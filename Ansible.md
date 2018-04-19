@@ -228,28 +228,36 @@
             - include conversation_tasks.yml
         ```
 8. Roles
-    - Ansible Roles define the folder structure and standards of an Ansible Project
+    - Ansible Roles use a predefined folder structure and standard naming convention to organize an Ansible Project.
     - Each Role must have a folder under the `roles` directory in your project.
-    ```
-    Projects/
-      |  inventory.txt
-      .  master_playbook.yml
-      |  roles/
-      .    |
-      |    .  webservers/
-      .    |    |  files
-      |    .    .  templates
-      .    |    |  tasks
-      |    .    .  vars
-      .    |    | 
-      |    .  databases/
-      .    |    |  files
-      |    .    .  templates
-      .    |    |  tasks
-      |    .    .  vars
-      .    |    |
-    ```
-    - `roles`: assigns a role at a playbook level
+    - Each Role contains the following folders.
+        - `tasks`: The main list of tasks executed by the role.
+        - `handlers`: Handlers that can be used inside and outside of the role.
+        - `defaults`: The default variables used in this role when the variable is not explicitly defined.
+        - `vars`: Additional variables to be used in the role.
+        - `files`: Files that can be deployed via this role.
+        - `templates`: Templats that can be deployed from this role.
+        - `meta`: A place for meta data about the role.
+            ```
+            Projects/
+            |  inventory.txt
+            .  master_playbook.yml
+            |  roles/
+            .    |
+            |    .  webservers/
+            .    |    |  files
+            |    .    .  templates
+            .    |    |  tasks
+            |    .    .  vars
+            .    |    | 
+            |    .  databases/
+            .    |    |  files
+            |    .    .  templates
+            .    |    |  tasks
+            |    .    .  vars
+            .    |    |
+            ```
+    - `roles`: assigns a role at the play level so there can be multiple roles in a playbook.
         ```yaml
         -
           name: Setup Firewall Servers
@@ -263,7 +271,7 @@
         - winrm has to be enabled for windows systems to be valid targets.
     - [Ansible Galaxy](galaxy.ansible.com)
         - Contains the `ansible-galaxy` cli tools
-        - A repository for Ansible Roles similr to the Docker Store
+        - A repository for Ansible Roles similar to the Docker Store
     - Patterns
         - Regex like patterns
     - Dynamic Inventory
