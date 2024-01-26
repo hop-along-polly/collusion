@@ -1,5 +1,10 @@
 # Github CI/CD
 
+Table of Contents
+ - [Github Teams](#github-teams)
+ - [Code Owners](#codeowners)
+ - [Github Actions](#github-actions)
+
 ## GitHub Teams
 
 The 2 primary use cases for GitHub teams is to grant permissions in a consistent and organized way to members of an organization and secondly to coordinate which members get notified for which events.
@@ -49,6 +54,129 @@ The following patterns are NOT supported in `CODEOWNERS` files
 # This rule specifies the DevOps team as the code owner for any files ending in .tf that exists under the root-level build directory.
 build/**/*.tf @testerozza/devops-team
 ```
+
+## Github Actions
+
+GitHub Actions is the CI/CD feature of GitHub allows developers to define the automated, build, testing, and deployment workflows in a yaml file that exists in the same repository as the source code itself. Additionally GitHub actions can be used to automate maintenance tasks for a repository.
+
+**NOTE: GitHub Actions has uses some very general terms such as "Action", "Event", "Job" etc. to refer to very specific concepts within GitHub Actions. To avoid confusion when you see a term like Action this refers to the Proper Noun for Action as defined by GitHub Actions, and action is just the general term for action.**
+
+### Components
+ - `Workflow`: Automated processes defined by a yaml file located in the `.github/workflows` directory of a repository.
+ - `Runner`: A server that a Workflow runs on when it is triggered.
+ - `Event`: A specific activity that occurs in a repository to trigger a Workflow. (i.e. opening a PR, or creating an issue)
+ - `Job`: A set of Steps within a Workflow executed in syncronous order and on the same Runner.
+ - `Action`: Customized plug-n-play applications that can be used as a Step in a Job.
+
+### Workflows
+
+A repository's workflow(s) are defined by yaml files located in the `.github/workflows` directory of the repository itself. A repository can contain any number of Workflow yaml files.
+
+A Workflow's yaml file at a minimum must include
+ - 1 or more Events that trigger the Workflow.
+ - 1 or more Jobs that will be run as part of the Workflow.
+ - 1 or more Steps per Job in the Workflow that define that tasks needed to complete the Job.
+
+GitHub offers an excellent example for [Understanding a Workflow yaml file](https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/about-workflows#understanding-the-workflow-file)
+
+**Reusing Workflows**
+
+There are 2 way's to reuse workflows. "Reusable Workflows", "Starter Workflows"
+
+Workflows can reference other workflows, however there can only be 4 levels of inception in a Workflow (i.e. Workflows can only be nested up to 4-levels deep). Additionally when calling another workflow it is take it or leave it. You CANNOT spin up services or add steps to a called work flow.
+
+That being said there are 2 work arounds/hacks for adding additional functionality hen calling a reusable workflow.
+
+1. As the author of a workflow you can accept inputs that alter the behaviour of a step or enable/disable it entirely. See [Configurable Workflows](#configurable-workflows)
+2. A Workflow that calls a reusable workflow can define other jobs that are dependant on the reusable workflow. See [Reusable Workflows and Dependent Jobs](#reusable-workflows-and-dependent-jobs)
+
+# TODO Research jobs being dependant on a reusable workflow
+
+Follow GitHub's guide for [Creating a Reusbale Workflow](https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow) if you're interested in writing your own Workflows.
+
+# TODO Research Starter workflows
+https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/creating-starter-workflows-for-your-organization
+
+### Reusable Workflows and Dependent Jobs
+
+Given the following reusable Workflow
+```yaml
+name: Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+
+jobs:
+  ci:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Check Python Version
+        run: python --version
+```
+
+You can configure a Job to run before or after it using the `needs` property.
+```yaml
+name: Experiments
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+
+jobs:
+  pre-reusable-workflow:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Pre Shared Workflow Stuff
+        run: echo "Pre shared workflow"
+  call-reusable-workflow:
+    needs: pre-reusable-workflow
+    uses: <github-username>/<repo-name>/.github/workflows/reusable.yaml@main
+  post-reusable-workflow:
+    runs-on: self-hosted
+    needs: call-reusable-workflow
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Post Shared Workflow Stuff
+        run: echo "Post shared workflow"
+```
+
+In this example the `Experiments` Workflow would run the `pre-reusable-workflow` Job first, then all the Jobs in the `call-reusable-workflow` Job would run, and finally the `post-reusable-workflow` Job would run.
+
+**NOTE: Each of these jobs will execute with a clean Runner anything created/setup in the `pre-reusable-workflow` Job would not be available in the `call-reusable-workflow` Job.**
+
+
+### Configurable Workflows
+
+# TODO Create an example of a workflow with a step that can be disabled.
+
+
+# TODO Experiment with making a reusable workflow dependent on a step running prior and running a step after a reusable workflow.
+https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/about-workflows#creating-dependent-jobs
+
+### Runners
+    - single job at a time
+    - Ubunut, Windows, and MacOS runners provided
+    - We can opt for self-hosted runners as well.
+    - Each workflow starts w/ a fresh copy of the runner.
+    - 
+
+### Events
+    - Complete list of events found [here](https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/events-that-trigger-workflows)
+
+### Jobs
+
+ Jobs are run in parallel but can assume dependencies on other jobs. See [Jobs](#jobs) for more details.
+
+### Actions
+
+
 
 ## References
 - [Code Owners](https://docs.github.com/en/enterprise-cloud@latest/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
