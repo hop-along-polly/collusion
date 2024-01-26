@@ -5,6 +5,7 @@ Table of Contents
  - [Code Owners](#codeowners)
  - [Github Actions](#github-actions)
 
+
 ## GitHub Teams
 
 The 2 primary use cases for GitHub teams is to grant permissions in a consistent and organized way to members of an organization and secondly to coordinate which members get notified for which events.
@@ -36,7 +37,6 @@ Each branch of a repository can have it's own `CODEOWNERS` file.
 That file must be located in the `.github/`, root, or `docs/` directory of the repository.
 Only the first `CODEOWNERS` file is used to determine code owners AND it will only determine code owners for that git branch. The precedence of `CODEOWNERS` files is `.github/` > root > `docs/`.
 
-
 ### CODEOWNERS Syntax
 
 The following patterns are NOT supported in `CODEOWNERS` files
@@ -55,128 +55,141 @@ The following patterns are NOT supported in `CODEOWNERS` files
 build/**/*.tf @testerozza/devops-team
 ```
 
+
 ## Github Actions
 
-GitHub Actions is the CI/CD feature of GitHub allows developers to define the automated, build, testing, and deployment workflows in a yaml file that exists in the same repository as the source code itself. Additionally GitHub actions can be used to automate maintenance tasks for a repository.
+GitHub Actions is the CI/CD feature of GitHub allowing developers to define the automated, build, testing, and deployment workflows in yaml files that exists in the same repository as the source code itself. Additionally GitHub actions can be used to automate maintenance tasks for a repository.
 
-**NOTE: GitHub Actions has uses some very general terms such as "Action", "Event", "Job" etc. to refer to very specific concepts within GitHub Actions. To avoid confusion when you see a term like Action this refers to the Proper Noun for Action as defined by GitHub Actions, and action is just the general term for action.**
+**NOTE: GitHub Actions has uses some very general terms such as "Action", "Event", "Job" etc. that refer to very specific concepts within GitHub Actions. To avoid confusion when you see a one of these upper-case nouns (i.e. Action) this refers to the proper noun for Action as defined by GitHub Actions, and lower-case action is just the general term for action.**
 
 ### Components
  - `Workflow`: Automated processes defined by a yaml file located in the `.github/workflows` directory of a repository.
  - `Runner`: A server that a Workflow runs on when it is triggered.
  - `Event`: A specific activity that occurs in a repository to trigger a Workflow. (i.e. opening a PR, or creating an issue)
- - `Job`: A set of Steps within a Workflow executed in syncronous order and on the same Runner.
+ - `Job`: A set of Steps within a Workflow executed in syncronous order and on the same Runner. Steps are bash commands that will be executed during the Step.
  - `Action`: Customized plug-n-play applications that can be used as a Step in a Job.
 
 ### Workflows
 
-A repository's workflow(s) are defined by yaml files located in the `.github/workflows` directory of the repository itself. A repository can contain any number of Workflow yaml files.
+A repository's Workflow(s) are defined by yaml files located in the `.github/workflows` directory of the repository itself. A repository can contain any number of Workflow yaml files.
 
-A Workflow's yaml file at a minimum must include
+There are 3 types of Workflows supported by GitHub Actions.
+ - `Standard Workflows`: This is not an official term defined by GitHub Actions. I use it to refer to the basic run of the mill Workflows that don't have special functionality like the other types of Workflows.
+ - `Starter Workflows`: Starter Workflows are templates that allows a developer to start with something other than a blank slate. GitHub Enterprise offers Starter Workflows, but you can also define your own custom Starter Workflows.
+ - `Reusable Workflows`: Reusable Workflows are Workflows that CAN be called by another Workflow. I think Callable Workflow would be a better term.
+
+**Standard Workflows**
+
+When writing a Workflow there are essentially 5 things you can do
+1. Write the custom Steps in a Job.
+2. Call a custom Action
+3. Call an Action from the [GitHub Marketplace](https://github.com/marketplace?type=actions)
+4. Spin up service containers (i.e. sidecars) needed by the Job
+5. Call a Reusable Workflow
+
+At a minimum a Workflow must include
  - 1 or more Events that trigger the Workflow.
  - 1 or more Jobs that will be run as part of the Workflow.
  - 1 or more Steps per Job in the Workflow that define that tasks needed to complete the Job.
 
-GitHub offers an excellent example for [Understanding a Workflow yaml file](https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/about-workflows#understanding-the-workflow-file)
+ GitHub offers an excellent example for [Understanding a Workflow yaml file](https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/about-workflows#understanding-the-workflow-file).
 
-**Reusing Workflows**
+**Starter Workflows**
 
-There are 2 way's to reuse workflows. "Reusable Workflows", "Starter Workflows"
+[TODO Research Started Workflows](https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/creating-starter-workflows-for-your-organization)
 
-Workflows can reference other workflows, however there can only be 4 levels of inception in a Workflow (i.e. Workflows can only be nested up to 4-levels deep). Additionally when calling another workflow it is take it or leave it. You CANNOT spin up services or add steps to a called work flow.
+**Reusable Workflows**
 
-That being said there are 2 work arounds/hacks for adding additional functionality hen calling a reusable workflow.
+Reusing a Workflow happens at the Job level. Essentially when calling a Workflow it is acting as a Job in the calling Workflow. There are a few important caveats when calling Workflows.
+Workflows CANNOT exceed 4 levels of inception, meaning Workflow A can call Workflow B and B can call Workflow C which can call Workflow D, but Workflow D cannot call another Workflow.
+A Workflow CAN define Jobs that will run before or after a called Workflow using the `needs` field.
+A Workflow CANNOT define Steps that will run before or after a called Workflow unless those Steps exist in a Job that will run before or after the called Workflow.
+A Workflow CANNOT define service containers that will spin up before calling a Workflow.
 
-1. As the author of a workflow you can accept inputs that alter the behaviour of a step or enable/disable it entirely. See [Configurable Workflows](#configurable-workflows)
-2. A Workflow that calls a reusable workflow can define other jobs that are dependant on the reusable workflow. See [Reusable Workflows and Dependent Jobs](#reusable-workflows-and-dependent-jobs)
-
-# TODO Research jobs being dependant on a reusable workflow
-
-Follow GitHub's guide for [Creating a Reusbale Workflow](https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow) if you're interested in writing your own Workflows.
-
-# TODO Research Starter workflows
-https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/creating-starter-workflows-for-your-organization
-
-### Reusable Workflows and Dependent Jobs
-
-Given the following reusable Workflow
+To make a Workflow callable the following Event needs to be added as a trigger for the Workflow.
 ```yaml
-name: Reusable Workflow
-
 on:
   workflow_call:
     inputs:
-
-jobs:
-  ci:
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-      - name: Check Python Version
-        run: python --version
+      example_input:
+        type: string
+        required: false
+        description: An example of an input. This can be deleted or modified
+    secrets:
+      example_secret:
+        description: An example of a secret. This can be deleted or modified.
+        required: false
 ```
-
-You can configure a Job to run before or after it using the `needs` property.
-```yaml
-name: Experiments
-on:
-  pull_request:
-    branches:
-      - main
-  push:
-
-jobs:
-  pre-reusable-workflow:
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run Pre Shared Workflow Stuff
-        run: echo "Pre shared workflow"
-  call-reusable-workflow:
-    needs: pre-reusable-workflow
-    uses: <github-username>/<repo-name>/.github/workflows/reusable.yaml@main
-  post-reusable-workflow:
-    runs-on: self-hosted
-    needs: call-reusable-workflow
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run Post Shared Workflow Stuff
-        run: echo "Post shared workflow"
-```
-
-In this example the `Experiments` Workflow would run the `pre-reusable-workflow` Job first, then all the Jobs in the `call-reusable-workflow` Job would run, and finally the `post-reusable-workflow` Job would run.
-
-**NOTE: Each of these jobs will execute with a clean Runner anything created/setup in the `pre-reusable-workflow` Job would not be available in the `call-reusable-workflow` Job.**
-
-
-### Configurable Workflows
-
-# TODO Create an example of a workflow with a step that can be disabled.
-
-
-# TODO Experiment with making a reusable workflow dependent on a step running prior and running a step after a reusable workflow.
-https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/about-workflows#creating-dependent-jobs
 
 ### Runners
-    - single job at a time
-    - Ubunut, Windows, and MacOS runners provided
-    - We can opt for self-hosted runners as well.
-    - Each workflow starts w/ a fresh copy of the runner.
-    - 
+
+Runners are the servers that Workflows execute on. GitHub offers Ubuntu, Windows, and MacOS X runners, however you can opt into using Self Hosted Runners.
+Each Worfklow starts with a fresh copy of the Runner. While executing the Workflow a Runner will execute one Job at a time.
 
 ### Events
-    - Complete list of events found [here](https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/events-that-trigger-workflows)
+
+GitHub provides a complete list of [events](https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/events-that-trigger-workflows) that can trigger a Workflow.
+
+Each Workflow will have 1 or more Events that trigger it and each Event type has additional filters that can be used to refine the conditions under which the Event triggers the Workflow.
+
+Here are some common examples. Refer to GitHubs [Triggering A Workflow](https://docs.github.com/en/enterprise-cloud@latest/actions/using-workflows/triggering-a-workflow) docs for all the possible ways to trigger a Workflow.
+
+**Trigger a Workflow when a commits are added to the "main" branch.**
+```
+on:
+  push:
+    branches:
+      - main
+```
+
+**Trigger a Workflow when a PR is opened against "main", or a branch prefixed with "releases/".**
+```
+on:
+  pull_request:
+    - main
+    - releases/**
+```
 
 ### Jobs
 
- Jobs are run in parallel but can assume dependencies on other jobs. See [Jobs](#jobs) for more details.
+By default Jobs defined in a Workflow will run in parallel. Dependencied between jobs can be created with `needs` field. When a Job needs or depends on another Job it will wait until it completes before starting up.
+
+Here is an example of a Job needing another Job
+```
+on: push
+
+jobs:
+  stand-alone-job:
+    steps:
+      ...
+
+  dependent-job:
+    needs: stand-alone-job
+    steps:
+      ...
+```
 
 ### Actions
 
+A repository can define it's own Actions as Yaml files in the `.github/actions` directory. 3rd party Actions can be found in the [GitHub Marketplace](https://github.com/marketplace?type=actions).
 
+This is an example of an custom Action defined in a repositories `.github/actions` directory. The `using: composite` directive allows the actions to specify multiple run commands in the Action.
+```
+name: A reusable Action
+description: An action that can be used in a Workflow
+
+inputs:
+  example_input:
+    type: string
+    description:
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Say Hello
+      run: echo Hello World!
+```
 
 ## References
 - [Code Owners](https://docs.github.com/en/enterprise-cloud@latest/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
