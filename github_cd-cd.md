@@ -68,6 +68,7 @@ GitHub Actions is the CI/CD feature of GitHub allowing developers to define the 
  - `Event`: A specific activity that occurs in a repository to trigger a Workflow. (i.e. opening a PR, or creating an issue)
  - `Job`: A set of Steps within a Workflow executed in syncronous order and on the same Runner. Steps are bash commands that will be executed during the Step.
  - `Action`: Customized plug-n-play applications that can be used as a Step in a Job.
+ - `Variables`: See the list of pre-defined environment variables provided by Github [here](https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables)
 
 ### Workflows
 
