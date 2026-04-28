@@ -17,8 +17,7 @@
 
  - Keep `skill.md` files under 500 lines.
  - Use Progressive Disclosure (i.e. essential instructions in `skill.md` with links to additional markdown files containing detailed reference information)
- - Use `CLAUDE.md` for project wide standards and constraints and Skills for task specific expertise and only re
- - 
+ - Use `CLAUDE.md` for project wide standards and constraints while reserving Skills for task specific expertise.
 
 
 ## Sharing Skills
