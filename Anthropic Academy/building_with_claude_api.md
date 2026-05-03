@@ -1,10 +1,47 @@
 # Building with Claude API
 
-
 ## Table of Contents
 
+- [Claude Models](#claude-models)
+- [Accessing the API](#accessing-the-api)
+  - [API Best Practices](#api-best-practices)
+  - [How Requests are Handled](#how-requests-are-handled)
+  - [System Prompts](#system-prompts)
+  - [Temperature](#temperature)
+  - [Response Streaming](#response-streaming)
+    - [Example](#response-streaming-example)
+  - [Structured Data](#structured-data)
+    - [Example](#structured-data-example)
+- [Prompt Engineering & Evaluation](#prompt-engineering-and-evaluation)
+  - [Prompt Evaluation Workflow](#prompt-evaluation-workflow)
+  - [Model Based Grading](#model-based-grading)
+  - [Prompt Engineering](#prompt-engineering)
+   - [Best Practices](#prompt-engineering-best-practices)
+   - [Structured Prompt Example](#structured-prompt-example)
+- [Tool Use](#tool-use)
+  - [Handling Toll Use Blocks](#handling-tooluseblock)
+  - [Handling Tool Results](#handling-tool-results)
+  - [Tool Use Example](#tool-use-example)
+  - [Implementing Multiple Turns](#implementing-multiple-turns)
+- [Retrieval Augmented Generation](#retrieval-augmented-generation-rag)
+  - [RAG Pipeline Overview](#rag-pipeline-overview)
+  - [Chunking Data](#chunking-data)
+  - [Storing Chunks](#storing-chunks)
+  - [Semantically Searching Chunks](#semantically-searching-chunks)
+  - [BM25 Lexical Search](#bm25-lexical-search)
+  - [Merging Results in a Multi-Index RAG Pipeline](#merging-results-in-a-multi-index-rag-pipeline)
+- [Claude Features](#claude-features)
+  - [Extended Thinking](#extended-thinking)
+  - [Image Support](#image-support)
+  - [PDF Support](#pdf-support)
+  - [Prompt Caching](#prompt-caching)
+  - [Code Execution & Files API](#code-execution-and-files-api)
+- [Model Context Protocol](#model-context-protocol)
+- [Anthropic Apps](#anthropic-apps)
+  - [Using Claude Code](#using-claude-code)
+- [Agents & Workflows](#agents-and-workflows)
 
-
+ ---
 
 ## Claude Models
 
@@ -18,6 +55,7 @@ When deciding on a model understand the trade-off between speed/cost vs. intelii
 
 **NOTE: Most agentic applications will use different models for different tasks depending on the need of the task.**
 
+ ---
 
 ## Accessing the API
 
@@ -404,9 +442,9 @@ When building a RAG pipeline that uses multiple search algorithms (i.e. semantic
 
  ---
 
-### Claude Features
+## Claude Features
 
-#### Extended Thinking
+### Extended Thinking
 
 When Exteneded Thinking increases how long the Model will work on the task and will include how the Model reasoned about the prompt. This results in more accurate responses and transparency into the Models thought proces.
 
@@ -425,7 +463,7 @@ Occassionally a RedactedThinking block is returned which is a thinking block whe
 
 **NOTE: Your code SHOULD be able to handle RedactedThinking blocks when Extended Thinking is enabled.**
 
-#### Image Support
+### Image Support
 
 Anthropic Models can parse images but there are limitations
  - No more than 100 images can be included across all messages in the message history
@@ -439,11 +477,11 @@ Images are sent with ImageBlock that contain the base64 encoded image bytes or a
 **NOTE: In the ImageBlock specify the media type used MIME types (i.e. image.png).**
 
 
-#### PDF Support
+### PDF Support
 
 PDFs are added to the message history using a DocumentBlock very similar to the ImageBlock. For PDF's use the `application/pdf` media type.
 
-#### Citations
+### Citations
 
 Citations allow the Model to respond with references to a page location for where is got its answer.
 
@@ -461,7 +499,7 @@ messages.append({
 })
 ```
 
-#### Prompt Caching
+### Prompt Caching
 
 Prompt Caching speeds up the Models response time and reduces the tokens used.
 
@@ -484,3 +522,50 @@ Prompt Caching can be enabled by adding the `cache_control` field to any kind of
 Constraints
  - There can be a total of 4 cache break points in the message history
  - A minimum of 1024 tokens must exist in the message history before anything will be cached.
+
+### Code Execution and Files API
+
+The Files API allows you to upload files ahead of time. It returns a File id which can be used during later messages when referring to that file.
+
+Code Execution is a server side API That runs code in a Docker container.
+
+ ---
+
+## Model Context Protocol
+
+See notes in [Intro to MCP](./intro_to_mcp.md).
+
+ ---
+
+## Anthropic Apps
+
+At the time of writing this cheat sheet the training videos only covered 2 of Anthropics apps, Claude Code and Computer Use. Co-Work is also now available but there will be no notes on that.
+
+`Claude code`: is an agentic coding assistant. It can write code, design, architect and test anything software development related.
+`Computer Use`: is a set of tools that allow Anthropics models to work with you local desktop/laptop environment.
+
+
+### Using Claude Code
+When using Claude in a new or existing code repository for the first time start with `/init` command. This command scans the code base and creates a CLAUDE.md file documenting architecture, coding styles etc. The CLAUDE.md file is referenced anytime you give claude code a prompt.
+
+To append individual lines to the CLAUDE.md file start a prompt with `#`. Claude code will then ask you where that line should be stored in memory.
+
+MCP servers can be connected to claude code using the `claude mcp add` command.
+
+**NOTE: Look for the official MCP server for 3rd party service before trying to write your own.**
+
+ ---
+
+## Agents and Workflows
+
+Workflows and Agents are 2 strategies for handling user requests that cannot be handled in a single request.
+ - `workflows`: When a series of pre-determined calls to Claude can be made to solve a specific task.
+ - `agents`: When a goal and set of tools is sent to the Model and it is expected to figure out how to complete the goal.
+
+`Evaluator-Optimizer Pattern`: Input provided to a Producer which produces and output. The output is passed to a Grader for evaluation. If the ouput needs improved it is sent back to the producer. This cycle repeats until the Grader determines the output is good enough as the final output.
+
+Here are 3 techniques for making workflows more useful
+
+ - `Parallel Workflows`: The process of spliting a single task into multiple sub-tasks that can be processed in parallel. The final results of each subtask are then passed back into the Model to aggregate a final response.
+ - `Chaining Workflows`: The process of taking a single task and breaking it up into distinct steps that can be processed in sequence. This lets the Model focus on tasks in a specialized way.
+ - `Routing Workflows`: Using the Model to classify the request in a users prompt and route it to a specialized workflow meant for that specific type of work. (i.e. create an educational video vs creating a music video)
