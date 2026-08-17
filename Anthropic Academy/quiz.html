@@ -1,0 +1,745 @@
+<title>Claude Architect — Foundations Practice Quiz</title>
+<style>
+  :root {
+    --paper: #F4F2EE;
+    --surface: #FFFFFF;
+    --surface-2: #FBFAF8;
+    --ink: #201C1A;
+    --muted: #6B635C;
+    --faint: #9A9088;
+    --line: #E4DFD8;
+    --line-strong: #D5CEC5;
+    --accent: #C15F3C;
+    --accent-deep: #A2492B;
+    --accent-wash: #F6E6DE;
+    --good: #2F7D5B;
+    --good-wash: #E4F0EA;
+    --bad: #C23B2E;
+    --bad-wash: #F6E2DF;
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(32,28,26,.04), 0 8px 28px rgba(32,28,26,.06);
+    --mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --display: "Helvetica Neue", Arial, system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1A1715;
+      --surface: #232019;
+      --surface-2: #2A251E;
+      --ink: #ECE7E1;
+      --muted: #A69D92;
+      --faint: #7A7167;
+      --line: #352F27;
+      --line-strong: #423B31;
+      --accent: #DA7351;
+      --accent-deep: #E38A6C;
+      --accent-wash: #3A281F;
+      --good: #58B58C;
+      --good-wash: #22322A;
+      --bad: #E0705F;
+      --bad-wash: #3A2320;
+      --shadow: 0 1px 2px rgba(0,0,0,.2), 0 10px 30px rgba(0,0,0,.28);
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #F4F2EE; --surface: #FFFFFF; --surface-2: #FBFAF8; --ink: #201C1A;
+    --muted: #6B635C; --faint: #9A9088; --line: #E4DFD8; --line-strong: #D5CEC5;
+    --accent: #C15F3C; --accent-deep: #A2492B; --accent-wash: #F6E6DE;
+    --good: #2F7D5B; --good-wash: #E4F0EA; --bad: #C23B2E; --bad-wash: #F6E2DF;
+    --shadow: 0 1px 2px rgba(32,28,26,.04), 0 8px 28px rgba(32,28,26,.06);
+  }
+  :root[data-theme="dark"] {
+    --paper: #1A1715; --surface: #232019; --surface-2: #2A251E; --ink: #ECE7E1;
+    --muted: #A69D92; --faint: #7A7167; --line: #352F27; --line-strong: #423B31;
+    --accent: #DA7351; --accent-deep: #E38A6C; --accent-wash: #3A281F;
+    --good: #58B58C; --good-wash: #22322A; --bad: #E0705F; --bad-wash: #3A2320;
+    --shadow: 0 1px 2px rgba(0,0,0,.2), 0 10px 30px rgba(0,0,0,.28);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---- top bar ---- */
+  .topbar {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: saturate(1.1) blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar.hidden { display: none; }
+  .topbar-inner {
+    max-width: 680px; margin: 0 auto; padding: 12px 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .track { flex: 1; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .fill { height: 100%; width: 0%; background: var(--accent); border-radius: 99px; transition: width .4s cubic-bezier(.4,0,.2,1); }
+  .counter, .livescore {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .02em;
+    color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums;
+  }
+  .livescore b { color: var(--ink); }
+
+  /* ---- generic ---- */
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--accent-deep); margin: 0 0 14px;
+  }
+  h1 {
+    font-family: var(--display); font-weight: 800; letter-spacing: -.022em;
+    font-size: clamp(30px, 6vw, 44px); line-height: 1.04; margin: 0 0 16px;
+    text-wrap: balance;
+  }
+  .lede { color: var(--muted); font-size: 17px; max-width: 52ch; margin: 0 0 28px; }
+
+  .btn {
+    font-family: var(--sans); font-size: 15px; font-weight: 600;
+    color: #fff; background: var(--accent); border: none; cursor: pointer;
+    padding: 13px 22px; border-radius: 10px; transition: background .15s, transform .05s;
+  }
+  .btn:hover { background: var(--accent-deep); }
+  .btn:active { transform: translateY(1px); }
+  .btn[disabled] { opacity: .4; cursor: not-allowed; }
+  .btn.ghost { background: transparent; color: var(--accent-deep); border: 1px solid var(--line-strong); }
+  .btn.ghost:hover { background: var(--accent-wash); }
+  :focus-visible { outline: 2.5px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+  /* ---- screens ---- */
+  .screen { display: none; }
+  .screen.active { display: block; }
+  #screen-start { padding: 72px 0 60px; }
+  #screen-quiz { padding: 28px 0 64px; }
+  #screen-results { padding: 40px 0 72px; }
+
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 34px; }
+  .chip {
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
+    background: var(--surface); border: 1px solid var(--line);
+    padding: 7px 12px; border-radius: 8px;
+  }
+  .chip b { color: var(--ink); }
+  .startcard {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 22px 24px; box-shadow: var(--shadow); margin-top: 8px;
+  }
+  .startcard h3 { margin: 0 0 12px; font-size: 14px; font-family: var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; }
+  .startcard ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14.5px; }
+  .startcard li { margin-bottom: 7px; }
+  .startcard li b { color: var(--ink); font-weight: 600; }
+
+  /* ---- question ---- */
+  .qtag {
+    display: inline-block; font-family: var(--mono); font-size: 11px;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--accent-deep);
+    background: var(--accent-wash); padding: 5px 10px; border-radius: 6px; margin-bottom: 16px;
+  }
+  .qtext {
+    font-size: 20px; font-weight: 600; line-height: 1.4; margin: 0 0 22px;
+    letter-spacing: -.01em; text-wrap: pretty;
+  }
+  .opts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+  .opt {
+    display: flex; align-items: flex-start; gap: 13px; width: 100%; text-align: left;
+    background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: 12px;
+    padding: 15px 16px; cursor: pointer; font: inherit; color: var(--ink);
+    transition: border-color .12s, background .12s;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--accent); background: var(--surface-2); }
+  .opt:disabled { cursor: default; }
+  .opt .key {
+    flex: none; width: 24px; height: 24px; border-radius: 6px;
+    display: grid; place-items: center; font-family: var(--mono); font-size: 12px; font-weight: 600;
+    background: var(--paper); border: 1px solid var(--line-strong); color: var(--muted);
+    transition: all .12s;
+  }
+  .opt .label { flex: 1; font-size: 15px; line-height: 1.45; padding-top: 1px; }
+  .opt .mark { flex: none; font-size: 17px; font-weight: 700; opacity: 0; transition: opacity .12s; }
+  .opt.selected { border-color: var(--accent); }
+  .opt.selected .key { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .opt.correct { border-color: var(--good); background: var(--good-wash); }
+  .opt.correct .key { background: var(--good); color: #fff; border-color: var(--good); }
+  .opt.correct .mark { opacity: 1; color: var(--good); }
+  .opt.wrong { border-color: var(--bad); background: var(--bad-wash); }
+  .opt.wrong .key { background: var(--bad); color: #fff; border-color: var(--bad); }
+  .opt.wrong .mark { opacity: 1; color: var(--bad); }
+
+  .feedback {
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 22px;
+    border: 1px solid var(--line); background: var(--surface-2);
+    animation: rise .3s ease both;
+  }
+  .feedback.is-correct { border-color: color-mix(in srgb, var(--good) 40%, var(--line)); }
+  .feedback.is-wrong { border-color: color-mix(in srgb, var(--bad) 40%, var(--line)); }
+  .fb-head { font-weight: 700; font-size: 14px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .fb-head.is-correct { color: var(--good); }
+  .fb-head.is-wrong { color: var(--bad); }
+  .fb-body { font-size: 14.5px; color: var(--muted); margin: 0 0 12px; line-height: 1.55; }
+  .fb-body b { color: var(--ink); font-weight: 600; }
+  .cite {
+    display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono);
+    font-size: 12.5px; color: var(--accent-deep); text-decoration: none;
+    border-top: 1px dashed var(--line-strong); padding-top: 11px; margin-top: 2px;
+  }
+  .cite:hover { text-decoration: underline; }
+  .cite::before { content: "\2197"; font-size: 13px; }
+
+  .qactions { display: flex; justify-content: flex-end; gap: 12px; }
+
+  /* ---- results / score report ---- */
+  .report {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .report-top { text-align: center; padding: 34px 24px 26px; border-bottom: 1px solid var(--line); }
+  .report-top .eyebrow { margin-bottom: 10px; }
+  .verdict { font-family: var(--display); font-weight: 800; font-size: 46px; letter-spacing: -.02em; margin: 4px 0 2px; }
+  .verdict.pass { color: var(--good); }
+  .verdict.fail { color: var(--bad); }
+  .bigscore { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 15px; color: var(--muted); }
+  .bigscore b { color: var(--ink); }
+  .scoregrid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--line);
+  }
+  .scoregrid div { padding: 16px 12px; text-align: center; border-right: 1px solid var(--line); }
+  .scoregrid div:last-child { border-right: none; }
+  .scoregrid .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin-bottom: 5px; }
+  .scoregrid .v { font-family: var(--mono); font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .breakdown { padding: 8px 4px 4px; }
+  .breakdown h3 {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); margin: 16px 20px 4px; font-weight: 600;
+  }
+  .brow { display: flex; align-items: center; gap: 14px; padding: 11px 20px; border-top: 1px solid var(--line); }
+  .brow:first-of-type { border-top: none; }
+  .brow .name { flex: 1; font-size: 14px; }
+  .brow .bar { flex: none; width: 90px; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .brow .bar span { display: block; height: 100%; border-radius: 99px; }
+  .brow .pct { flex: none; width: 52px; text-align: right; font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+
+  .review-toggle { margin: 26px 0 0; }
+  .review { margin-top: 18px; display: none; }
+  .review.open { display: block; }
+  .rev-item {
+    border: 1px solid var(--line); border-left: 3px solid var(--bad); border-radius: 10px;
+    background: var(--surface); padding: 14px 16px; margin-bottom: 12px;
+  }
+  .rev-item .rq { font-weight: 600; font-size: 14.5px; margin: 0 0 8px; }
+  .rev-line { font-size: 13.5px; margin: 3px 0; color: var(--muted); }
+  .rev-line b { color: var(--ink); font-weight: 600; }
+  .rev-line.ok b { color: var(--good); }
+  .rev-line.no b { color: var(--bad); }
+  .rev-item .cite { border-top: none; padding-top: 8px; margin-top: 6px; }
+
+  .results-actions { display: flex; gap: 12px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .qcard { animation: rise .28s ease both; }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+  @media (max-width: 520px) {
+    .scoregrid { grid-template-columns: 1fr; }
+    .scoregrid div { border-right: none; border-bottom: 1px solid var(--line); }
+    .verdict { font-size: 38px; }
+  }
+</style>
+
+<div class="topbar hidden" id="topbar">
+  <div class="topbar-inner">
+    <span class="counter" id="counter">01 / 17</span>
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <span class="livescore" id="livescore"><b>0</b> correct</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ START ============ -->
+  <section class="screen active" id="screen-start">
+    <p class="eyebrow">Claude Certified Architect · Foundations</p>
+    <h1>Practice Assessment</h1>
+    <p class="lede">Seventeen scenario questions targeting the two clusters that decided Attempt&nbsp;1 — multi-agent orchestration and structured JSON output. Each answer comes with an explanation and a link to the source doc.</p>
+
+    <div class="meta-row">
+      <span class="chip"><b>17</b> questions</span>
+      <span class="chip"><b>72%</b> to pass</span>
+      <span class="chip">immediate feedback</span>
+      <span class="chip">cited answers</span>
+    </div>
+
+    <div class="startcard">
+      <h3>What this covers</h3>
+      <ul>
+        <li><b>Bucket A — Orchestration:</b> pattern selection, broken-subagent diagnosis, delegation style, self-contained prompts, state persistence, <code>context: fork</code>, iterative refinement</li>
+        <li><b>Bucket B — Structured output:</b> <code>tool_choice</code>, strict schemas, optional/nullable/enum extraction, uncertainty-preserving synthesis, confidence-based review routing</li>
+        <li><b>Tooling:</b> choosing Grep / Glob / Read / Bash</li>
+      </ul>
+    </div>
+
+    <div class="results-actions" style="justify-content:flex-start; margin-top: 30px;">
+      <button class="btn" id="startBtn">Begin assessment</button>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="screen" id="screen-quiz">
+    <div id="qhost"></div>
+  </section>
+
+  <!-- ============ RESULTS ============ -->
+  <section class="screen" id="screen-results">
+    <p class="eyebrow" style="text-align:center;">Claude Certified Architect · Foundations</p>
+    <div class="report">
+      <div class="report-top">
+        <div class="verdict" id="verdict">—</div>
+        <div class="bigscore">YOUR SCORE: <b id="scorePct">0%</b> &nbsp;·&nbsp; PASSING: <b>72%</b></div>
+      </div>
+      <div class="scoregrid">
+        <div><div class="k">Correct</div><div class="v" id="rCorrect">0</div></div>
+        <div><div class="k">Questions</div><div class="v" id="rTotal">17</div></div>
+        <div><div class="k">Grade</div><div class="v" id="rGrade">—</div></div>
+      </div>
+      <div class="breakdown" id="breakdown"></div>
+    </div>
+
+    <div class="review-toggle" style="text-align:center;">
+      <button class="btn ghost" id="reviewBtn">Review missed questions</button>
+    </div>
+    <div class="review" id="review"></div>
+
+    <div class="results-actions">
+      <button class="btn" id="retryBtn">Retake quiz</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var QUESTIONS = [
+    { tag: "Orchestration · L1", topic: "Orchestration",
+      q: "A research task's subtasks can't be known in advance — how many and what kind depend on what earlier searches reveal. Coverage matters more than latency. Which pattern fits?",
+      options: [
+        "Parallelization (sectioning) — split into fixed independent slices",
+        "Orchestrator-workers — a lead agent dynamically decomposes and delegates",
+        "Prompt chaining — a fixed sequence of steps",
+        "Routing — classify, then hand to a specialist"
+      ], correct: 1,
+      why: "When subtasks are <b>not predefined</b> and depend on what's discovered, a central orchestrator must decide them at runtime. Parallelization requires knowing the slices up front.",
+      cite: { label: "Building Effective Agents", url: "https://www.anthropic.com/engineering/building-effective-agents" } },
+
+    { tag: "Orchestration · L1", topic: "Orchestration",
+      q: "You have three fully independent extraction subtasks, all known in advance, and you need to minimize total wall-clock latency. Best structure?",
+      options: [
+        "Sequential pipeline — one after another",
+        "Orchestrator-workers — a lead decides the subtasks",
+        "Parallelization — run all three simultaneously",
+        "Evaluator-optimizer — generate then critique in a loop"
+      ], correct: 2,
+      why: "Independent + known subtasks run <b>at the same time</b>. Parallelization is the latency win here; an orchestrator adds a coordination round-trip you don't need.",
+      cite: { label: "Building Effective Agents", url: "https://www.anthropic.com/engineering/building-effective-agents" } },
+
+    { tag: "Orchestration · L2", topic: "Orchestration",
+      q: "A newly added research subagent always returns an empty result, while the coordinator's own runs succeed. Most likely cause?",
+      options: [
+        "Its model is set too small to answer",
+        "Its frontmatter omits the search/read tools it needs to gather anything",
+        "tool_choice is set to \"auto\"",
+        "The coordinator's prompt is too long"
+      ], correct: 1,
+      why: "No tool permissions → the subagent has no way to gather information → it returns empty. Missing/over-restricted <b>tool access</b> is the first thing to check when a subagent produces nothing.",
+      cite: { label: "Create custom subagents", url: "https://docs.claude.com/en/docs/claude-code/sub-agents" } },
+
+    { tag: "Orchestration · L2", topic: "Orchestration",
+      q: "In the Agent SDK, the coordinator never delegates to a subagent you defined, even for clearly matching tasks. Most likely wiring problem?",
+      options: [
+        "The subagent's description is vague or missing, so the coordinator can't route to it",
+        "The subagent is granted too many tools",
+        "strict: true isn't set on the subagent",
+        "The subagent file is Markdown instead of JSON"
+      ], correct: 0,
+      why: "The <b>description</b> is the routing signal — it's how the coordinator decides which subagent handles a task. A vague or absent description is itself a wiring bug.",
+      cite: { label: "Subagents in the SDK", url: "https://docs.claude.com/en/docs/agent-sdk/subagents" } },
+
+    { tag: "Orchestration · L3", topic: "Orchestration",
+      q: "You want a subagent to adapt to whatever it discovers, while the coordinator keeps control through the returned result. Which delegation style?",
+      options: [
+        "Procedural — spell out each step to execute in order",
+        "Goal-oriented — state the outcome and what success looks like",
+        "A fixed prompt chain",
+        "Random sampling of approaches"
+      ], correct: 1,
+      why: "<b>Goal-oriented</b> instructions enable adaptive behavior — the subagent adjusts its path to what it finds. Procedural instructions lock it to fixed steps and prevent adaptation.",
+      cite: { label: "Multi-agent research system", url: "https://www.anthropic.com/engineering/multi-agent-research-system" } },
+
+    { tag: "Orchestration · L3", topic: "Orchestration",
+      q: "Why must the coordinator's delegation prompt include all findings, data, and source metadata a subagent will need?",
+      options: [
+        "To reduce total token cost",
+        "Because subagents automatically inherit the coordinator's context",
+        "Because each subagent runs in an isolated context window and can't see prior conversation or files",
+        "Because tool_choice requires it"
+      ], correct: 2,
+      why: "Subagents start with a <b>fresh, isolated context</b>. If the prompt isn't self-contained, the subagent has to come back for missing context — a round-trip that signals a broken delegation.",
+      cite: { label: "Effective context engineering", url: "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" } },
+
+    { tag: "Orchestration · L4", topic: "Orchestration",
+      q: "A multi-agent pipeline must resume after a crash without repeating finished stages or losing findings. Best approach?",
+      options: [
+        "Increase max_tokens so the whole run fits in one context window",
+        "Checkpoint completed stages and findings to durable external storage, keyed so a restart skips done work",
+        "Re-run the entire pipeline from the start every time",
+        "Keep all intermediate state only in the context window"
+      ], correct: 1,
+      why: "Resumability requires <b>durable checkpoints</b> in external memory — state that survives a crash and lets a restart detect \"stage 3 done, skip to 4.\" Context-window-only state is lost on interruption.",
+      cite: { label: "Effective context engineering", url: "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" } },
+
+    { tag: "Orchestration · L5", topic: "Orchestration",
+      q: "You have a Claude Code Skill with an explicit task that should run without seeing — or polluting — the current conversation. Which frontmatter option?",
+      options: [
+        "model: haiku",
+        "tools: []",
+        "context: fork",
+        "background: false"
+      ], correct: 2,
+      why: "<b>context: fork</b> runs the skill in an isolated subagent with a fresh context window — it can't see conversation history, preventing cross-contamination of session state.",
+      cite: { label: "Extend Claude with skills", url: "https://docs.claude.com/en/docs/claude-code/skills" } },
+
+    { tag: "Orchestration · L5", topic: "Orchestration",
+      q: "You add context: fork to a Skill that contains only style guidelines (\"use these API conventions\") and no task. What happens?",
+      options: [
+        "It runs perfectly and applies the conventions",
+        "The subagent receives guidelines but no actionable prompt, and returns nothing useful",
+        "It errors and blocks the whole session",
+        "It inherits the full conversation despite the fork"
+      ], correct: 1,
+      why: "A fork's skill content <b>becomes the prompt</b>. Guidelines without a task give the subagent nothing to do — <code>context: fork</code> only makes sense for skills with explicit instructions.",
+      cite: { label: "Extend Claude with skills", url: "https://docs.claude.com/en/docs/claude-code/skills" } },
+
+    { tag: "Orchestration · L9", topic: "Orchestration",
+      q: "An extraction agent keeps repeating the same three mistakes across runs. Which refinement input is most effective?",
+      options: [
+        "\"Please do better next time.\"",
+        "Concrete input→output examples plus targeted feedback naming each specific failure, batched together",
+        "Raise the temperature and try again",
+        "One vague correction, one problem at a time, over many rounds"
+      ], correct: 1,
+      why: "Iterative refinement works on <b>specific, example-driven, batched</b> feedback — name each failure and evaluate them in one consolidated pass. Vague or one-at-a-time feedback wastes round-trips.",
+      cite: { label: "Building Effective Agents", url: "https://www.anthropic.com/engineering/building-effective-agents" } },
+
+    { tag: "Structured output · L6", topic: "Structured",
+      q: "A downstream service breaks whenever Claude replies conversationally instead of calling your extraction tool. Which setting guarantees the tool is invoked?",
+      options: [
+        "tool_choice: {\"type\": \"auto\"}",
+        "tool_choice: {\"type\": \"any\"} or a specific {\"type\": \"tool\", \"name\": …}",
+        "Prefill the assistant response with \"{\"",
+        "Raise max_tokens"
+      ], correct: 1,
+      why: "<b>auto</b> lets Claude choose not to call a tool. <code>any</code> forces some tool call; <code>{type:\"tool\", name}</code> forces a specific one — either guarantees invocation when a conversational reply would break parsing.",
+      cite: { label: "How to implement tool use", url: "https://docs.claude.com/en/docs/agents-and-tools/tool-use/implement-tool-use" } },
+
+    { tag: "Structured output · L6", topic: "Structured",
+      q: "You need a hard guarantee that tool inputs match your schema — an integer 2, never the string \"two\". What do you use?",
+      options: [
+        "A detailed prompt politely asking for valid JSON",
+        "tool_choice alone",
+        "Strict tool use (strict: true) / structured outputs with the beta header",
+        "Lower the temperature to 0"
+      ], correct: 2,
+      why: "Only <b>strict structured outputs</b> guarantee schema conformance and type-safe params. Prompting and low temperature reduce errors but don't guarantee anything; <code>tool_choice</code> forces the call, not the shape.",
+      cite: { label: "Structured outputs", url: "https://docs.claude.com/en/docs/build-with-claude/structured-outputs" } },
+
+    { tag: "Structured output · L7", topic: "Structured",
+      q: "Documents frequently lack a \"middle name\", and the model keeps inventing one. Best schema fix?",
+      options: [
+        "Make every field required so nothing gets skipped",
+        "Make the field optional and/or nullable so \"missing\" is representable",
+        "Remove the field from the schema entirely",
+        "Raise max_tokens to give room for the real value"
+      ], correct: 1,
+      why: "Forcing a field to be required pushes the model to <b>fabricate</b>. Optional / nullable fields let it explicitly represent absence instead of hallucinating a value.",
+      cite: { label: "Structured outputs", url: "https://docs.claude.com/en/docs/build-with-claude/structured-outputs" } },
+
+    { tag: "Structured output · L7", topic: "Structured",
+      q: "A status field should only ever be one of a fixed set of values, with a clear way to mark ambiguous cases. What do you define?",
+      options: [
+        "A free-text string with instructions",
+        "An enum whose members include an explicit \"unknown\"/\"other\" value",
+        "A boolean",
+        "A nullable integer"
+      ], correct: 1,
+      why: "An <b>enum</b> constrains the field to allowed values so the model can't drift into free-text variants; adding <code>unknown</code>/<code>other</code> gives it an honest slot for ambiguous cases.",
+      cite: { label: "Tool use overview", url: "https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview" } },
+
+    { tag: "Structured output · L8", topic: "Structured",
+      q: "Two sources disagree on a key fact. What should a synthesis agent do?",
+      options: [
+        "Pick the more confident-sounding source and state it as fact",
+        "Average the two claims into a single statement",
+        "Preserve the disagreement — distinguish well-established findings from contested claims",
+        "Drop the fact entirely to stay safe"
+      ], correct: 2,
+      why: "Collapsing conflict into one confident statement is a <b>silent reliability failure</b>. Good synthesis carries source-level uncertainty through — flagging what's established vs. contested.",
+      cite: { label: "Multi-agent research system", url: "https://www.anthropic.com/engineering/multi-agent-research-system" } },
+
+    { tag: "Structured output · L8", topic: "Structured",
+      q: "You have limited human reviewers for extraction QA. How should you route items to them?",
+      options: [
+        "Random sampling across all extractions",
+        "Newest documents first",
+        "By confidence score, document characteristics, and field-level ambiguity — send the uncertain ones",
+        "Alphabetically by document title"
+      ], correct: 2,
+      why: "Route on <b>confidence and ambiguity</b>: send low-confidence / ambiguous extractions to humans and auto-accept high-confidence ones. Random sampling wastes scarce review capacity.",
+      cite: { label: "Reduce hallucinations", url: "https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations" } },
+
+    { tag: "Tooling · L10", topic: "Tooling",
+      q: "You need to find every file whose contents match a regular expression across a repo. Which built-in tool?",
+      options: [
+        "Glob — match files by name/path pattern",
+        "Grep — search file contents by regex",
+        "Read — open a specific known file",
+        "Bash — shell out to find"
+      ], correct: 1,
+      why: "<b>Grep</b> searches file <i>contents</i>. Glob matches names/paths, Read opens a known file, and you should prefer Grep/Glob over shelling out with Bash for search.",
+      cite: { label: "Writing tools for agents", url: "https://www.anthropic.com/engineering/writing-tools-for-agents" } }
+  ];
+
+  var TOPIC_LABELS = {
+    "Orchestration": "Multi-agent orchestration",
+    "Structured": "Structured JSON output",
+    "Tooling": "Tool selection"
+  };
+  var PASS = 72;
+
+  var state = { i: 0, score: 0, answered: false, selected: null, results: [] };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+
+  var screens = { start: $("screen-start"), quiz: $("screen-quiz"), results: $("screen-results") };
+  function show(name) {
+    Object.keys(screens).forEach(function (k) { screens[k].classList.toggle("active", k === name); });
+    $("topbar").classList.toggle("hidden", name !== "quiz");
+    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+  }
+
+  function updateBar() {
+    $("counter").textContent = pad(state.i + 1) + " / " + pad(QUESTIONS.length);
+    $("fill").style.width = ((state.i) / QUESTIONS.length * 100) + "%";
+    $("livescore").innerHTML = "<b>" + state.score + "</b> correct";
+  }
+
+  function renderQuestion() {
+    var q = QUESTIONS[state.i];
+    state.answered = false;
+    state.selected = null;
+    updateBar();
+
+    var host = $("qhost");
+    host.innerHTML = "";
+
+    var card = document.createElement("div");
+    card.className = "qcard";
+
+    var tag = document.createElement("span");
+    tag.className = "qtag";
+    tag.textContent = q.tag;
+    card.appendChild(tag);
+
+    var qt = document.createElement("p");
+    qt.className = "qtext";
+    qt.textContent = q.q;
+    card.appendChild(qt);
+
+    var opts = document.createElement("div");
+    opts.className = "opts";
+    var letters = ["A", "B", "C", "D"];
+    q.options.forEach(function (text, idx) {
+      var b = document.createElement("button");
+      b.className = "opt";
+      b.type = "button";
+      b.setAttribute("data-idx", idx);
+      b.innerHTML =
+        '<span class="key">' + letters[idx] + '</span>' +
+        '<span class="label"></span>' +
+        '<span class="mark"></span>';
+      b.querySelector(".label").textContent = text;
+      b.addEventListener("click", function () { onSelect(idx); });
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+
+    var fbSlot = document.createElement("div");
+    fbSlot.id = "fbSlot";
+    card.appendChild(fbSlot);
+
+    var actions = document.createElement("div");
+    actions.className = "qactions";
+    var nextBtn = document.createElement("button");
+    nextBtn.className = "btn";
+    nextBtn.id = "nextBtn";
+    nextBtn.disabled = true;
+    nextBtn.textContent = (state.i === QUESTIONS.length - 1) ? "See results" : "Next question";
+    nextBtn.addEventListener("click", onNext);
+    actions.appendChild(nextBtn);
+    card.appendChild(actions);
+
+    host.appendChild(card);
+  }
+
+  function onSelect(idx) {
+    if (state.answered) return;
+    state.answered = true;
+    state.selected = idx;
+    var q = QUESTIONS[state.i];
+    var isCorrect = idx === q.correct;
+    if (isCorrect) state.score++;
+    state.results.push({ q: q, selected: idx, correct: isCorrect });
+
+    var buttons = $("qhost").querySelectorAll(".opt");
+    buttons.forEach(function (b) {
+      var bi = parseInt(b.getAttribute("data-idx"), 10);
+      b.disabled = true;
+      if (bi === q.correct) { b.classList.add("correct"); b.querySelector(".mark").textContent = "✓"; }
+      if (bi === idx && !isCorrect) { b.classList.add("wrong"); b.querySelector(".mark").textContent = "✗"; }
+    });
+
+    var fb = document.createElement("div");
+    fb.className = "feedback " + (isCorrect ? "is-correct" : "is-wrong");
+    fb.innerHTML =
+      '<div class="fb-head ' + (isCorrect ? "is-correct" : "is-wrong") + '">' +
+        (isCorrect ? "✓ Correct" : "✗ Not quite") + '</div>' +
+        '<p class="fb-body">' + q.why + '</p>' +
+        '<a class="cite" href="' + q.cite.url + '" target="_blank" rel="noopener">' + q.cite.label + '</a>';
+    $("fbSlot").appendChild(fb);
+
+    $("livescore").innerHTML = "<b>" + state.score + "</b> correct";
+    var nb = $("nextBtn");
+    nb.disabled = false;
+    nb.focus();
+  }
+
+  function onNext() {
+    if (state.i < QUESTIONS.length - 1) {
+      state.i++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  function showResults() {
+    $("fill").style.width = "100%";
+    var total = QUESTIONS.length;
+    var pct = Math.round(state.score / total * 100);
+    var passed = pct >= PASS;
+
+    $("verdict").textContent = passed ? "Pass" : "Keep studying";
+    $("verdict").className = "verdict " + (passed ? "pass" : "fail");
+    $("scorePct").textContent = pct + "%";
+    $("rCorrect").textContent = state.score;
+    $("rTotal").textContent = total;
+    $("rGrade").textContent = passed ? "Pass" : "Fail";
+    $("rGrade").style.color = passed ? "var(--good)" : "var(--bad)";
+
+    // per-topic breakdown
+    var byTopic = {};
+    state.results.forEach(function (r) {
+      var t = r.q.topic;
+      if (!byTopic[t]) byTopic[t] = { c: 0, n: 0 };
+      byTopic[t].n++;
+      if (r.correct) byTopic[t].c++;
+    });
+    var bd = $("breakdown");
+    bd.innerHTML = "<h3>By topic</h3>";
+    Object.keys(byTopic).forEach(function (t) {
+      var d = byTopic[t];
+      var p = Math.round(d.c / d.n * 100);
+      var color = p >= PASS ? "var(--good)" : (p >= 50 ? "var(--accent)" : "var(--bad)");
+      var row = document.createElement("div");
+      row.className = "brow";
+      row.innerHTML =
+        '<span class="name">' + (TOPIC_LABELS[t] || t) + '</span>' +
+        '<span class="bar"><span style="width:' + p + '%;background:' + color + '"></span></span>' +
+        '<span class="pct" style="color:' + color + '">' + d.c + '/' + d.n + '</span>';
+      bd.appendChild(row);
+    });
+
+    // review of missed
+    var missed = state.results.filter(function (r) { return !r.correct; });
+    var rev = $("review");
+    var revBtn = $("reviewBtn");
+    if (missed.length === 0) {
+      revBtn.style.display = "none";
+      rev.innerHTML = '<div class="rev-item" style="border-left-color:var(--good)"><p class="rq">Perfect run — nothing missed. You’re ready.</p></div>';
+      rev.classList.add("open");
+    } else {
+      revBtn.style.display = "";
+      revBtn.textContent = "Review " + missed.length + " missed question" + (missed.length > 1 ? "s" : "");
+      var letters = ["A", "B", "C", "D"];
+      rev.innerHTML = "";
+      missed.forEach(function (r) {
+        var it = document.createElement("div");
+        it.className = "rev-item";
+        it.innerHTML =
+          '<p class="rq">' + escapeHtml(r.q.q) + '</p>' +
+          '<p class="rev-line no">Your answer: <b>' + letters[r.selected] + ' · ' + escapeHtml(r.q.options[r.selected]) + '</b></p>' +
+          '<p class="rev-line ok">Correct: <b>' + letters[r.q.correct] + ' · ' + escapeHtml(r.q.options[r.q.correct]) + '</b></p>' +
+          '<p class="rev-line">' + r.q.why + '</p>' +
+          '<a class="cite" href="' + r.q.cite.url + '" target="_blank" rel="noopener">' + r.q.cite.label + '</a>';
+        rev.appendChild(it);
+      });
+    }
+
+    show("results");
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+
+  // keyboard: 1-4 to answer, Enter/→ to advance
+  document.addEventListener("keydown", function (e) {
+    if (!screens.quiz.classList.contains("active")) return;
+    if (!state.answered && /^[1-4]$/.test(e.key)) {
+      var idx = parseInt(e.key, 10) - 1;
+      if (idx < QUESTIONS[state.i].options.length) onSelect(idx);
+    } else if (state.answered && (e.key === "Enter" || e.key === "ArrowRight")) {
+      var nb = $("nextBtn");
+      if (nb && !nb.disabled) onNext();
+    }
+  });
+
+  $("startBtn").addEventListener("click", function () {
+    state = { i: 0, score: 0, answered: false, selected: null, results: [] };
+    renderQuestion();
+    show("quiz");
+  });
+  $("retryBtn").addEventListener("click", function () {
+    state = { i: 0, score: 0, answered: false, selected: null, results: [] };
+    $("review").classList.remove("open");
+    renderQuestion();
+    show("quiz");
+  });
+  $("reviewBtn").addEventListener("click", function () {
+    var rev = $("review");
+    var open = rev.classList.toggle("open");
+    $("reviewBtn").textContent = open ? "Hide review" : "Review missed questions";
+  });
+})();
+</script>

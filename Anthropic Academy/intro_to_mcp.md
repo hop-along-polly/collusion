@@ -11,6 +11,13 @@ MCP Client -> Server communication can use many different protocols. Common ones
  - HTTP(s)
  - Websockets
 
+## Transport Types
+
+MCP Client to Server communication can use many different transport types (i.e. protocols). The common ones are
+
+ - `stdio`: Only available when the Client and Server are running on the same system and can use stdin/stdout to pass messages to each other.
+ - `Streamable HTTP`: Client sends HTTP POST requests to a single endpoint; server responds with standard JSON or dynamically streams via Server-Side Events (SSE). Preferred transport for remote, multi-client MCP servers
+
 ## MCP Primitives
 
 The MCP protocol defines 3 primitives that are core objects provided by the MCP server that help make agents more useful. Each of the primitives listed below are used by different components of an agentic app.
