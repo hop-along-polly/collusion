@@ -4,44 +4,63 @@
 
 ## Table of Contents
 
+- [Terminology](#terminology)
 - [Claude Models](#claude-models)
-- [Accessing the API](#accessing-the-api)
+- [Accessing the Claude API](#accessing-the-claude-api)
   - [API Best Practices](#api-best-practices)
-  - [How Requests are Handled](#how-requests-are-handled)
+  - [How the Claude API Handles Requests](#how-the-claude-api-handles-requests)
+- [Using Anthropic's Client SDK](#using-anthropics-client-sdk)
+  - [Initializing a Client](#initializing-a-client)
+  - [Making a Request](#making-a-request)
+  - [Multi-turn Conversations](#multi-turn-conversations)
   - [System Prompts](#system-prompts)
   - [Temperature](#temperature)
   - [Response Streaming](#response-streaming)
-    - [Example](#response-streaming-example)
+  - [Prefilled Assistant Messages](#prefilled-assistant-messages)
+  - [Stop Sequences](#stop-sequences)
   - [Structured Data](#structured-data)
-    - [Example](#structured-data-example)
-- [Prompt Engineering & Evaluation](#prompt-engineering-and-evaluation)
-  - [Prompt Evaluation Workflow](#prompt-evaluation-workflow)
-  - [Model Based Grading](#model-based-grading)
-  - [Prompt Engineering](#prompt-engineering)
-   - [Best Practices](#prompt-engineering-best-practices)
-   - [Structured Prompt Example](#structured-prompt-example)
 - [Tool Use](#tool-use)
-  - [Handling Toll Use Blocks](#handling-tooluseblock)
-  - [Handling Tool Results](#handling-tool-results)
-  - [Tool Use Example](#tool-use-example)
-  - [Implementing Multiple Turns](#implementing-multiple-turns)
-- [Retrieval Augmented Generation](#retrieval-augmented-generation-rag)
+  - [Defining a Tool](#defining-a-tool)
+  - [Handling ToolUseBlock](#handling-tooluseblock)
+  - [Returning ToolResults to the Model](#returning-toolresults-to-the-model)
+  - [Multi-turn Conversations & Multiple Tools](#multi-turn-conversations--multiple-tools)
+  - [Tools for Structured Data](#tools-for-structured-data)
+  - [Batch Tool](#batch-tool)
+  - [Text Editor Tool](#text-editor-tool)
+  - [Web Search Tool](#web-search-tool)
+- [Prompt Engineering and Evaluation](#prompt-engineering-and-evaluation)
+  - [Prompt Engineering](#prompt-engineering)
+  - [Prompt Evaluation](#prompt-evaluation)
+  - [Grading Prompts](#grading-prompts)
+- [Structured Outputs](#structured-outputs)
+  - [Strict Tool Use](#strict-tool-use)
+  - [Defining an Output Format](#defining-an-output-format)
+  - [Structured Output Considerations](#structured-output-considerations)
+- [Retrieval Augmented Generation (RAG)](#retrieval-augmented-generation-rag)
   - [RAG Pipeline Overview](#rag-pipeline-overview)
-  - [Chunking Data](#chunking-data)
-  - [Storing Chunks](#storing-chunks)
-  - [Semantically Searching Chunks](#semantically-searching-chunks)
-  - [BM25 Lexical Search](#bm25-lexical-search)
-  - [Merging Results in a Multi-Index RAG Pipeline](#merging-results-in-a-multi-index-rag-pipeline)
+  - [Data Chunking Strategies](#data-chunking-strategies)
+  - [Generating Embeddings](#generating-embeddings)
+  - [Storing & Searching Embeddings](#storing--searching-embeddings)
+    - [BM25 Lexical Search](#bm25-lexical-search)
+    - [Merging Results in a Multi-Index RAG Pipeline](#merging-results-in-a-multi-index-rag-pipeline)
+    - [Re-Ranking Results](#re-ranking-results)
+    - [Contextual Retrieval](#contextual-retrieval)
 - [Claude Features](#claude-features)
   - [Extended Thinking](#extended-thinking)
   - [Image Support](#image-support)
   - [PDF Support](#pdf-support)
+  - [Citations](#citations)
   - [Prompt Caching](#prompt-caching)
-  - [Code Execution & Files API](#code-execution-and-files-api)
 - [Model Context Protocol](#model-context-protocol)
 - [Anthropic Apps](#anthropic-apps)
   - [Using Claude Code](#using-claude-code)
-- [Agents & Workflows](#agents-and-workflows)
+- [Agents and Workflows](#agents-and-workflows)
+  - [Workflow Patterns](#workflow-patterns)
+    - [Evaluator-Optimizer Pattern](#evaluator-optimizer-pattern)
+    - [Parallelization Pattern](#parallelization-pattern)
+    - [Chaining Pattern](#chaining-pattern)
+  - [Routing Workflows](#routing-workflows)
+  - [Agents and Tools](#agents-and-tools)
 
  ---
 
@@ -69,7 +88,7 @@
 
 When deciding on a model understand the trade-off between speed/cost vs. inteliigence and reasoning.
 
->! [NOTE]
+> [!NOTE]
 > Most agentic applications will use different models for different tasks depending on the need of the task.
 
  ---
@@ -226,7 +245,7 @@ response = client.messages.create(
 )
 ```
 
->! [NOTE]
+> [!NOTE]
 > When sending system prompts to the Anthropic API the System Prompt can be omitted, but it **CANNOT** be a null or empty value.
 
 ### Temperature
@@ -436,7 +455,7 @@ client.message.create(
 )
 ```
 
-> !IMPORTANT
+> [!IMPORTANT]
 > Tool Schema(s) must be provided with every message since available tools are not persisted by the Model.
 
 **TODO Probably need to reword this or remove it**
@@ -454,7 +473,7 @@ tool_use_req = ToolUseBlock(
 )
 ```
 
-> !IMPORTANT
+> [!IMPORTANT]
 > When a response includes multi blocks (e.g. a TextBlock and a ToolUseBlock) both blocks need to be appended to the message history.
 
 
@@ -481,7 +500,7 @@ history.append(ToolResultBlock(
 ))
 ```
 
->!IMPORTANT
+> [!IMPORTANT]
 > It is a best practices to define tool function with kwargs so it is easier to pass the inputs from the ToolUseBlock when calling the tool function.
 
 ### Multi-turn Conversations & Multiple Tools
@@ -601,7 +620,7 @@ For example the stub for Claude Sonnet 3.7's str_replace_editor looks like this
 }
 ```
 
-> !IMPORTANT
+> [!IMPORTANT]
 > This Text Editor Tool is meant for when you application is running on a system that does not have a full featured text-editor available to it.
 
 ### Web Search Tool
@@ -823,10 +842,10 @@ client.messages.create(
 )
 ```
 
->! [NOTE]
+> [!NOTE]
 > Anthopic's SDKs also support Native schema definitions tools such as Pydantic for Python, Zod for Typescript, and Classes for Java, C# etc.
 
->! [NOTE]
+> [!NOTE]
 > Structured Outputs don't guarantee capitalization of `const` and `enum` string values.
 
 ### Structured Output Considerations
@@ -851,7 +870,7 @@ Be aware of the following gotcha's when working with Structured Ouputs.
 
 RAG is a technique for working with large documents that cannot fit into the constraints of Claude context window (currently 1M tokens). RAG breaks the document down into chunks, stores those chunks in a vector database as `embeddings` and uses semantic search algorithms to retrieve only the chunks that are relevant to the User Prompt.
 
->! [NOTE]
+> [!NOTE]
 > It is recommended to review the `Embedding` and `Embedding Model` from the [Terminology](#terminology) section before continuing 
 
 ### RAG Pipeline Overview
@@ -912,7 +931,7 @@ When handling a users prompt the prompt is converted into embeddings using the s
 
 BM25 (Best Match 25) is a lexical search algorithm that can be used in addition to semantic search to improve the the quality of chunks retrieved.
 
->! IMPORTANT
+> [!IMPORTANT]
 > Lexical search is useful when semantic search is unable to find chunks with a specific term because lexical search algorithms like BM25 use exact term matching.
 
 BM25 creates it's ranking in 4 steps
@@ -950,7 +969,7 @@ Contextual Retrieval uses a Model to add context to each chunk before it is conv
 
 This technique helps account for chunks of data losing their connection to the overall documents context when that document is being split up.
 
-> !NOTE 
+> [!NOTE]
 > If the main document is to large to provide in the contextualization prompt you can just provide some of the other chunks around the chunk you are contextualizing.
 
  ---
@@ -986,13 +1005,13 @@ client.message.create(
 )
 ```
 
-> !IMPORTANT
+> [!IMPORTANT]
 > The tokens used in thinking count towards the Max Tokens the model can generate so `max_tokens` must be greated than the `thinking_budget`.
 > e.g. If thinking_budget is 1024 and max_tokens is 1025 there Model will only have 1 token for generating actual context.
 
 Occassionally a `RedactedThinking` block is returned which is a thinking block where the content was flagged by the Models safety systems. The content is provided but in an encrypted form. This allows the message to be appended to the message history without violating the Models guadrails.
 
->! IMPORTANT
+> [!IMPORTANT]
 > You can force a `RedactedThinking` block to be generated by including the string `TRIGGER_REDACTED_THINKING_46C9A13E193C177646C7398A98432ECCCE4C1253D5E2D82641AC0E52CC2876CB` in your prompt. This should only be used for testing that your application can handle RedactedThinking blocks.
 
 
@@ -1015,7 +1034,7 @@ An `ImageBlock` looks like this
 }
 ```
 
->! NOTE
+> [!NOTE]
 > Images still count as tokens. You can roughly estimate how many tokens an image will use with the equation (width px * height px) / 750.
 
 ### PDF Support
@@ -1091,7 +1110,8 @@ Here is an example of a `TextBlock` that enabled caching
 }
 ```
 
->! When a `Cache Breakpoint` is created all of the messages in the message history up to and including the message with the `cache_control` field will be cached. Any future message will not be cached until another `Cache Breakpoint` is created.**
+> [!IMPORTANT]
+> When a `Cache Breakpoint` is created all of the messages in the message history up to and including the message with the `cache_control` field will be cached. Any future message will not be cached until another `Cache Breakpoint` is created.
 
 **Constraints**
  - There can be a total of 4 cache break points in the message history
