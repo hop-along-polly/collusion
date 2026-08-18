@@ -1,6 +1,6 @@
 # Anthropic Multi-Agent Pipelines
 
->! [WARNING]
+> [!WARNING]
 > Anthropic doesn't officially have a course covering multi-agent pipelines, but it is a crucial topic to pass the Claude Artchitect - Foundations certification exam. The information contained in this document has been distilled from the following sources.
 > - [How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)
 > - [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)
@@ -43,7 +43,7 @@ it's own prompt. This makes Prompt Engineering the primary lever for improving h
 system functions. The following principles can be used to improve the coordination and
 effectiveness of Multi-Agent Systems.
 
->! [NOTE]
+> [!NOTE]
 > Anthropics prompting philosophy is to instill good heuristics instead of rigid rules.
 
 1. `Observe and fine tune your agents thinking`: Run simulations using your exact System Prompt(s) so you can see how an Agent/Subagent thinks and what tools it calls. Use the observations from the simulation to write a System Prompt that guides the Agent towards calling the correct tools and away from bad thinking.
@@ -69,7 +69,7 @@ Classify the user query based on complexity and then use the following scaling r
 7. `Enable Extended Thinking, and Interleaved Thinking`: The orchestrator model should enable Extended Thinking which allows the Model to generate additional tokens that explain it's thinking process. This improves the Models reasoning and instruction following. Interleaved Thinking should be enabled on subagents allowing them to reason between tool calls. This improves the subagents adaptability to new tasks.
 8. `Parallelize tool calls`: Complex tasks can be handled quicker if multiple Subagents are run in parallel because each agent can call tools in parallel unlike a single agent which has to call tools sequentially.
 
->! [NOTE]
+> [!NOTE]
 > Anthropic recommends prompting a Multi-Agent system with a framework for collaboration that defines the division of labor, problem solving approach and efort budget rather than strict instructions.
 
 
@@ -85,7 +85,7 @@ Agents are more difficult to evaluate than workflows because they chose their ow
  - `Humans evaluations are still necessary`: A Judge Model can miss hallucinations, system failures and biases in source selection. (e.g. Anthropics research agent would often chose SEO optimized content over more authoritative but less highly ranked sources)
 
 
->! [NOTE]
+> [!NOTE]
 > Careful prompting, tool design, solid heuristics, observability, and tight feedback loops are essential for building quality System Prompts for a Multi-Agent system.
 
 ## Reliability and Engineering Challenges
@@ -99,5 +99,5 @@ When engineering a Multi-Agent system follow these best practices.
 4. `Use Rainbow Deployments`: Rainbow deployments gradually phase out old Agents by shifting traffic from the old version of an Agent to the new version. New requests are always routed to the new version while existing requests continue to use the old version. When all the existing requests eventually burn down (complete, fail etc.) only then is the old version removed.
 5. `Use Parallel Subagents`: Allow the main Agent to spin-up multiple subagents in parallel to improve the speed and efficiency of a Multi-Agent system. 
 
->! [NOTE]
+> [!NOTE]
 > Parallel subagents requires more orchestration logic just like any parallel processing application.

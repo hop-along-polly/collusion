@@ -63,10 +63,10 @@ The following tools are built into the Agents SDK.
 
 The `allowed_tools` and `disallowed_tools` arguments can be used to explicitly allow/deny specific Tools.
 
->! [NOTE]
+> [!NOTE]
 > Read only Tools (e.g. Read, Glob, Grep) can be run in parallel while Tools that modify state (e.g. Edit, Write) will be run sequentially. Custom Tools default to running sequentially.
 
->! [NOTE]
+> [!NOTE]
 > The `SendMessage` Tool allows an Agent to send a message to any other named Agent including Agents running in a different session.
 
 ## Hooks
@@ -80,7 +80,7 @@ Hooks are callbacks (literal function calls) executed at specific points of the 
  - `SubagentStop`: after a subagent completes
  - `PreCompact`: before the context window is compacted
 
->! [NOTE]
+> [!NOTE]
 > Hooks run in the application process and do not consume context.
 
 ## Subagents
@@ -96,7 +96,7 @@ The Subagent will **NOT** receive the following from the main Agent.
 
 The list of Tools a subagent has access to can be restricted when it is spawned. This reduces the chances of Tool overload.
 
->! [NOTE]
+> [!NOTE]
 > When a Subagent is spawned with `fork` main Agent's System Prompt, entire conversation history, and Tools are inherited by the Subagent.
 
 ### Defining Subagents
@@ -119,7 +119,7 @@ The following parameters are available when defining an Agent
  - `effort`: the level of Reasoning effort the Agent will use
  - `permissionMode`: how much permission the Agent has based on the predefined rules in the various modes; `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, and `plan`
 
->! [NOTE]
+> [!NOTE]
 > A programmatically defined agent takes precedence over a filesystem-based Agent.
 
 ### Resuming Subagents
