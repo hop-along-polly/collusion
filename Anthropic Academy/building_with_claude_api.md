@@ -21,6 +21,7 @@
   - [Structured Data](#structured-data)
 - [Tool Use](#tool-use)
   - [Defining a Tool](#defining-a-tool)
+  - [Tool Choice](#tool-choice)
   - [Handling ToolUseBlock](#handling-tooluseblock)
   - [Returning ToolResults to the Model](#returning-toolresults-to-the-model)
   - [Multi-turn Conversations & Multiple Tools](#multi-turn-conversations--multiple-tools)
@@ -458,8 +459,31 @@ client.message.create(
 > [!IMPORTANT]
 > Tool Schema(s) must be provided with every message since available tools are not persisted by the Model.
 
-**TODO Probably need to reword this or remove it**
-**Best Practice**: Use **kwargs and/or default values to make calling the tool function easier. Reference the full [Tool Use Example](#tool-use-example) below.
+### Tool Choice
+
+The `tool_choice` argument lets you configure how the Model makes it's Tool selection. The 3 types of tool choice are
+
+| Type | Default | Requires Tool Call |  Description |
+| ---- | ------- | ------------------ | ------------ |
+| `auto` | X || The Model decides **IF** it needs to call a Tool and which Tool to call. |
+| `any` || X | The Model **MUST** call a Tool listed in `tools`, but it decides which tool |
+| `tool` || X | The Model **MUST** call the tool specified. |
+
+**Example**
+```python
+client.message.create(
+    model='claude-sonnet-4@20250514',
+    max_tokens=1000,
+    messages = chat_history,
+    tools=[random_password_schema],
+    tool_choice={
+      'type': 'tool',
+      'name': 'random_password' # force the Model to use the random_password tool.
+    }
+    # tool_choice={ 'type': 'auto' } # Uncomment if you want the Model to decide if it needs Tools and which Tools to call
+    # tool_choice={ 'type': 'any' } # Uncomment if you want to require the Model to call one of the Tools listed in `tools`
+  )
+```
 
 ### Handling ToolUseBlock
 
@@ -522,41 +546,6 @@ Reference the [ai_react_loop.py](./ai_react_loop.py) script for an example of a 
 Tools albeit it more complicated can provide more reliable generation of structured data that the previous technique of using Prefilled Assistant Messages and Stop Sequences.
 
 When using tools to generate structured data they will be realtively specialized for specific tasks like creating a report, or financial summary.
-
-The `tool_choice` keyword argument can be used for force the Model to call a tool. The 3 types of tool choice are
- - `auto`: The model decides if it needs a tool and which tool it needs. This is claudes default setting.
-  ```python
-  client.message.create(
-    model='claude-sonnet-4@20250514',
-    max_tokens=1000,
-    messages = chat_history,
-    tools=[random_password_schema],
-    tool_choice={ 'type': 'auto' }
-  )
-  ```
- - `any`: The Model **must** use a tool but can decide which tool to use.
-  ```python
-  client.message.create(
-    model='claude-sonnet-4@20250514',
-    max_tokens=1000,
-    messages = chat_history,
-    tools=[random_password_schema],
-    tool_choice={ 'type': 'any' }
-  )
-  ```
- - `named`: The Model **must** use the named tool.
-  ```python
-  client.message.create(
-    model='claude-sonnet-4@20250514',
-    max_tokens=1000,
-    messages = chat_history,
-    tools=[random_password_schema],
-    tool_choice={
-      'type': 'tool',
-      'name': 'random_password' # force the Model to use the random_password tool.
-    }
-  )
-  ```
 
 ### Batch Tool
 
@@ -863,8 +852,6 @@ Be aware of the following gotcha's when working with Structured Ouputs.
   - 16 or less parameters with `union` types
 
  ---
-
-**TODO Pick back up with RAG**
 
 ## Retrieval Augmented Generation (RAG)
 
