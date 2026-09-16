@@ -20,9 +20,8 @@ The table below can be used as a quick reference for each Listing Type. Each row
 
 <sup>1</sup> `AI Agents & Tools` is a *category* layered over the existing product types rather than a product type of its own. Both of its paths land on an existing listing: API deployment produces a SaaS Product using the `Agents API` Fulfillment option, and Container deployment produces a Server Product using the `Container image` Fulfillment option.
 
-**TODO make sure this has been added to the Data Product section. It doesn't belong here**
-> [!NOTE]
-> Pricing on a Data Product attaches to the **offer**, not to the data set type, so every Data Product Fulfillment option shares the same pricing models. Professional Services always transact through a Private Offer.
+> [!IMPORTANT]
+> A Foundational Tech Review (FTR) is not required for any listing type. An FTR is only needed if a Seller wants to leverage co-sell (where AWS helps sell their product).
 
 ## Terminology
 
