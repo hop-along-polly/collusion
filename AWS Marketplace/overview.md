@@ -11,7 +11,7 @@ The table below can be used as a quick reference for each Listing Type. Each row
 | Listing Type | Hosted by | Delivered As | Fulfillment Options | Pricing Models |
 | ------------ | --------- | ------------ | ------------------- | -------------- |
 | [SaaS](./saas.md) | Seller | API | <ul><li>SaaS</li><li>Agents API</li>*[Read More](./saas.md#fulfillment)*</ul> | <ul><li>Free</li><li>Contract-based</li><li>Usage-based</li><li>Contract + Usage</li>*[Read More](./saas.md#pricing-models)*</ul> |
-| [AI Agents & Tools](./agents_and_tools.md) <sup>1</sup> | Seller *or* Buyer | API *or* Container | <ul><li>API deployment</li><li>Container deployment</li>*[Read More](./agents_and_tools.md#fulfillment-ai-agents--tools)*</ul> | Inherited from SaaS or Server Product (Container) |
+| [AI Agents & Tools](./agents_and_tools.md) <sup>1</sup> | Seller *or* Buyer | API *or* Container | <ul><li>Agents API deployment</li><li>Container deployment</li>*[Read More](./agents_and_tools.md#fulfillment-ai-agents--tools)*</ul> | Inherited from SaaS or Server Product (Container) |
 | [Server Product (AMI)](./server_ami.md) | Buyer | Machine Image | <ul><li>Amazon Machine Image (single AMI)</li><li>AWS CloudFormation template</li>*[Read More](./server_ami.md#fulfillment-ami)*</ul> | <ul><li>Free</li><li>BYOL</li><li>Hourly</li><li>Hourly + Annual</li><li>Monthly</li><li>Usage-based</li><li>Contract-based</li>*[Read More](./server_ami.md#pricing-models-ami)*</ul> |
 | [Server Product (Container)](./server_container.md) | Buyer | Container Image | <ul><li>Container image</li><li>Helm chart</li>*[Read More](./server_container.md#fulfillment)*</ul> | <ul><li>BYOL</li><li>Monthly</li><li>Usage-based</li><li>Per task / per pod hourly</li><li>Contract-based</li>*[Read More](./server_container.md#pricing-models)*</ul> |
 | [ML Product](./machine_learning.md) | Buyer | SageMaker AI model or algorithm | <ul><li>Model package</li><li>Algorithm</li>*[Read More](./machine_learning.md#fulfillment-ml)*</ul> | <ul><li>Free</li><li>Hourly</li><li>Per inference</li><li>Free trial</li>*[Read More](./machine_learning.md#pricing-models-ml)*</ul> |
@@ -20,9 +20,9 @@ The table below can be used as a quick reference for each Listing Type. Each row
 
 <sup>1</sup> `AI Agents & Tools` is a *category* layered over the existing product types rather than a product type of its own. Both of its paths land on an existing listing: API deployment produces a SaaS Product using the `Agents API` Fulfillment option, and Container deployment produces a Server Product using the `Container image` Fulfillment option.
 
-**TODO make sure this has been added to the Data Product section. It doesn't belong here**
-> [!NOTE]
-> Pricing on a Data Product attaches to the **offer**, not to the data set type, so every Data Product Fulfillment option shares the same pricing models. Professional Services always transact through a Private Offer.
+> [!IMPORTANT]
+> A Foundational Tech Review (FTR) is not required for any listing type. An FTR is only needed if a Seller wants to leverage co-sell (where AWS helps sell their product).
+
 
 ## Terminology
 
