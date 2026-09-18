@@ -25,6 +25,7 @@ Fulfillment for a Data Product is determined by the **data set type**, which con
 | Amazon S3 data access | Read-only access to objects in the Seller's own buckets | No | Large or frequently updated data where copying is impractical. | On subscription AWS Data Exchange automatically provisions an **S3 Access Point** and updates its resource policy to grant the Buyer read-only access. The Seller can share an entire bucket, or restrict sharing to specific prefixes and objects. |
 | AWS Lake Formation *(Preview)* | Access to databases, tables, and columns carrying specified LF-tags | No | Governed lakehouse data where access is already expressed as tags. | The Seller tags data in AWS Lake Formation using LF-tags and imports those tags as Assets. Buyers create resource links in their own Lake Formation and query through services such as Amazon Athena. Because access follows the tags rather than a fixed list of resources, newly tagged data becomes visible to existing subscribers automatically — either the main benefit or the main hazard, depending on tagging discipline. |
 
+
 > [!NOTE]
 > Pricing on a Data Product attaches to the **offer**, not to the data set type, so every Data Product Fulfillment option shares the same pricing models. Professional Services always transact through a Private Offer.
 

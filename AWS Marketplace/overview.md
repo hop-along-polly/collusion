@@ -23,6 +23,7 @@ The table below can be used as a quick reference for each Listing Type. Each row
 > [!IMPORTANT]
 > A Foundational Tech Review (FTR) is not required for any listing type. An FTR is only needed if a Seller wants to leverage co-sell (where AWS helps sell their product).
 
+
 ## Terminology
 
  - `Seller`: The company listing the Product on AWS Marketplace.
