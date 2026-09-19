@@ -1,0 +1,1128 @@
+{
+  "id": "claude-api",
+  "title": "Building with the Claude API",
+  "cards": [
+    {
+      "id": "model-selection-realtime",
+      "type": "single",
+      "prompt": "A workload is real-time and cost-sensitive, and does not need step-by-step reasoning. Which model does the comparison table in the notes point to?",
+      "tags": ["models"],
+      "options": [
+        {
+          "id": "a",
+          "text": "Opus — its reasoning support is what makes real-time work possible",
+          "correct": false,
+          "rationale": "Opus is the highest intelligence tier but is listed as high cost and slow speed, which is the opposite of what a real-time, cost-sensitive workload needs."
+        },
+        {
+          "id": "b",
+          "text": "Sonnet — it is the only model that balances cost, speed and intelligence",
+          "correct": false,
+          "rationale": "Sonnet is the balanced option (moderate cost, moderate speed), but the requirement here is explicitly low cost and fast — and no reasoning is needed, so paying for Sonnet's reasoning is wasted."
+        },
+        {
+          "id": "c",
+          "text": "Haiku — moderate intelligence, no reasoning, low cost, fast",
+          "correct": true,
+          "rationale": "The table lists Haiku's use case as real-time processing precisely because it is fast and low cost."
+        },
+        {
+          "id": "d",
+          "text": "Whichever model exposes the largest context window, regardless of tier",
+          "correct": false,
+          "rationale": "Context window is not one of the axes the notes use to choose a model. The trade-off named is speed/cost versus intelligence and reasoning."
+        }
+      ],
+      "explanation": "The model table scores each tier on intelligence, reasoning, cost and speed, and assigns a use case. Haiku is the only tier with low cost and fast speed, and its stated use case is real-time processing. The notes frame model choice as a single trade-off: speed and cost on one side, intelligence and reasoning on the other — so when a task needs neither reasoning nor high intelligence, paying for a higher tier buys nothing.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Claude Models" }]
+    },
+    {
+      "id": "one-model-per-app",
+      "type": "boolean",
+      "prompt": "Most agentic applications should pick a single model and use it for every task, to keep behaviour consistent.",
+      "tags": ["models"],
+      "options": [
+        { "id": "a", "text": "True", "correct": false },
+        { "id": "b", "text": "False", "correct": true }
+      ],
+      "explanation": "The notes state the opposite: most agentic applications will use different models for different tasks depending on the needs of the task. A cheap, fast model can handle classification or extraction steps while a reasoning-heavy model handles planning, which keeps cost and latency down without giving up quality where it matters.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Claude Models" }]
+    },
+    {
+      "id": "api-key-transport",
+      "type": "multi",
+      "prompt": "How can an Anthropic API key be supplied when calling the Claude API? (Select all that apply)",
+      "tags": ["access", "auth"],
+      "options": [
+        {
+          "id": "a",
+          "text": "Passed to the client constructor of an Anthropic SDK",
+          "correct": true,
+          "rationale": "This is the documented path and the one the notes recommend, since the SDKs are preferred over raw HTTP."
+        },
+        {
+          "id": "b",
+          "text": "Sent as the `x-api-key` header on an HTTP request",
+          "correct": true,
+          "rationale": "This is the raw-HTTP equivalent of the SDK constructor argument."
+        },
+        {
+          "id": "c",
+          "text": "Sent as an `Authorization: Bearer <key>` header",
+          "correct": false,
+          "rationale": "A plausible guess because many APIs work this way, but the notes name `x-api-key` specifically."
+        },
+        {
+          "id": "d",
+          "text": "Appended to the request URL as an `?api_key=` query parameter",
+          "correct": false,
+          "rationale": "Not supported, and it would leak the key into logs and browser history."
+        },
+        {
+          "id": "e",
+          "text": "Included in the JSON request body as an `api_key` field",
+          "correct": false,
+          "rationale": "Credentials travel in headers or SDK configuration, not in the message payload."
+        }
+      ],
+      "explanation": "An API key is generated in the Anthropic Console and then handed to the client either through an SDK's constructor or, for direct HTTP calls, as the `x-api-key` header. The notes recommend the SDK route — raw HTTP requests are listed as something to avoid.",
+      "citations": [
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Accessing the API" },
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "API Best Practices" }
+      ]
+    },
+    {
+      "id": "api-is-stateless",
+      "type": "boolean",
+      "prompt": "The Anthropic API stores conversation history server-side, so an application only needs to send the newest user message on each turn.",
+      "tags": ["access", "messages"],
+      "options": [
+        { "id": "a", "text": "True", "correct": false },
+        { "id": "b", "text": "False", "correct": true }
+      ],
+      "explanation": "The Anthropic API does not store any messages. The application must maintain its own list of messages per session and submit the whole list on every request — that is what gives the model its apparent memory of the conversation. This is also why tool use requires appending the assistant's tool-use content and the tool result back into your own message list before calling again.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Accessing the API" }]
+    },
+    {
+      "id": "api-best-practices",
+      "type": "multi",
+      "prompt": "Which practices does the API Best Practices section recommend? (Select all that apply)",
+      "tags": ["access", "best-practices"],
+      "options": [
+        {
+          "id": "a",
+          "text": "Do not make requests to the Claude API from a client-side application",
+          "correct": true,
+          "rationale": "A client-side call would ship the API key to the end user's device."
+        },
+        {
+          "id": "b",
+          "text": "Limit `max_tokens` on requests to prevent excess token usage",
+          "correct": true,
+          "rationale": "A cap bounds the cost of any single response."
+        },
+        {
+          "id": "c",
+          "text": "Use one of the pre-built SDKs instead of raw HTTP requests",
+          "correct": true,
+          "rationale": "The SDKs handle request shape, typed blocks and streaming for you."
+        },
+        {
+          "id": "d",
+          "text": "Disable response streaming so fewer tokens are billed",
+          "correct": false,
+          "rationale": "Streaming changes how the response is delivered, not how much is generated. The notes actually recommend streaming for perceived responsiveness."
+        },
+        {
+          "id": "e",
+          "text": "Cache the API key in browser `localStorage` so the front end can reuse it",
+          "correct": false,
+          "rationale": "This is the client-side anti-pattern the first practice exists to prevent — anything in the browser is readable by the user."
+        }
+      ],
+      "explanation": "The three recommendations are about keeping the key secret, keeping spend bounded, and not reinventing the transport layer. Calls belong on a server you control; `max_tokens` puts a ceiling on any one response; the SDKs are the supported way to talk to the API.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "API Best Practices" }]
+    },
+    {
+      "id": "request-pipeline-order",
+      "type": "single",
+      "prompt": "In what order does the Claude API handle an incoming request?",
+      "tags": ["internals"],
+      "options": [
+        {
+          "id": "a",
+          "text": "Tokenization → Embedding → Contextualization → Generation",
+          "correct": true,
+          "rationale": "Text is split into tokens, each token becomes a vector, those vectors are adjusted against their neighbours, and only then is output generated."
+        },
+        {
+          "id": "b",
+          "text": "Embedding → Tokenization → Contextualization → Generation",
+          "correct": false,
+          "rationale": "There is nothing to embed until the text has been split into tokens."
+        },
+        {
+          "id": "c",
+          "text": "Tokenization → Contextualization → Embedding → Generation",
+          "correct": false,
+          "rationale": "Contextualization operates on embeddings, so it cannot run before they exist."
+        },
+        {
+          "id": "d",
+          "text": "Contextualization → Tokenization → Embedding → Generation",
+          "correct": false,
+          "rationale": "Contextualization is the third stage, not the first — it needs both tokens and their embeddings."
+        }
+      ],
+      "explanation": "Tokenization breaks words into smaller substrings called tokens. Embedding converts each token into a vector — a numerical representation of that token's meaning. Contextualization then adjusts the numbers in each embedding based on the embeddings around it, narrowing a token down to a precise meaning relative to the rest of the input. Generation comes last.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "How Requests are Handled" }]
+    },
+    {
+      "id": "contextualization-stage",
+      "type": "single",
+      "prompt": "The word \"set\" means something different in \"set the plates on the table\", \"a nice tool set\", and \"game, set and match\". Which request-handling stage resolves which meaning applies?",
+      "tags": ["internals"],
+      "options": [
+        {
+          "id": "a",
+          "text": "Tokenization — it splits the word into meaning-bearing substrings",
+          "correct": false,
+          "rationale": "Tokenization is purely mechanical: it breaks words into smaller substrings and carries no meaning of its own."
+        },
+        {
+          "id": "b",
+          "text": "Embedding — it converts the token into a vector of its meaning",
+          "correct": false,
+          "rationale": "Close, but an embedding captures the token's meaning in isolation. All three sentences would start from the same embedding for \"set\"."
+        },
+        {
+          "id": "c",
+          "text": "Contextualization — it adjusts each embedding against the embeddings around it",
+          "correct": true,
+          "rationale": "This is exactly the example the notes use to illustrate contextualization."
+        },
+        {
+          "id": "d",
+          "text": "Generation — ambiguity is only resolved once the response is produced",
+          "correct": false,
+          "rationale": "Generation consumes the contextualized embeddings; the disambiguation has already happened by then."
+        }
+      ],
+      "explanation": "Contextualization is the stage that adjusts the numerical values in each embedding based on the surrounding embeddings, narrowing the embedding down to a precise definition of that token in relation to every other token in the input. The \"set\" example in the notes exists to make this concrete: same token, three different contextualized meanings.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "How Requests are Handled" }]
+    },
+    {
+      "id": "system-prompt-properties",
+      "type": "multi",
+      "prompt": "Which statements about system prompts match the notes? (Select all that apply)",
+      "tags": ["prompts"],
+      "options": [
+        {
+          "id": "a",
+          "text": "They are written by the application developer, not the end user or Anthropic",
+          "correct": true,
+          "rationale": "The system prompt is the developer's channel for steering a session."
+        },
+        {
+          "id": "b",
+          "text": "They are provided to the model once, at the beginning of the chat session",
+          "correct": true,
+          "rationale": "One system prompt governs the session, unlike user messages which accumulate."
+        },
+        {
+          "id": "c",
+          "text": "The system prompt may be omitted from a request entirely",
+          "correct": true,
+          "rationale": "Omitting the field is allowed."
+        },
+        {
+          "id": "d",
+          "text": "The system prompt may be sent as an empty string to mean \"no system prompt\"",
+          "correct": false,
+          "rationale": "This is the trap. The field can be omitted, but it cannot be null or empty — sending `\"\"` is an error, not a way of opting out."
+        },
+        {
+          "id": "e",
+          "text": "The API re-sends the stored system prompt automatically on every later turn",
+          "correct": false,
+          "rationale": "Nothing is stored server-side; the application owns and re-sends whatever the model should see."
+        }
+      ],
+      "explanation": "A system prompt is developer-authored guidance given once at the start of a session to shape how the model responds for that session. The subtle rule is the omit-versus-empty distinction: the field can be left out of the request, but it cannot be sent as a null or empty value.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "System Prompts" }]
+    },
+    {
+      "id": "temperature-direction",
+      "type": "single",
+      "prompt": "You need the most deterministic, least creative output a model will give. What do you do with `temperature`?",
+      "tags": ["prompts", "parameters"],
+      "options": [
+        {
+          "id": "a",
+          "text": "Lower it — lower temperature is more deterministic and less creative",
+          "correct": true,
+          "rationale": "This is the direction the notes give."
+        },
+        {
+          "id": "b",
+          "text": "Raise it — higher temperature narrows the model to its most likely answer",
+          "correct": false,
+          "rationale": "Backwards. Higher temperature makes responses more dynamic and creative."
+        },
+        {
+          "id": "c",
+          "text": "Leave it alone and lower `max_tokens` instead",
+          "correct": false,
+          "rationale": "`max_tokens` bounds response length, not variability."
+        },
+        {
+          "id": "d",
+          "text": "Leave it alone and add a stop sequence",
+          "correct": false,
+          "rationale": "A stop sequence controls where generation ends, not how creative it is."
+        }
+      ],
+      "explanation": "Temperature is set when creating a chat session and alters how creative and dynamic responses are: higher is more dynamic and creative, lower is more deterministic and less creative. Length (`max_tokens`) and termination (stop sequences) are separate controls.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Temperature" }]
+    },
+    {
+      "id": "stream-event-names",
+      "type": "multi",
+      "prompt": "Which of these are Anthropic stream events listed in the notes? (Select all that apply)",
+      "tags": ["streaming"],
+      "options": [
+        { "id": "a", "text": "`MessageStart`", "correct": true, "rationale": "Signals a new message is being sent from the model to the client." },
+        { "id": "b", "text": "`ContentBlockDelta`", "correct": true, "rationale": "Carries a chunk of the content being generated — the event you render incrementally." },
+        { "id": "c", "text": "`ContentBlockStop`", "correct": true, "rationale": "Signals no more content is coming for that block." },
+        { "id": "d", "text": "`MessageStop`", "correct": true, "rationale": "Carries information about the current message as it closes out." },
+        {
+          "id": "e",
+          "text": "`ContentBlockChunk`",
+          "correct": false,
+          "rationale": "Invented. The chunk-carrying event is `ContentBlockDelta` — Anthropic's naming uses \"Delta\" for incremental payloads."
+        },
+        {
+          "id": "f",
+          "text": "`TokenDelta`",
+          "correct": false,
+          "rationale": "Invented. Streaming is framed around content blocks and messages, not individual tokens."
+        }
+      ],
+      "explanation": "The event set is symmetric: `MessageStart` / `MessageDelta` / `MessageStop` bracket the message, and `ContentBlockStart` / `ContentBlockDelta` / `ContentBlockStop` bracket each block of text, tool use or other content inside it. The `*Delta` events are the ones carrying incremental payloads, which is why the plausible-sounding `ContentBlockChunk` and `TokenDelta` are not real.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Response Streaming" }]
+    },
+    {
+      "id": "why-stream",
+      "type": "single",
+      "prompt": "According to the notes, why should an application implement response streaming?",
+      "tags": ["streaming"],
+      "options": [
+        {
+          "id": "a",
+          "text": "Response time varies widely with prompt length and task complexity, so intermediate output can be shown to the user as it is generated",
+          "correct": true,
+          "rationale": "This is the stated reason — it is a perceived-latency fix."
+        },
+        {
+          "id": "b",
+          "text": "Streaming reduces the number of tokens billed for a response",
+          "correct": false,
+          "rationale": "Delivery mechanism does not change what is generated or billed."
+        },
+        {
+          "id": "c",
+          "text": "Streaming is required whenever tools are enabled on a request",
+          "correct": false,
+          "rationale": "Tool use and streaming are independent features."
+        },
+        {
+          "id": "d",
+          "text": "Streaming lets the model revise earlier parts of its answer before the client sees them",
+          "correct": false,
+          "rationale": "Streaming does the opposite — the client sees content as it is produced, so nothing is held back for revision."
+        }
+      ],
+      "explanation": "Because response time varies widely depending on prompt length and task complexity, streaming lets the client display intermediate responses as the model thinks and generates. It is about keeping the user informed, not about cost or capability.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Response Streaming" }]
+    },
+    {
+      "id": "structured-output-constructs",
+      "type": "multi",
+      "prompt": "You want the model to return a bare JSON payload with no surrounding prose or markdown fences. Which two constructs do the notes combine to achieve this? (Select all that apply)",
+      "tags": ["prompts", "structured-output"],
+      "options": [
+        {
+          "id": "a",
+          "text": "An assistant (prefilled) message ending in an opening ```json fence",
+          "correct": true,
+          "rationale": "This tricks the model into believing it has already opened the fence, so it continues with the JSON body."
+        },
+        {
+          "id": "b",
+          "text": "A stop sequence of ``` so generation halts at the closing fence",
+          "correct": true,
+          "rationale": "Without it the model would emit the closing fence and possibly keep talking."
+        },
+        {
+          "id": "c",
+          "text": "Setting `temperature` to 0",
+          "correct": false,
+          "rationale": "Lower temperature makes output more deterministic but does nothing to strip formatting characters."
+        },
+        {
+          "id": "d",
+          "text": "A system prompt that forbids markdown formatting",
+          "correct": false,
+          "rationale": "Plausible prompt engineering, but not the mechanism the notes describe for this problem."
+        },
+        {
+          "id": "e",
+          "text": "A `response_format: json` request parameter",
+          "correct": false,
+          "rationale": "Not a parameter the notes describe — the prefill-plus-stop-sequence pair is the technique being taught."
+        }
+      ],
+      "explanation": "Prefilled assistant messages and stop sequences work as a pair. The prefill puts the model mid-structure so it skips the preamble, and the stop sequence cuts generation off before the trailing formatting characters. The notes' example prefills with ```json and stops on ```, so the returned text is just the JSON body.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Structured Data" }]
+    },
+    {
+      "id": "prefill-not-echoed",
+      "type": "boolean",
+      "prompt": "Text supplied in a prefilled assistant message is included in the model's final response content.",
+      "tags": ["prompts", "structured-output"],
+      "options": [
+        { "id": "a", "text": "True", "correct": false },
+        { "id": "b", "text": "False", "correct": true }
+      ],
+      "explanation": "The final response includes only what the model generated, not the assistant message you prefilled. That is worth knowing in practice: if you prefill with ```json and want a complete fenced block for display, you have to re-attach the prefix yourself.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Structured Data" }]
+    },
+    {
+      "id": "grader-types",
+      "type": "multi",
+      "prompt": "Which grader types does the Model Based Grading section describe? (Select all that apply)",
+      "tags": ["evaluation"],
+      "options": [
+        {
+          "id": "a",
+          "text": "Code — assertions on things like output length, presence or absence of words, and valid syntax",
+          "correct": true,
+          "rationale": "Essentially unit tests over the output."
+        },
+        {
+          "id": "b",
+          "text": "Model — output is scored or compared by another model, usually one with strong reasoning",
+          "correct": true,
+          "rationale": "This is the grader the section is named after."
+        },
+        {
+          "id": "c",
+          "text": "Human — a reviewer judges quality, comprehensiveness and depth",
+          "correct": true,
+          "rationale": "Comparable to reinforcement learning from human feedback."
+        },
+        {
+          "id": "d",
+          "text": "Statistical — a regression model trained on historical grades predicts a score",
+          "correct": false,
+          "rationale": "Not one of the three types described."
+        },
+        {
+          "id": "e",
+          "text": "Embedding — cosine distance from a reference answer produces the grade",
+          "correct": false,
+          "rationale": "Cosine distance appears in the notes under semantic search for RAG, not as a grading strategy."
+        }
+      ],
+      "explanation": "There are three grader types — Code, Model and Human — and the notes point out that more than one is often used together, because each has its own strengths and weaknesses. A common convention is to score output from 1 to 10, though nothing requires that scale.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Model Based Grading" }]
+    },
+    {
+      "id": "eval-workflow-position",
+      "type": "single",
+      "prompt": "In the prompt evaluation workflow, what is the evaluation data set?",
+      "tags": ["evaluation"],
+      "options": [
+        {
+          "id": "a",
+          "text": "The set of \"test\" user prompts that the draft system prompt will be prepended to",
+          "correct": true,
+          "rationale": "The draft prompt is the thing under test; the data set supplies the user inputs it runs against."
+        },
+        {
+          "id": "b",
+          "text": "A collection of graded example outputs the model should imitate",
+          "correct": false,
+          "rationale": "That describes few-shot examples inside a prompt, not the evaluation data set."
+        },
+        {
+          "id": "c",
+          "text": "The scores produced by the grader for each response",
+          "correct": false,
+          "rationale": "Those are the workflow's output, produced in the grading step."
+        },
+        {
+          "id": "d",
+          "text": "The set of candidate system prompts being compared against each other",
+          "correct": false,
+          "rationale": "There is a single draft prompt per pass; refinement happens by looping, not by batching candidates."
+        }
+      ],
+      "explanation": "The workflow is: draft a system prompt, create an evaluation data set of test user prompts, send each one to Claude with the draft prompt prepended, feed the response through a grader, then refine and repeat. The data set holds the user-side inputs, which is what makes results comparable across prompt revisions.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Prompt Evaluation Workflow" }]
+    },
+    {
+      "id": "prompt-clarity-practices",
+      "type": "multi",
+      "prompt": "Which of these belong in a well-formed prompt per the Prompt Engineering Best Practices? (Select all that apply)",
+      "tags": ["prompts", "prompt-engineering"],
+      "options": [
+        {
+          "id": "a",
+          "text": "An action verb followed by a simple statement of the task",
+          "correct": true,
+          "rationale": "The recommended shape for instructions, e.g. \"Create a list of the highest grossing movies of all time\"."
+        },
+        {
+          "id": "b",
+          "text": "Questions that open with an interrogative word — who, what, why, where, when, how",
+          "correct": true,
+          "rationale": "The recommended shape for questions."
+        },
+        {
+          "id": "c",
+          "text": "XML tags separating the distinct portions of the prompt",
+          "correct": true,
+          "rationale": "The notes' structured prompt example uses `<task>`, `<context>`, `<input>` and `<output_format>`."
+        },
+        {
+          "id": "d",
+          "text": "Politeness framing such as \"Hi Claude\", \"Please\" and \"Thank You\"",
+          "correct": false,
+          "rationale": "Explicitly called out as fluff to avoid — it adds tokens without adding instruction."
+        },
+        {
+          "id": "e",
+          "text": "Hedges like \"I think\" to leave the model room to disagree",
+          "correct": false,
+          "rationale": "Also named as a fluff phrase to avoid. Be clear and direct instead."
+        }
+      ],
+      "explanation": "\"Be clear and direct\" is the first practice: simple language, explicit statements, no fluff. Instructions take the form of an action verb plus the task; questions start with an interrogative word. Structure comes from XML tags that fence off the task, context, input and output format so the model can tell them apart.",
+      "citations": [
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Prompt Engineering Best Practices" },
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Structured Prompt Example" }
+      ]
+    },
+    {
+      "id": "guidelines-vs-steps",
+      "type": "single",
+      "prompt": "\"Respond in 2–3 paragraphs and in fewer than 500 words\" is an example of which prompt construct?",
+      "tags": ["prompts", "prompt-engineering"],
+      "options": [
+        {
+          "id": "a",
+          "text": "A guideline — a quality the output should have",
+          "correct": true,
+          "rationale": "Guidelines describe the shape of the answer."
+        },
+        {
+          "id": "b",
+          "text": "A step to follow — an instruction about how to reason",
+          "correct": false,
+          "rationale": "Steps are the reasoning path the model should take while working, not a property of the finished output."
+        },
+        {
+          "id": "c",
+          "text": "A negative example — a description of what the response should not look like",
+          "correct": false,
+          "rationale": "Negative examples show undesired output; this states a desired constraint."
+        },
+        {
+          "id": "d",
+          "text": "A stop sequence — it tells the model when to stop generating",
+          "correct": false,
+          "rationale": "A stop sequence is a literal character sequence that halts generation, not a prose constraint."
+        }
+      ],
+      "explanation": "The notes draw a line between guidelines and steps: guidelines are qualities the output should have, while steps to follow are the reasoning steps the model should take. Paragraph count and word limits are output qualities, so they are guidelines.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Prompt Engineering Best Practices" }]
+    },
+    {
+      "id": "tool-definition-constructs",
+      "type": "multi",
+      "prompt": "Before the Claude API can call a tool, which constructs does the application developer need to define? (Select all that apply)",
+      "tags": ["tools"],
+      "options": [
+        {
+          "id": "a",
+          "text": "The tool input schema",
+          "correct": true,
+          "rationale": "A JSON Schema describing the tool's name, description and inputs — this is what gets passed in the `tools` list so the model knows the tool exists."
+        },
+        {
+          "id": "b",
+          "text": "The tool function or class",
+          "correct": true,
+          "rationale": "The schema only describes the call; something still has to execute it."
+        },
+        {
+          "id": "c",
+          "text": "The `ToolUseBlock`",
+          "correct": false,
+          "rationale": "The model produces this, not you. It arrives in the response when the model decides to call a tool."
+        },
+        {
+          "id": "d",
+          "text": "The `ToolResultBlock`",
+          "correct": false,
+          "rationale": "You build one of these, but only after the tool has run — it is not part of defining the tool."
+        },
+        {
+          "id": "e",
+          "text": "A stop sequence marking the end of the tool call",
+          "correct": false,
+          "rationale": "Tool use is signalled by `stop_reason: tool_use`, not by a stop sequence."
+        }
+      ],
+      "explanation": "A tool is a function plus a JSON Schema describing how it should be called. Both halves are the developer's responsibility: the schema (an SDK `ToolParam`) is sent in the request's `tools` list so the model knows the tool exists, and the function is what your code actually invokes when a tool use comes back. `ToolUseBlock` and `ToolResultBlock` belong to the runtime exchange that follows.",
+      "citations": [
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Tool Use" },
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Tool Use Example" }
+      ]
+    },
+    {
+      "id": "tooluseblock-dispatch-field",
+      "type": "single",
+      "prompt": "Your code receives a `ToolUseBlock`. Which field tells it which function to invoke?",
+      "tags": ["tools"],
+      "options": [
+        {
+          "id": "a",
+          "text": "`id`",
+          "correct": false,
+          "rationale": "`id` is a randomly generated identifier used to tie this request to its result — useful for correlation, not dispatch."
+        },
+        {
+          "id": "b",
+          "text": "`input`",
+          "correct": false,
+          "rationale": "`input` is the object of arguments to pass in once you know what to call."
+        },
+        {
+          "id": "c",
+          "text": "`name`",
+          "correct": true,
+          "rationale": "`name` is the name of the tool function that should be called — the notes look it up dynamically in Python's `globals()`."
+        },
+        {
+          "id": "d",
+          "text": "`type`",
+          "correct": false,
+          "rationale": "`type` is the discriminator (`tool_use`) that tells you this block is a tool call at all."
+        }
+      ],
+      "explanation": "A `ToolUseBlock` carries four fields: `name` (which tool function to call), `input` (the arguments as an object), `id` (a random identifier that ties the call to its eventual result), and `type` (`tool_use`). Because the model chooses the tool, real code dispatches on `name` dynamically rather than hard-coding a single function.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Handling ToolUseBlock" }]
+    },
+    {
+      "id": "tool-use-id-purpose",
+      "type": "single",
+      "prompt": "Why does a tool result have to carry the same `tool_use_id` as the `ToolUseBlock` that triggered it?",
+      "tags": ["tools"],
+      "options": [
+        {
+          "id": "a",
+          "text": "When multiple tools are used in one response, the id ensures each tool use gets its own result rather than another tool's",
+          "correct": true,
+          "rationale": "This is the stated purpose — correlation across a set of concurrent tool calls."
+        },
+        {
+          "id": "b",
+          "text": "It authenticates the result as coming from your server rather than a third party",
+          "correct": false,
+          "rationale": "The id is a random correlation identifier, not a credential or signature."
+        },
+        {
+          "id": "c",
+          "text": "It lets the API bill the tool call against the right request",
+          "correct": false,
+          "rationale": "Nothing in the notes ties tool ids to billing."
+        },
+        {
+          "id": "d",
+          "text": "It is how the model looks up the tool's input schema on the follow-up request",
+          "correct": false,
+          "rationale": "The schema has to be re-sent in the `tools` list on the follow-up call; the id plays no part in that."
+        }
+      ],
+      "explanation": "`id` on the `ToolUseBlock` and `tool_use_id` on the tool result are a matched pair. Since a single model response can contain several `ToolUseBlock`s, the id is what keeps results from being mismatched with requests.",
+      "citations": [
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Handling ToolUseBlock" },
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Handling Tool Results" }
+      ]
+    },
+    {
+      "id": "tool-result-role",
+      "type": "single",
+      "prompt": "With which role is a `tool_result` block appended to the message history?",
+      "tags": ["tools", "messages"],
+      "options": [
+        {
+          "id": "a",
+          "text": "`user`",
+          "correct": true,
+          "rationale": "Only the user/client can execute tools and report results back — the model cannot run code itself."
+        },
+        {
+          "id": "b",
+          "text": "`assistant`",
+          "correct": false,
+          "rationale": "The `assistant` role is used for the model's own content, including the `ToolUseBlock` you echo back into history."
+        },
+        {
+          "id": "c",
+          "text": "`tool`",
+          "correct": false,
+          "rationale": "A plausible guess — some other APIs have a dedicated tool role — but the notes use `user`."
+        },
+        {
+          "id": "d",
+          "text": "`system`",
+          "correct": false,
+          "rationale": "The system prompt is developer guidance provided once at the start of the session, unrelated to tool results."
+        }
+      ],
+      "explanation": "The exchange alternates: the model's `ToolUseBlock` content is appended as an `assistant` message, then the tool result is appended as a `user` message. The reason given in the notes is that only the user/client side can execute tools and report results — the model has no ability to run code.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Tool Use Example" }]
+    },
+    {
+      "id": "tool-result-fields",
+      "type": "multi",
+      "prompt": "Which fields appear in the tool result block shown in the notes? (Select all that apply)",
+      "tags": ["tools"],
+      "options": [
+        { "id": "a", "text": "`tool_use_id`", "correct": true, "rationale": "Matches the `id` from the originating `ToolUseBlock`." },
+        { "id": "b", "text": "`type`", "correct": true, "rationale": "Set to `tool_result`." },
+        { "id": "c", "text": "`content`", "correct": true, "rationale": "The actual result of the tool call." },
+        { "id": "d", "text": "`is_error`", "correct": true, "rationale": "Defaults to false; set to true if the tool raised." },
+        {
+          "id": "e",
+          "text": "`name`",
+          "correct": false,
+          "rationale": "`name` is on the `ToolUseBlock`. The result is correlated by id, so the name is not repeated."
+        },
+        {
+          "id": "f",
+          "text": "`input`",
+          "correct": false,
+          "rationale": "Also on the `ToolUseBlock` — the result carries output, not the inputs."
+        }
+      ],
+      "explanation": "A tool result is four fields: `tool_use_id` to correlate it, `type: \"tool_result\"`, `content` holding the tool's output, and `is_error` to report failure. `name` and `input` belong to the `ToolUseBlock` on the way in, and are not echoed back on the way out.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Handling Tool Results" }]
+    },
+    {
+      "id": "resend-tool-schemas",
+      "type": "boolean",
+      "prompt": "On the follow-up request that carries a tool result back to the model, the tool schemas must be supplied again in the `tools` list.",
+      "tags": ["tools"],
+      "options": [
+        { "id": "a", "text": "True", "correct": true },
+        { "id": "b", "text": "False", "correct": false }
+      ],
+      "explanation": "Because the message history now references the tool, the tool schema has to be provided again on the follow-up call. This is the same statelessness rule that forces you to resend the whole message list: the API remembers nothing between requests.",
+      "citations": [
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Tool Use Example" },
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Accessing the API" }
+      ]
+    },
+    {
+      "id": "stop-reason-values",
+      "type": "multi",
+      "prompt": "Which values can `stop_reason` take on a model response? (Select all that apply)",
+      "tags": ["tools", "agent-loop"],
+      "options": [
+        { "id": "a", "text": "`tool_use`", "correct": true, "rationale": "The model wants to use a tool — keep the agent loop running." },
+        { "id": "b", "text": "`end_turn`", "correct": true, "rationale": "The model is done and wants to send a message to the end user — exit the loop." },
+        { "id": "c", "text": "`max_tokens`", "correct": true, "rationale": "The max allowed number of tokens was generated; the answer may be truncated." },
+        { "id": "d", "text": "`stop_sequence`", "correct": true, "rationale": "A custom stop sequence was encountered." },
+        {
+          "id": "e",
+          "text": "`tool_result`",
+          "correct": false,
+          "rationale": "`tool_result` is a content block type you send, never a reason the model stopped."
+        },
+        {
+          "id": "f",
+          "text": "`content_filter`",
+          "correct": false,
+          "rationale": "Not among the values listed. Safety-flagged reasoning surfaces as a `RedactedThinking` block instead."
+        }
+      ],
+      "explanation": "The multi-turn agent loop is a `while` loop driven by `stop_reason`: keep going while it is `tool_use`, and stop on `end_turn`. `max_tokens` and `stop_sequence` are the two other terminal values, and both mean the response ended for a mechanical reason rather than because the model was finished.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Implementing Multiple Turns" }]
+    },
+    {
+      "id": "rag-pipeline-order",
+      "type": "single",
+      "prompt": "What is the order of the RAG pipeline described in the notes?",
+      "tags": ["rag"],
+      "options": [
+        {
+          "id": "a",
+          "text": "Chunk the document → generate embeddings with an embedding model → store them in a vector database → find relevant chunks by semantic search",
+          "correct": true,
+          "rationale": "Three ingestion steps, then retrieval at query time."
+        },
+        {
+          "id": "b",
+          "text": "Generate embeddings for the whole document → chunk the embeddings → store them in a vector database → find relevant chunks",
+          "correct": false,
+          "rationale": "Chunking exists precisely because the document is too large to handle whole; you chunk text first, then embed each chunk."
+        },
+        {
+          "id": "c",
+          "text": "Chunk the document → store the chunks in a vector database → generate embeddings on read → find relevant chunks",
+          "correct": false,
+          "rationale": "A vector database stores embeddings, so the embeddings have to exist before the write, not after."
+        },
+        {
+          "id": "d",
+          "text": "Find relevant chunks → chunk the document → generate embeddings → store them in a vector database",
+          "correct": false,
+          "rationale": "Retrieval is the query-time step and cannot precede ingestion."
+        }
+      ],
+      "explanation": "RAG exists for documents too large to fit in a single prompt. The pipeline is: break the document into chunks, convert each chunk into an embedding using an embedding model, store those embeddings in a vector database, then at query time embed the user's prompt with the same model and use it as a query to retrieve the most related chunks.",
+      "citations": [
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "RAG Pipeline Overview" },
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Storing & Searching Embeddings" }
+      ]
+    },
+    {
+      "id": "chunking-tradeoffs",
+      "type": "multi",
+      "prompt": "Which statements about the three chunking strategies are correct? (Select all that apply)",
+      "tags": ["rag"],
+      "options": [
+        {
+          "id": "a",
+          "text": "Size-based chunks should overlap on each side to retain context",
+          "correct": true,
+          "rationale": "Overlap is how a fixed-length split avoids cutting an idea in half."
+        },
+        {
+          "id": "b",
+          "text": "Size-based is the easiest to implement but loses the most context",
+          "correct": true,
+          "rationale": "It ignores the document's structure and meaning entirely."
+        },
+        {
+          "id": "c",
+          "text": "Structure-based splits on headers and paragraph breaks and requires preprocessing to understand the structure",
+          "correct": true,
+          "rationale": "You have to parse the document before you can split on its structure."
+        },
+        {
+          "id": "d",
+          "text": "Semantic-based leads to the best results but is computationally expensive",
+          "correct": true,
+          "rationale": "It groups related sentences or sections, which needs a lot of preprocessing."
+        },
+        {
+          "id": "e",
+          "text": "Semantic-based is the cheapest to compute because it produces the fewest chunks",
+          "correct": false,
+          "rationale": "Directly contradicts the notes — it is the expensive option."
+        },
+        {
+          "id": "f",
+          "text": "Only semantic-based chunking requires a vector database",
+          "correct": false,
+          "rationale": "All three produce chunks that get embedded and stored the same way; the strategy does not change the storage layer."
+        }
+      ],
+      "explanation": "The three strategies trade implementation effort against retrieval quality. Size-based is simplest and worst at preserving context (mitigated with overlap); structure-based needs preprocessing to find headers and paragraph breaks; semantic-based groups related content, costs the most to compute, and gives the best results. The storage and retrieval steps that follow are identical regardless of which you pick.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Chunking Data" }]
+    },
+    {
+      "id": "cosine-distance-meaning",
+      "type": "single",
+      "prompt": "A semantic search returns a chunk whose embedding has a cosine distance of 0 from the query embedding. What does that mean?",
+      "tags": ["rag", "math"],
+      "options": [
+        {
+          "id": "a",
+          "text": "The embeddings are essentially the same — identical in meaning",
+          "correct": true,
+          "rationale": "Cosine distance is 1 − cosine similarity, so distance 0 corresponds to similarity 1."
+        },
+        {
+          "id": "b",
+          "text": "The embeddings are complete opposites",
+          "correct": false,
+          "rationale": "That is a cosine distance of 2, the far end of the range."
+        },
+        {
+          "id": "c",
+          "text": "The embeddings have no semantic relation at all",
+          "correct": false,
+          "rationale": "No relation is cosine similarity 0, which is a distance of 1 — the middle of the range."
+        },
+        {
+          "id": "d",
+          "text": "The query could not be embedded, so no score was computed",
+          "correct": false,
+          "rationale": "0 is a meaningful score at the top of the range, not a missing value."
+        }
+      ],
+      "explanation": "Cosine similarity runs from −1 (no semantic relation) to 1 (identical meaning). Cosine distance is defined as 1 − cosine similarity, so it runs from 0 (essentially the same) to 2 (complete opposites). A distance of 0 is the best possible match; the trap is reading \"0\" as \"nothing in common\" when that is actually a distance of 1.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "The math behind Semantic Search" }]
+    },
+    {
+      "id": "bm25-is-lexical",
+      "type": "boolean",
+      "prompt": "BM25 improves retrieval by ranking chunks on semantic meaning rather than on exact word matches.",
+      "tags": ["rag"],
+      "options": [
+        { "id": "a", "text": "True", "correct": false },
+        { "id": "b", "text": "False", "correct": true }
+      ],
+      "explanation": "BM25 (Best Match 25) is a lexical search algorithm: rather than focusing on semantic meaning, it matches exact words or phrases from the user query against the data being searched. That is exactly why it is used alongside semantic search — the two fail in different ways, so together they retrieve better chunks than either alone.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "BM25 Lexical Search" }]
+    },
+    {
+      "id": "merging-multi-index-results",
+      "type": "single",
+      "prompt": "A RAG pipeline runs both semantic search and BM25 lexical search. Which algorithm do the notes name for combining the two result sets before passing chunks to the model?",
+      "tags": ["rag"],
+      "options": [
+        {
+          "id": "a",
+          "text": "Reciprocal Rank Fusion",
+          "correct": true,
+          "rationale": "It ranks a record using the individual ranks each search index assigned it."
+        },
+        {
+          "id": "b",
+          "text": "Cosine distance",
+          "correct": false,
+          "rationale": "A similarity metric used *within* semantic search, not a way to merge two indexes — BM25 does not produce a cosine score to compare against."
+        },
+        {
+          "id": "c",
+          "text": "Best Match 25",
+          "correct": false,
+          "rationale": "That is BM25 itself, one of the two inputs to the merge."
+        },
+        {
+          "id": "d",
+          "text": "Contextualization",
+          "correct": false,
+          "rationale": "A stage of request handling inside the model, unrelated to retrieval."
+        }
+      ],
+      "explanation": "When a pipeline uses multiple search algorithms, their results have to be merged before reaching the model. Reciprocal Rank Fusion does this by scoring each record from the ranks it received in each individual index, which avoids the problem that a BM25 score and a cosine similarity are not directly comparable.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Merging Results in a Multi-Index RAG Pipeline" }]
+    },
+    {
+      "id": "thinking-block-signature",
+      "type": "single",
+      "prompt": "What is the `signature` field on a `ThinkingBlock` for?",
+      "tags": ["extended-thinking"],
+      "options": [
+        {
+          "id": "a",
+          "text": "It ensures developers cannot alter thinking blocks and steer Claude in a different direction",
+          "correct": true,
+          "rationale": "Integrity protection on reasoning that gets appended back into message history."
+        },
+        {
+          "id": "b",
+          "text": "It identifies which model generated the reasoning",
+          "correct": false,
+          "rationale": "Plausible, but not the purpose given."
+        },
+        {
+          "id": "c",
+          "text": "It holds the encrypted form of reasoning that safety systems flagged",
+          "correct": false,
+          "rationale": "That is a `RedactedThinking` block — a different construct."
+        },
+        {
+          "id": "d",
+          "text": "It correlates the thinking block with the tool use it led to",
+          "correct": false,
+          "rationale": "Tool correlation is done with `id` / `tool_use_id`."
+        }
+      ],
+      "explanation": "Extended thinking returns the model's reasoning as a `ThinkingBlock` with two fields: `thinking`, the generated description of what the model is working through, and `signature`, which exists so developers cannot edit that reasoning and steer Claude in a different direction on the next turn.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Extended Thinking" }]
+    },
+    {
+      "id": "redacted-thinking",
+      "type": "multi",
+      "prompt": "Which statements about `RedactedThinking` blocks are correct? (Select all that apply)",
+      "tags": ["extended-thinking"],
+      "options": [
+        {
+          "id": "a",
+          "text": "They are returned when thinking content is flagged by the model's safety systems",
+          "correct": true,
+          "rationale": "That flagging is what makes a thinking block redacted."
+        },
+        {
+          "id": "b",
+          "text": "The content is still provided, but in encrypted form",
+          "correct": true,
+          "rationale": "You receive it; you just cannot read it."
+        },
+        {
+          "id": "c",
+          "text": "They can be appended to message history without violating the model's guardrails",
+          "correct": true,
+          "rationale": "This is the reason for encrypting rather than dropping the content — history stays intact."
+        },
+        {
+          "id": "d",
+          "text": "Code should handle them whenever extended thinking is enabled",
+          "correct": true,
+          "rationale": "The notes call this out explicitly — they appear occasionally, so treat them as expected."
+        },
+        {
+          "id": "e",
+          "text": "They mean the request failed and must be retried",
+          "correct": false,
+          "rationale": "The response is valid; only the reasoning text is opaque."
+        },
+        {
+          "id": "f",
+          "text": "They replace all text content in the response, so the message has no answer",
+          "correct": false,
+          "rationale": "Redaction applies to a thinking block, not to the model's answer."
+        }
+      ],
+      "explanation": "A `RedactedThinking` block is a thinking block whose content was flagged by the model's safety systems. The content is returned encrypted rather than removed, which lets the block be appended to the message history without violating the model's guardrails. They show up occasionally, so any code path that enables extended thinking needs to handle them.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Extended Thinking" }]
+    },
+    {
+      "id": "image-limits",
+      "type": "multi",
+      "prompt": "Which limits apply to images sent to an Anthropic model? (Select all that apply)",
+      "tags": ["multimodal"],
+      "options": [
+        {
+          "id": "a",
+          "text": "No more than 100 images across all messages in the message history",
+          "correct": true,
+          "rationale": "The cap is on the whole history, not per request."
+        },
+        { "id": "b", "text": "Each image must be under 5MB", "correct": true, "rationale": "A hard per-image size limit." },
+        {
+          "id": "c",
+          "text": "Maximum height/width is 8k px for a single image",
+          "correct": true,
+          "rationale": "The single-image ceiling."
+        },
+        {
+          "id": "d",
+          "text": "When sending multiple images, each is capped at 2000px on its longest side",
+          "correct": true,
+          "rationale": "The per-image ceiling tightens once there is more than one."
+        },
+        {
+          "id": "e",
+          "text": "Images are processed separately from text and do not count toward token usage",
+          "correct": false,
+          "rationale": "Images still count as tokens — roughly (width px × height px) / 750."
+        }
+      ],
+      "explanation": "Four limits apply: at most 100 images across the whole message history, under 5MB each, 8k px maximum height/width for a single image, and 2000px maximum per image when several are sent together. Images are not free — they consume tokens, which can be estimated as (width px × height px) / 750.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Image Support" }]
+    },
+    {
+      "id": "document-media-types",
+      "type": "single",
+      "prompt": "You are attaching a PDF to the message history using a `DocumentBlock`. Which media type does it need?",
+      "tags": ["multimodal"],
+      "options": [
+        {
+          "id": "a",
+          "text": "`application/pdf`",
+          "correct": true,
+          "rationale": "PDFs use the `application/pdf` media type; images use their own MIME type such as `image/png`."
+        },
+        {
+          "id": "b",
+          "text": "`document/pdf`",
+          "correct": false,
+          "rationale": "Not a real MIME type — `document` is not a registered top-level type."
+        },
+        {
+          "id": "c",
+          "text": "`text/pdf`",
+          "correct": false,
+          "rationale": "A PDF is not plain text, despite containing text."
+        },
+        {
+          "id": "d",
+          "text": "No media type is needed for documents; only images require one",
+          "correct": false,
+          "rationale": "`DocumentBlock` works very much like `ImageBlock`, media type included."
+        }
+      ],
+      "explanation": "PDFs are added to the message history with a `DocumentBlock`, which works very much like an `ImageBlock` — base64 bytes or a URL, plus a media type. For PDFs that media type is `application/pdf`; for images it is the image's own MIME type, e.g. `image/png`.",
+      "citations": [
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "PDF Support" },
+        { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Image Support" }
+      ]
+    },
+    {
+      "id": "prompt-caching-rules",
+      "type": "multi",
+      "prompt": "Which statements about prompt caching are correct? (Select all that apply)",
+      "tags": ["caching", "performance"],
+      "options": [
+        {
+          "id": "a",
+          "text": "A cache breakpoint is created by adding a `cache_control` field of type `ephemeral` to a block",
+          "correct": true,
+          "rationale": "That field on any block is what marks the breakpoint."
+        },
+        {
+          "id": "b",
+          "text": "There can be at most 4 cache breakpoints in the message history",
+          "correct": true,
+          "rationale": "A hard limit."
+        },
+        {
+          "id": "c",
+          "text": "At least 1024 tokens must exist in the message history before anything is cached",
+          "correct": true,
+          "rationale": "Below that threshold caching does not kick in."
+        },
+        {
+          "id": "d",
+          "text": "A breakpoint caches every earlier message plus the message containing the breakpoint",
+          "correct": true,
+          "rationale": "The cache covers the prefix up to and including the marked block — which is why breakpoints belong after your stable content."
+        },
+        {
+          "id": "e",
+          "text": "Only text blocks can carry a cache breakpoint",
+          "correct": false,
+          "rationale": "`cache_control` can go on any kind of block — text, image/document, system prompts and tools."
+        },
+        {
+          "id": "f",
+          "text": "Caching trades higher token usage for lower latency",
+          "correct": false,
+          "rationale": "Backwards. Caching speeds up responses *and* reduces tokens used, because the cached prefix is not reprocessed."
+        }
+      ],
+      "explanation": "Prompt caching stores the final contextualized embeddings of a processed prefix so repeated content is not recomputed, which both speeds up responses and reduces token usage. You mark a cache breakpoint with `cache_control: { type: \"ephemeral\" }` on any block — including system prompts and tool definitions — and everything up to and including that block is cached. Two constraints bound it: a maximum of 4 breakpoints, and a 1024-token minimum before anything is cached at all.",
+      "citations": [{ "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Prompt Caching" }]
+    }
+  ]
+}

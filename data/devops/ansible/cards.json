@@ -1,0 +1,529 @@
+{
+  "id": "ansible",
+  "title": "Ansible Fundamentals",
+  "cards": [
+    {
+      "id": "why-agentless",
+      "type": "single",
+      "prompt": "Why is Ansible described as agentless?",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It communicates over SSH and WinRM, so no software needs to be installed on the target servers",
+          "correct": true,
+          "rationale": "Reusing transports the hosts already run is what removes the agent."
+        },
+        {
+          "id": "b",
+          "text": "It runs entirely on the control machine and never contacts the targets",
+          "correct": false,
+          "rationale": "It very much contacts them — agentless describes *how*, not whether."
+        },
+        {
+          "id": "c",
+          "text": "Its agent is bundled into the operating system rather than installed separately",
+          "correct": false,
+          "rationale": "There is no agent at all, bundled or otherwise."
+        },
+        {
+          "id": "d",
+          "text": "Playbooks are compiled to binaries that run standalone on each host",
+          "correct": false,
+          "rationale": "Playbooks are YAML interpreted by the control machine; modules are written in Python."
+        }
+      ],
+      "explanation": "Ansible is an open-source, agentless IT automation tool for provisioning, configuring, managing and deploying software. \"Agentless\" means it rides on transports the targets already have — SSH for Linux and WinRM for Windows — so nothing has to be installed on the managed hosts. The cost of this design shows up elsewhere: WinRM has to be enabled before a Windows host can be targeted at all.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "heading": "Ansible Fundamentals"
+        },
+        {
+          "file": "Ansible.md",
+          "section": "Advanced topics"
+        }
+      ]
+    },
+    {
+      "id": "inventory-defaults",
+      "type": "multi",
+      "prompt": "Which statements about the Ansible inventory are correct? (Select all that apply)",
+      "tags": [
+        "inventory"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The default inventory file is `/etc/ansible/hosts`",
+          "correct": true,
+          "rationale": "The default location when none is supplied."
+        },
+        {
+          "id": "b",
+          "text": "It uses syntax similar to an INI file",
+          "correct": true,
+          "rationale": "Hosts, `key=value` parameters and `[group]` headers."
+        },
+        {
+          "id": "c",
+          "text": "`ansible_port` defaults to 22 for SSH connections",
+          "correct": true,
+          "rationale": "The standard SSH port."
+        },
+        {
+          "id": "d",
+          "text": "`ansible_user` defaults to root on Linux systems",
+          "correct": true,
+          "rationale": "The documented default."
+        },
+        {
+          "id": "e",
+          "text": "Arbitrary custom parameters are parsed as Python literals, so `custom_variable=1337` becomes an integer",
+          "correct": false,
+          "rationale": "The opposite — arbitrary inventory parameters are interpreted as strings, not Python literals. Worth remembering before comparing one numerically."
+        },
+        {
+          "id": "f",
+          "text": "Passwords are best stored directly in the inventory with `ansible_ssh_pass`",
+          "correct": false,
+          "rationale": "The parameter exists, but the notes recommend Ansible Vault for passwords rather than putting them in the inventory."
+        }
+      ],
+      "explanation": "The inventory is an INI-style file, `/etc/ansible/hosts` by default, holding hosts and their connection parameters. Two details catch people out: any arbitrary parameter you invent is interpreted as a string rather than a Python literal, and although `ansible_ssh_pass` / `ansible_password` exist, the recommended home for credentials is Ansible Vault.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "section": "Inventory"
+        }
+      ]
+    },
+    {
+      "id": "connection-password-params",
+      "type": "single",
+      "prompt": "Which inventory parameter supplies the password for a WinRM connection?",
+      "tags": [
+        "inventory"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`ansible_ssh_pass`",
+          "correct": false,
+          "rationale": "That one is for SSH connections — the near-identical naming is the trap."
+        },
+        {
+          "id": "b",
+          "text": "`ansible_password`",
+          "correct": true,
+          "rationale": "The WinRM counterpart to `ansible_ssh_pass`."
+        },
+        {
+          "id": "c",
+          "text": "`ansible_winrm_pass`",
+          "correct": false,
+          "rationale": "Plausible by symmetry with `ansible_ssh_pass`, but not the parameter named in the notes."
+        },
+        {
+          "id": "d",
+          "text": "`ansible_connection`",
+          "correct": false,
+          "rationale": "That selects the transport (`ssh`, `winrm`, `localhost`), not the credential."
+        }
+      ],
+      "explanation": "`ansible_ssh_pass` is the SSH password and `ansible_password` is the WinRM password. The transport itself is chosen with `ansible_connection`, whose values are `ssh`, `winrm`, or `localhost` — the last meaning Ansible will not connect to remote machines at all. Either way, Ansible Vault is the recommended place to keep the secret.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "section": "Inventory"
+        }
+      ]
+    },
+    {
+      "id": "host-aliasing",
+      "type": "single",
+      "prompt": "Servers must be specified by their FQDN in the inventory. How do you refer to one by a short name like `web` instead?",
+      "tags": [
+        "inventory"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Set the short name as the host entry and give the FQDN in `ansible_host`",
+          "correct": true,
+          "rationale": "e.g. `web ansible_host=frontend.xyz.com` — the entry becomes the alias, `ansible_host` carries the real name."
+        },
+        {
+          "id": "b",
+          "text": "Set `ansible_alias=web` on the FQDN entry",
+          "correct": false,
+          "rationale": "There is no `ansible_alias` parameter."
+        },
+        {
+          "id": "c",
+          "text": "Define a `[web]` group containing the FQDN",
+          "correct": false,
+          "rationale": "That creates a group, not an alias. Groups target many hosts; an alias renames one."
+        },
+        {
+          "id": "d",
+          "text": "Add the short name to `/etc/hosts` on the control machine",
+          "correct": false,
+          "rationale": "That would resolve the name at the OS level but is not how Ansible models aliases."
+        }
+      ],
+      "explanation": "`ansible_host` defines the host name Ansible actually connects to, which lets the inventory entry itself be a friendly alias. One consequence is worth remembering: once a host is aliased, use the alias — not the FQDN — when listing it inside a group.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "section": "Inventory"
+        }
+      ]
+    },
+    {
+      "id": "group-of-groups",
+      "type": "single",
+      "prompt": "Which inventory syntax defines a group whose members are other groups?",
+      "tags": [
+        "inventory"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`[groupname:children]`",
+          "correct": true,
+          "rationale": "Each line under it names another group."
+        },
+        {
+          "id": "b",
+          "text": "`[groupname:groups]`",
+          "correct": false,
+          "rationale": "Not valid syntax."
+        },
+        {
+          "id": "c",
+          "text": "`[groupname:vars]`",
+          "correct": false,
+          "rationale": "Real Ansible syntax, but it sets variables for a group rather than nesting groups."
+        },
+        {
+          "id": "d",
+          "text": "`[groupname:all]`",
+          "correct": false,
+          "rationale": "Not valid syntax. `all` is conventionally the *name* of a top-level group of groups, as in `[all:children]`."
+        }
+      ],
+      "explanation": "`[groupname:children]` declares a group of groups, with each nested group named on its own line — the notes' example uses `[all:children]` containing `web_servers` and `databases`. Targeting the parent then acts on every host in every child group.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "section": "Inventory"
+        }
+      ]
+    },
+    {
+      "id": "playbook-terminology",
+      "type": "multi",
+      "prompt": "Which playbook definitions are correct? (Select all that apply)",
+      "tags": [
+        "playbooks",
+        "terminology"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Task — an action to take on a host",
+          "correct": true,
+          "rationale": "The smallest unit of work."
+        },
+        {
+          "id": "b",
+          "text": "Play — a series of tasks",
+          "correct": true,
+          "rationale": "A play binds a set of tasks to a set of hosts."
+        },
+        {
+          "id": "c",
+          "text": "Module — the action run in a task, such as `shell`, `command`, `yum` or `service`",
+          "correct": true,
+          "rationale": "Modules are the verbs a task invokes."
+        },
+        {
+          "id": "d",
+          "text": "Playbook — a YAML file containing a set of plays",
+          "correct": true,
+          "rationale": "Each YAML file is a different playbook."
+        },
+        {
+          "id": "e",
+          "text": "Role — a single task file included by a play",
+          "correct": false,
+          "rationale": "A role is a whole predefined folder structure (tasks, handlers, defaults, vars, files, templates, meta), not one file."
+        },
+        {
+          "id": "f",
+          "text": "Handler — one of the categories modules are grouped into",
+          "correct": false,
+          "rationale": "Module categories are System, Commands, Script, Files, Database, Cloud and Windows. `handlers` is a role folder, not a module category."
+        }
+      ],
+      "explanation": "The hierarchy runs playbook → plays → tasks → modules. A playbook is one YAML file containing a set of plays; each play names its `hosts` and lists `tasks`; each task invokes a module that performs the actual action. Getting these levels straight is what makes playbook YAML readable — `name` and `hosts` sit at play level, `name` and the module sit at task level.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "section": "Playbooks"
+        }
+      ]
+    },
+    {
+      "id": "module-idempotency",
+      "type": "boolean",
+      "prompt": "Most Ansible modules are idempotent, so running the same playbook several times leaves the system in the same state as running it once.",
+      "tags": [
+        "modules"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "Most modules are idempotent: a task like `service: name=httpd state=started` starts httpd if it is stopped and does nothing if it is already running. This is why playbooks describe desired state rather than steps, and why re-running one is safe. Note the wording \"most\" — the `shell` and `command` modules simply execute what you give them, so idempotency there is your responsibility.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "section": "Modules"
+        }
+      ]
+    },
+    {
+      "id": "variable-declaration-sites",
+      "type": "multi",
+      "prompt": "Where can variables be declared, according to the Variables section? (Select all that apply)",
+      "tags": [
+        "variables"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "In the inventory file, alongside host entries",
+          "correct": true,
+          "rationale": "`ansible_host`, `ansible_user` and any custom parameter are inventory variables."
+        },
+        {
+          "id": "b",
+          "text": "In a playbook, under the `vars` key",
+          "correct": true,
+          "rationale": "Scoped to that play."
+        },
+        {
+          "id": "c",
+          "text": "In a standalone variables file, pulled in with `vars_files`",
+          "correct": true,
+          "rationale": "`vars_files` is required to include them — listing the file under `vars` will not work."
+        },
+        {
+          "id": "d",
+          "text": "Inside a `when` clause, which both defines and tests the variable",
+          "correct": false,
+          "rationale": "`when` only evaluates a condition; it does not declare anything."
+        },
+        {
+          "id": "e",
+          "text": "Only through `register`, which is the sole way to create a variable at runtime",
+          "correct": false,
+          "rationale": "`register` does create a variable from a module's output, but it is hardly the only way — and it is described under conditionals, not variables."
+        }
+      ],
+      "explanation": "Variables store information that varies between hosts and are read with Jinja2 syntax, `{{ var_name }}`. They can be declared in the inventory file, in a play's `vars` block, or in a standalone YAML file included with the `vars_files` keyword — the distinct keyword for files is the detail most easily forgotten.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "section": "Variables"
+        }
+      ]
+    },
+    {
+      "id": "missing-variable-behaviour",
+      "type": "boolean",
+      "prompt": "If a playbook references an inventory variable that one of the targeted hosts does not define, Ansible substitutes an empty string and continues.",
+      "tags": [
+        "variables"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "The play fails. If a playbook targets a host that does not have the variable being referenced, the run does not silently degrade — which is why per-host variables belong in the inventory (or in group-level defaults) for every host a play can target.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "section": "Variables"
+        }
+      ]
+    },
+    {
+      "id": "register-keyword",
+      "type": "single",
+      "prompt": "What does the `register` keyword do in a playbook task?",
+      "tags": [
+        "conditionals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Stores the output of a module so a later task can test it",
+          "correct": true,
+          "rationale": "The notes register `cat /etc/resolv.conf` output and then test `name_servers.stdout.find(...)` in a `when` clause."
+        },
+        {
+          "id": "b",
+          "text": "Declares a variable with a literal default value for the play",
+          "correct": false,
+          "rationale": "That is the `vars` key. `register` captures a result rather than setting a value."
+        },
+        {
+          "id": "c",
+          "text": "Registers a host with the inventory at runtime",
+          "correct": false,
+          "rationale": "Inventory membership is not what `register` controls."
+        },
+        {
+          "id": "d",
+          "text": "Marks a task as requiring confirmation before it runs",
+          "correct": false,
+          "rationale": "Invented — gating a task on a condition is `when`."
+        }
+      ],
+      "explanation": "`register` captures a module's output into a variable; `when` performs the check. They pair up to make a playbook conditional on real system state — inspect the current state with one task, register the result, then run the next task only when the registered output shows the change is needed. Conditionals are only used in a playbook.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "section": "Conditionals"
+        }
+      ]
+    },
+    {
+      "id": "role-folder-structure",
+      "type": "multi",
+      "prompt": "Which of these are folders in Ansible's predefined role structure? (Select all that apply)",
+      "tags": [
+        "roles"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`tasks` — the main list of tasks executed by the role",
+          "correct": true,
+          "rationale": "The role's entry point."
+        },
+        {
+          "id": "b",
+          "text": "`defaults` — default variables used when a variable is not explicitly defined",
+          "correct": true,
+          "rationale": "Overridable fallbacks, distinct from `vars`."
+        },
+        {
+          "id": "c",
+          "text": "`templates` — templates that can be deployed from this role",
+          "correct": true,
+          "rationale": "Jinja2 templates rendered onto targets."
+        },
+        {
+          "id": "d",
+          "text": "`meta` — metadata about the role",
+          "correct": true,
+          "rationale": "Where role metadata lives."
+        },
+        {
+          "id": "e",
+          "text": "`inventory` — the hosts this role applies to",
+          "correct": false,
+          "rationale": "Roles are assigned to hosts by the play that uses them, via `hosts` plus the `roles` key. A role never carries its own inventory."
+        },
+        {
+          "id": "f",
+          "text": "`plays` — the plays the role contributes to the playbook",
+          "correct": false,
+          "rationale": "Roles supply tasks, not plays. The play lives in the playbook and pulls roles in."
+        }
+      ],
+      "explanation": "A role's folders are `tasks`, `handlers`, `defaults`, `vars`, `files`, `templates` and `meta`, each under a named directory inside the project's `roles` directory. Roles are attached at the play level with the `roles` key, so one playbook can apply different roles to different host groups — which is exactly why a role has no inventory or plays of its own.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "section": "Roles"
+        }
+      ]
+    },
+    {
+      "id": "advanced-platform-facts",
+      "type": "multi",
+      "prompt": "Which statements from the Advanced topics section are correct? (Select all that apply)",
+      "tags": [
+        "advanced"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Ansible control machines can only be Linux machines",
+          "correct": true,
+          "rationale": "Windows can be a target, never the controller."
+        },
+        {
+          "id": "b",
+          "text": "WinRM must be enabled before a Windows system is a valid target",
+          "correct": true,
+          "rationale": "There is no agent to install, so the existing remote-management transport has to be turned on."
+        },
+        {
+          "id": "c",
+          "text": "Ansible Galaxy is a repository for Ansible Roles, and ships the `ansible-galaxy` CLI",
+          "correct": true,
+          "rationale": "Described as being similar to the Docker Store."
+        },
+        {
+          "id": "d",
+          "text": "Custom modules are written in Python",
+          "correct": true,
+          "rationale": "Templates for them are in the Ansible docs."
+        },
+        {
+          "id": "e",
+          "text": "A Windows machine can act as the control machine once WinRM is enabled on it",
+          "correct": false,
+          "rationale": "Enabling WinRM makes a Windows box a valid *target*. The control machine must still be Linux."
+        },
+        {
+          "id": "f",
+          "text": "Dynamic inventory requires a static inventory file; `ansible-playbook -i` cannot take a script",
+          "correct": false,
+          "rationale": "Backwards — `ansible-playbook -i` accepts either an inventory file or a Python script, and the script is what makes the inventory dynamic."
+        }
+      ],
+      "explanation": "Four facts worth holding onto: the control machine must be Linux (Windows is target-only, and only once WinRM is enabled); Ansible Galaxy is the role repository plus the `ansible-galaxy` CLI; modules are authored in Python; and `ansible-playbook -i` accepts either an inventory file or a script, which is how dynamic inventory works.",
+      "citations": [
+        {
+          "file": "Ansible.md",
+          "section": "Advanced topics"
+        }
+      ]
+    }
+  ]
+}

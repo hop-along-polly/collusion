@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Scribe Cards — Certification Flashcards</title>
+    <meta
+      name="description"
+      content="Flashcards grounded in hand-written certification study notes: Claude API, Agent Skills, GitHub Actions and Ansible."
+    />
+    <meta name="theme-color" content="#1B8996" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090B" media="(prefers-color-scheme: dark)" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abel&family=Bellefair&family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      // Apply the stored theme before first paint so dark mode never flashes white.
+      // Mirrors the toggle logic in the style guide §9 (class strategy, not media).
+      try {
+        var saved = localStorage.getItem('scribe-cards.theme')
+        if (saved === 'dark' || (!saved && matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark')
+        }
+      } catch (_) {
+        /* localStorage unavailable (private mode) — fall back to light */
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

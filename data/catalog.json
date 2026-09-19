@@ -1,0 +1,74 @@
+{
+  "$comment": "Registry of every domain and card set. Adding a set = drop cards.json into data/<domain>/<set>/ and add an entry to `sets`. `npm run validate:data` checks that the two stay in sync.",
+  "domains": [
+    {
+      "id": "anthropic",
+      "title": "Anthropic",
+      "tagline": "Building with Claude — the API, tools, RAG and agent skills.",
+      "description": "Cards drawn from the Anthropic Academy notes: request handling, prompt engineering and evaluation, tool use, retrieval-augmented generation, and the constructs that make up Agent Skills.",
+      "status": "available",
+      "icon": "sparkles",
+      "order": 1
+    },
+    {
+      "id": "devops",
+      "title": "DevOps",
+      "tagline": "CI/CD and configuration management fundamentals.",
+      "description": "Cards drawn from the GitHub CI/CD and Ansible notes: teams and code ownership, GitHub Actions workflows and runners, and Ansible inventories, playbooks, variables and roles.",
+      "status": "available",
+      "icon": "workflow",
+      "order": 2
+    },
+    {
+      "id": "aws",
+      "title": "AWS",
+      "tagline": "Solutions Architect Associate and friends — notes pending.",
+      "description": "No AWS notes exist in this repository yet, so there is nothing to generate cards from. Cards here must stay grounded in committed Markdown notes; once a note file lands, a card set can be added without touching application code.",
+      "status": "planned",
+      "icon": "cloud",
+      "order": 3
+    }
+  ],
+  "sets": [
+    {
+      "id": "claude-api",
+      "domainId": "anthropic",
+      "path": "anthropic/claude-api",
+      "title": "Building with the Claude API",
+      "subtitle": "Anthropic Academy",
+      "description": "Model selection, request handling, system prompts, streaming, structured output, prompt evaluation, tool use, RAG, extended thinking and prompt caching.",
+      "sources": ["Anthropic Academy/building_with_claude_api.md"],
+      "cardCount": 34
+    },
+    {
+      "id": "agent-skills",
+      "domainId": "anthropic",
+      "path": "anthropic/agent-skills",
+      "title": "Agent Skills",
+      "subtitle": "Anthropic Academy",
+      "description": "Choosing between CLAUDE.md, Skills, Hooks and Subagents; skill scopes and precedence; authoring practices; and the four categories of skill failure.",
+      "sources": ["Anthropic Academy/agent_skills.md"],
+      "cardCount": 9
+    },
+    {
+      "id": "github-cicd",
+      "domainId": "devops",
+      "path": "devops/github-cicd",
+      "title": "GitHub CI/CD",
+      "subtitle": "Teams, CODEOWNERS and Actions",
+      "description": "Team hierarchy and notifications, CODEOWNERS precedence and syntax limits, and the Actions model — workflows, jobs, runners, reusable workflows and composite actions.",
+      "sources": ["github_cd-cd.md"],
+      "cardCount": 12
+    },
+    {
+      "id": "ansible",
+      "domainId": "devops",
+      "path": "devops/ansible",
+      "title": "Ansible Fundamentals",
+      "subtitle": "Inventory to roles",
+      "description": "The agentless model, inventory parameters and grouping, playbook terminology, idempotency, variables and conditionals, roles, and platform constraints.",
+      "sources": ["Ansible.md"],
+      "cardCount": 12
+    }
+  ]
+}
