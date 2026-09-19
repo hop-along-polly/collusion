@@ -3,6 +3,17 @@
 How Scribe Cards is put together, and why. For day-to-day tasks — running it, adding cards,
 deploying — see [README.md](README.md).
 
+## Set sizing
+
+A card set targets **30-60 cards**. Below that a topic is not covered; above it, the set is
+usually two study units wearing one name — which is why `AWS Marketplace` was split into
+*Commercials* (the model shared by every listing) and *Listing Types* (per-listing mechanics
+and the API surface), and why `AI Fluency & Claude 101` became two sets.
+
+The target is a target, not a floor to pad toward. Two sets sit below it because their source
+notes are 60-70 lines and are already covered exhaustively; the README marks them explicitly
+rather than quietly filling the gap with weaker questions.
+
 ## The one rule
 
 **Cards are pure data.** The UI never hard-codes a question, an answer, an explanation or a
@@ -64,11 +75,15 @@ landing page and domain pages render without fetching a single card.
 the Claude API cards. Confirmed in the build output:
 
 ```
-dist/assets/cards-*.js   13.49 kB   ← agent-skills
-dist/assets/cards-*.js   15.88 kB   ← github-cicd
-dist/assets/cards-*.js   17.53 kB   ← ansible
-dist/assets/cards-*.js   47.71 kB   ← claude-api
+dist/assets/cards-*.js   13.16 kB  ┐
+dist/assets/cards-*.js   13.49 kB  │  11 chunks, one per card set —
+   …                               │  a learner studying Ansible never
+dist/assets/cards-*.js   65.21 kB  │  downloads the 40 Marketplace cards
+dist/assets/cards-*.js   79.60 kB  ┘
 ```
+
+This mattered more once the notes grew: the card corpus went from 67 cards to 217 without
+the initial page load changing at all, because none of it is in the entry bundle.
 
 The trade-off is that a new set must be registered in the catalog *and* exist on disk. That
 duplication is deliberate — it buys real loading states and code splitting — and
@@ -110,7 +125,23 @@ A citation may name a `heading` **or** a `section`, never both:
 
 Without the distinction, roughly a quarter of the citations would have pointed at anchors that
 do not exist. The validator rejects a `heading` that is not one, *and* a `section` that actually
-is one, so the more precise form is always used where it is available.
+is one, so the more precise form is always used where it is available. Heading extraction only
+runs for `.md` files — in a source file like `ToolUseExample.py` every `#` comment would
+otherwise look like a heading.
+
+### What the gate caught
+
+This is not theoretical. When `building_with_claude_api.md` was rewritten and roughly tripled
+in size, the gate failed the build on **18 citations** pointing at headings that no longer
+existed (`Accessing the API` → `Accessing the Claude API`, `Handling Tool Results` →
+`Returning ToolResults to the Model`, and so on). Re-reading the note against those cards then
+surfaced three whose *content* the rewrite had invalidated — the stream-event names had changed
+from `MessageStart` to `message_start`/`RawMessageStartEvent`, the evaluation dataset was
+redefined as prompt/expected-output pairs, and a claim that the system prompt is "provided once
+at the beginning of the session" was contradicted by the new statelessness wording.
+
+A broken anchor is what the machine can detect; it is also a reliable signal that the prose
+around it moved, which is the actual reason the check earns its keep.
 
 ---
 
@@ -270,9 +301,15 @@ from contributors.
 | `src/storage/progress.test.ts` | Counters, review eligibility, summaries, reset, immutability |
 | `src/data/validate.test.ts` | Card and catalog shape rules |
 | `src/routes/quiz-flow.test.tsx` | Full flow in jsdom against the **real** card data |
+| `src/routes/domain-empty.test.tsx` | The no-card-sets empty state, against a mocked catalog |
 
 The integration test drives the actual `data/` files, so it also proves the catalog, the lazy
 loader and the routes agree with each other.
+
+The empty-state test is the one exception, and deliberately so: it mocks the catalog rather
+than relying on a domain that happens to have no cards. Originally it asserted against the real
+AWS domain, which broke the moment AWS notes were added — the code path is permanent, but which
+domain is empty today is not.
 
 `vitest.config.ts` is separate from `vite.config.ts` because Vitest bundles its own pinned copy
 of Vite and merging the two makes the plugin types collide nominally.

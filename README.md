@@ -9,9 +9,9 @@ it came from — a build-time gate fails the build if a citation stops resolving
 
 | | |
 |---|---|
-| **Notes** | [`Ansible.md`](Ansible.md), [`github_cd-cd.md`](github_cd-cd.md), [`Anthropic Academy/`](Anthropic%20Academy) |
+| **Notes** | [`Anthropic Academy/`](Anthropic%20Academy), [`AWS Marketplace/`](AWS%20Marketplace), [`AWS Certs/`](AWS%20Certs), [`Ansible.md`](Ansible.md), [`github_cd-cd.md`](github_cd-cd.md) |
 | **App** | Vite + React + TypeScript + React Router, Tailwind CSS |
-| **Cards** | 67 across 4 sets — see [Card sets](#card-sets) |
+| **Cards** | 447 across 13 sets in 3 domains — see [Card sets](#card-sets) |
 | **Hosting** | GitHub Pages, fully static — no backend, no database, no accounts |
 | **Style** | [CodeScribes Brand Style Guide](https://github.com/hop-along-polly/codescribes-styleguide/blob/main/BRAND_STYLE_GUIDE.md) |
 
@@ -44,21 +44,40 @@ heading that no longer exists fails the build rather than shipping broken.
 
 ## Card sets
 
+Each set targets **30-60 cards** — enough to study a topic properly in one place, small enough
+to finish. Sets are split when a single note corpus turns out to be two study units.
+
 | Domain | Set | Cards | Derived from |
 |---|---|---:|---|
-| Anthropic | Building with the Claude API | 34 | `Anthropic Academy/building_with_claude_api.md` |
-| Anthropic | Agent Skills | 9 | `Anthropic Academy/agent_skills.md` |
-| DevOps | GitHub CI/CD | 12 | `github_cd-cd.md` |
-| DevOps | Ansible Fundamentals | 12 | `Ansible.md` |
+| Anthropic | Building with the Claude API | 55 | `building_with_claude_api.md`, `ToolUseExample.py`, `claude_on_google_cloud.md` |
+| Anthropic | Code Review & CI/CD | 37 | `code_review_cicd.md` |
+| Anthropic | Multi-Agent Pipelines | 32 | `multi_agent_pipelines.md` |
+| Anthropic | Agents SDK | 31 | `agents_sdk.md` |
+| Anthropic | AI Fluency | 31 | `ai_fluency.md` |
+| Anthropic | Claude 101 | 31 | `claude_101.md` |
+| Anthropic | Agent Skills | 27 † | `agent_skills.md` |
+| Anthropic | Model Context Protocol | 22 † | `intro_to_mcp.md` |
+| AWS | AWS Marketplace — Listing Types | 40 | `saas.md`, `agents_and_tools.md`, `server_ami.md`, `server_container.md`, `machine_learning.md`, `data_product.md`, `marketplace_apis.md` |
+| AWS | AWS Services | 38 | `AWS Certs/all_aws_services.md`, `notes.md` |
+| AWS | AWS Marketplace — Commercials | 32 | `overview.md`, `private_offers.md`, `renewals.md`, `professional_services.md`, `saas.md` |
+| DevOps | Ansible Fundamentals | 37 | `Ansible.md` |
+| DevOps | GitHub CI/CD | 34 | `github_cd-cd.md` |
 
-**AWS is present in the navigation but has no cards**, because this repository contains no AWS
-notes yet. Rather than inventing questions, the AWS domain renders an honest empty state
-explaining what is needed. Drop in a note file and a card set and it lights up with no code
-change — see below.
+**447 cards, 516 citations** — 244 select-one, 158 select-all-that-apply, 45 true/false.
+
+† **Below the 30-card target because the source note is too thin, not because the set is
+unfinished.** `agent_skills.md` is 67 lines and `intro_to_mcp.md` is 59; both are already
+covered point-for-point. Reaching 30 would mean inventing questions the notes do not support,
+which is the one thing this project will not do. Grow those two notes and the cards follow.
 
 Question types follow the source material: *select one* (exactly one correct answer of four),
 *select all that apply* (one or more correct, at least four options), and *true / false*.
 Grading is all-or-nothing on multi-answer cards, which is how the real exams score them.
+
+Every citation is checked against the note files at build time, so a card can never drift
+from the note it claims to cite. When the Claude API notes were rewritten, the gate caught
+18 citations pointing at headings that no longer existed — and three cards whose *content*
+the rewrite had invalidated.
 
 ---
 
