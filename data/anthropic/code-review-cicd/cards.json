@@ -1,0 +1,1646 @@
+{
+  "id": "code-review-cicd",
+  "title": "Claude Code Review & CI/CD",
+  "cards": [
+    {
+      "id": "install-github-app",
+      "type": "single",
+      "prompt": "What is the easiest way to install the Claude GitHub App with the correct permissions?",
+      "tags": [
+        "github-app"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Run the `/install-github-app` slash command from a local Claude Code instance",
+          "correct": true,
+          "rationale": "It sets up the app's permissions automatically, rather than granting a dozen of them by hand."
+        },
+        {
+          "id": "b",
+          "text": "Add the `anthropics/claude-code-action` step — installation happens on first run",
+          "correct": false,
+          "rationale": "The app must already be installed on the repository before the action will work."
+        },
+        {
+          "id": "c",
+          "text": "Run `claude mcp add github` to connect the repository",
+          "correct": false,
+          "rationale": "That connects an MCP server to Claude Code, which is unrelated to the GitHub App."
+        },
+        {
+          "id": "d",
+          "text": "Set the `ANTHROPIC_API_KEY` repository secret, which triggers installation",
+          "correct": false,
+          "rationale": "The secret authenticates the action; it does not install the app."
+        }
+      ],
+      "explanation": "The `/install-github-app` slash command installs the app and configures its permissions automatically. Doing it manually means granting read & write on Actions, Checks, Contents, Discussions, Issues, Pull Requests, Repo Hooks and Workflows, plus read on Members, Metadata and Statuses. The app is shared by every Claude feature that integrates with GitHub, including Code Review and the `claude-code-action`, and it must be installed on the repository the action runs in.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Github App"
+        }
+      ]
+    },
+    {
+      "id": "interactive-vs-automation-mode",
+      "type": "single",
+      "prompt": "What single field selects between Interactive mode and Automation mode on a `claude-code-action` step?",
+      "tags": [
+        "action",
+        "modes"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`prompt` — omit it for Interactive mode, provide a value for Automation mode",
+          "correct": true,
+          "rationale": "In Interactive mode the prompt comes from the event payload where the trigger phrase was used."
+        },
+        {
+          "id": "b",
+          "text": "`mode` — set it explicitly to `interactive` or `automation`",
+          "correct": false,
+          "rationale": "There is no `mode` input; the presence or absence of `prompt` is the switch."
+        },
+        {
+          "id": "c",
+          "text": "The event type in `on:` — comment events are interactive, others are automation",
+          "correct": false,
+          "rationale": "Event choice matters for whether a mode makes sense, but it does not select the mode."
+        },
+        {
+          "id": "d",
+          "text": "`claude_args` — passing `--interactive` selects Interactive mode",
+          "correct": false,
+          "rationale": "`claude_args` passes Claude Code CLI flags; no such flag selects the mode."
+        }
+      ],
+      "explanation": "The `prompt` field is the switch. Omit it and the action runs in Interactive mode, taking its prompt from the event payload containing the `@claude` trigger phrase. Provide a value and it runs in Automation mode, doing the same specific thing whenever the event fires.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Interactive mode"
+        },
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Automation mode"
+        }
+      ]
+    },
+    {
+      "id": "trigger-phrase-not-event",
+      "type": "boolean",
+      "prompt": "In Interactive mode, the `@claude` trigger phrase is what triggers the GitHub Actions workflow.",
+      "tags": [
+        "action",
+        "modes"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "The workflow is triggered by a standard GitHub Actions event type — `issue_comment`, `pull_request_review_comment` and so on. Only *then*, if that event's payload contains `@claude`, do the `claude-code-action` steps actually run; otherwise the step logs \"No trigger found\" and is skipped. This is why an Interactive-mode step in a workflow triggered on `push` will never run: a push payload can never contain the trigger phrase.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Interactive mode"
+        }
+      ]
+    },
+    {
+      "id": "action-prechecks",
+      "type": "multi",
+      "prompt": "Before running, the `claude-code-action` performs checks regardless of mode. Which apply? (Select all that apply)",
+      "tags": [
+        "action",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Whether the user has `write` access to the repository, for Issue and Pull Request events",
+          "correct": true,
+          "rationale": "Skipped for any event not triggered by a user."
+        },
+        {
+          "id": "b",
+          "text": "Users without write access can still be allowed via `allowed_non_write_users` plus a `github_token`",
+          "correct": true,
+          "rationale": "Both the list and the token are needed."
+        },
+        {
+          "id": "c",
+          "text": "Whether the event was triggered by a human user",
+          "correct": true,
+          "rationale": "Bot-triggered events are rejected."
+        },
+        {
+          "id": "d",
+          "text": "Bots can be permitted by listing them in `allowed_bots`",
+          "correct": true,
+          "rationale": "The escape hatch for legitimate automation."
+        },
+        {
+          "id": "e",
+          "text": "Whether the repository has a `REVIEW.md` file at its root",
+          "correct": false,
+          "rationale": "`REVIEW.md` customises Code Review findings; it is not a precondition for the action to run."
+        }
+      ],
+      "explanation": "Two gates run before the action does anything, and both are about who is asking. Write access is checked for Issue and Pull Request events — skipped when no user triggered the event — with `allowed_non_write_users` plus a `github_token` as the override. Bot-triggered events are rejected unless the bot appears in `allowed_bots`.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Code Github Action"
+        }
+      ]
+    },
+    {
+      "id": "automation-mode-events",
+      "type": "multi",
+      "prompt": "Which GitHub event types lend themselves to Automation mode? (Select all that apply)",
+      "tags": [
+        "action",
+        "modes"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`pull_request` with types opened, synchronize, ready_for_review, reopened",
+          "correct": true,
+          "rationale": "Covers PR creation, new commits pushed to the branch, and draft-to-ready transitions."
+        },
+        {
+          "id": "b",
+          "text": "`schedule`",
+          "correct": true,
+          "rationale": "Runs on a timetable with no user triggering it."
+        },
+        {
+          "id": "c",
+          "text": "`workflow_dispatch`",
+          "correct": true,
+          "rationale": "Runs when a user calls the workflow manually."
+        },
+        {
+          "id": "d",
+          "text": "`push`",
+          "correct": true,
+          "rationale": "Runs when commits are pushed to a branch."
+        },
+        {
+          "id": "e",
+          "text": "`issue_comment` with type created",
+          "correct": false,
+          "rationale": "That is an Interactive-mode event — it exists to carry a human's `@claude` request."
+        }
+      ],
+      "explanation": "Automation mode fits events where something should happen because a specific event occurred, with no human phrasing a request: `pull_request`, `schedule`, `workflow_dispatch` and `push`. Comment and review events belong to Interactive mode, because their payload is where the `@claude` trigger phrase lives.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Automation mode"
+        }
+      ]
+    },
+    {
+      "id": "system-prompt-flags",
+      "type": "single",
+      "prompt": "A workflow needs to add instructions on top of the System Prompt rather than replace it. Which `claude_args` flag?",
+      "tags": [
+        "action",
+        "cli-flags"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`--append-system-prompt`",
+          "correct": true,
+          "rationale": "Appends to the System Prompt supplied by `--system-prompt` and/or the `prompt` input."
+        },
+        {
+          "id": "b",
+          "text": "`--system-prompt`",
+          "correct": false,
+          "rationale": "That replaces the entire System Prompt, overriding the value from the action's `prompt` field."
+        },
+        {
+          "id": "c",
+          "text": "`--append-subagent-system-prompt`",
+          "correct": false,
+          "rationale": "That appends instructions to every *Subagent's* System Prompt, not the main one."
+        },
+        {
+          "id": "d",
+          "text": "`--allowedTools`",
+          "correct": false,
+          "rationale": "That pre-approves tools for the session and has nothing to do with the prompt."
+        }
+      ],
+      "explanation": "The four prompt flags form a grid: `--system-prompt` and `--system-prompt-file` **replace** the System Prompt, while `--append-system-prompt` and `--append-system-prompt-file` **add** to it. `--append-subagent-system-prompt` is separate again, appending to every subagent's prompt. All of them pass through `claude_args`, which accepts any Claude Code CLI argument.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Code CLI Flags"
+        }
+      ]
+    },
+    {
+      "id": "skills-in-action",
+      "type": "multi",
+      "prompt": "Which statements about running Skills from the `claude-code-action` are correct? (Select all that apply)",
+      "tags": [
+        "action",
+        "skills"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A Skill from `.claude/skills` requires `actions/checkout` to run before the Claude action",
+          "correct": true,
+          "rationale": "Otherwise the Skill files do not exist on the Runner."
+        },
+        {
+          "id": "b",
+          "text": "A repository Skill is invoked by passing its name as the `prompt`, e.g. `/code-review`",
+          "correct": true,
+          "rationale": "The Skill name becomes the prompt value."
+        },
+        {
+          "id": "c",
+          "text": "A Plugin Skill requires the `plugin_marketplace` and `plugin` inputs so the plugin is installed",
+          "correct": true,
+          "rationale": "Without those the plugin is never available to invoke."
+        },
+        {
+          "id": "d",
+          "text": "A Plugin Skill is invoked as `/plugin-name:skill-name`",
+          "correct": true,
+          "rationale": "The namespaced form, matching how plugin skills are addressed generally."
+        },
+        {
+          "id": "e",
+          "text": "Repository Skills are fetched automatically by the action, so checkout is unnecessary",
+          "correct": false,
+          "rationale": "They are not — checkout is mandatory for Skills that live in the repository."
+        }
+      ],
+      "explanation": "Both kinds of Skill are invoked through the `prompt` field, but they need different setup. A repository Skill in `.claude/skills` needs `actions/checkout` first so the files exist on the Runner, and is invoked as `/skill-name`. A Plugin Skill needs the `plugin_marketplace` and `plugin` inputs to install the plugin, and is invoked as `/plugin-name:skill-name`.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Advanced Usage"
+        }
+      ]
+    },
+    {
+      "id": "cost-optimization",
+      "type": "single",
+      "prompt": "Which single change does the notes call the best optimization for reducing GitHub Action minutes consumed by `claude-code-action`?",
+      "tags": [
+        "action",
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Use self-hosted runners",
+          "correct": true,
+          "rationale": "Named as the single best optimization, because it avoids paying for GitHub Runners entirely."
+        },
+        {
+          "id": "b",
+          "text": "Set `--max-turns` in `claude_args`",
+          "correct": false,
+          "rationale": "A good practice that limits iterations, but it reduces tokens rather than eliminating runner cost."
+        },
+        {
+          "id": "c",
+          "text": "Keep the `CLAUDE.md` file concise",
+          "correct": false,
+          "rationale": "Also recommended, and it reduces tokens — but not runner minutes."
+        },
+        {
+          "id": "d",
+          "text": "Use GitHub Actions concurrency controls",
+          "correct": false,
+          "rationale": "Limits parallel execution, which helps, but is not the one singled out as best."
+        }
+      ],
+      "explanation": "Self-hosted runners are named as the single best optimization for Action minutes, since they take GitHub's runner billing out of the picture. The rest of the list attacks both minutes and tokens: concurrency controls, workflow-level timeouts to stop runaway jobs, `--max-turns` to limit iterations, issue templates to provide context up front, specific `@claude` requests so fewer turns are needed, and a concise `CLAUDE.md`.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Managing Costs"
+        }
+      ]
+    },
+    {
+      "id": "ci-not-running-on-claude-commits",
+      "type": "single",
+      "prompt": "CI does not run on commits that Claude pushes. What is the first thing to check?",
+      "tags": [
+        "action",
+        "troubleshooting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "That the default `GITHUB_TOKEN` is not being passed to the action — Actions don't run on commits added with it",
+          "correct": true,
+          "rationale": "A deliberate GitHub behaviour that prevents workflow recursion, and the usual cause here."
+        },
+        {
+          "id": "b",
+          "text": "That the Claude GitHub App has Workflows write permission",
+          "correct": false,
+          "rationale": "A permission worth having, but it does not change the `GITHUB_TOKEN` commit behaviour."
+        },
+        {
+          "id": "c",
+          "text": "That the API key is set as a repository secret",
+          "correct": false,
+          "rationale": "That belongs to the \"Claude is not responding\" checklist — here Claude clearly ran and pushed commits."
+        },
+        {
+          "id": "d",
+          "text": "That `include_fix_links` is enabled",
+          "correct": false,
+          "rationale": "That input adds \"Fix This\" links to code reviews; unrelated to CI triggering."
+        }
+      ],
+      "explanation": "GitHub Actions do not run on commits added with the default `GITHUB_TOKEN`, so passing it to `claude-code-action` silently stops downstream CI. The second thing to check is that the CI workflows actually include the event triggers that fire when Claude pushes. Note how this differs from the \"Claude is not responding to `@claude`\" checklist, which is about app installation, workflows being enabled, the API key secret, the exact trigger phrase, and the commenter's write permissions.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Troubleshooting"
+        }
+      ]
+    },
+    {
+      "id": "code-review-severity",
+      "type": "multi",
+      "prompt": "Which severity levels does Claude Code Review tag findings with? (Select all that apply)",
+      "tags": [
+        "code-review"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`Important` — should be fixed before the PR is merged",
+          "correct": true,
+          "rationale": "The blocking-ish tier, though Code Review does not actually block."
+        },
+        {
+          "id": "b",
+          "text": "`Nit` — a minor issue that should be fixed but does not block the PR",
+          "correct": true,
+          "rationale": "Also the severity assigned to CLAUDE.md rule violations."
+        },
+        {
+          "id": "c",
+          "text": "`Pre-Existing` — a bug that exists but was not introduced by this PR",
+          "correct": true,
+          "rationale": "Separates \"you broke this\" from \"this was already broken\"."
+        },
+        {
+          "id": "d",
+          "text": "`Critical` — a security issue that blocks the merge automatically",
+          "correct": false,
+          "rationale": "Not a severity level, and Code Review does not block merges at all."
+        },
+        {
+          "id": "e",
+          "text": "`Suggestion` — an optional improvement",
+          "correct": false,
+          "rationale": "Invented. Minor issues are tagged `Nit`."
+        }
+      ],
+      "explanation": "The three levels are `Important`, `Nit` and `Pre-Existing`. Code Review is a managed service that reviews PRs using a fleet of specialised subagents and leaves findings as inline comments — but it does **not** approve or block the pull requests it analyzes. Reviewers can react to each comment with 👍 or 👎, and Anthropic uses those responses to fine-tune the reviewer subagents.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Code Review"
+        }
+      ]
+    },
+    {
+      "id": "code-review-triggers",
+      "type": "multi",
+      "prompt": "When does Claude Code Review run on a pull request? (Select all that apply)",
+      "tags": [
+        "code-review"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "When a new PR is opened",
+          "correct": true,
+          "rationale": "Automatic on creation."
+        },
+        {
+          "id": "b",
+          "text": "When a PR is updated",
+          "correct": true,
+          "rationale": "Re-reviews as the branch moves."
+        },
+        {
+          "id": "c",
+          "text": "When someone comments `@claude review`",
+          "correct": true,
+          "rationale": "The manual trigger."
+        },
+        {
+          "id": "d",
+          "text": "Continuously, once subscribed with `@claude review always` in a comment",
+          "correct": true,
+          "rationale": "That comment subscribes Code Review to the PR."
+        },
+        {
+          "id": "e",
+          "text": "When the PR is approved by a human reviewer",
+          "correct": false,
+          "rationale": "Not a trigger — and Code Review neither approves nor blocks PRs itself."
+        }
+      ],
+      "explanation": "Code Review runs when a PR is opened, when it is updated, and on demand via `@claude review`. Adding `@claude review always` to a comment subscribes Code Review to that PR. Because it never approves or blocks, it functions as an additional reviewer rather than a merge gate.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Code Review"
+        }
+      ]
+    },
+    {
+      "id": "claude-md-vs-review-md",
+      "type": "single",
+      "prompt": "A team wants to cap how many `nit` findings a review can post. Where does that rule belong?",
+      "tags": [
+        "code-review",
+        "customization"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`REVIEW.md` at the repository root — review-specific guidance used only by the review subagents",
+          "correct": true,
+          "rationale": "Nit volume is explicitly one of the things a REVIEW.md controls."
+        },
+        {
+          "id": "b",
+          "text": "`CLAUDE.md` at the repository root — it applies to everything",
+          "correct": false,
+          "rationale": "`CLAUDE.md` carries project and directory instructions that apply to *all* tasks, not review-specific configuration."
+        },
+        {
+          "id": "c",
+          "text": "`claude_args` on the action step, via `--max-turns`",
+          "correct": false,
+          "rationale": "That limits iterations, not how many findings are reported."
+        },
+        {
+          "id": "d",
+          "text": "A `.claude/skills` Skill invoked as the review prompt",
+          "correct": false,
+          "rationale": "Skills can run reviews, but nit volume has a dedicated home in REVIEW.md."
+        }
+      ],
+      "explanation": "The two files divide by scope. `CLAUDE.md` holds project and directory-level instructions that apply to all tasks — Code Review reads one in every directory, and it applies to that directory and below, so a root file applies everywhere while `src/ui/components/CLAUDE.md` applies only to that subtree. Violations of a `CLAUDE.md` rule are flagged as `nit`. `REVIEW.md` lives at the repository root, is used only by the review subagents, and is where review-specific rules belong: severity redefinition, nit volume caps, skip rules, repo-specific checks, verification bars, re-review convergence, and summary shape. Note `@import` syntax is not supported in `REVIEW.md`.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Customizing Reviews"
+        }
+      ]
+    },
+    {
+      "id": "review-verification-bar",
+      "type": "single",
+      "prompt": "A `REVIEW.md` rule requires a `file:line` citation for any behaviour claim and forbids inferring from naming. What is that rule for?",
+      "tags": [
+        "code-review",
+        "customization"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A verification bar — it demands evidence before a class of finding is reported, cutting down false positives",
+          "correct": true,
+          "rationale": "Requiring a citation forces the reviewer to have actually read the code it is claiming about."
+        },
+        {
+          "id": "b",
+          "text": "A re-review convergence rule — it stops repeated reviews spiralling",
+          "correct": false,
+          "rationale": "That is a separate rule type, such as \"if the PR has already been reviewed do not flag new nit findings\"."
+        },
+        {
+          "id": "c",
+          "text": "A summary shape rule — it formats the review body",
+          "correct": false,
+          "rationale": "Summary shape governs the review body, e.g. including a tally like \"4 factual, 2 style\"."
+        },
+        {
+          "id": "d",
+          "text": "A skip rule — it excludes paths from review",
+          "correct": false,
+          "rationale": "Skip rules list paths, branch patterns and finding categories to post nothing for."
+        }
+      ],
+      "explanation": "This is a **verification bar**: it requires evidence before a class of finding may be reported, which cuts down false positives by forcing the reviewer to ground a behavioural claim in an actual line of code rather than inferring it from a variable name. It sits alongside the other `REVIEW.md` rule types — severity redefinition, nit volume, skip rules, repo-specific checks, re-review convergence, and summary shape.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Customizing Reviews"
+        }
+      ]
+    },
+    {
+      "id": "action-claude-md-contents",
+      "type": "multi",
+      "prompt": "The `claude-code-action` loads the repository's `CLAUDE.md` each session. What should it contain as a best practice? (Select all that apply)",
+      "tags": [
+        "action",
+        "customization"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Style guidelines",
+          "correct": true,
+          "rationale": "So generated and reviewed code matches the codebase."
+        },
+        {
+          "id": "b",
+          "text": "Review criteria",
+          "correct": true,
+          "rationale": "What the team cares about in a review."
+        },
+        {
+          "id": "c",
+          "text": "Project-specific rules",
+          "correct": true,
+          "rationale": "Constraints that always apply."
+        },
+        {
+          "id": "d",
+          "text": "Preferred patterns",
+          "correct": true,
+          "rationale": "The idioms to follow rather than invent."
+        },
+        {
+          "id": "e",
+          "text": "The API key, so the action can authenticate without a secret",
+          "correct": false,
+          "rationale": "Credentials belong in repository secrets, never in a committed file."
+        },
+        {
+          "id": "f",
+          "text": "An exhaustive architectural history of the repository",
+          "correct": false,
+          "rationale": "Directly at odds with the cost guidance, which says to keep `CLAUDE.md` concise."
+        }
+      ],
+      "explanation": "Just like Claude Code itself, the action loads `CLAUDE.md` into context every session, so it should carry style guidelines, review criteria, project-specific rules and preferred patterns. The counterweight is the cost guidance: keep it concise, because everything in it is re-read on every run.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Code Github Action"
+        },
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Managing Costs"
+        }
+      ]
+    },
+    {
+      "id": "two-review-solutions",
+      "type": "single",
+      "prompt": "What are the two ways to enable automatic code reviews on a GitHub repository?",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Anthropic's hosted `Code Review` solution, or the `Claude Code` GitHub Action",
+          "correct": true,
+          "rationale": "One is a managed service; the other is a workflow step you control."
+        },
+        {
+          "id": "b",
+          "text": "The Claude GitHub App, or an MCP server for GitHub",
+          "correct": false,
+          "rationale": "The GitHub App is a shared prerequisite for both solutions, not one of them."
+        },
+        {
+          "id": "c",
+          "text": "A `REVIEW.md` file, or a `CLAUDE.md` file",
+          "correct": false,
+          "rationale": "Those customise what a review flags; neither enables reviewing."
+        },
+        {
+          "id": "d",
+          "text": "Interactive mode, or Automation mode",
+          "correct": false,
+          "rationale": "Those are the two modes of the *action*, so they sit inside one of the two solutions."
+        }
+      ],
+      "explanation": "The two options are the hosted `Code Review` service and the `claude-code-action` GitHub Action. They share the Claude GitHub App as a prerequisite — the app is used by every Claude feature that integrates with GitHub — but differ in control: Code Review is managed and opinionated, while the action runs whatever prompt you give it in your own workflow.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "section": "Automatic code reviews can be enabled for a Github Repository"
+        }
+      ]
+    },
+    {
+      "id": "app-readonly-permissions",
+      "type": "multi",
+      "prompt": "Which Claude GitHub App permissions are **read only** rather than read & write? (Select all that apply)",
+      "tags": [
+        "github-app"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Members",
+          "correct": true,
+          "rationale": "Read — needed to resolve team membership, not to change it."
+        },
+        {
+          "id": "b",
+          "text": "Metadata",
+          "correct": true,
+          "rationale": "Read — the baseline permission every app needs."
+        },
+        {
+          "id": "c",
+          "text": "Statuses",
+          "correct": true,
+          "rationale": "Read — Claude reads check status rather than setting it."
+        },
+        {
+          "id": "d",
+          "text": "Pull Requests",
+          "correct": false,
+          "rationale": "Read & write — Claude comments on and updates PRs."
+        },
+        {
+          "id": "e",
+          "text": "Workflows",
+          "correct": false,
+          "rationale": "Read & write."
+        },
+        {
+          "id": "f",
+          "text": "Contents",
+          "correct": false,
+          "rationale": "Read & write — Claude pushes commits."
+        }
+      ],
+      "explanation": "Three permissions are read-only — Members, Metadata and Statuses — and the rest are read & write: Actions, Checks, Contents, Discussions, Issues, Pull Requests, Repo Hooks and Workflows. The split follows what Claude actually does: it writes code, comments and workflow files, but only *reads* who is in which team and what the current check state is. `/install-github-app` configures all of this for you.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Github App"
+        }
+      ]
+    },
+    {
+      "id": "app-must-be-installed",
+      "type": "boolean",
+      "prompt": "The Claude GitHub App must be installed on the specific repository where `claude-code-action` will be used.",
+      "tags": [
+        "github-app",
+        "action"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "Installing the app at the organization level is not enough — it must be installed on the repository the action runs in. This is also the first item on the \"Claude is not responding to `@claude`\" troubleshooting checklist, ahead of checking that workflows are enabled and that the API key secret is set.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Github App"
+        },
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Troubleshooting"
+        }
+      ]
+    },
+    {
+      "id": "interactive-events",
+      "type": "multi",
+      "prompt": "Which GitHub events suit `claude-code-action` in Interactive mode? (Select all that apply)",
+      "tags": [
+        "action",
+        "modes"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`issue_comment` (created)",
+          "correct": true,
+          "rationale": "A comment added to an issue can carry the trigger phrase."
+        },
+        {
+          "id": "b",
+          "text": "`pull_request_review_comment` (created)",
+          "correct": true,
+          "rationale": "A review comment can carry it too."
+        },
+        {
+          "id": "c",
+          "text": "`pull_request_review` (submitted, edited)",
+          "correct": true,
+          "rationale": "Runs when a review is submitted or updated."
+        },
+        {
+          "id": "d",
+          "text": "`issues` (opened, assigned, labeled)",
+          "correct": true,
+          "rationale": "Trigger phrase in the title or body, assignment to \"claude\", or the claude label."
+        },
+        {
+          "id": "e",
+          "text": "`schedule`",
+          "correct": false,
+          "rationale": "Nothing human phrases a request on a schedule — that is an Automation-mode event."
+        },
+        {
+          "id": "f",
+          "text": "`push`",
+          "correct": false,
+          "rationale": "A push payload can never contain the trigger phrase, so an Interactive step there never fires."
+        }
+      ],
+      "explanation": "Interactive mode responds to `@claude` mentions, so it needs events whose payload can carry human text: `issue_comment`, `pull_request` (opened, with the phrase in title or description), `pull_request_review`, `pull_request_review_comment`, and `issues`. The `issues` event is the broadest — it fires on the trigger phrase in the title or body, on assignment to \"claude\", or on the claude label being applied.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Interactive mode"
+        }
+      ]
+    },
+    {
+      "id": "issues-event-three-paths",
+      "type": "single",
+      "prompt": "Besides the `@claude` phrase appearing in an issue's title or body, what else makes the `issues` event run a Claude step?",
+      "tags": [
+        "action",
+        "modes"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Assigning the issue to \"claude\", or applying the claude label",
+          "correct": true,
+          "rationale": "Three distinct paths on one event, only one of which involves typing the phrase."
+        },
+        {
+          "id": "b",
+          "text": "Closing the issue",
+          "correct": false,
+          "rationale": "Not one of the listed types — the types are opened, assigned and labeled."
+        },
+        {
+          "id": "c",
+          "text": "Adding the issue to a milestone",
+          "correct": false,
+          "rationale": "Not a listed type."
+        },
+        {
+          "id": "d",
+          "text": "Nothing — the trigger phrase is the only path",
+          "correct": false,
+          "rationale": "Assignment and labelling both work, which is what makes this event unusual."
+        }
+      ],
+      "explanation": "The `issues` event is filtered on `opened`, `assigned` and `labeled`, giving three ways in: the trigger phrase in the title or body, assigning the issue to \"claude\", or applying the claude label. Assignment and labelling are useful because they let a maintainer route work to Claude during triage without editing the issue text.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Interactive mode"
+        }
+      ]
+    },
+    {
+      "id": "push-interactive-warning",
+      "type": "single",
+      "prompt": "A workflow triggers on `push` and contains a `claude-code-action` step with no `prompt`. What happens?",
+      "tags": [
+        "action",
+        "modes",
+        "troubleshooting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Nothing — the step logs \"No trigger found\" and is skipped, because a push payload can never contain `@claude`",
+          "correct": true,
+          "rationale": "Omitting `prompt` selects Interactive mode, which needs the trigger phrase in the event payload."
+        },
+        {
+          "id": "b",
+          "text": "It runs with an empty prompt and Claude asks what to do",
+          "correct": false,
+          "rationale": "There is no interactive session to ask into; the step is simply skipped."
+        },
+        {
+          "id": "c",
+          "text": "The workflow fails with a configuration error",
+          "correct": false,
+          "rationale": "It is a valid configuration that silently does nothing, which is what makes it a trap."
+        },
+        {
+          "id": "d",
+          "text": "It falls back to Automation mode using the commit message as the prompt",
+          "correct": false,
+          "rationale": "There is no such fallback — Automation mode requires an explicit `prompt`."
+        }
+      ],
+      "explanation": "This is the trap worth internalising. Omitting `prompt` selects Interactive mode, and Interactive mode takes its prompt from the `@claude` phrase in the event payload. A push payload never contains it, so the step logs \"No trigger found\" and skips — no error, no output, just nothing. A `push`-triggered workflow needs Automation mode and an explicit prompt.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Interactive mode"
+        }
+      ]
+    },
+    {
+      "id": "action-inputs",
+      "type": "multi",
+      "prompt": "Which statements about `claude-code-action` inputs are correct? (Select all that apply)",
+      "tags": [
+        "action",
+        "inputs"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`prompt` holds instructions for Claude; if omitted the `@claude` trigger phrase is used instead",
+          "correct": true,
+          "rationale": "The same field that selects the mode."
+        },
+        {
+          "id": "b",
+          "text": "`claude_args` accepts Claude Code CLI flags such as `--agent` and `--allowedTools`",
+          "correct": true,
+          "rationale": "The passthrough for anything the CLI supports."
+        },
+        {
+          "id": "c",
+          "text": "`include_fix_links` defaults to True",
+          "correct": true,
+          "rationale": "On unless you turn it off."
+        },
+        {
+          "id": "d",
+          "text": "`include_fix_links` adds 'Fix This' links that open Claude Code with context to fix the issue",
+          "correct": true,
+          "rationale": "A handoff from review finding to local fix."
+        },
+        {
+          "id": "e",
+          "text": "`anthropic_api_key` must be hard-coded in the workflow file",
+          "correct": false,
+          "rationale": "It comes from a repository secret — and `/install-github-app` sets that up automatically."
+        }
+      ],
+      "explanation": "Three inputs carry most of the configuration: `prompt` (which doubles as the mode switch), `claude_args` (a passthrough for any Claude Code CLI flag), and `include_fix_links`, on by default, which adds 'Fix This' links in code reviews that open Claude Code with the context needed to fix the finding.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Code Action Inputs"
+        }
+      ]
+    },
+    {
+      "id": "disallowed-tools-nuance",
+      "type": "single",
+      "prompt": "How does `--disallowedTools` differ from simply leaving a tool out of `--allowedTools`?",
+      "tags": [
+        "action",
+        "cli-flags"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A disallowed tool cannot be used *and* Claude should not even ask permission to use it",
+          "correct": true,
+          "rationale": "It suppresses the permission prompt, not just the capability."
+        },
+        {
+          "id": "b",
+          "text": "It removes the tool from the session entirely so it does not consume context",
+          "correct": false,
+          "rationale": "Context savings come from on-demand tool loading, not from this flag."
+        },
+        {
+          "id": "c",
+          "text": "It is an alias — the two flags have identical effect",
+          "correct": false,
+          "rationale": "`--allowedTools` pre-approves; `--disallowedTools` forbids and silences the request."
+        },
+        {
+          "id": "d",
+          "text": "It applies only to subagents",
+          "correct": false,
+          "rationale": "Subagent-specific customisation is `--append-subagent-system-prompt`."
+        }
+      ],
+      "explanation": "`--allowedTools` is a list of pre-approved tools Claude may use in the session. `--disallowedTools` goes further than omission: the tool cannot be used and Claude should not even ask permission for it. In an unattended CI run that distinction matters, because a permission request nobody can answer is just a stalled job.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Code CLI Flags"
+        }
+      ]
+    },
+    {
+      "id": "system-prompt-file-variants",
+      "type": "multi",
+      "prompt": "Which `claude_args` flags load System Prompt text from a **file** rather than inline? (Select all that apply)",
+      "tags": [
+        "action",
+        "cli-flags"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`--system-prompt-file` — loads a System Prompt from a file, replacing the default",
+          "correct": true,
+          "rationale": "The file-based replacement."
+        },
+        {
+          "id": "b",
+          "text": "`--append-system-prompt-file` — appends instructions from a file",
+          "correct": true,
+          "rationale": "The file-based append."
+        },
+        {
+          "id": "c",
+          "text": "`--system-prompt` — replaces the entire System Prompt",
+          "correct": false,
+          "rationale": "Inline text, not a file."
+        },
+        {
+          "id": "d",
+          "text": "`--append-system-prompt` — appends instructions inline",
+          "correct": false,
+          "rationale": "Inline text."
+        },
+        {
+          "id": "e",
+          "text": "`--append-subagent-system-prompt` — appends to every subagent's prompt",
+          "correct": false,
+          "rationale": "Inline, and aimed at subagents rather than the main prompt."
+        }
+      ],
+      "explanation": "The prompt flags form a two-by-two grid — replace versus append, inline versus file: `--system-prompt` / `--system-prompt-file` replace, and `--append-system-prompt` / `--append-system-prompt-file` add. `--append-subagent-system-prompt` sits outside the grid, appending custom instructions to every subagent's System Prompt.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Code CLI Flags"
+        }
+      ]
+    },
+    {
+      "id": "model-and-effort-flags",
+      "type": "multi",
+      "prompt": "Which session-level choices can be made through `claude_args`? (Select all that apply)",
+      "tags": [
+        "action",
+        "cli-flags"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`--model` selects which Anthropic model is used for reasoning",
+          "correct": true,
+          "rationale": "Per-session model choice."
+        },
+        {
+          "id": "b",
+          "text": "`--effort` selects the reasoning effort level",
+          "correct": true,
+          "rationale": "How much reasoning before responding."
+        },
+        {
+          "id": "c",
+          "text": "`--max-turns` limits how many iterations Claude takes",
+          "correct": true,
+          "rationale": "Called out under cost management as a way to bound iterations."
+        },
+        {
+          "id": "d",
+          "text": "`--agent` selects a custom agent definition",
+          "correct": true,
+          "rationale": "Listed as an example of a CLI flag `claude_args` accepts."
+        },
+        {
+          "id": "e",
+          "text": "`--temperature` sets output randomness",
+          "correct": false,
+          "rationale": "Temperature is a Messages API parameter, not one of the CLI flags listed here."
+        }
+      ],
+      "explanation": "`claude_args` accepts any Claude Code CLI argument, and the ones that matter most in CI are the levers on cost and quality: `--model`, `--effort`, `--max-turns`, `--agent`, and the tool allow/deny lists. Setting `--max-turns` is one of the named cost-optimization practices, since a runaway agentic loop burns both tokens and Action minutes.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Code CLI Flags"
+        },
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Managing Costs"
+        }
+      ]
+    },
+    {
+      "id": "plugin-skill-inputs",
+      "type": "single",
+      "prompt": "A workflow needs to run a Skill that ships in a plugin. What must the step provide?",
+      "tags": [
+        "action",
+        "skills"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The `plugin_marketplaces` and `plugins` inputs, so the plugin is installed before the Skill is invoked",
+          "correct": true,
+          "rationale": "Without installation there is no Skill to call."
+        },
+        {
+          "id": "b",
+          "text": "An `actions/checkout` step, so the plugin files exist on the Runner",
+          "correct": false,
+          "rationale": "Checkout is required for Skills in the repository's `.claude/skills`, not for plugin Skills."
+        },
+        {
+          "id": "c",
+          "text": "The plugin's Skill copied into `.claude/skills` first",
+          "correct": false,
+          "rationale": "Plugin Skills are installed as a plugin rather than vendored."
+        },
+        {
+          "id": "d",
+          "text": "Nothing beyond the `prompt` — plugins resolve automatically",
+          "correct": false,
+          "rationale": "The inputs are mandatory for the plugin to be available."
+        }
+      ],
+      "explanation": "The two Skill sources need different setup. A repository Skill in `.claude/skills` needs `actions/checkout` so the files are on the Runner, and is invoked as `/skill-name`. A plugin Skill needs the marketplace and plugin inputs to install it, and is invoked with the namespaced form `/plugin-name:skill-name` — matching how plugin skills are addressed everywhere else.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Advanced Usage"
+        }
+      ]
+    },
+    {
+      "id": "trigger-phrase-exact",
+      "type": "single",
+      "prompt": "Claude is not responding to review requests in comments. Which of these is a genuine cause per the troubleshooting list?",
+      "tags": [
+        "action",
+        "troubleshooting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The comment used `/claude` or `@claude-bot` rather than exactly `@claude`",
+          "correct": true,
+          "rationale": "One of the five checks — the phrase has to be exact."
+        },
+        {
+          "id": "b",
+          "text": "The repository has no `REVIEW.md`",
+          "correct": false,
+          "rationale": "`REVIEW.md` customises findings; its absence does not stop Claude responding."
+        },
+        {
+          "id": "c",
+          "text": "`include_fix_links` is disabled",
+          "correct": false,
+          "rationale": "That only controls whether 'Fix This' links appear in reviews."
+        },
+        {
+          "id": "d",
+          "text": "The workflow is missing a `--model` flag",
+          "correct": false,
+          "rationale": "Model selection is optional."
+        }
+      ],
+      "explanation": "The five checks for \"Claude isn't responding\" are: the GitHub App is installed on the repository, workflows are enabled for it, the API key or OAuth token is set as a repository secret, the command is exactly `@claude` (not `/claude` or `@claude-bot`), and the commenting user has write permissions. Notice how each maps to a different layer — installation, repo settings, credentials, syntax, authorization.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Troubleshooting"
+        }
+      ]
+    },
+    {
+      "id": "auth-error-troubleshooting",
+      "type": "multi",
+      "prompt": "A workflow fails with an authentication error. Which checks does the troubleshooting section give? (Select all that apply)",
+      "tags": [
+        "action",
+        "troubleshooting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Confirm the API key or OAuth token works with a local `claude` instance",
+          "correct": true,
+          "rationale": "Isolates whether the credential itself is the problem."
+        },
+        {
+          "id": "b",
+          "text": "Consult the cloud provider's troubleshooting docs if using Bedrock, Microsoft Foundry or Google Cloud's agent platform",
+          "correct": true,
+          "rationale": "Third-party hosting has its own auth path."
+        },
+        {
+          "id": "c",
+          "text": "Verify the commenting user has write access",
+          "correct": false,
+          "rationale": "That belongs to the \"Claude isn't responding\" checklist, not auth errors."
+        },
+        {
+          "id": "d",
+          "text": "Remove the `GITHUB_TOKEN` from the action",
+          "correct": false,
+          "rationale": "That is the fix for CI not running on Claude's commits."
+        },
+        {
+          "id": "e",
+          "text": "Re-run `/install-github-app`",
+          "correct": false,
+          "rationale": "That configures app permissions, not model credentials."
+        }
+      ],
+      "explanation": "Auth errors get two checks: prove the credential works locally with `claude`, then — if the model is served through Bedrock, Microsoft Foundry or Google Cloud — follow that provider's troubleshooting docs, because the failure may be in their auth chain rather than Anthropic's. Keeping the three troubleshooting checklists apart (not responding, CI not running, auth errors) is most of the diagnostic value.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Troubleshooting"
+        }
+      ]
+    },
+    {
+      "id": "code-review-subagents",
+      "type": "multi",
+      "prompt": "Which statements describe how Claude Code Review works? (Select all that apply)",
+      "tags": [
+        "code-review"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It is a managed service that reviews PRs using a fleet of specialised subagents",
+          "correct": true,
+          "rationale": "Not a single reviewer but several specialised ones."
+        },
+        {
+          "id": "b",
+          "text": "Findings are tagged by severity and left as inline comments",
+          "correct": true,
+          "rationale": "Comments land on the lines they concern."
+        },
+        {
+          "id": "c",
+          "text": "Reacting 👍 or 👎 to a comment feeds back into fine-tuning the reviewer subagents",
+          "correct": true,
+          "rationale": "Anthropic collects the responses for that purpose."
+        },
+        {
+          "id": "d",
+          "text": "It approves a PR once no Important findings remain",
+          "correct": false,
+          "rationale": "Code Review does not approve or block the PRs it analyzes at all."
+        },
+        {
+          "id": "e",
+          "text": "It replaces the need for the Claude GitHub App",
+          "correct": false,
+          "rationale": "The app is shared by every Claude GitHub integration, Code Review included."
+        }
+      ],
+      "explanation": "Code Review is a managed service built on a fleet of specialised subagents, leaving severity-tagged inline comments. It deliberately does not approve or block — it behaves as an extra reviewer rather than a merge gate. The 👍/👎 reactions are not cosmetic: Anthropic collects them to fine-tune the reviewer subagents.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Code Review"
+        }
+      ]
+    },
+    {
+      "id": "claude-md-directory-scope",
+      "type": "single",
+      "prompt": "A repository has `CLAUDE.md` at the root and another in `src/ui/components`. Which applies when Code Review looks at a file in `src/api`?",
+      "tags": [
+        "code-review",
+        "customization"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Only the root one — a `CLAUDE.md` applies to its own directory and subdirectories",
+          "correct": true,
+          "rationale": "`src/ui/components` is not an ancestor of `src/api`."
+        },
+        {
+          "id": "b",
+          "text": "Both, since Code Review reads every `CLAUDE.md` in the repository",
+          "correct": false,
+          "rationale": "It reads them all, but each applies only to its own subtree."
+        },
+        {
+          "id": "c",
+          "text": "Only the components one, because the more specific file wins",
+          "correct": false,
+          "rationale": "Specificity does not override scope — the file simply does not cover `src/api`."
+        },
+        {
+          "id": "d",
+          "text": "Neither — only `REVIEW.md` affects review findings",
+          "correct": false,
+          "rationale": "`CLAUDE.md` rules very much affect findings; violations are flagged as `nit`."
+        }
+      ],
+      "explanation": "Code Review reads a `CLAUDE.md` in every directory, and each one applies to that directory and its subdirectories. So a root file covers everything, while `src/ui/components/CLAUDE.md` covers only that subtree. Violations of a `CLAUDE.md` rule are flagged as `nit` — and if a code change makes a `CLAUDE.md` statement outdated, the `CLAUDE.md` file itself picks up a `nit` finding.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Customizing Reviews"
+        }
+      ]
+    },
+    {
+      "id": "outdated-claude-md",
+      "type": "boolean",
+      "prompt": "If a code change makes a statement in `CLAUDE.md` outdated, Code Review flags the `CLAUDE.md` file itself with a `nit` finding.",
+      "tags": [
+        "code-review",
+        "customization"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "Documentation drift is treated as a finding like any other. Code Review flags code that violates a `CLAUDE.md` rule as `nit`, and it flags the `CLAUDE.md` file when a change makes one of its statements outdated — which is the mechanism that keeps a long-lived instructions file from quietly becoming wrong.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Customizing Reviews"
+        }
+      ]
+    },
+    {
+      "id": "review-md-rule-types",
+      "type": "multi",
+      "prompt": "Which rule types belong in a `REVIEW.md`? (Select all that apply)",
+      "tags": [
+        "code-review",
+        "customization"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`Severity` — redefining which classes of finding are `important` versus `nit`",
+          "correct": true,
+          "rationale": "Reclassifying what matters in this repo."
+        },
+        {
+          "id": "b",
+          "text": "`Skip rules` — paths, branch patterns and finding categories to post nothing for",
+          "correct": true,
+          "rationale": "Silencing whole areas."
+        },
+        {
+          "id": "c",
+          "text": "`Repo-specific checks` — e.g. \"all API routes must have an integration test\"",
+          "correct": true,
+          "rationale": "Checks that only make sense here."
+        },
+        {
+          "id": "d",
+          "text": "`Re-review Convergence` — how to handle a PR that has already been reviewed",
+          "correct": true,
+          "rationale": "Stops a one-line change spiralling into repeated reviews."
+        },
+        {
+          "id": "e",
+          "text": "`Summary Shape` — how the review body should be formatted",
+          "correct": true,
+          "rationale": "E.g. a one-line tally such as \"4 factual, 2 style\"."
+        },
+        {
+          "id": "f",
+          "text": "`Model Selection` — which Anthropic model reviews the PR",
+          "correct": false,
+          "rationale": "Not a `REVIEW.md` rule; model choice is a `claude_args --model` concern on the action."
+        }
+      ],
+      "explanation": "`REVIEW.md` lives at the repository root and is used only by the review subagents. Its documented rule types are Severity, Nit Volume, Skip rules, Repo-specific checks, Verification bar, Re-review Convergence, and Summary Shape. One syntax limitation to remember: `@import` is not supported in `REVIEW.md`.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Customizing Reviews"
+        }
+      ]
+    },
+    {
+      "id": "review-md-import",
+      "type": "boolean",
+      "prompt": "`REVIEW.md` supports `@import` syntax for pulling in shared review rules from another file.",
+      "tags": [
+        "code-review",
+        "customization"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "`@import` syntax is not supported for `REVIEW.md`. Shared review rules therefore have to be duplicated into each repository's file rather than referenced from a central one — worth knowing before designing an org-wide review standard around imports.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Customizing Reviews"
+        }
+      ]
+    },
+    {
+      "id": "re-review-convergence",
+      "type": "single",
+      "prompt": "A one-line follow-up commit keeps generating fresh rounds of minor review comments. Which `REVIEW.md` rule type addresses this?",
+      "tags": [
+        "code-review",
+        "customization"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Re-review Convergence — e.g. \"if the PR has already been reviewed do not flag new `nit` findings\"",
+          "correct": true,
+          "rationale": "Exactly the stated purpose: preventing one-line changes from spiralling into multiple reviews."
+        },
+        {
+          "id": "b",
+          "text": "Nit Volume — a hard cap on how many `nit` findings a review can include",
+          "correct": false,
+          "rationale": "That bounds a single review's size rather than the behaviour across repeated reviews."
+        },
+        {
+          "id": "c",
+          "text": "Verification bar — requiring evidence before a finding is reported",
+          "correct": false,
+          "rationale": "That reduces false positives, not repetition."
+        },
+        {
+          "id": "d",
+          "text": "Skip rules — excluding paths from review",
+          "correct": false,
+          "rationale": "Too blunt; the path still needs reviewing on the first pass."
+        }
+      ],
+      "explanation": "Nit Volume and Re-review Convergence both restrain noise but at different scopes. Nit Volume caps findings *within* one review. Re-review Convergence governs *subsequent* reviews of the same PR — a rule like \"if already reviewed, do not flag new nits\" is what stops a trivial follow-up commit producing another full round of minor comments.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Customizing Reviews"
+        }
+      ]
+    },
+    {
+      "id": "interactive-workflow-permissions",
+      "type": "multi",
+      "prompt": "Which permissions does the Interactive mode workflow example declare? (Select all that apply)",
+      "tags": [
+        "action",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`contents: write`",
+          "correct": true,
+          "rationale": "So Claude can push commits."
+        },
+        {
+          "id": "b",
+          "text": "`pull-requests: write`",
+          "correct": true,
+          "rationale": "So Claude can comment on and update PRs."
+        },
+        {
+          "id": "c",
+          "text": "`issues: write`",
+          "correct": true,
+          "rationale": "So Claude can respond on issues."
+        },
+        {
+          "id": "d",
+          "text": "`id-token: write`",
+          "correct": true,
+          "rationale": "For OIDC token issuance."
+        },
+        {
+          "id": "e",
+          "text": "`actions: read`",
+          "correct": true,
+          "rationale": "Read-only — enough to inspect workflow state."
+        },
+        {
+          "id": "f",
+          "text": "`packages: write`",
+          "correct": false,
+          "rationale": "Not in the example; publishing packages is not part of responding to a mention."
+        }
+      ],
+      "explanation": "The Interactive example grants write on contents, pull-requests, issues and id-token, plus read on actions. Note this is the *workflow's* `permissions` block, which scopes the `GITHUB_TOKEN` for that run — separate from the Claude GitHub App's own permission set, even though the two overlap in what they cover.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Interactive mode"
+        }
+      ]
+    },
+    {
+      "id": "cost-practices-tokens-vs-minutes",
+      "type": "multi",
+      "prompt": "Which cost practices reduce **tokens** rather than GitHub Action minutes? (Select all that apply)",
+      "tags": [
+        "action",
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Setting `--max-turns` in `claude_args`",
+          "correct": true,
+          "rationale": "Fewer iterations means fewer model calls."
+        },
+        {
+          "id": "b",
+          "text": "Using issue templates to provide context up front",
+          "correct": true,
+          "rationale": "Better initial context means fewer clarifying turns."
+        },
+        {
+          "id": "c",
+          "text": "Being specific in `@claude` requests",
+          "correct": true,
+          "rationale": "Fewer turns to complete the task."
+        },
+        {
+          "id": "d",
+          "text": "Keeping the `CLAUDE.md` file concise",
+          "correct": true,
+          "rationale": "It is re-read into context on every run."
+        },
+        {
+          "id": "e",
+          "text": "Using self-hosted runners",
+          "correct": false,
+          "rationale": "That eliminates GitHub runner billing — minutes, not tokens."
+        },
+        {
+          "id": "f",
+          "text": "Setting workflow-level timeouts",
+          "correct": false,
+          "rationale": "A guard against runaway *jobs*, so it bounds minutes."
+        }
+      ],
+      "explanation": "The cost practices attack two different bills. Minutes: self-hosted runners (the single best optimization), concurrency controls, and workflow timeouts. Tokens: `--max-turns`, issue templates, specific requests, and a concise `CLAUDE.md`. That last one is easy to miss — `CLAUDE.md` is loaded into context every session, so its length is a recurring cost rather than a one-off.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Managing Costs"
+        }
+      ]
+    },
+    {
+      "id": "action-official-name",
+      "type": "single",
+      "prompt": "What is the official name of the GitHub Action, and where is it published?",
+      "tags": [
+        "action"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`claude-code-action`, on the GitHub Actions Marketplace",
+          "correct": true,
+          "rationale": "Referenced in workflows as `anthropics/claude-code-action@v1`."
+        },
+        {
+          "id": "b",
+          "text": "`claude-review-action`, published in the repository's `.github/actions`",
+          "correct": false,
+          "rationale": "`.github/actions` is where a repository defines its *own* Actions."
+        },
+        {
+          "id": "c",
+          "text": "`anthropic-code-review`, installed via the Claude GitHub App",
+          "correct": false,
+          "rationale": "The app is a prerequisite, not a distribution channel for Actions."
+        },
+        {
+          "id": "d",
+          "text": "`claude-code`, the same package as the CLI",
+          "correct": false,
+          "rationale": "The CLI and the Action are distinct, though the Action accepts CLI flags via `claude_args`."
+        }
+      ],
+      "explanation": "The Action is `claude-code-action`, published on the GitHub Actions Marketplace and referenced as `anthropics/claude-code-action@v1`. Like Claude Code itself it loads the repository's `CLAUDE.md` into context each session, which is why style guidelines, review criteria, project rules and preferred patterns belong there.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Code Github Action"
+        }
+      ]
+    },
+    {
+      "id": "bot-triggered-events",
+      "type": "single",
+      "prompt": "A bot opens a PR and the Claude step does not run. Why, and what is the fix?",
+      "tags": [
+        "action",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Bot-triggered events are rejected; list the bot in `allowed_bots`",
+          "correct": true,
+          "rationale": "The check asks whether a human triggered the event."
+        },
+        {
+          "id": "b",
+          "text": "Bots lack write access; list them in `allowed_non_write_users`",
+          "correct": false,
+          "rationale": "That field covers users without write access, a separate check."
+        },
+        {
+          "id": "c",
+          "text": "Bot PRs need `id-token: write`; add it to permissions",
+          "correct": false,
+          "rationale": "A permissions issue would not present as a silent skip on bot events specifically."
+        },
+        {
+          "id": "d",
+          "text": "Bots cannot use the trigger phrase; switch to Automation mode",
+          "correct": false,
+          "rationale": "The rejection is about who triggered the event, not about the phrase."
+        }
+      ],
+      "explanation": "Two pre-run checks guard the action, and each has its own override. The write-access check covers Issue and Pull Request events — skipped when no user triggered the event — with `allowed_non_write_users` plus a `github_token` as the escape hatch. The human-user check rejects bot-triggered events unless the bot appears in `allowed_bots`.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/code_review_cicd.md",
+          "heading": "Claude Code Github Action"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1352 @@
+{
+  "id": "agents-sdk",
+  "title": "Agents SDK",
+  "cards": [
+    {
+      "id": "agents-sdk-vs-client-sdk",
+      "type": "single",
+      "prompt": "When should a developer reach for the Agents SDK rather than the Client SDK?",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "When building an agent without implementing a custom tool loop",
+          "correct": true,
+          "rationale": "The Agents SDK wraps the execution engine, ReAct loop, built-in tools and subagents that Claude Code uses."
+        },
+        {
+          "id": "b",
+          "text": "When the application needs direct access to the Messages API",
+          "correct": false,
+          "rationale": "That is the Client SDK. The Agents SDK sits at a higher level of abstraction."
+        },
+        {
+          "id": "c",
+          "text": "When the agent must run inside Claude Code rather than standalone",
+          "correct": false,
+          "rationale": "The SDK exposes what Claude Code is built on; it does not require running inside it."
+        },
+        {
+          "id": "d",
+          "text": "When token cost matters more than development speed",
+          "correct": false,
+          "rationale": "The trade being made is abstraction versus control, not cost versus speed."
+        }
+      ],
+      "explanation": "The Agents SDK wraps the execution engine, ReAct loop, built-in tools and subagents that Claude Code itself uses, which puts it a level above the Client SDK — the Client SDK gives a developer the core Messages API and leaves the loop to them. The stated use case is building an agent without implementing a custom tool loop.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "section": "Use the Agents SDK when building an Agent without implementing a custom tool loop"
+        }
+      ]
+    },
+    {
+      "id": "react-loop-meaning",
+      "type": "single",
+      "prompt": "What does the \"ReAct\" in ReAct loop stand for?",
+      "tags": [
+        "react-loop"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Reason + Act — the loop reasons about an input, decides to call tools, then interprets the results",
+          "correct": true,
+          "rationale": "It is the core construct of how any agentic system works."
+        },
+        {
+          "id": "b",
+          "text": "Retrieve + Action — the loop retrieves context before acting on it",
+          "correct": false,
+          "rationale": "Retrieval is RAG, a separate technique."
+        },
+        {
+          "id": "c",
+          "text": "Recursive Activation — the loop calls itself until the task completes",
+          "correct": false,
+          "rationale": "Invented. The loop repeats, but the name is not about recursion."
+        },
+        {
+          "id": "d",
+          "text": "React — it is named after the UI framework the first agent harness was written in",
+          "correct": false,
+          "rationale": "A tempting coincidence, but the term is Reason + Act."
+        }
+      ],
+      "explanation": "ReAct comes from Reason + Act, and the loop is also called the agentic loop. It is the core construct of every agentic system: reason about an input, decide whether tools are needed, call them, interpret the results, repeat. Every Agent session in the Agents SDK follows this cycle.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "react-loop-cycle",
+      "type": "single",
+      "prompt": "At which stage of the ReAct loop can Hooks intercept, modify or block a tool call?",
+      "tags": [
+        "react-loop",
+        "hooks"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Call Tools — the stage where each returned `ToolUseBlock` is executed and results sent back",
+          "correct": true,
+          "rationale": "Hooks sit around tool execution, which is why `PreToolUse` and `PostToolUse` exist."
+        },
+        {
+          "id": "b",
+          "text": "Receive Prompt — before the input reaches the Model",
+          "correct": false,
+          "rationale": "`UserPromptSubmit` fires around prompts, but tool interception happens at the Call Tools stage."
+        },
+        {
+          "id": "c",
+          "text": "Evaluate and Respond — while the Model is deciding what to do",
+          "correct": false,
+          "rationale": "That stage is the Model's reasoning; there is nothing to intercept there yet."
+        },
+        {
+          "id": "d",
+          "text": "Return Result — as the final answer leaves the SDK",
+          "correct": false,
+          "rationale": "By then the tool calls have already happened."
+        }
+      ],
+      "explanation": "The cycle is: receive the prompt (user prompt + system prompt + message history + tool definitions), evaluate and respond (answer or emit a `ToolUseBlock`), call tools, repeat until no `ToolUseBlock`s come back or the max-turns limit is reached, then return the result. Hooks intercept at the Call Tools stage — which is what `PreToolUse` and `PostToolUse` are for.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "ReAct Loop"
+        }
+      ]
+    },
+    {
+      "id": "hook-trigger-points",
+      "type": "multi",
+      "prompt": "Which are valid Hook trigger points in the Agents SDK? (Select all that apply)",
+      "tags": [
+        "hooks"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`PreToolUse` — before a tool is called",
+          "correct": true,
+          "rationale": "The interception point for blocking or modifying a call."
+        },
+        {
+          "id": "b",
+          "text": "`PostToolUse` — after a tool returns results",
+          "correct": true,
+          "rationale": "Where results can be validated or transformed."
+        },
+        {
+          "id": "c",
+          "text": "`SubagentStart` and `SubagentStop`",
+          "correct": true,
+          "rationale": "Before a subagent spawns and after it completes."
+        },
+        {
+          "id": "d",
+          "text": "`PreCompact` — before the context window is compacted",
+          "correct": true,
+          "rationale": "A chance to act before history is condensed."
+        },
+        {
+          "id": "e",
+          "text": "`PostModelResponse` — after the Model generates any content block",
+          "correct": false,
+          "rationale": "Invented. The trigger covering the end of generation is `Stop`."
+        },
+        {
+          "id": "f",
+          "text": "`PreRequest` — before each HTTP request to the Claude API",
+          "correct": false,
+          "rationale": "Invented. Hooks are defined around loop events, not around individual HTTP requests."
+        }
+      ],
+      "explanation": "The trigger points are `PreToolUse`, `PostToolUse`, `UserPromptSubmit`, `Stop`, `SubagentStart`, `SubagentStop`, and `PreCompact`. Hooks are literal function calls that run in the application process, which has a useful consequence: they do not consume context.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Hooks"
+        }
+      ]
+    },
+    {
+      "id": "hooks-consume-context",
+      "type": "boolean",
+      "prompt": "Because Hooks run at defined points in the ReAct loop, their output consumes part of the agent's context window.",
+      "tags": [
+        "hooks"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "Hooks run in the application process and do not consume context. That is what makes them suitable for guardrails and validation that would be wasteful as prompt instructions — the check happens in your code rather than by spending tokens asking the Model to remember a rule.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Hooks"
+        }
+      ]
+    },
+    {
+      "id": "subagent-inheritance",
+      "type": "multi",
+      "prompt": "A main Agent spawns a subagent normally (not with `fork`). What does the subagent receive? (Select all that apply)",
+      "tags": [
+        "subagents"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A specialized System Prompt tailored for its subtask",
+          "correct": true,
+          "rationale": "One of only two things it starts with."
+        },
+        {
+          "id": "b",
+          "text": "A list of the main Agent's tool definitions, or a subset specified in `tools`",
+          "correct": true,
+          "rationale": "Restricting the list reduces the chance of tool overload."
+        },
+        {
+          "id": "c",
+          "text": "The main Agent's conversation history",
+          "correct": false,
+          "rationale": "It does not — a subagent essentially starts from a blank slate."
+        },
+        {
+          "id": "d",
+          "text": "The main Agent's System Prompt",
+          "correct": false,
+          "rationale": "It gets its own specialized one instead."
+        },
+        {
+          "id": "e",
+          "text": "Preloaded skill content",
+          "correct": false,
+          "rationale": "Not unless explicitly listed in `AgentDefinition.skills`."
+        }
+      ],
+      "explanation": "A subagent starts nearly empty: a specialized System Prompt and a tool list, and nothing else. It does not inherit the main Agent's conversation history, its System Prompt, or preloaded skill content unless skills are explicitly listed. `fork` is the exception — a subagent spawned with `fork` inherits the main Agent's System Prompt, entire conversation history and tools.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Subagents"
+        }
+      ]
+    },
+    {
+      "id": "subagent-fork",
+      "type": "single",
+      "prompt": "A subagent needs the full conversation so far in order to continue the main Agent's work. How is it spawned?",
+      "tags": [
+        "subagents"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "With `fork`, which inherits the main Agent's System Prompt, entire conversation history and tools",
+          "correct": true,
+          "rationale": "The single exception to a subagent starting from a blank slate."
+        },
+        {
+          "id": "b",
+          "text": "By passing the history into the subagent's `initialPrompt`",
+          "correct": false,
+          "rationale": "`initialPrompt` is an auto-submitted user message, and it is ignored when the Agent runs as a subagent."
+        },
+        {
+          "id": "c",
+          "text": "By listing the parent in the subagent's `memory` scope",
+          "correct": false,
+          "rationale": "`memory` controls which CLAUDE.md and project memory scope is loaded, not conversation history."
+        },
+        {
+          "id": "d",
+          "text": "By resuming it with the parent's `session_id`",
+          "correct": false,
+          "rationale": "Resuming restores a *subagent's own* previous history, using both its `session_id` and `agent_id`."
+        }
+      ],
+      "explanation": "`fork` is the exception to subagent isolation: a forked subagent inherits the main Agent's System Prompt, full conversation history and tools. Resuming is a different mechanism — it restores a subagent's own previous run, including its conversation history, tool calls and reasoning blocks, and requires capturing both the `session_id` and the `agent_id` first.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Subagents"
+        },
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Resuming Subagents"
+        }
+      ]
+    },
+    {
+      "id": "agent-definition-params",
+      "type": "multi",
+      "prompt": "Which statements about defining a subagent are correct? (Select all that apply)",
+      "tags": [
+        "subagents"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Omitting `tools` means the Agent inherits every tool available to subagents",
+          "correct": true,
+          "rationale": "Which is why explicitly narrowing the list is the defence against tool overload."
+        },
+        {
+          "id": "b",
+          "text": "`disallowedTools` supports MCP-level patterns such as `mcp__server__*`",
+          "correct": true,
+          "rationale": "Useful for excluding a whole third-party server at once."
+        },
+        {
+          "id": "c",
+          "text": "`background: True` runs the Agent as a non-blocking background task",
+          "correct": true,
+          "rationale": "As opposed to blocking until it completes."
+        },
+        {
+          "id": "d",
+          "text": "A programmatically defined Agent takes precedence over a filesystem-based one",
+          "correct": true,
+          "rationale": "And programmatic definition is the recommended approach."
+        },
+        {
+          "id": "e",
+          "text": "`initialPrompt` is submitted whether the Agent runs as the main Agent or as a subagent",
+          "correct": false,
+          "rationale": "It is an auto-submitted user message only when the Agent runs as the main Agent — it is ignored when spawned as a subagent."
+        },
+        {
+          "id": "f",
+          "text": "Skills not listed in `skills` cannot be called by the Agent at all",
+          "correct": false,
+          "rationale": "`skills` controls what is *preloaded* into context. Unlisted skills can still be called."
+        }
+      ],
+      "explanation": "Subagents can be defined programmatically — the recommended route, and it wins over a filesystem definition in `.claude/agents` — or as Markdown files. The parameters worth remembering for their surprises are `tools` (omit it and everything is inherited), `skills` (controls preloading, not availability), and `initialPrompt` (ignored when running as a subagent). Including the `Agent` tool in `allowed_tools` auto-approves spawning subagents.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Defining Subagents"
+        }
+      ]
+    },
+    {
+      "id": "builtin-tool-parallelism",
+      "type": "single",
+      "prompt": "Which built-in tools can the Agents SDK run in parallel?",
+      "tags": [
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Read-only tools such as `Read`, `Glob` and `Grep`",
+          "correct": true,
+          "rationale": "Tools that modify state run sequentially, and custom tools default to sequential."
+        },
+        {
+          "id": "b",
+          "text": "All built-in tools, since the SDK manages concurrency",
+          "correct": false,
+          "rationale": "State-modifying tools like `Edit` and `Write` are run sequentially."
+        },
+        {
+          "id": "c",
+          "text": "Only orchestration tools such as `Agent` and `Task Create`",
+          "correct": false,
+          "rationale": "Those spawn work but are not the category singled out for parallel execution."
+        },
+        {
+          "id": "d",
+          "text": "Custom tools, because the developer controls their side effects",
+          "correct": false,
+          "rationale": "Custom tools default to running sequentially precisely because the SDK cannot know their side effects."
+        }
+      ],
+      "explanation": "Read-only tools (`Read`, `Glob`, `Grep`) can run in parallel, while tools that modify state (`Edit`, `Write`) run sequentially — and custom tools default to sequential, since the SDK has no way to know whether yours is safe to parallelise. The built-in set spans file operations, search, execution (`Bash`), web (`WebSearch`, `WebFetch`), discovery (`ToolSearch`), and orchestration (`Agent`, `Skill`, `AskUserQuestion`, task tracking).",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Built-in Tools"
+        }
+      ]
+    },
+    {
+      "id": "toolsearch-purpose",
+      "type": "single",
+      "prompt": "An agent has grown a large tool inventory and is starting to choose the wrong tool. Which built-in tool is designed to help?",
+      "tags": [
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`ToolSearch` — it finds and loads tools on demand instead of pre-loading them all",
+          "correct": true,
+          "rationale": "Fewer tools in context at once means fewer chances of tool overload."
+        },
+        {
+          "id": "b",
+          "text": "`Agent` — spawning a subagent avoids the problem entirely",
+          "correct": false,
+          "rationale": "Restricting a subagent's tool list does reduce tool overload, but `Agent` spawns subagents rather than managing tool discovery."
+        },
+        {
+          "id": "c",
+          "text": "`Skill` — skills replace tools once the inventory grows",
+          "correct": false,
+          "rationale": "Skills supply task-specific expertise; they are not a tool-discovery mechanism."
+        },
+        {
+          "id": "d",
+          "text": "`AskUserQuestion` — the user picks the tool",
+          "correct": false,
+          "rationale": "That surfaces a decision to the user; it does not address the size of the tool inventory."
+        }
+      ],
+      "explanation": "`ToolSearch` is the discovery tool: it finds and loads tools on demand rather than pre-loading every one. That directly targets **Tool Overload** — the phenomenon where an agent has too many tools to choose from and the Model starts choosing badly, also called Tool Bloat or the tool choice selection problem.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Built-in Tools"
+        },
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "react-execution-controls",
+      "type": "multi",
+      "prompt": "Which settings control how the ReAct loop runs? (Select all that apply)",
+      "tags": [
+        "react-loop"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`max_turns` / `maxTurns` — limits the number of Turns that call tools",
+          "correct": true,
+          "rationale": "`max_turns` in the Python SDK, `maxTurns` in the JavaScript SDK."
+        },
+        {
+          "id": "b",
+          "text": "`max_budget_usd` — limits the cost a ReAct loop can run up",
+          "correct": true,
+          "rationale": "A spend ceiling on the loop."
+        },
+        {
+          "id": "c",
+          "text": "`effort` — limits how much reasoning the Model does before responding",
+          "correct": true,
+          "rationale": "Valid values are `low`, `medium`, `high`, `xhigh` and `max`."
+        },
+        {
+          "id": "d",
+          "text": "`max_tokens_per_turn` — caps generation within each Turn",
+          "correct": false,
+          "rationale": "Invented as a loop control. `max_tokens` is a per-request Messages API parameter."
+        },
+        {
+          "id": "e",
+          "text": "`temperature` — lowering it shortens the loop",
+          "correct": false,
+          "rationale": "Temperature controls randomness of output, not loop length."
+        }
+      ],
+      "explanation": "Three controls bound the loop and each bounds a different resource: `max_turns` bounds iterations, `max_budget_usd` bounds money, and `effort` bounds reasoning depth (`low` through `max`). A Turn is one full round trip — receive input, request tool calls, call tools, receive results — all of which happens before control returns from the SDK.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "ReAct Loop Execution Controls"
+        },
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Turns"
+        }
+      ]
+    },
+    {
+      "id": "agents-sdk-capabilities",
+      "type": "multi",
+      "prompt": "Which capabilities does the Agents SDK provide out of the box? (Select all that apply)",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A built-in MCP client handling connection lifecycle, authentication, tool discovery and invocation",
+          "correct": true,
+          "rationale": "So you don't implement the MCP handshake yourself."
+        },
+        {
+          "id": "b",
+          "text": "A permissions engine providing configurable tool-level permissions and enforcement",
+          "correct": true,
+          "rationale": "Removes the need for custom authorization logic around tool execution."
+        },
+        {
+          "id": "c",
+          "text": "Session management including saving, resuming and forking sessions",
+          "correct": true,
+          "rationale": "No custom session storage needed."
+        },
+        {
+          "id": "d",
+          "text": "Loading skills, commands and memory from `.claude` and `~/.claude` directories",
+          "correct": true,
+          "rationale": "Discovery and loading come for free."
+        },
+        {
+          "id": "e",
+          "text": "A vector database for retrieval-augmented generation",
+          "correct": false,
+          "rationale": "RAG storage is not part of the SDK — that is a separate architectural choice."
+        },
+        {
+          "id": "f",
+          "text": "Automatic prompt evaluation and grading of the agent's outputs",
+          "correct": false,
+          "rationale": "Evaluation is a technique you implement, not an SDK capability."
+        }
+      ],
+      "explanation": "The SDK's capabilities are all about not rebuilding plumbing: built-in tools, lifecycle hooks, subagent orchestration, an MCP client, a permissions engine, session persistence (save/resume/fork), skills-commands-memory loading from `.claude` and `~/.claude`, and a plugin framework. Retrieval and evaluation stay your design decisions.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "section": "The Agents SDK includes the following capabilities"
+        }
+      ]
+    },
+    {
+      "id": "sendmessage-tool",
+      "type": "boolean",
+      "prompt": "The `SendMessage` tool lets an Agent message another named Agent, including one running in a different session.",
+      "tags": [
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "`SendMessage` allows an Agent to send a message to any other named Agent, including Agents running in a different session. That cross-session reach is what makes it more than intra-loop coordination — it turns separately running agents into something addressable.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Built-in Tools"
+        }
+      ]
+    },
+    {
+      "id": "tool-overload-definition",
+      "type": "single",
+      "prompt": "What is \"Tool Overload\"?",
+      "tags": [
+        "terminology",
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "An Agent has too many Tools to choose from and the Model starts making poor choices about which to use",
+          "correct": true,
+          "rationale": "Also called Tool Bloat or the tool choice selection problem."
+        },
+        {
+          "id": "b",
+          "text": "Too many tools run in parallel and exhaust the host's resources",
+          "correct": false,
+          "rationale": "It is a reasoning problem, not a resource one."
+        },
+        {
+          "id": "c",
+          "text": "A single tool is called repeatedly until the max-turns limit is hit",
+          "correct": false,
+          "rationale": "That is a loop bounded by `max_turns`, not tool overload."
+        },
+        {
+          "id": "d",
+          "text": "Tool definitions consume so much context that the conversation history is compacted",
+          "correct": false,
+          "rationale": "Context pressure is a related consequence, but the definition is about choice quality."
+        }
+      ],
+      "explanation": "Tool Overload — also Tool Bloat, or the tool choice selection problem — is when an Agent has so many Tools that the Model begins choosing badly. Two mechanisms in the SDK address it: `ToolSearch` loads tools on demand rather than pre-loading them all, and restricting a subagent's `tools` list narrows what it has to choose between.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "react-loop-receive-prompt",
+      "type": "multi",
+      "prompt": "At the Receive Prompt stage of the ReAct loop, what is sent to the Model for initial reasoning? (Select all that apply)",
+      "tags": [
+        "react-loop"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The User Prompt",
+          "correct": true,
+          "rationale": "The request itself."
+        },
+        {
+          "id": "b",
+          "text": "The System Prompt",
+          "correct": true,
+          "rationale": "The developer's standing instructions."
+        },
+        {
+          "id": "c",
+          "text": "The Message History",
+          "correct": true,
+          "rationale": "Everything that has happened so far."
+        },
+        {
+          "id": "d",
+          "text": "The Tool Definitions",
+          "correct": true,
+          "rationale": "So the Model knows what it can call."
+        },
+        {
+          "id": "e",
+          "text": "The results of the previous run's tool calls only, to save context",
+          "correct": false,
+          "rationale": "The full history goes, not a summary of it — nothing is persisted server-side."
+        }
+      ],
+      "explanation": "Step one of the loop assembles four things: user prompt, system prompt, message history and tool definitions. That list is the same set a single stateless Request carries, which is the point — the SDK is managing the loop, but each iteration is still a complete self-contained call.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "ReAct Loop"
+        }
+      ]
+    },
+    {
+      "id": "react-loop-termination",
+      "type": "single",
+      "prompt": "What ends the repeat phase of the ReAct loop?",
+      "tags": [
+        "react-loop"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "No `ToolUseBlock`s are returned, or the Max Turns limit is reached",
+          "correct": true,
+          "rationale": "Two exit conditions — task complete, or budget exhausted."
+        },
+        {
+          "id": "b",
+          "text": "Only when no `ToolUseBlock`s are returned",
+          "correct": false,
+          "rationale": "That would let a loop run forever; `max_turns` is the backstop."
+        },
+        {
+          "id": "c",
+          "text": "When a `Stop` hook fires",
+          "correct": false,
+          "rationale": "The `Stop` hook runs *after* the Model stops; it observes rather than causes termination."
+        },
+        {
+          "id": "d",
+          "text": "When `max_budget_usd` is reached, which is the only hard limit",
+          "correct": false,
+          "rationale": "A cost limit exists, but the loop's own exit conditions are tool-use and turns."
+        }
+      ],
+      "explanation": "Steps 2 and 3 — evaluate and respond, then call tools — repeat until either no `ToolUseBlock`s come back or the Max Turns limit is reached, at which point the final result is returned. The two conditions are worth distinguishing: one means the agent finished, the other means it ran out of room, and only the first implies the answer is complete.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "ReAct Loop"
+        }
+      ]
+    },
+    {
+      "id": "turn-boundary",
+      "type": "boolean",
+      "prompt": "All the steps of a Turn — receiving input, requesting tool calls, calling tools, receiving results — happen before control is returned from the SDK.",
+      "tags": [
+        "react-loop"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "A Turn is a complete round trip and the SDK does not hand control back mid-way through one. That is what makes `max_turns` a meaningful unit of budget — you are limiting whole cycles, not partial ones — and it is why hooks exist: if you need to intervene inside a Turn, `PreToolUse` and `PostToolUse` are the seams provided for it.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Turns"
+        }
+      ]
+    },
+    {
+      "id": "effort-values",
+      "type": "multi",
+      "prompt": "Which are valid values for the `effort` setting? (Select all that apply)",
+      "tags": [
+        "react-loop"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`low`",
+          "correct": true,
+          "rationale": "The cheapest tier."
+        },
+        {
+          "id": "b",
+          "text": "`medium`",
+          "correct": true,
+          "rationale": "The middle tier."
+        },
+        {
+          "id": "c",
+          "text": "`high`",
+          "correct": true,
+          "rationale": "More reasoning."
+        },
+        {
+          "id": "d",
+          "text": "`xhigh`",
+          "correct": true,
+          "rationale": "Beyond high."
+        },
+        {
+          "id": "e",
+          "text": "`max`",
+          "correct": true,
+          "rationale": "The top tier."
+        },
+        {
+          "id": "f",
+          "text": "`none`",
+          "correct": false,
+          "rationale": "Not a listed value — there is no way to disable reasoning through `effort`."
+        }
+      ],
+      "explanation": "`effort` limits how much reasoning the Model does before responding, across five levels: `low`, `medium`, `high`, `xhigh` and `max`. It is one of three loop controls, each bounding a different resource — `max_turns` bounds iterations, `max_budget_usd` bounds spend, and `effort` bounds reasoning depth.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "ReAct Loop Execution Controls"
+        }
+      ]
+    },
+    {
+      "id": "builtin-tool-categories",
+      "type": "multi",
+      "prompt": "Which tool-to-category pairings from the built-in tools table are correct? (Select all that apply)",
+      "tags": [
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "File Operations — `Read`, `Edit`, `Write`",
+          "correct": true,
+          "rationale": "Read, modify and create files."
+        },
+        {
+          "id": "b",
+          "text": "Search — `Glob`, `Grep`",
+          "correct": true,
+          "rationale": "Find files by pattern, search contents by regex."
+        },
+        {
+          "id": "c",
+          "text": "Execution — `Bash`",
+          "correct": true,
+          "rationale": "Run shell commands and scripts."
+        },
+        {
+          "id": "d",
+          "text": "Web — `WebSearch`, `WebFetch`",
+          "correct": true,
+          "rationale": "Search, fetch and parse web pages."
+        },
+        {
+          "id": "e",
+          "text": "Discovery — `Agent`",
+          "correct": false,
+          "rationale": "`Agent` is Orchestration. Discovery is `ToolSearch`."
+        },
+        {
+          "id": "f",
+          "text": "Orchestration — `Grep`",
+          "correct": false,
+          "rationale": "`Grep` is Search. Orchestration covers `Agent`, `Skill`, `AskUserQuestion` and the task tools."
+        }
+      ],
+      "explanation": "The built-in tools group by what they touch: File Operations (`Read`, `Edit`, `Write`), Search (`Glob`, `Grep`), Execution (`Bash`), Web (`WebSearch`, `WebFetch`), Discovery (`ToolSearch`), and Orchestration (`Agent`, `Skill`, `AskUserQuestion`, task create/update). The categories matter because parallelism follows them — read-only tools can run concurrently, state-modifying ones cannot.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Built-in Tools"
+        }
+      ]
+    },
+    {
+      "id": "allowed-disallowed-tools",
+      "type": "single",
+      "prompt": "Which arguments explicitly allow or deny specific built-in tools for a session?",
+      "tags": [
+        "tools",
+        "permissions"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`allowed_tools` and `disallowed_tools`",
+          "correct": true,
+          "rationale": "The explicit allow/deny lists."
+        },
+        {
+          "id": "b",
+          "text": "`tools` and `skills`",
+          "correct": false,
+          "rationale": "`tools` is the subagent's tool list and `skills` controls skill preloading."
+        },
+        {
+          "id": "c",
+          "text": "`permissionMode` alone",
+          "correct": false,
+          "rationale": "`permissionMode` selects a predefined rule set; it does not name individual tools."
+        },
+        {
+          "id": "d",
+          "text": "`max_turns` and `effort`",
+          "correct": false,
+          "rationale": "Those are loop controls."
+        }
+      ],
+      "explanation": "`allowed_tools` and `disallowed_tools` explicitly permit or deny specific Tools. Including the `Agent` tool in `allowed_tools` has a particular effect worth remembering: it auto-approves spawning subagents, which is the difference between an agent that can delegate freely and one that stops to ask.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Built-in Tools"
+        },
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Defining Subagents"
+        }
+      ]
+    },
+    {
+      "id": "hook-userpromptsubmit",
+      "type": "single",
+      "prompt": "When does the `UserPromptSubmit` hook fire?",
+      "tags": [
+        "hooks"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "After a prompt is sent — both User and Assistant prompts",
+          "correct": true,
+          "rationale": "Broader than the name suggests."
+        },
+        {
+          "id": "b",
+          "text": "Only after a User message is submitted",
+          "correct": false,
+          "rationale": "The notes specify both User and Assistant."
+        },
+        {
+          "id": "c",
+          "text": "Before the prompt reaches the Model, so it can be rewritten",
+          "correct": false,
+          "rationale": "It fires after the prompt is sent."
+        },
+        {
+          "id": "d",
+          "text": "Once per session, when the first prompt is submitted",
+          "correct": false,
+          "rationale": "It is a per-prompt trigger."
+        }
+      ],
+      "explanation": "`UserPromptSubmit` fires after a prompt is sent, and covers both User and Assistant prompts despite the name. It sits alongside `PreToolUse` and `PostToolUse` (around tool execution), `Stop` (after the Model stops for any reason), `SubagentStart` / `SubagentStop`, and `PreCompact` (before the context window is compacted).",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Hooks"
+        }
+      ]
+    },
+    {
+      "id": "hook-stop-trigger",
+      "type": "single",
+      "prompt": "When does the `Stop` hook fire?",
+      "tags": [
+        "hooks"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "After the Model generates a stop_sequence message block, or stops for any other reason",
+          "correct": true,
+          "rationale": "Any termination, not just a stop sequence."
+        },
+        {
+          "id": "b",
+          "text": "Only when a custom stop sequence is encountered",
+          "correct": false,
+          "rationale": "That is one of several reasons it fires."
+        },
+        {
+          "id": "c",
+          "text": "When `max_turns` is reached, to allow a graceful exit",
+          "correct": false,
+          "rationale": "Hitting max turns is one way to stop, but the hook is not specific to it."
+        },
+        {
+          "id": "d",
+          "text": "Before the loop terminates, so the agent can continue",
+          "correct": false,
+          "rationale": "It fires after the Model stops; it observes rather than resumes."
+        }
+      ],
+      "explanation": "`Stop` is deliberately broad: it fires after the Model generates a stop_sequence block *or stops for any other reason*. That makes it the right place for cleanup or reporting that must happen however a session ends — a natural `end_turn`, a max-tokens cutoff, or a stop sequence.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Hooks"
+        }
+      ]
+    },
+    {
+      "id": "hook-precompact",
+      "type": "single",
+      "prompt": "What does the `PreCompact` hook let you act on?",
+      "tags": [
+        "hooks"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The moment before the context window is compacted",
+          "correct": true,
+          "rationale": "A chance to persist or summarise before history is condensed."
+        },
+        {
+          "id": "b",
+          "text": "The moment before a tool's results are truncated",
+          "correct": false,
+          "rationale": "Compaction applies to the context window, not to individual tool results."
+        },
+        {
+          "id": "c",
+          "text": "The moment before a subagent's history is discarded",
+          "correct": false,
+          "rationale": "Subagent lifecycle is `SubagentStart` and `SubagentStop`."
+        },
+        {
+          "id": "d",
+          "text": "The moment before the session is saved",
+          "correct": false,
+          "rationale": "Session persistence is handled by session management, not by this hook."
+        }
+      ],
+      "explanation": "`PreCompact` fires before the context window is compacted. It matters because compaction is lossy by design — a long session's history gets condensed — so this is the seam for writing anything important to durable storage first. It also pairs naturally with the multi-agent advice to keep state external to the agent process.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Hooks"
+        }
+      ]
+    },
+    {
+      "id": "subagent-definition-location",
+      "type": "single",
+      "prompt": "Where can subagents be defined as files, and which definition wins in a conflict?",
+      "tags": [
+        "subagents"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Markdown files in `.claude/agents`, but a programmatic definition takes precedence",
+          "correct": true,
+          "rationale": "Programmatic is also the recommended approach."
+        },
+        {
+          "id": "b",
+          "text": "Markdown files in `.claude/skills`, with the filesystem winning",
+          "correct": false,
+          "rationale": "`.claude/skills` holds Skills; agents live in `.claude/agents`, and programmatic definitions win."
+        },
+        {
+          "id": "c",
+          "text": "Only programmatically — there is no filesystem option",
+          "correct": false,
+          "rationale": "Markdown definitions in `.claude/agents` are supported."
+        },
+        {
+          "id": "d",
+          "text": "In `~/.claude/CLAUDE.md`, which is also where memory scope is read from",
+          "correct": false,
+          "rationale": "That file is memory, read according to the `memory` parameter."
+        }
+      ],
+      "explanation": "Subagents can be defined programmatically — the recommended route — or as Markdown files in `.claude/agents`. When both exist, the programmatic definition takes precedence. Keep the `.claude` directories distinct: `agents` for subagent definitions, `skills` for skills, and `CLAUDE.md` for memory.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Defining Subagents"
+        }
+      ]
+    },
+    {
+      "id": "agent-memory-scopes",
+      "type": "single",
+      "prompt": "An `AgentDefinition` sets `memory: project`. What does the Agent load?",
+      "tags": [
+        "subagents"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "User memory from `~/.claude/CLAUDE.md` plus the project memory directory",
+          "correct": true,
+          "rationale": "`project` is additive — it loads the user scope as well."
+        },
+        {
+          "id": "b",
+          "text": "Only the project memory directory, excluding user memory",
+          "correct": false,
+          "rationale": "The notes describe `project` as *additionally* loading project memory."
+        },
+        {
+          "id": "c",
+          "text": "Only `~/.claude/CLAUDE.md`",
+          "correct": false,
+          "rationale": "That is the `user` scope."
+        },
+        {
+          "id": "d",
+          "text": "The repository's root `CLAUDE.md` and every nested one",
+          "correct": false,
+          "rationale": "Per-directory `CLAUDE.md` reading is how Code Review works, not how the `memory` parameter is scoped."
+        }
+      ],
+      "explanation": "The `memory` parameter has two scopes and they nest: `user` loads memory from `~/.claude/CLAUDE.md`, while `project` *additionally* loads the project memory directory. So `project` is a superset of `user`, which matters when deciding whether a subagent should see your personal cross-project conventions as well as this repository's.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Defining Subagents"
+        }
+      ]
+    },
+    {
+      "id": "permission-modes",
+      "type": "multi",
+      "prompt": "Which are valid `permissionMode` values for an Agent? (Select all that apply)",
+      "tags": [
+        "subagents",
+        "permissions"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`default`",
+          "correct": true,
+          "rationale": "The baseline rule set."
+        },
+        {
+          "id": "b",
+          "text": "`acceptEdits`",
+          "correct": true,
+          "rationale": "Auto-approves edits."
+        },
+        {
+          "id": "c",
+          "text": "`bypassPermissions`",
+          "correct": true,
+          "rationale": "The most permissive mode."
+        },
+        {
+          "id": "d",
+          "text": "`plan`",
+          "correct": true,
+          "rationale": "Planning without acting."
+        },
+        {
+          "id": "e",
+          "text": "`readOnly`",
+          "correct": false,
+          "rationale": "Not one of the six modes. Restricting to read-only behaviour is done with `tools` or `disallowedTools`."
+        },
+        {
+          "id": "f",
+          "text": "`sandbox`",
+          "correct": false,
+          "rationale": "Not a permission mode — sandboxing is a Cowork feature (Protected Environments)."
+        }
+      ],
+      "explanation": "The six modes are `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions` and `plan`. Each bundles a predefined set of rules, so choosing a mode is coarse-grained; naming specific tools through `tools`, `allowed_tools` or `disallowedTools` is how you get precision.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Defining Subagents"
+        }
+      ]
+    },
+    {
+      "id": "agent-background-flag",
+      "type": "single",
+      "prompt": "What does setting `background: True` on an Agent definition do?",
+      "tags": [
+        "subagents"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Runs the Agent as a non-blocking background task",
+          "correct": true,
+          "rationale": "The caller does not wait for it."
+        },
+        {
+          "id": "b",
+          "text": "Runs the Agent with reduced reasoning effort to save cost",
+          "correct": false,
+          "rationale": "That is `effort`."
+        },
+        {
+          "id": "c",
+          "text": "Defers the Agent until the parent's loop completes",
+          "correct": false,
+          "rationale": "Non-blocking means concurrent, not deferred."
+        },
+        {
+          "id": "d",
+          "text": "Suppresses the Agent's output unless it fails",
+          "correct": false,
+          "rationale": "It changes scheduling, not reporting."
+        }
+      ],
+      "explanation": "`background: True` runs the Agent as a non-blocking background task; `False` does not. This is the per-agent equivalent of the multi-agent guidance to run parallel subagents for speed — and it carries the same caveat, that parallelism needs more orchestration logic than a blocking call.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Defining Subagents"
+        }
+      ]
+    },
+    {
+      "id": "mcp-patterns-in-disallowed",
+      "type": "single",
+      "prompt": "A subagent must not touch any tool from a particular MCP server. What is the concise way to express that?",
+      "tags": [
+        "subagents",
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "An MCP-level pattern in `disallowedTools`, e.g. `mcp__server__*`",
+          "correct": true,
+          "rationale": "Patterns let you exclude a whole server without listing its tools."
+        },
+        {
+          "id": "b",
+          "text": "Omit the server from `mcpServers` and leave `disallowedTools` empty",
+          "correct": false,
+          "rationale": "A reasonable belt-and-braces move, but the feature being tested is pattern support in `disallowedTools`."
+        },
+        {
+          "id": "c",
+          "text": "Set `permissionMode: plan` so no tools execute",
+          "correct": false,
+          "rationale": "That blocks all action, not one server."
+        },
+        {
+          "id": "d",
+          "text": "List every tool from that server in `tools`",
+          "correct": false,
+          "rationale": "`tools` is an allow list — listing them would grant access, not remove it."
+        }
+      ],
+      "explanation": "`disallowedTools` supports MCP-level patterns such as `mcp__server__*`, so a whole third-party server can be excluded in one line rather than enumerating its tools — which matters because you do not control what tools that server adds in future. This is also the practical answer to tool overload from third-party MCPs whose descriptions you cannot improve.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Defining Subagents"
+        }
+      ]
+    },
+    {
+      "id": "resuming-subagent-ids",
+      "type": "multi",
+      "prompt": "What must be captured before a subagent can be resumed, and what is restored? (Select all that apply)",
+      "tags": [
+        "subagents"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The `session_id` and the `agent_id` must be captured first",
+          "correct": true,
+          "rationale": "Both identifiers are needed."
+        },
+        {
+          "id": "b",
+          "text": "The session id is passed as the `resume` parameter in `query`",
+          "correct": true,
+          "rationale": "How the resume is requested."
+        },
+        {
+          "id": "c",
+          "text": "The full conversation history is retained",
+          "correct": true,
+          "rationale": "Not a blank slate this time."
+        },
+        {
+          "id": "d",
+          "text": "Previous tool calls and reasoning blocks are retained",
+          "correct": true,
+          "rationale": "Both are restored."
+        },
+        {
+          "id": "e",
+          "text": "The parent Agent's conversation history is merged in",
+          "correct": false,
+          "rationale": "Resuming restores the *subagent's own* history; inheriting the parent's is what `fork` does."
+        }
+      ],
+      "explanation": "Resuming is the opposite of the usual blank-slate spawn: it restores the subagent's full conversation history, its previous tool calls and its reasoning blocks. It requires capturing both the `session_id` and the `agent_id` beforehand, with the session id passed as `resume` in `query`. Keep it distinct from `fork`, which inherits the *parent's* context rather than restoring the subagent's own.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Resuming Subagents"
+        }
+      ]
+    },
+    {
+      "id": "skills-commands-memory-loading",
+      "type": "single",
+      "prompt": "Which SDK capability removes the need to write your own discovery and loading logic for skills, commands and memory?",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Skills, Commands & Memory — loading from the `.claude` and `~/.claude` directories",
+          "correct": true,
+          "rationale": "Discovery and loading are handled for you."
+        },
+        {
+          "id": "b",
+          "text": "The Plugin Framework",
+          "correct": false,
+          "rationale": "That is for creating and integrating third-party plugins."
+        },
+        {
+          "id": "c",
+          "text": "Session Management",
+          "correct": false,
+          "rationale": "That covers saving, resuming and forking sessions."
+        },
+        {
+          "id": "d",
+          "text": "The Permissions Engine",
+          "correct": false,
+          "rationale": "That provides tool-level permissions and enforcement."
+        }
+      ],
+      "explanation": "The `Skills, Commands & Memory` capability handles storing and loading those three things from `.claude` and `~/.claude`, so you do not implement discovery yourself. The two-directory split is the same project-versus-personal distinction that governs skill scopes — repo conventions in `.claude`, cross-project utilities in `~/.claude`.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "section": "The Agents SDK includes the following capabilities"
+        }
+      ]
+    },
+    {
+      "id": "custom-tool-parallelism-default",
+      "type": "single",
+      "prompt": "A developer adds a custom Tool that only reads data. How does the SDK schedule it by default?",
+      "tags": [
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Sequentially — custom Tools default to running sequentially regardless of what they do",
+          "correct": true,
+          "rationale": "The SDK cannot know a custom tool's side effects, so it assumes the worst."
+        },
+        {
+          "id": "b",
+          "text": "In parallel, since read-only tools can run concurrently",
+          "correct": false,
+          "rationale": "That guarantee applies to the *built-in* read-only tools, which the SDK knows about."
+        },
+        {
+          "id": "c",
+          "text": "In parallel only if declared with a read-only flag",
+          "correct": false,
+          "rationale": "No such flag is described."
+        },
+        {
+          "id": "d",
+          "text": "It depends on the `permissionMode`",
+          "correct": false,
+          "rationale": "Permission modes govern approval, not scheduling."
+        }
+      ],
+      "explanation": "Built-in read-only tools (`Read`, `Glob`, `Grep`) run in parallel and state-modifying ones (`Edit`, `Write`) run sequentially — the SDK knows which is which. A custom Tool is opaque to it, so it defaults to sequential. Being read-only in fact does not change the default; the SDK is being conservative about side effects it cannot inspect.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/agents_sdk.md",
+          "heading": "Built-in Tools"
+        }
+      ]
+    }
+  ]
+}

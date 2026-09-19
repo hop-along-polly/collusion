@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens — CodeScribes Brand Style Guide.
+ * Light values from §2 (palette) and §9 (elevation tiers); `.dark` overrides from
+ * §9 "Dark Mode CSS Custom Properties (Complete)".
+ *
+ * Colours are stored as space-separated RGB channels, not hex, and consumed in
+ * `tailwind.config.ts` as `rgb(var(--token) / <alpha-value>)`. That is what makes
+ * opacity modifiers work: with a hex inside a `var()`, Tailwind cannot split the
+ * channels and silently emits nothing for `border-ok/40`. The style guide's own
+ * `:root` block stores components the same way, for the same reason.
+ *
+ * The `*-fill` tokens are the exception and stay as complete colour values, because
+ * in dark mode they are transparent tints (§9) whose alpha is part of the token. They
+ * are only ever used at full opacity.
+ */
+@layer base {
+  :root {
+    /* Elevation tiers (§9) */
+    --ground: 250 250 250;
+    --surface-1: 255 255 255;
+    --surface-2: 244 244 245;
+    --surface-3: 228 228 231;
+
+    /* Text */
+    --content-strong: 39 39 42;
+    --content: 82 82 91;
+    --content-muted: 113 113 122;
+    --content-subtle: 161 161 170;
+
+    /* Lines */
+    --line: 228 228 231;
+    --line-strong: 212 212 216;
+
+    /* Brand teal — hover darkens in light mode */
+    --brand: 27 137 150;
+    --brand-hover: 19 106 116;
+    --brand-active: 15 90 98;
+    --brand-fill: #e8f6f8;
+
+    /* Parchment accent */
+    --accent: 245 240 232;
+    --accent-border: 232 224 208;
+    --accent-foreground: 63 63 70;
+
+    /*
+     * Semantic colours come in three parts: an indicator (icons, borders, badge text),
+     * a fill, and a text colour. The guide's indicator hexes are tuned for graphical
+     * use at 3:1; as small body text on their own fills they fall short of the 4.5:1
+     * that §8 requires, so `*-text` is darkened in light mode only.
+     */
+    --ok: 22 163 74;
+    --ok-text: 21 128 61;
+    --ok-fill: #f0fdf4;
+    --bad: 220 38 38;
+    --bad-text: 185 28 28;
+    --bad-fill: #fef2f2;
+    --warn: 202 138 4;
+    --warn-text: 133 77 14;
+    --warn-fill: #fefce8;
+
+    --ring: 27 137 150;
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  }
+
+  .dark {
+    --ground: 9 9 11;
+    --surface-1: 24 24 27;
+    --surface-2: 39 39 42;
+    --surface-3: 63 63 70;
+
+    --content-strong: 250 250 250;
+    --content: 212 212 216;
+    --content-muted: 161 161 170;
+    --content-subtle: 113 113 122;
+
+    --line: 39 39 42;
+    --line-strong: 63 63 70;
+
+    /* §9: in dark mode teal *lightens* on hover — the cursor moves toward light */
+    --brand: 43 176 191;
+    --brand-hover: 60 200 214;
+    --brand-active: 27 137 150;
+    --brand-fill: rgb(43 176 191 / 0.1);
+
+    --accent: 30 28 24;
+    --accent-border: 51 48 42;
+    --accent-foreground: 212 212 216;
+
+    /* Lighter indicators; the lighter indicator is already AA as text on dark fills */
+    --ok: 74 222 128;
+    --ok-text: 74 222 128;
+    --ok-fill: rgb(74 222 128 / 0.1);
+    --bad: 248 113 113;
+    --bad-text: 248 113 113;
+    --bad-fill: rgb(248 113 113 / 0.1);
+    --warn: 250 204 21;
+    --warn-text: 250 204 21;
+    --warn-fill: rgb(250 204 21 / 0.1);
+
+    --ring: 43 176 191;
+
+    /* Shadows need far higher opacity to register on dark surfaces (§9) */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.5), 0 1px 2px -1px rgb(0 0 0 / 0.5);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.6), 0 2px 4px -2px rgb(0 0 0 / 0.6);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.7), 0 4px 6px -4px rgb(0 0 0 / 0.7);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ground font-body text-base text-content antialiased;
+  }
+
+  /* Semantic heading hierarchy always renders in Bellefair (§3) */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading text-content-strong;
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    @apply font-mono;
+  }
+
+  /* Never remove a focus indicator without replacing it (§8) */
+  :focus-visible {
+    @apply outline-none ring-2 ring-offset-2;
+    --tw-ring-color: rgb(var(--ring));
+    --tw-ring-offset-color: rgb(var(--ground));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Inline `code` inside prompts, options and explanations. */
+  .prose-note code {
+    @apply rounded-sm bg-surface-2 px-1 py-0.5 font-mono text-[0.85em] text-content-strong;
+  }
+
+  .prose-note strong {
+    @apply text-content-strong;
+  }
+
+  /* Skip link: off-screen until focused. */
+  .skip-link {
+    @apply absolute left-4 z-50 -translate-y-20 rounded-lg bg-brand px-4 py-2 font-body text-sm text-white transition-transform focus-visible:translate-y-4;
+  }
+}

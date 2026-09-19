@@ -1,0 +1,1519 @@
+{
+  "id": "github-cicd",
+  "title": "GitHub CI/CD",
+  "cards": [
+    {
+      "id": "team-use-cases",
+      "type": "multi",
+      "prompt": "What are the two primary use cases for GitHub Teams? (Select all that apply)",
+      "tags": [
+        "teams"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Granting permissions to organization members in a consistent, organized way",
+          "correct": true,
+          "rationale": "Permissions are attached to the team rather than to each person."
+        },
+        {
+          "id": "b",
+          "text": "Coordinating which members get notified for which events",
+          "correct": true,
+          "rationale": "Mentioning a team is how you reach the right group."
+        },
+        {
+          "id": "c",
+          "text": "Billing organization usage back to individual departments",
+          "correct": false,
+          "rationale": "Teams model permissions and notifications, not cost allocation."
+        },
+        {
+          "id": "d",
+          "text": "Adding external collaborators who are not organization members",
+          "correct": false,
+          "rationale": "The opposite — only members of the organization can be added to its teams."
+        },
+        {
+          "id": "e",
+          "text": "Enforcing which branches a member may push to, independently of repository settings",
+          "correct": false,
+          "rationale": "Teams carry permissions, but branch rules are repository settings; the team is the subject of a permission, not a replacement for it."
+        }
+      ],
+      "explanation": "Teams exist to grant permissions consistently and to route notifications. They are often shaped to mirror the organization's hierarchy, and only organization members can join them — a member can belong to multiple teams. Each team gets its own page listing members, the repositories it owns, and any child teams nested under it.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "GitHub Teams"
+        }
+      ]
+    },
+    {
+      "id": "child-team-mentions",
+      "type": "boolean",
+      "prompt": "Mentioning a child team also notifies the members of its parent team.",
+      "tags": [
+        "teams"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "Notification flows downward only. Mentioning the parent team notifies the child teams, but mentioning a child team does not notify the parent. That asymmetry is what makes the notes' example work: a `devops` parent with `azure` and `aws` children lets other teams tag just the AWS experts without pulling in every DevOps engineer. Permissions, by contrast, are inherited downward — a child team inherits whatever the parent was granted.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "GitHub Teams"
+        }
+      ]
+    },
+    {
+      "id": "codeowners-last-match-wins",
+      "type": "single",
+      "prompt": "Given this `CODEOWNERS` file, a PR updates a Go source file inside the `build/` directory. Who is tagged as reviewer?\n\n```\n/build @testerozza/devops-team\n\n*.go @ttestofferson\n```",
+      "tags": [
+        "codeowners"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`@testerozza/devops-team` only — the more specific path pattern wins",
+          "correct": false,
+          "rationale": "Specificity is not the rule. This is the intuition CODEOWNERS deliberately does not follow."
+        },
+        {
+          "id": "b",
+          "text": "`@ttestofferson` only — the last matching pattern wins",
+          "correct": true,
+          "rationale": "Both patterns match, and the last one in the file determines the owners."
+        },
+        {
+          "id": "c",
+          "text": "Both, since both patterns match the file",
+          "correct": false,
+          "rationale": "Only one entry determines ownership — the last matching one — rather than the union of all matches."
+        },
+        {
+          "id": "d",
+          "text": "Neither, because two conflicting patterns cancel each other out",
+          "correct": false,
+          "rationale": "There is no conflict to resolve; the file's ordering is the resolution."
+        }
+      ],
+      "explanation": "The last matching pattern in a `CODEOWNERS` file determines who is tagged. Both `/build` and `*.go` match a Go file under `build/`, so the later `*.go` entry wins and only `@ttestofferson` is requested. The practical consequence is stated in the notes' own example: a global fallback rule must be the *first* rule in the file, because anything after it would override it.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "CODEOWNERS"
+        },
+        {
+          "file": "github_cd-cd.md",
+          "heading": "CODEOWNERS Syntax"
+        }
+      ]
+    },
+    {
+      "id": "codeowners-file-locations",
+      "type": "multi",
+      "prompt": "Which statements about where a `CODEOWNERS` file lives are correct? (Select all that apply)",
+      "tags": [
+        "codeowners"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It may be placed in the `.github/` directory, the repository root, or `docs/`",
+          "correct": true,
+          "rationale": "Those are the three permitted locations."
+        },
+        {
+          "id": "b",
+          "text": "When more than one exists, precedence is `.github/` > root > `docs/`",
+          "correct": true,
+          "rationale": "Only the first file found in that order is used."
+        },
+        {
+          "id": "c",
+          "text": "Each branch of a repository can have its own `CODEOWNERS` file",
+          "correct": true,
+          "rationale": "The file is versioned like any other, so it varies per branch."
+        },
+        {
+          "id": "d",
+          "text": "A `CODEOWNERS` file determines code owners only for the branch it lives on",
+          "correct": true,
+          "rationale": "It is scoped to its own branch, not repository-wide."
+        },
+        {
+          "id": "e",
+          "text": "All `CODEOWNERS` files present are merged, with later files adding owners",
+          "correct": false,
+          "rationale": "Only the first file, by the precedence order above, is used at all."
+        },
+        {
+          "id": "f",
+          "text": "It may be placed in any directory, applying to that subtree",
+          "correct": false,
+          "rationale": "Unlike `.gitignore`, `CODEOWNERS` is not per-directory — only the three locations are valid, and paths are expressed as patterns inside the single file."
+        }
+      ],
+      "explanation": "A `CODEOWNERS` file must be in `.github/`, the repository root, or `docs/`. Only the first one found is used, with precedence `.github/` > root > `docs/`, and it applies only to its own git branch — so each branch can carry a different one. It borrows `.gitignore`'s pattern syntax but not its per-directory placement model.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "CODEOWNERS"
+        }
+      ]
+    },
+    {
+      "id": "codeowners-unsupported-syntax",
+      "type": "multi",
+      "prompt": "`CODEOWNERS` reuses `.gitignore` pattern syntax, with exceptions. Which of these are NOT supported? (Select all that apply)",
+      "tags": [
+        "codeowners",
+        "syntax"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`\\` to escape a pattern that begins with `#`",
+          "correct": true,
+          "rationale": "Unsupported — such lines are always interpreted as comments."
+        },
+        {
+          "id": "b",
+          "text": "`!` to negate a pattern",
+          "correct": true,
+          "rationale": "Unsupported. There is no way to carve an exception out of a broader rule; you reorder rules instead."
+        },
+        {
+          "id": "c",
+          "text": "`[]` to define a character range such as `[A-Za-z]`",
+          "correct": true,
+          "rationale": "Unsupported."
+        },
+        {
+          "id": "d",
+          "text": "`*` as a wildcard, e.g. `*.go`",
+          "correct": false,
+          "rationale": "Supported — the notes' own precedence example uses `*.go`."
+        },
+        {
+          "id": "e",
+          "text": "`**` to match nested directories, e.g. `build/**/*.tf`",
+          "correct": false,
+          "rationale": "Supported — this exact pattern appears in the notes' example file."
+        },
+        {
+          "id": "f",
+          "text": "A leading `/` to anchor a pattern to the repository root, e.g. `/build`",
+          "correct": false,
+          "rationale": "Supported — used in the precedence example."
+        }
+      ],
+      "explanation": "Three `.gitignore` behaviours are dropped: escaping a leading `#` with `\\` (those lines are always comments), `!` negation, and `[]` character ranges. Everything else in the pattern language — `*`, `**`, and root-anchoring `/` — works as usual. The loss of `!` is the one with real design consequences: since you cannot express an exception, ownership is shaped purely by rule order, and last match wins.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "CODEOWNERS Syntax"
+        }
+      ]
+    },
+    {
+      "id": "workflow-minimum-contents",
+      "type": "multi",
+      "prompt": "At a minimum, what must a GitHub Actions workflow include? (Select all that apply)",
+      "tags": [
+        "actions",
+        "workflows"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "One or more Events that trigger the workflow",
+          "correct": true,
+          "rationale": "Without a trigger the workflow can never run."
+        },
+        {
+          "id": "b",
+          "text": "One or more Jobs to run as part of the workflow",
+          "correct": true,
+          "rationale": "Jobs are the unit of work."
+        },
+        {
+          "id": "c",
+          "text": "One or more Steps per Job defining the tasks needed to complete it",
+          "correct": true,
+          "rationale": "A job with no steps does nothing."
+        },
+        {
+          "id": "d",
+          "text": "At least one Action from the GitHub Marketplace",
+          "correct": false,
+          "rationale": "Actions are optional. A step can simply be a bash command."
+        },
+        {
+          "id": "e",
+          "text": "A `workflow_call` trigger so the workflow can be reused",
+          "correct": false,
+          "rationale": "Only needed to make a workflow *callable* by another workflow, which is a specific workflow type rather than a baseline requirement."
+        },
+        {
+          "id": "f",
+          "text": "A service container definition for the job's dependencies",
+          "correct": false,
+          "rationale": "Spinning up service containers is one of the five things you *can* do in a workflow, not something you must."
+        }
+      ],
+      "explanation": "The floor is three things: at least one triggering Event, at least one Job, and at least one Step in each Job. Everything else — calling a Marketplace Action, calling a custom Action, spinning up service containers, calling a Reusable Workflow — is optional. Workflow YAML lives in `.github/workflows/`, and a repository may contain any number of workflow files.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Workflows"
+        }
+      ]
+    },
+    {
+      "id": "reusable-workflow-depth",
+      "type": "single",
+      "prompt": "Workflow A calls B, B calls C, and C calls D. What can workflow D do?",
+      "tags": [
+        "actions",
+        "reusable-workflows"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Nothing further — it cannot call another workflow, because nesting cannot exceed 4 levels",
+          "correct": true,
+          "rationale": "A → B → C → D is the maximum depth described in the notes."
+        },
+        {
+          "id": "b",
+          "text": "Call workflow E, since the limit applies per calling workflow rather than to the chain",
+          "correct": false,
+          "rationale": "The limit is on the depth of the chain, and D is already the fourth level."
+        },
+        {
+          "id": "c",
+          "text": "Call workflow E only if E declares no inputs or secrets",
+          "correct": false,
+          "rationale": "Inputs and secrets are unrelated to the depth limit."
+        },
+        {
+          "id": "d",
+          "text": "Call workflow E only if it is invoked through a composite Action instead",
+          "correct": false,
+          "rationale": "Invented — composite Actions are about grouping multiple run commands in one Action."
+        }
+      ],
+      "explanation": "Reusable workflows cannot exceed 4 levels of nesting: A can call B, B can call C, and C can call D, but D cannot call another workflow. Reuse happens at the Job level — a called workflow effectively acts as a job inside the caller.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "section": "Reusable Workflows"
+        }
+      ]
+    },
+    {
+      "id": "reusable-workflow-constraints",
+      "type": "multi",
+      "prompt": "Which constraints apply when one workflow calls another? (Select all that apply)",
+      "tags": [
+        "actions",
+        "reusable-workflows"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Reuse happens at the Job level — the called workflow acts as a job in the caller",
+          "correct": true,
+          "rationale": "This single fact explains most of the other constraints."
+        },
+        {
+          "id": "b",
+          "text": "The caller can define Jobs that run before or after the called workflow using `needs`",
+          "correct": true,
+          "rationale": "Ordering between jobs is expressed with `needs`, and a called workflow is a job."
+        },
+        {
+          "id": "c",
+          "text": "The caller cannot define Steps that run before or after the called workflow, unless those Steps live in a Job that runs before or after it",
+          "correct": true,
+          "rationale": "Steps belong to jobs, so there is nowhere to hang a bare step."
+        },
+        {
+          "id": "d",
+          "text": "The caller cannot define service containers that spin up before calling the workflow",
+          "correct": true,
+          "rationale": "Explicitly called out in the notes."
+        },
+        {
+          "id": "e",
+          "text": "The caller can insert Steps directly around the called workflow, as long as they come from a composite Action",
+          "correct": false,
+          "rationale": "The restriction is about where steps can live, not where they come from."
+        },
+        {
+          "id": "f",
+          "text": "A called workflow cannot accept inputs or secrets",
+          "correct": false,
+          "rationale": "It can — the `workflow_call` trigger takes both `inputs` and `secrets` blocks."
+        }
+      ],
+      "explanation": "Everything follows from reuse happening at the Job level. Because the called workflow *is* a job, you can order work around it with `needs` (job-to-job ordering), but you cannot place bare Steps or service containers around it — those only exist inside a job. To make a workflow callable, add the `workflow_call` event, which may declare `inputs` and `secrets`.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "section": "Reusable Workflows"
+        }
+      ]
+    },
+    {
+      "id": "workflow-call-trigger",
+      "type": "single",
+      "prompt": "What has to be added to a workflow to make it callable by another workflow?",
+      "tags": [
+        "actions",
+        "reusable-workflows"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The `workflow_call` event as one of its triggers",
+          "correct": true,
+          "rationale": "`on: workflow_call:` — optionally with `inputs` and `secrets` — is what makes a workflow reusable."
+        },
+        {
+          "id": "b",
+          "text": "The `workflow_dispatch` event as one of its triggers",
+          "correct": false,
+          "rationale": "That exposes manual triggering, not workflow-to-workflow calling."
+        },
+        {
+          "id": "c",
+          "text": "A `reusable: true` field at the top level of the file",
+          "correct": false,
+          "rationale": "Invented — reusability is declared through the trigger, not a flag."
+        },
+        {
+          "id": "d",
+          "text": "Moving the file from `.github/workflows/` to `.github/actions/`",
+          "correct": false,
+          "rationale": "`.github/actions/` holds custom Actions, which are a different construct used as a Step."
+        }
+      ],
+      "explanation": "A workflow becomes callable by adding `workflow_call` to its `on:` triggers, where it can declare typed `inputs` and `secrets` with descriptions and `required` flags. The notes suggest \"Callable Workflow\" would have been the clearer name, since the trigger is what grants the capability.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "section": "Reusable Workflows"
+        }
+      ]
+    },
+    {
+      "id": "runner-behaviour",
+      "type": "multi",
+      "prompt": "Which statements about Runners are correct? (Select all that apply)",
+      "tags": [
+        "actions",
+        "runners"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "GitHub offers Ubuntu, Windows and macOS runners",
+          "correct": true,
+          "rationale": "The three hosted platforms named in the notes."
+        },
+        {
+          "id": "b",
+          "text": "Self-hosted runners are available as an opt-in",
+          "correct": true,
+          "rationale": "You can opt into running workflows on your own infrastructure."
+        },
+        {
+          "id": "c",
+          "text": "Each workflow starts with a fresh copy of the runner",
+          "correct": true,
+          "rationale": "No state carries over from a previous workflow run."
+        },
+        {
+          "id": "d",
+          "text": "While executing a workflow, a runner executes one Job at a time",
+          "correct": true,
+          "rationale": "Concurrency across jobs comes from multiple runners, not from one runner multitasking."
+        },
+        {
+          "id": "e",
+          "text": "All Jobs in a workflow share one runner, so files written by one Job are visible to the next",
+          "correct": false,
+          "rationale": "A Job is a set of Steps that run on the same runner — the guarantee is per job, not per workflow. This is a common source of \"my artifact vanished\" bugs."
+        },
+        {
+          "id": "f",
+          "text": "A runner executes all Jobs of a workflow concurrently to reduce wall-clock time",
+          "correct": false,
+          "rationale": "Jobs do default to running in parallel, but that parallelism comes from multiple runners; a single runner still handles one job at a time."
+        }
+      ],
+      "explanation": "Runners are the servers workflows execute on: hosted Ubuntu, Windows and macOS, or self-hosted if you opt in. Two properties matter in practice — each workflow begins from a fresh runner copy, and a runner handles one job at a time. Since a Job is defined as the set of Steps that run in synchronous order *on the same runner*, filesystem state is shared within a job but never across jobs.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Runners"
+        },
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Components"
+        }
+      ]
+    },
+    {
+      "id": "jobs-parallel-by-default",
+      "type": "boolean",
+      "prompt": "By default, Jobs defined in a workflow run in parallel, and a dependency between them is created with the `needs` field.",
+      "tags": [
+        "actions",
+        "jobs"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "Parallel is the default. Adding `needs: <other-job>` makes a job wait until the job it depends on completes. Note the contrast within a workflow: Jobs are parallel unless you say otherwise, while Steps inside a Job always execute in synchronous order on the same runner.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Jobs"
+        },
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Components"
+        }
+      ]
+    },
+    {
+      "id": "composite-action-directive",
+      "type": "single",
+      "prompt": "In a custom Action defined under `.github/actions`, what does `using: composite` enable?",
+      "tags": [
+        "actions"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The Action can specify multiple `run` commands in its steps",
+          "correct": true,
+          "rationale": "This is the stated purpose of the directive."
+        },
+        {
+          "id": "b",
+          "text": "The Action can be called by workflows in other repositories",
+          "correct": false,
+          "rationale": "Reuse across repositories is about where the Action is published, not about `using`."
+        },
+        {
+          "id": "c",
+          "text": "The Action runs on multiple runner operating systems simultaneously",
+          "correct": false,
+          "rationale": "Runner selection belongs to the calling Job, and a runner handles one job at a time."
+        },
+        {
+          "id": "d",
+          "text": "The Action's steps run in parallel rather than in sequence",
+          "correct": false,
+          "rationale": "\"Composite\" refers to composing several commands into one Action, not to parallelism."
+        }
+      ],
+      "explanation": "A repository can define its own Actions as YAML in `.github/actions`, and `using: composite` is what allows one Action to contain multiple `run` commands across its steps. An Action is a plug-and-play unit consumed as a Step in a Job — third-party ones come from the GitHub Marketplace.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Actions"
+        },
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Components"
+        }
+      ]
+    },
+    {
+      "id": "team-hierarchy-membership",
+      "type": "multi",
+      "prompt": "Which statements about GitHub Team membership are correct? (Select all that apply)",
+      "tags": [
+        "teams"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Only members of the organization can be added to its teams",
+          "correct": true,
+          "rationale": "Teams model an org's internal structure."
+        },
+        {
+          "id": "b",
+          "text": "A member of the organization can be assigned to multiple teams",
+          "correct": true,
+          "rationale": "Membership is not exclusive."
+        },
+        {
+          "id": "c",
+          "text": "Teams are often used to reflect an organization's hierarchy",
+          "correct": true,
+          "rationale": "The usual shape they take."
+        },
+        {
+          "id": "d",
+          "text": "A team can have at most one child team",
+          "correct": false,
+          "rationale": "The notes' own example nests two children — `azure` and `aws` — under a `devops` parent."
+        },
+        {
+          "id": "e",
+          "text": "External collaborators can be added to a team to grant them repository access",
+          "correct": false,
+          "rationale": "Only organization members can join teams."
+        }
+      ],
+      "explanation": "Teams exist to grant permissions consistently and to route notifications, and they are typically shaped to mirror the organization's hierarchy. Only org members can join, a member can belong to several teams, and teams nest — the `devops` parent with `azure` and `aws` children is the example that makes the notification asymmetry useful.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "GitHub Teams"
+        }
+      ]
+    },
+    {
+      "id": "child-team-permissions",
+      "type": "boolean",
+      "prompt": "A child team inherits the permissions granted to its parent team.",
+      "tags": [
+        "teams"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "Permissions are inherited downward — a child team receives whatever the parent was granted. It is worth holding this next to the notification rule, which runs the same direction but is often misremembered: mentioning the parent notifies the children, while mentioning a child does not notify the parent.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "GitHub Teams"
+        }
+      ]
+    },
+    {
+      "id": "team-page-contents",
+      "type": "multi",
+      "prompt": "What does a team's own page list? (Select all that apply)",
+      "tags": [
+        "teams"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The team's members",
+          "correct": true,
+          "rationale": "Who is on it."
+        },
+        {
+          "id": "b",
+          "text": "The repositories the team owns",
+          "correct": true,
+          "rationale": "What it is responsible for."
+        },
+        {
+          "id": "c",
+          "text": "The child teams nested under it",
+          "correct": true,
+          "rationale": "Its place in the hierarchy."
+        },
+        {
+          "id": "d",
+          "text": "The pull requests currently awaiting the team's review",
+          "correct": false,
+          "rationale": "Not listed — review requests arrive through CODEOWNERS and notifications."
+        },
+        {
+          "id": "e",
+          "text": "The parent team it belongs to",
+          "correct": false,
+          "rationale": "The page lists children, not parents."
+        }
+      ],
+      "explanation": "Each team has its own page showing members, owned repositories, and nested child teams — the three things that answer \"who is this group, what do they own, and what sits beneath them\".",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "GitHub Teams"
+        }
+      ]
+    },
+    {
+      "id": "codeowners-reference-forms",
+      "type": "multi",
+      "prompt": "How can a code owner be referenced in a `CODEOWNERS` file? (Select all that apply)",
+      "tags": [
+        "codeowners"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A user's GitHub handle, e.g. `@ttestofferson`",
+          "correct": true,
+          "rationale": "The most common form."
+        },
+        {
+          "id": "b",
+          "text": "A team handle, e.g. `@testerozza/testers`",
+          "correct": true,
+          "rationale": "Org-qualified team reference."
+        },
+        {
+          "id": "c",
+          "text": "An email address, which GitHub resolves to the associated user",
+          "correct": true,
+          "rationale": "Resolved the same way commit authors are."
+        },
+        {
+          "id": "d",
+          "text": "A user ID number",
+          "correct": false,
+          "rationale": "Not a supported reference form."
+        },
+        {
+          "id": "e",
+          "text": "A wildcard such as `@*` to mean every organization member",
+          "correct": false,
+          "rationale": "Not supported — and `*` is a path wildcard, not an owner one."
+        }
+      ],
+      "explanation": "Owners are referenced by handle — `@user` or `@org/team` — or by email address, which GitHub resolves to the associated account exactly as it does for commit authors. The email form is handy when onboarding from a system that only knows email addresses, though handles are clearer to read.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "CODEOWNERS"
+        }
+      ]
+    },
+    {
+      "id": "codeowners-global-rule-placement",
+      "type": "single",
+      "prompt": "A `CODEOWNERS` file needs a global fallback owner for anything no other rule matches. Where must that rule go?",
+      "tags": [
+        "codeowners"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "First in the file, because any rule after it would take precedence",
+          "correct": true,
+          "rationale": "Last matching pattern wins, so a global rule placed late would override everything."
+        },
+        {
+          "id": "b",
+          "text": "Last in the file, so it applies only when nothing else matched",
+          "correct": false,
+          "rationale": "That intuition comes from firewall rules and is exactly backwards here."
+        },
+        {
+          "id": "c",
+          "text": "Anywhere — GitHub evaluates specificity, not order",
+          "correct": false,
+          "rationale": "Specificity plays no part; the last matching pattern decides."
+        },
+        {
+          "id": "d",
+          "text": "In a separate `CODEOWNERS` file in `docs/`",
+          "correct": false,
+          "rationale": "Only the first file found is used at all, by the precedence `.github/` > root > `docs/`."
+        }
+      ],
+      "explanation": "Because the **last** matching pattern determines the owners, a catch-all must come first — any rule below it will win for the paths it matches. The notes' own example file comments on exactly this: the global rule is placed first *because* it would otherwise take precedence over the rules defined before it.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "CODEOWNERS Syntax"
+        }
+      ]
+    },
+    {
+      "id": "codeowners-purpose",
+      "type": "single",
+      "prompt": "What does GitHub do with a `CODEOWNERS` file when a pull request is created?",
+      "tags": [
+        "codeowners"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Determines the code owners for the changed paths so they can be tagged as reviewers",
+          "correct": true,
+          "rationale": "It drives review requests, nothing more."
+        },
+        {
+          "id": "b",
+          "text": "Blocks the PR until an owner approves",
+          "correct": false,
+          "rationale": "Requiring approval is a branch protection setting; CODEOWNERS only identifies who to ask."
+        },
+        {
+          "id": "c",
+          "text": "Assigns the PR to the owner",
+          "correct": false,
+          "rationale": "Owners are added as reviewers, not assignees."
+        },
+        {
+          "id": "d",
+          "text": "Notifies the parent of any owning team",
+          "correct": false,
+          "rationale": "Mentioning a child team does not notify the parent."
+        }
+      ],
+      "explanation": "A `CODEOWNERS` entry pairs a path pattern with a list of users and/or teams, and GitHub uses it on PR creation to work out who should be tagged as a reviewer. It answers \"who should look at this\" — turning that into a merge requirement is branch protection's job.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "CODEOWNERS"
+        }
+      ]
+    },
+    {
+      "id": "codeowners-negation-consequence",
+      "type": "single",
+      "prompt": "`CODEOWNERS` does not support `!` negation. What does that force on the way ownership is expressed?",
+      "tags": [
+        "codeowners",
+        "syntax"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Exceptions have to be expressed by rule order, since last match wins",
+          "correct": true,
+          "rationale": "With no way to carve out an exception, ordering is the only lever."
+        },
+        {
+          "id": "b",
+          "text": "Every path needs its own explicit rule",
+          "correct": false,
+          "rationale": "Wildcards and `**` still work, so broad rules are fine."
+        },
+        {
+          "id": "c",
+          "text": "Exceptions must live in a second `CODEOWNERS` file",
+          "correct": false,
+          "rationale": "Only the first file found is used."
+        },
+        {
+          "id": "d",
+          "text": "Character ranges must be used instead",
+          "correct": false,
+          "rationale": "`[]` character ranges are also unsupported."
+        }
+      ],
+      "explanation": "Three `.gitignore` behaviours are dropped: escaping a leading `#` with `\\`, `!` negation, and `[]` character ranges. Losing `!` is the one with design consequences — you cannot say \"this team owns `src/` except `src/vendor/`\". Instead you write the broad rule first and the exception after it, letting last-match-wins do the carving.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "CODEOWNERS Syntax"
+        }
+      ]
+    },
+    {
+      "id": "actions-components",
+      "type": "multi",
+      "prompt": "Which definitions from the GitHub Actions Components section are correct? (Select all that apply)",
+      "tags": [
+        "actions",
+        "terminology"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`Workflow` — an automated process defined by a YAML file in `.github/workflows`",
+          "correct": true,
+          "rationale": "The top-level unit."
+        },
+        {
+          "id": "b",
+          "text": "`Event` — a specific activity in a repository that triggers a workflow",
+          "correct": true,
+          "rationale": "Opening a PR, creating an issue, and so on."
+        },
+        {
+          "id": "c",
+          "text": "`Job` — a set of Steps executed in synchronous order on the same Runner",
+          "correct": true,
+          "rationale": "Both properties matter: order *and* shared runner."
+        },
+        {
+          "id": "d",
+          "text": "`Action` — a customized plug-and-play application used as a Step in a Job",
+          "correct": true,
+          "rationale": "Reusable units consumed by steps."
+        },
+        {
+          "id": "e",
+          "text": "`Runner` — the YAML file describing what should execute",
+          "correct": false,
+          "rationale": "A Runner is the *server* a workflow runs on. The YAML file is the Workflow."
+        },
+        {
+          "id": "f",
+          "text": "`Step` — a group of Jobs sharing an Event trigger",
+          "correct": false,
+          "rationale": "Inverted: Steps live inside a Job, not the other way round."
+        }
+      ],
+      "explanation": "The hierarchy is Workflow → Jobs → Steps, with Actions consumed as Steps and Runners providing the machines. The definition doing the most work is Job: a set of Steps in synchronous order *on the same Runner*, which is exactly why filesystem state is shared within a job and never between jobs.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Components"
+        }
+      ]
+    },
+    {
+      "id": "workflow-file-location",
+      "type": "multi",
+      "prompt": "Which statements about where workflows and actions live are correct? (Select all that apply)",
+      "tags": [
+        "actions",
+        "workflows"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Workflow YAML files live in `.github/workflows`",
+          "correct": true,
+          "rationale": "The fixed location."
+        },
+        {
+          "id": "b",
+          "text": "A repository can contain any number of workflow files",
+          "correct": true,
+          "rationale": "No limit is imposed."
+        },
+        {
+          "id": "c",
+          "text": "A repository can define its own Actions as YAML in `.github/actions`",
+          "correct": true,
+          "rationale": "Custom actions, as opposed to Marketplace ones."
+        },
+        {
+          "id": "d",
+          "text": "Third-party Actions are found in the GitHub Marketplace",
+          "correct": true,
+          "rationale": "Where published Actions are discovered."
+        },
+        {
+          "id": "e",
+          "text": "Workflows and custom Actions share the `.github/workflows` directory",
+          "correct": false,
+          "rationale": "They are separate directories — `workflows` and `actions` — because they are separate constructs."
+        }
+      ],
+      "explanation": "Two directories, two constructs. `.github/workflows` holds workflows, the automated processes triggered by events, and there can be any number. `.github/actions` holds a repository's own Actions — plug-and-play units consumed as a Step inside a Job. Third-party Actions come from the GitHub Marketplace instead.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Workflows"
+        },
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Actions"
+        }
+      ]
+    },
+    {
+      "id": "five-things-in-a-workflow",
+      "type": "multi",
+      "prompt": "When writing a workflow, which of these are among the five things you can do? (Select all that apply)",
+      "tags": [
+        "actions",
+        "workflows"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Write custom Steps in a Job",
+          "correct": true,
+          "rationale": "Plain commands."
+        },
+        {
+          "id": "b",
+          "text": "Call a custom Action",
+          "correct": true,
+          "rationale": "One defined in `.github/actions`."
+        },
+        {
+          "id": "c",
+          "text": "Call an Action from the GitHub Marketplace",
+          "correct": true,
+          "rationale": "Third-party reuse."
+        },
+        {
+          "id": "d",
+          "text": "Spin up service containers needed by the Job",
+          "correct": true,
+          "rationale": "Sidecars for dependencies like a database."
+        },
+        {
+          "id": "e",
+          "text": "Call a Reusable Workflow",
+          "correct": true,
+          "rationale": "The fifth, and the one that happens at Job level."
+        },
+        {
+          "id": "f",
+          "text": "Edit the repository's branch protection rules",
+          "correct": false,
+          "rationale": "Not one of the five; workflows run work rather than configure repository settings."
+        }
+      ],
+      "explanation": "The five things a workflow can do are: custom Steps, a custom Action, a Marketplace Action, service containers, and a Reusable Workflow. Worth noting which of these are constrained when calling another workflow — you cannot spin up service containers before a called workflow, and you cannot place bare Steps around it.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Workflows"
+        }
+      ]
+    },
+    {
+      "id": "workflow-types",
+      "type": "multi",
+      "prompt": "Which workflow types does GitHub Actions support? (Select all that apply)",
+      "tags": [
+        "actions",
+        "workflows"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Starter Workflows — templates so a developer starts with something other than a blank slate",
+          "correct": true,
+          "rationale": "GitHub Enterprise offers them, and you can define your own custom ones."
+        },
+        {
+          "id": "b",
+          "text": "Reusable Workflows — workflows that can be called by another workflow",
+          "correct": true,
+          "rationale": "\"Callable Workflow\" would arguably be the clearer name."
+        },
+        {
+          "id": "c",
+          "text": "Standard Workflows — ordinary workflows without special functionality",
+          "correct": true,
+          "rationale": "Not an official GitHub term, but the notes use it for the run-of-the-mill case."
+        },
+        {
+          "id": "d",
+          "text": "Scheduled Workflows — a distinct type triggered by time",
+          "correct": false,
+          "rationale": "`schedule` is an Event that triggers a workflow, not a workflow *type*."
+        },
+        {
+          "id": "e",
+          "text": "Composite Workflows — workflows bundling multiple run commands",
+          "correct": false,
+          "rationale": "`using: composite` applies to a custom **Action**, not a workflow."
+        }
+      ],
+      "explanation": "Three types: Standard (the plain case, and not an official GitHub term), Starter (templates, offered by GitHub Enterprise or authored yourself), and Reusable (callable by another workflow). The two distractors are real concepts wearing the wrong label — `schedule` is an event, and `composite` describes an Action.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Workflows"
+        }
+      ]
+    },
+    {
+      "id": "workflow-call-inputs-secrets",
+      "type": "multi",
+      "prompt": "Which statements about the `workflow_call` trigger's declarations are correct? (Select all that apply)",
+      "tags": [
+        "actions",
+        "reusable-workflows"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It can declare `inputs`, each with a type, a `required` flag and a description",
+          "correct": true,
+          "rationale": "Typed parameters for the caller to supply."
+        },
+        {
+          "id": "b",
+          "text": "It can declare `secrets`, each with a description and a `required` flag",
+          "correct": true,
+          "rationale": "Declared separately from inputs."
+        },
+        {
+          "id": "c",
+          "text": "Inputs can be marked `required: false`",
+          "correct": true,
+          "rationale": "The example uses exactly that."
+        },
+        {
+          "id": "d",
+          "text": "Declaring `secrets` is mandatory for a workflow to be callable",
+          "correct": false,
+          "rationale": "Only the `workflow_call` trigger itself is required; inputs and secrets are optional."
+        },
+        {
+          "id": "e",
+          "text": "Inputs are untyped and always passed as strings",
+          "correct": false,
+          "rationale": "Each input declares a `type`."
+        }
+      ],
+      "explanation": "Adding `on: workflow_call` makes a workflow callable, and beneath it the workflow declares its interface: `inputs` with types, descriptions and required flags, and `secrets` separately. Both blocks are optional — the trigger alone is enough to make a workflow reusable.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "section": "Reusable Workflows"
+        }
+      ]
+    },
+    {
+      "id": "event-filters",
+      "type": "single",
+      "prompt": "A workflow should run only when commits land on the `main` branch. How is that expressed?",
+      "tags": [
+        "actions",
+        "events"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "With a filter on the event: `on: push:` with `branches: [main]`",
+          "correct": true,
+          "rationale": "Each event type has additional filters that refine when it triggers the workflow."
+        },
+        {
+          "id": "b",
+          "text": "With a `when: branch == 'main'` condition at workflow level",
+          "correct": false,
+          "rationale": "That is Ansible's conditional syntax, not GitHub Actions."
+        },
+        {
+          "id": "c",
+          "text": "By naming the workflow file `main.yml`",
+          "correct": false,
+          "rationale": "The filename has no bearing on triggering."
+        },
+        {
+          "id": "d",
+          "text": "With `needs: main` on the job",
+          "correct": false,
+          "rationale": "`needs` creates a dependency on another *job*."
+        }
+      ],
+      "explanation": "Every workflow has one or more triggering Events, and each event type carries additional filters to refine the conditions. A push filtered to `branches: [main]` is the common case; a `pull_request` can likewise be filtered to `main` and wildcard patterns such as `releases/**`.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Events"
+        }
+      ]
+    },
+    {
+      "id": "job-dependency-needs",
+      "type": "single",
+      "prompt": "A workflow has `stand-alone-job` and `dependent-job` with `needs: stand-alone-job`. What happens?",
+      "tags": [
+        "actions",
+        "jobs"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`dependent-job` waits until `stand-alone-job` completes before starting",
+          "correct": true,
+          "rationale": "`needs` converts the default parallelism into an ordering."
+        },
+        {
+          "id": "b",
+          "text": "Both run in parallel; `needs` only affects artifact sharing",
+          "correct": false,
+          "rationale": "`needs` creates a genuine dependency."
+        },
+        {
+          "id": "c",
+          "text": "They run on the same Runner so state carries between them",
+          "correct": false,
+          "rationale": "A Runner executes one Job at a time and each Job is its own environment — `needs` orders jobs, it does not merge them."
+        },
+        {
+          "id": "d",
+          "text": "`stand-alone-job` is skipped because nothing depends on the reverse",
+          "correct": false,
+          "rationale": "Both jobs run; only the order changes."
+        }
+      ],
+      "explanation": "Jobs default to running in parallel, and `needs` is how a dependency is expressed — the dependent job waits for the one it needs. What `needs` does *not* do is share an environment: a Job is a set of Steps on the same Runner, so anything one job leaves on disk is gone by the time the next starts.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Jobs"
+        },
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Runners"
+        }
+      ]
+    },
+    {
+      "id": "custom-action-inputs",
+      "type": "multi",
+      "prompt": "Which fields appear in the custom Action definition shown in the notes? (Select all that apply)",
+      "tags": [
+        "actions"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`name` and `description` for the Action",
+          "correct": true,
+          "rationale": "Identifying metadata."
+        },
+        {
+          "id": "b",
+          "text": "`inputs`, each with a type, description and `required` flag",
+          "correct": true,
+          "rationale": "The Action's parameters."
+        },
+        {
+          "id": "c",
+          "text": "`runs.using` declaring how the Action executes",
+          "correct": true,
+          "rationale": "`composite` in the example."
+        },
+        {
+          "id": "d",
+          "text": "`runs.steps` listing the steps the Action performs",
+          "correct": true,
+          "rationale": "Where the run commands live."
+        },
+        {
+          "id": "e",
+          "text": "`on`, declaring which events trigger the Action",
+          "correct": false,
+          "rationale": "`on` belongs to a workflow. An Action does not trigger — it is invoked as a Step."
+        }
+      ],
+      "explanation": "A custom Action is a YAML file in `.github/actions` with `name`, `description`, `inputs` and a `runs` block. The `on:` distractor is the useful one: Actions have no triggers because they are invoked as a Step inside a Job, whereas Workflows are the things Events fire.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Actions"
+        }
+      ]
+    },
+    {
+      "id": "self-hosted-runners",
+      "type": "single",
+      "prompt": "GitHub offers hosted Ubuntu, Windows and macOS runners. What is the alternative?",
+      "tags": [
+        "actions",
+        "runners"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Self-hosted runners, which you can opt into",
+          "correct": true,
+          "rationale": "Your own infrastructure running the workflows."
+        },
+        {
+          "id": "b",
+          "text": "Running workflows directly on the GitHub Enterprise control plane",
+          "correct": false,
+          "rationale": "Not a runner option."
+        },
+        {
+          "id": "c",
+          "text": "Reusable Workflows, which execute without a runner",
+          "correct": false,
+          "rationale": "A called workflow acts as a Job, and Jobs need runners."
+        },
+        {
+          "id": "d",
+          "text": "Service containers, which replace the runner for containerised jobs",
+          "correct": false,
+          "rationale": "Service containers are sidecars *alongside* a job, not a substitute for its runner."
+        }
+      ],
+      "explanation": "Runners are the servers workflows execute on. GitHub provides Ubuntu, Windows and macOS options, and self-hosted runners are the opt-in alternative — which is also the single biggest lever on Action-minute cost when running something token-hungry like `claude-code-action`.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Runners"
+        }
+      ]
+    },
+    {
+      "id": "codeowners-per-branch",
+      "type": "single",
+      "prompt": "A repository has a `CODEOWNERS` file on `main` and a different one on a long-lived `release/2.x` branch. Which applies to a PR targeting `release/2.x`?",
+      "tags": [
+        "codeowners"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The one on `release/2.x` — a CODEOWNERS file determines owners only for its own branch",
+          "correct": true,
+          "rationale": "It is versioned like any other file and scoped to its branch."
+        },
+        {
+          "id": "b",
+          "text": "The one on `main`, since it is the default branch",
+          "correct": false,
+          "rationale": "There is no default-branch precedence; each branch carries its own."
+        },
+        {
+          "id": "c",
+          "text": "Both, with `main` taking precedence",
+          "correct": false,
+          "rationale": "Precedence applies between *locations* within a branch, not between branches."
+        },
+        {
+          "id": "d",
+          "text": "Neither — CODEOWNERS only applies to the default branch",
+          "correct": false,
+          "rationale": "Each branch of a repository can have its own."
+        }
+      ],
+      "explanation": "Each branch can carry its own `CODEOWNERS`, and a given file determines code owners for that branch alone. The precedence rule — `.github/` > root > `docs/`, first file only — resolves *where* within a branch, not *which* branch.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "CODEOWNERS"
+        }
+      ]
+    },
+    {
+      "id": "reusable-workflow-is-a-job",
+      "type": "single",
+      "prompt": "Why can't a caller place a Step immediately before a workflow it calls?",
+      "tags": [
+        "actions",
+        "reusable-workflows"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Reuse happens at the Job level, so the called workflow *is* a job — and Steps only exist inside jobs",
+          "correct": true,
+          "rationale": "There is nowhere to hang a bare step."
+        },
+        {
+          "id": "b",
+          "text": "Because Steps cannot run before any job in a workflow",
+          "correct": false,
+          "rationale": "Steps run inside jobs all the time; the restriction is specific to placing them around a called workflow."
+        },
+        {
+          "id": "c",
+          "text": "Because the caller's runner is not provisioned until the called workflow finishes",
+          "correct": false,
+          "rationale": "Not the reason given."
+        },
+        {
+          "id": "d",
+          "text": "Because `needs` cannot be used with a called workflow",
+          "correct": false,
+          "rationale": "The opposite — `needs` is exactly how you order jobs around a called workflow."
+        }
+      ],
+      "explanation": "Every constraint on reusable workflows follows from one fact: reuse happens at the Job level, so a called workflow behaves as a job in the caller. You can therefore order *jobs* around it with `needs`, but you cannot place bare Steps or service containers around it — those only exist inside a job. If you need work before or after, put it in its own job.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "section": "Reusable Workflows"
+        }
+      ]
+    },
+    {
+      "id": "pr-event-filter-example",
+      "type": "single",
+      "prompt": "A workflow should run when a PR is opened against `main` or any branch under `releases/`. Which filter shape does the notes' example use?",
+      "tags": [
+        "actions",
+        "events"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`on: pull_request:` listing `main` and `releases/**`",
+          "correct": true,
+          "rationale": "`**` matches nested paths under the prefix."
+        },
+        {
+          "id": "b",
+          "text": "`on: push:` with the same branch list",
+          "correct": false,
+          "rationale": "`push` fires on commits, not on a PR being opened."
+        },
+        {
+          "id": "c",
+          "text": "`on: pull_request_review:` with types submitted and edited",
+          "correct": false,
+          "rationale": "That fires when a review is submitted or updated."
+        },
+        {
+          "id": "d",
+          "text": "A single `releases/*` pattern, since `*` already crosses path separators",
+          "correct": false,
+          "rationale": "The example uses `**` for nested branches, and `main` still has to be listed separately."
+        }
+      ],
+      "explanation": "Branch filters accept wildcards, and `releases/**` is the form used for nested branch names. GitHub publishes the complete list of triggering events and the ways to refine them, but the shape is consistent: pick the event, then narrow it with filters rather than adding conditions inside the job.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Events"
+        }
+      ]
+    },
+    {
+      "id": "workflow-variables",
+      "type": "single",
+      "prompt": "Where are the environment variables GitHub predefines for a workflow documented?",
+      "tags": [
+        "actions"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "In GitHub's default environment variables reference, linked from the Components section",
+          "correct": true,
+          "rationale": "`Variables` is listed as a component precisely to point at that reference."
+        },
+        {
+          "id": "b",
+          "text": "In the repository's `.github/variables` directory",
+          "correct": false,
+          "rationale": "No such directory exists."
+        },
+        {
+          "id": "c",
+          "text": "In each Action's `inputs` block",
+          "correct": false,
+          "rationale": "Those are an Action's own parameters, not workflow-wide variables."
+        },
+        {
+          "id": "d",
+          "text": "They must be declared per job with `needs`",
+          "correct": false,
+          "rationale": "`needs` orders jobs."
+        }
+      ],
+      "explanation": "`Variables` appears as one of the Actions components mainly as a pointer: GitHub predefines a set of environment variables available to every workflow, and the reference list is the place to look rather than guessing names. It sits alongside Workflow, Runner, Event, Job and Action in the component vocabulary.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Components"
+        }
+      ]
+    },
+    {
+      "id": "actions-maintenance-use",
+      "type": "boolean",
+      "prompt": "GitHub Actions is only for build, test and deployment workflows.",
+      "tags": [
+        "actions"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "GitHub Actions is the CI/CD feature — defining automated build, testing and deployment workflows in YAML alongside the source code — but it is explicitly also used to automate repository maintenance tasks. Scheduled housekeeping, triage automation and similar jobs are as much a fit as a build pipeline.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Github Actions"
+        }
+      ]
+    },
+    {
+      "id": "proper-noun-convention",
+      "type": "single",
+      "prompt": "The notes capitalise terms like \"Action\", \"Event\" and \"Job\". What does that convention signal?",
+      "tags": [
+        "actions",
+        "terminology"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The capitalised form refers to the specific GitHub Actions concept, not the everyday word",
+          "correct": true,
+          "rationale": "GitHub reuses very general words for very specific constructs."
+        },
+        {
+          "id": "b",
+          "text": "Capitalised terms are YAML keys and lower-case ones are values",
+          "correct": false,
+          "rationale": "The convention is about prose, not syntax."
+        },
+        {
+          "id": "c",
+          "text": "Capitalised terms are GitHub Enterprise features only",
+          "correct": false,
+          "rationale": "No such distinction is drawn."
+        },
+        {
+          "id": "d",
+          "text": "Capitalised terms are deprecated",
+          "correct": false,
+          "rationale": "Nothing of the sort."
+        }
+      ],
+      "explanation": "GitHub Actions overloads ordinary words — an \"action\" is any action, but an **Action** is a plug-and-play unit used as a Step. The notes capitalise the proper nouns to keep the two readings apart, which matters most for Action, Event and Job, where the general and specific meanings are easy to conflate.",
+      "citations": [
+        {
+          "file": "github_cd-cd.md",
+          "heading": "Github Actions"
+        }
+      ]
+    }
+  ]
+}
