@@ -56,7 +56,13 @@ export function slugify(heading: string): string {
     .replace(/\s+/g, '-')
 }
 
-/** Markdown headings, ignoring `#` lines inside fenced code blocks. */
+/**
+ * Markdown headings, ignoring `#` lines inside fenced code blocks.
+ *
+ * Only ever called for `.md` files. In a source file — `ai_react_loop.py`, say — every
+ * `#` comment looks like a heading, so treating a non-Markdown file as Markdown would
+ * invent anchors that GitHub never generates.
+ */
 function extractHeadings(markdown: string): string[] {
   const headings: string[] = []
   let inFence = false
@@ -102,7 +108,10 @@ function readNote(file: string): { headings: Set<string>; text: string } | null 
   }
 
   const text = readFileSync(notePath, 'utf8')
-  const parsed = { headings: new Set(extractHeadings(text)), text }
+  // Non-Markdown notes (the example `.py` scripts) have no headings and therefore no
+  // anchors — every citation into one has to be a `section`.
+  const headings = file.toLowerCase().endsWith('.md') ? extractHeadings(text) : []
+  const parsed = { headings: new Set(headings), text }
   noteCache.set(file, parsed)
   return parsed
 }
@@ -115,7 +124,12 @@ function checkCitation(citation: Citation, at: string): void {
   }
 
   if (citation.heading) {
-    if (!note.headings.has(citation.heading)) {
+    if (!citation.file.toLowerCase().endsWith('.md')) {
+      error(
+        `${at}.heading`,
+        `${citation.file} is not Markdown, so it has no anchors — use "section" instead of "heading".`,
+      )
+    } else if (!note.headings.has(citation.heading)) {
       const label = note.headings.has(citation.heading.trim()) ? ' (check whitespace)' : ''
       error(
         `${at}.heading`,
