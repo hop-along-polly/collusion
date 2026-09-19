@@ -7,6 +7,14 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { App } from '@/App'
 import { ProgressProvider } from '@/hooks/useProgress'
 import { STORAGE_KEY } from '@/storage/progress'
+import { findSet, listSets } from '@/data/catalog'
+
+/**
+ * Counts come from the catalog rather than being hard-coded. Card sets grow as notes
+ * are added, and a literal here turns every content change into a test failure that
+ * says nothing useful.
+ */
+const AGENT_SKILLS = findSet('anthropic', 'agent-skills')!
 
 /**
  * Integration coverage for the screens a learner actually touches. These tests drive
@@ -35,26 +43,29 @@ beforeEach(() => {
 afterEach(cleanup)
 
 describe('landing page', () => {
-  it('lists every domain and marks the one with no notes as pending', async () => {
+  it('lists every domain in the catalog with a route into it', async () => {
     renderAt('/')
 
     expect(await screen.findByRole('heading', { name: /study what you actually wrote down/i })).toBeTruthy()
-    expect(screen.getByRole('heading', { name: 'Anthropic', level: 3 })).toBeTruthy()
-    expect(screen.getByRole('heading', { name: 'DevOps', level: 3 })).toBeTruthy()
-    expect(screen.getByRole('heading', { name: 'AWS', level: 3 })).toBeTruthy()
-    // The AWS card is badged as pending and offers no "Browse" link, since cards must
-    // stay grounded in notes this repository does not have yet.
-    expect(screen.getAllByText(/notes pending/i).length).toBeGreaterThan(0)
-    expect(screen.queryByRole('link', { name: /browse aws/i })).toBeNull()
+    for (const domain of ['Anthropic', 'DevOps', 'AWS']) {
+      expect(screen.getByRole('heading', { name: domain, level: 3 })).toBeTruthy()
+      expect(screen.getByRole('link', { name: new RegExp(`browse ${domain}`, 'i') })).toBeTruthy()
+    }
   })
 })
 
-describe('a domain with no card sets', () => {
-  it('shows an empty state with a way forward instead of a dead end', async () => {
+describe('a domain page', () => {
+  it('lists the card sets belonging to that domain', async () => {
     renderAt('/aws')
 
-    expect(await screen.findByRole('heading', { name: /no aws card sets yet/i })).toBeTruthy()
-    expect(screen.getByRole('link', { name: /study something else/i })).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: 'AWS', level: 1 })).toBeTruthy()
+
+    // Every set the catalog places in this domain gets a heading and a link.
+    const sets = listSets('aws')
+    expect(sets.length).toBeGreaterThan(0)
+    for (const set of sets) {
+      expect(screen.getByRole('heading', { name: set.title, level: 2 })).toBeTruthy()
+    }
   })
 })
 
@@ -110,7 +121,7 @@ describe('the quiz flow', () => {
 
     await user.click(screen.getByRole('button', { name: /next question|see results/i }))
     await waitFor(() => {
-      expect(screen.getByText(/^2 \/ 9$/)).toBeTruthy()
+      expect(screen.getByText(`2 / ${AGENT_SKILLS.cardCount}`)).toBeTruthy()
     })
   })
 
