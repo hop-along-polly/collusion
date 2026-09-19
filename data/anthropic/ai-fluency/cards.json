@@ -1,0 +1,1359 @@
+{
+  "id": "ai-fluency",
+  "title": "AI Fluency",
+  "cards": [
+    {
+      "id": "three-ways-of-collaborating",
+      "type": "single",
+      "prompt": "Creative work where the desired outcome is not yet clear. Which of the three ways of collaborating with AI fits?",
+      "tags": [
+        "fluency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Augmentation — the AI helps you do your work better rather than doing it for you",
+          "correct": true,
+          "rationale": "Best for creative work where the outcome is not clear yet."
+        },
+        {
+          "id": "b",
+          "text": "Automation — the AI performs a unit of work based on your instructions",
+          "correct": false,
+          "rationale": "Automation is for when the outcome can be clearly stated and the steps are well-defined — the opposite situation."
+        },
+        {
+          "id": "c",
+          "text": "Agency — the AI works independently for you",
+          "correct": false,
+          "rationale": "Agency is best when the AI needs to reason rather than execute steps, which still implies a goal to reason toward."
+        },
+        {
+          "id": "d",
+          "text": "Delegation — deciding which work the AI should do",
+          "correct": false,
+          "rationale": "Delegation is one of the four competencies of the AI Fluency Framework, not one of the three ways of collaborating."
+        }
+      ],
+      "explanation": "The three ways of collaborating map onto how well-defined the work is. **Automation** suits a clear outcome with well-defined steps. **Augmentation** suits creative work where the outcome is still unclear — the AI makes you better rather than replacing you. **Agency** suits work where the AI needs to reason rather than execute prescribed steps.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "3 Ways of Collaborating with AI"
+        }
+      ]
+    },
+    {
+      "id": "fluency-framework-competencies",
+      "type": "multi",
+      "prompt": "Which are the four core competencies of the AI Fluency Framework? (Select all that apply)",
+      "tags": [
+        "fluency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Delegation",
+          "correct": true,
+          "rationale": "Deciding what work AI should do versus a human."
+        },
+        {
+          "id": "b",
+          "text": "Description",
+          "correct": true,
+          "rationale": "Articulating your needs so the AI can deliver."
+        },
+        {
+          "id": "c",
+          "text": "Discernment",
+          "correct": true,
+          "rationale": "Judging whether the response actually met the need."
+        },
+        {
+          "id": "d",
+          "text": "Diligence",
+          "correct": true,
+          "rationale": "Interacting responsibly, ethically and safely."
+        },
+        {
+          "id": "e",
+          "text": "Deployment",
+          "correct": false,
+          "rationale": "*Deployment Diligence* is a facet of Diligence — taking informed responsibility for AI outputs — not a competency of its own."
+        },
+        {
+          "id": "f",
+          "text": "Determination",
+          "correct": false,
+          "rationale": "Invented."
+        }
+      ],
+      "explanation": "The four competencies are Delegation, Description, Discernment and Diligence. They form a cycle: decide what to hand over, describe it well, judge what comes back, and take responsibility for how it is used. Description and Discernment are explicit mirrors of each other — one states the need, the other checks the need was met.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "AI Fluency Framework"
+        }
+      ]
+    },
+    {
+      "id": "delegation-considerations",
+      "type": "multi",
+      "prompt": "What should you consider when exercising Delegation? (Select all that apply)",
+      "tags": [
+        "fluency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Problem awareness — do you understand your own goal or problem well",
+          "correct": true,
+          "rationale": "\"A problem well stated is a problem half solved.\""
+        },
+        {
+          "id": "b",
+          "text": "Platform awareness — what are the strengths and limitations of the AI system you are using",
+          "correct": true,
+          "rationale": "You cannot delegate well without knowing what the tool is good at."
+        },
+        {
+          "id": "c",
+          "text": "Task delegation — which work suits the AI and which suits a human",
+          "correct": true,
+          "rationale": "The actual allocation decision."
+        },
+        {
+          "id": "d",
+          "text": "Process description — describing the route you want the AI to take",
+          "correct": false,
+          "rationale": "That belongs to Description, not Delegation."
+        },
+        {
+          "id": "e",
+          "text": "Product discernment — judging the quality of the output",
+          "correct": false,
+          "rationale": "That belongs to Discernment, which happens after the work comes back."
+        }
+      ],
+      "explanation": "Delegation is about deciding what work AI should do versus a human, and how to distribute tasks between them. Its three considerations are problem awareness (do you understand the goal), platform awareness (what is this system good and bad at), and the task delegation decision itself. The John Dewey line — \"a problem well stated is a problem half solved\" — is used for both Delegation and Description.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Delegation"
+        }
+      ]
+    },
+    {
+      "id": "description-facets",
+      "type": "single",
+      "prompt": "You want the AI to challenge your assumptions rather than follow your lead. Which facet of Description is that?",
+      "tags": [
+        "fluency",
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Performance Description — describing the behaviour of the AI system",
+          "correct": true,
+          "rationale": "Whether to be verbose or high-level, and whether to challenge or follow, are behavioural."
+        },
+        {
+          "id": "b",
+          "text": "Project Description — defining the problem, goals and output format",
+          "correct": false,
+          "rationale": "That describes *what* is wanted, not how the AI should behave while producing it."
+        },
+        {
+          "id": "c",
+          "text": "Process Description — describing the process the AI should follow",
+          "correct": false,
+          "rationale": "Close, but process is the route to the answer rather than the AI's manner."
+        },
+        {
+          "id": "d",
+          "text": "Product Discernment — judging the quality of the output",
+          "correct": false,
+          "rationale": "A Discernment facet, and it happens after the fact."
+        }
+      ],
+      "explanation": "Description has three facets: **Project** (the problem, goals and output format), **Process** (the route to an answer), and **Performance** (how the AI should behave — verbose or terse, challenging or compliant). Most prompt engineering techniques fall under Description, because they describe the output, the behaviour, or the approach: few-shot prompting describes the output, role/persona prompting describes behaviour, and chain-of-thought describes behaviour too.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Description"
+        }
+      ]
+    },
+    {
+      "id": "prompting-techniques-mapping",
+      "type": "multi",
+      "prompt": "Which pairings of prompting technique to its plain-English description are correct? (Select all that apply)",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Few-shot prompting — offering examples of inputs and desired outputs",
+          "correct": true,
+          "rationale": "\"Offer Examples\" is the foundational tip; few-shot is its formal name."
+        },
+        {
+          "id": "b",
+          "text": "Role/Persona prompting — defining roles to control vocabulary, depth and nuance",
+          "correct": true,
+          "rationale": "\"Define roles\" is the foundational tip."
+        },
+        {
+          "id": "c",
+          "text": "Chain-of-Thought prompting — breaking down complex tasks",
+          "correct": true,
+          "rationale": "Having the Model explain its reasoning and prompting in response to it."
+        },
+        {
+          "id": "d",
+          "text": "Give the AI space to think — letting the Model reason, or asking it to explain its reasoning",
+          "correct": true,
+          "rationale": "So you can see how it reached its answer."
+        },
+        {
+          "id": "e",
+          "text": "Specify output constraints — telling the AI which model to use",
+          "correct": false,
+          "rationale": "Output constraints describe what should and should not appear in the output; model selection is a separate Claude tool."
+        }
+      ],
+      "explanation": "The six foundational prompting tips are: provide context (be specific about what, why and your own level of knowledge), offer examples (few-shot), specify output constraints, break down complex tasks (chain-of-thought), give the AI space to think, and define roles (role/persona). They are all Description-competency techniques, which is the point — they describe the output, the process, or the behaviour.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Description"
+        }
+      ]
+    },
+    {
+      "id": "discernment-types",
+      "type": "single",
+      "prompt": "An AI's answer is correct, but it got there by circular reasoning and fixated on a minor detail. Which type of Discernment surfaces that?",
+      "tags": [
+        "fluency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Process Discernment — the quality of the AI's problem solving and reasoning",
+          "correct": true,
+          "rationale": "Circular reasoning and getting stuck on a minor detail are exactly its diagnostic questions."
+        },
+        {
+          "id": "b",
+          "text": "Product Discernment — the quality of the output",
+          "correct": false,
+          "rationale": "The output was fine here. Product Discernment asks about accuracy, audience fit, coherence and whether requirements were met."
+        },
+        {
+          "id": "c",
+          "text": "Performance Discernment — how well the AI interacts with the user",
+          "correct": false,
+          "rationale": "That covers communication style, level of detail, and responsiveness to feedback."
+        },
+        {
+          "id": "d",
+          "text": "Diligence — verifying facts and checking for bias",
+          "correct": false,
+          "rationale": "A separate competency about responsible use rather than evaluating a specific response."
+        }
+      ],
+      "explanation": "Discernment splits three ways, and a response can pass one while failing another. **Product** asks whether the output is good — accurate, appropriate, coherent, meeting the stated requirements. **Process** asks whether the reasoning was sound — logically consistent, no lapses in judgement, no circular reasoning, not stuck on minor details. **Performance** asks whether the interaction is working — right style, right level, responsive to direction, not needlessly verbose.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Discernment"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-principles",
+      "type": "multi",
+      "prompt": "Which are principles of Responsible AI under the Diligence competency? (Select all that apply)",
+      "tags": [
+        "fluency",
+        "ethics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Fairness and inclusiveness — limiting biases learned from training data",
+          "correct": true,
+          "rationale": "Bias originates in the data, so it has to be worked against."
+        },
+        {
+          "id": "b",
+          "text": "Transparency — making the use, design and training data source available",
+          "correct": true,
+          "rationale": "Being open about what the system is."
+        },
+        {
+          "id": "c",
+          "text": "Explainability — being able to explain how the system reached its output",
+          "correct": true,
+          "rationale": "Distinct from transparency: one is about disclosure, the other about traceability."
+        },
+        {
+          "id": "d",
+          "text": "Accountability — willingness to take ownership of AI-assisted work and decisions",
+          "correct": true,
+          "rationale": "The buck stops with a person."
+        },
+        {
+          "id": "e",
+          "text": "Determinism — ensuring the same prompt always produces the same response",
+          "correct": false,
+          "rationale": "Non-determinism is listed as a *limitation* of AI systems, not a principle to uphold."
+        }
+      ],
+      "explanation": "The Responsible AI principles are fairness and inclusiveness, transparency, explainability and accountability. Diligence also comes in three flavours — creation (being thoughtful about which systems you use and how), transparency (being open about your use of AI to build trust), and deployment (owning the outputs and how they are used) — and in practice means verifying facts, checking for biases, ensuring accuracy, and checking usage rights.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Diligence"
+        }
+      ]
+    },
+    {
+      "id": "genai-three-pillars",
+      "type": "multi",
+      "prompt": "Which three technical developments made generative AI possible? (Select all that apply)",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Algorithms — advances in neural networks and the invention of the Transformer architecture",
+          "correct": true,
+          "rationale": "The Transformer made it possible to process long sequences while maintaining relationships between words."
+        },
+        {
+          "id": "b",
+          "text": "Data — Web2 producing vast amounts of diverse digital text on the open web",
+          "correct": true,
+          "rationale": "The training corpus had to exist first."
+        },
+        {
+          "id": "c",
+          "text": "Computation — increased power of GPUs and TPUs",
+          "correct": true,
+          "rationale": "Processing that much data quickly requires specialised hardware."
+        },
+        {
+          "id": "d",
+          "text": "Connectivity — broadband making model inference available to consumers",
+          "correct": false,
+          "rationale": "Not one of the three pillars."
+        },
+        {
+          "id": "e",
+          "text": "Compression — techniques for shrinking models to run on-device",
+          "correct": false,
+          "rationale": "Not one of the three pillars."
+        }
+      ],
+      "explanation": "The three pillars are algorithms, data and computation — a method, a corpus, and the hardware to combine them at scale. The Transformer architecture is singled out because it made it possible to process large sequences of text while maintaining the relationships between words. Related is the scaling law: as models grow larger, train on more data and run on more compute, performance improves predictably and new capabilities emerge.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Generative AI Fundamentals"
+        },
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Scaling Laws"
+        }
+      ]
+    },
+    {
+      "id": "ai-limitations",
+      "type": "multi",
+      "prompt": "Which are listed as limitations of AI systems? (Select all that apply)",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A knowledge cut-off date beyond which the model has no inherent knowledge",
+          "correct": true,
+          "rationale": "Bounded by its training data."
+        },
+        {
+          "id": "b",
+          "text": "Hallucinations — reproducing inaccuracies present in training data",
+          "correct": true,
+          "rationale": "Which is why verifying key facts independently matters."
+        },
+        {
+          "id": "c",
+          "text": "A limited context window — the conversation history is always finite",
+          "correct": true,
+          "rationale": "However large, it has an end."
+        },
+        {
+          "id": "d",
+          "text": "Non-determinism — the same prompt gets different responses every time",
+          "correct": true,
+          "rationale": "A property of generation, and what makes agents hard to evaluate."
+        },
+        {
+          "id": "e",
+          "text": "Inability to use external tools or fetch external data",
+          "correct": false,
+          "rationale": "The opposite — tool use and RAG are both listed as *capabilities*, and they are the standard mitigations for the cut-off date."
+        }
+      ],
+      "explanation": "The four limitations are the knowledge cut-off date, hallucinations, a finite context window, and non-determinism. Set against them are the capabilities: summarization, translation, retrieval-augmented generation, and tool use — and note that the last two are precisely how a knowledge cut-off is worked around. The overall framing is that AI provides speed, scale, pattern recognition and processing, while humans provide critical thinking, judgement, creativity and ethical oversight.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Capabilities and Limitations"
+        }
+      ]
+    },
+    {
+      "id": "what-is-ai-fluency",
+      "type": "single",
+      "prompt": "How is AI Fluency defined?",
+      "tags": [
+        "fluency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Developing practical skills, knowledge and values to use AI effectively, efficiently, ethically and safely",
+          "correct": true,
+          "rationale": "Four adverbs, and the last two are what make it more than a skills course."
+        },
+        {
+          "id": "b",
+          "text": "Understanding how transformer models work internally",
+          "correct": false,
+          "rationale": "Technical fundamentals are a section of the material, not the definition."
+        },
+        {
+          "id": "c",
+          "text": "Being able to write effective prompts",
+          "correct": false,
+          "rationale": "Prompting sits inside the Description competency — one quarter of the framework."
+        },
+        {
+          "id": "d",
+          "text": "Knowing which AI system to buy for a given task",
+          "correct": false,
+          "rationale": "Platform awareness is one consideration within Delegation."
+        }
+      ],
+      "explanation": "AI Fluency is about developing practical skills, knowledge *and values* to use AI effectively, efficiently, ethically and safely. The inclusion of values and ethics is deliberate — it is why Diligence is a first-class competency alongside the three that are purely about getting good output.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "section": "What is AI Fluency?"
+        }
+      ]
+    },
+    {
+      "id": "what-is-generative-ai",
+      "type": "single",
+      "prompt": "What distinguishes generative AI from earlier AI systems?",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It can create new content instead of only analyzing existing data",
+          "correct": true,
+          "rationale": "Generation rather than classification or analysis."
+        },
+        {
+          "id": "b",
+          "text": "It runs on GPUs rather than CPUs",
+          "correct": false,
+          "rationale": "Hardware is one of the three enabling pillars, not the distinction."
+        },
+        {
+          "id": "c",
+          "text": "It uses neural networks",
+          "correct": false,
+          "rationale": "Neural networks predate generative AI; the Transformer was the specific advance."
+        },
+        {
+          "id": "d",
+          "text": "It can call external tools",
+          "correct": false,
+          "rationale": "Tool use is listed as a capability, not the defining property."
+        }
+      ],
+      "explanation": "Generative AI is defined as AI systems that can create new content instead of just analyzing existing data. Everything else in the fundamentals section explains how that became possible — the Transformer architecture, Web2's corpus of digital text, and GPU/TPU compute.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "section": "What is generative AI?"
+        }
+      ]
+    },
+    {
+      "id": "automation-best-for",
+      "type": "single",
+      "prompt": "When is Automation the right way to collaborate with AI?",
+      "tags": [
+        "fluency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "When the solution or outcome can be clearly stated and the steps to reach it are well-defined",
+          "correct": true,
+          "rationale": "Both halves — outcome *and* steps."
+        },
+        {
+          "id": "b",
+          "text": "When the outcome is not yet clear",
+          "correct": false,
+          "rationale": "That is Augmentation."
+        },
+        {
+          "id": "c",
+          "text": "When the AI needs to reason rather than execute steps",
+          "correct": false,
+          "rationale": "That is Agency."
+        },
+        {
+          "id": "d",
+          "text": "Whenever the task is repetitive, regardless of how well-defined it is",
+          "correct": false,
+          "rationale": "Repetition is not enough — an ill-defined repetitive task still needs judgement."
+        }
+      ],
+      "explanation": "Automation — the AI performing a unit of work from your instructions — fits when the outcome can be clearly stated *and* the steps are well-defined. It is the same test that separates a Workflow from an Agent in the multi-agent material: known goal plus known steps means you can encode the path.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "3 Ways of Collaborating with AI"
+        }
+      ]
+    },
+    {
+      "id": "agency-best-for",
+      "type": "single",
+      "prompt": "When is Agency the right collaboration mode?",
+      "tags": [
+        "fluency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "When the AI needs to reason rather than execute steps",
+          "correct": true,
+          "rationale": "Independent work requires judgement about the route."
+        },
+        {
+          "id": "b",
+          "text": "When you want the AI to help you do your own work better",
+          "correct": false,
+          "rationale": "That is Augmentation."
+        },
+        {
+          "id": "c",
+          "text": "When the steps are fully specified in advance",
+          "correct": false,
+          "rationale": "Fully specified steps point to Automation."
+        },
+        {
+          "id": "d",
+          "text": "When the task is too large for one context window",
+          "correct": false,
+          "rationale": "Context size is a limitation to work around, not what selects a collaboration mode."
+        }
+      ],
+      "explanation": "Agency — the AI working independently for you — is best when reasoning is required rather than step execution. The three modes form a gradient of how much the AI decides: Automation executes your plan, Augmentation improves your work, Agency works out its own route.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "3 Ways of Collaborating with AI"
+        }
+      ]
+    },
+    {
+      "id": "project-description",
+      "type": "single",
+      "prompt": "Which facet of Description covers clearly defining the problem, the goals and the format of the outputs?",
+      "tags": [
+        "fluency",
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Project Description",
+          "correct": true,
+          "rationale": "What is wanted, and in what shape."
+        },
+        {
+          "id": "b",
+          "text": "Process Description",
+          "correct": false,
+          "rationale": "That is the process you want the AI to follow to reach an answer."
+        },
+        {
+          "id": "c",
+          "text": "Performance Description",
+          "correct": false,
+          "rationale": "That is how the AI should behave — verbose or terse, challenging or compliant."
+        },
+        {
+          "id": "d",
+          "text": "Problem Awareness",
+          "correct": false,
+          "rationale": "A Delegation consideration: do *you* understand your own goal."
+        }
+      ],
+      "explanation": "Description splits three ways and each answers a different question. Project: what is the problem, what are the goals, what shape should the output take. Process: how should the AI get there. Performance: how should the AI behave while doing it. Naming which one is missing is usually faster than rewriting a prompt wholesale.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Description"
+        }
+      ]
+    },
+    {
+      "id": "provide-context-tip",
+      "type": "single",
+      "prompt": "The \"Provide Context\" prompting tip asks you to be specific about three things. Which?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "What you want, why you want it, and your own level of knowledge on the topic",
+          "correct": true,
+          "rationale": "The third is easy to forget and changes the answer most."
+        },
+        {
+          "id": "b",
+          "text": "What you want, the output format, and the deadline",
+          "correct": false,
+          "rationale": "Format belongs to output constraints; deadlines are not mentioned."
+        },
+        {
+          "id": "c",
+          "text": "The role, the audience and the tone",
+          "correct": false,
+          "rationale": "Those are the fixes for generic responses and wrong tone."
+        },
+        {
+          "id": "d",
+          "text": "The model, the temperature and the max tokens",
+          "correct": false,
+          "rationale": "API parameters, not prompting context."
+        }
+      ],
+      "explanation": "Provide Context means stating what you want, why you want it, and your level of knowledge on the topic. That last element is the one people omit, and it has the largest effect on how the answer is pitched — the same question from a beginner and an expert deserves genuinely different responses.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Description"
+        }
+      ]
+    },
+    {
+      "id": "role-prompting-controls",
+      "type": "single",
+      "prompt": "What does Role/Persona prompting control?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Vocabulary, depth and nuance",
+          "correct": true,
+          "rationale": "Assigning an identity shifts all three at once."
+        },
+        {
+          "id": "b",
+          "text": "The length of the response",
+          "correct": false,
+          "rationale": "Length is an output constraint."
+        },
+        {
+          "id": "c",
+          "text": "Which tools the AI may call",
+          "correct": false,
+          "rationale": "Tool access is configuration, not prompting."
+        },
+        {
+          "id": "d",
+          "text": "Whether the AI explains its reasoning",
+          "correct": false,
+          "rationale": "That is chain-of-thought, or giving the AI space to think."
+        }
+      ],
+      "explanation": "Role/Persona prompting assigns an identity in order to control vocabulary, depth and nuance — it is classified under Description because it describes the AI's behaviour and approach. Few-shot prompting, by contrast, describes the final *output*, and chain-of-thought describes behaviour again.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Description"
+        }
+      ]
+    },
+    {
+      "id": "product-discernment-questions",
+      "type": "multi",
+      "prompt": "Which questions belong to Product Discernment? (Select all that apply)",
+      "tags": [
+        "fluency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Is the response factually accurate?",
+          "correct": true,
+          "rationale": "Quality of the output itself."
+        },
+        {
+          "id": "b",
+          "text": "Is it appropriate for my audience and purpose?",
+          "correct": true,
+          "rationale": "Fit for the intended use."
+        },
+        {
+          "id": "c",
+          "text": "Did it meet my acceptance criteria from the prompt?",
+          "correct": true,
+          "rationale": "Did you get what you asked for."
+        },
+        {
+          "id": "d",
+          "text": "Does this response add value?",
+          "correct": true,
+          "rationale": "The bluntest of the set."
+        },
+        {
+          "id": "e",
+          "text": "Did it get trapped in circular reasoning?",
+          "correct": false,
+          "rationale": "A Process Discernment question — about the reasoning, not the output."
+        },
+        {
+          "id": "f",
+          "text": "Is the communication style appropriate?",
+          "correct": false,
+          "rationale": "A Performance Discernment question."
+        }
+      ],
+      "explanation": "Product Discernment interrogates the output: accuracy, appropriateness for audience and purpose, coherence and structure, whether the prompt's acceptance criteria were met, and whether it adds value at all. Keeping it apart from Process (was the reasoning sound) and Performance (is the interaction working) is what makes feedback specific enough to act on.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Discernment"
+        }
+      ]
+    },
+    {
+      "id": "performance-discernment-questions",
+      "type": "multi",
+      "prompt": "Which questions belong to Performance Discernment? (Select all that apply)",
+      "tags": [
+        "fluency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Is the communication style appropriate?",
+          "correct": true,
+          "rationale": "How the AI is talking to you."
+        },
+        {
+          "id": "b",
+          "text": "Is the information presented at the right level for my audience?",
+          "correct": true,
+          "rationale": "Pitch and register."
+        },
+        {
+          "id": "c",
+          "text": "Does the AI respond well to feedback and direction?",
+          "correct": true,
+          "rationale": "Responsiveness over a conversation."
+        },
+        {
+          "id": "d",
+          "text": "Are the responses efficient, or overly verbose when you need concision?",
+          "correct": true,
+          "rationale": "Explicitly one of the questions."
+        },
+        {
+          "id": "e",
+          "text": "Were inappropriate or wrong steps taken?",
+          "correct": false,
+          "rationale": "A Process Discernment question."
+        }
+      ],
+      "explanation": "Performance Discernment is about the interaction rather than the answer: style, level, responsiveness to direction, and efficiency. It is the facet that shows up over a whole conversation rather than in a single response — which is why part of Discernment is providing feedback and correction in follow-up prompts.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Discernment"
+        }
+      ]
+    },
+    {
+      "id": "discernment-includes-feedback",
+      "type": "boolean",
+      "prompt": "Discernment includes providing feedback and correction in follow-up prompts, not just judging a response.",
+      "tags": [
+        "fluency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "Evaluating a response is only half of Discernment — the other half is acting on that evaluation by providing feedback and correction in follow-ups. It is the mechanism that connects Discernment back to Description: you judged the output, now describe better.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Discernment"
+        }
+      ]
+    },
+    {
+      "id": "diligence-three-flavours",
+      "type": "single",
+      "prompt": "Being open and honest about your AI system in order to build trust is which flavour of Diligence?",
+      "tags": [
+        "fluency",
+        "ethics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Transparency Diligence",
+          "correct": true,
+          "rationale": "Openness in relationships, as distinct from the Transparency *principle* about disclosing design and training data."
+        },
+        {
+          "id": "b",
+          "text": "Creation Diligence",
+          "correct": false,
+          "rationale": "That is being thoughtful about which AI systems you use and how."
+        },
+        {
+          "id": "c",
+          "text": "Deployment Diligence",
+          "correct": false,
+          "rationale": "That is taking ownership and informed responsibility for outputs and their use."
+        },
+        {
+          "id": "d",
+          "text": "Accountability",
+          "correct": false,
+          "rationale": "One of the four Responsible AI principles rather than a flavour of Diligence."
+        }
+      ],
+      "explanation": "Diligence comes in three flavours: Creation (which systems you use and how), Transparency (being open and honest to build trust), and Deployment (owning the outputs and how they are used). They sit alongside — not instead of — the four Responsible AI principles of fairness and inclusiveness, transparency, explainability and accountability.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Diligence"
+        }
+      ]
+    },
+    {
+      "id": "diligence-practices",
+      "type": "multi",
+      "prompt": "To exercise Diligence properly in your AI usage, what should you do? (Select all that apply)",
+      "tags": [
+        "fluency",
+        "ethics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Verify facts",
+          "correct": true,
+          "rationale": "The direct response to hallucination as a limitation."
+        },
+        {
+          "id": "b",
+          "text": "Check for biases",
+          "correct": true,
+          "rationale": "Bias is learned from training data."
+        },
+        {
+          "id": "c",
+          "text": "Ensure accuracy",
+          "correct": true,
+          "rationale": "Beyond spot-checking individual facts."
+        },
+        {
+          "id": "d",
+          "text": "Check for usage rights",
+          "correct": true,
+          "rationale": "The one that is about law rather than quality."
+        },
+        {
+          "id": "e",
+          "text": "Retrain the model on corrected outputs",
+          "correct": false,
+          "rationale": "Not a practice available to a user of the system."
+        }
+      ],
+      "explanation": "Four practices: verify facts, check for biases, ensure accuracy, and check usage rights. The first three answer directly to the listed limitations — hallucinations and training-data bias — while usage rights is the one purely about responsible deployment rather than output quality.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Diligence"
+        }
+      ]
+    },
+    {
+      "id": "explainability-vs-transparency",
+      "type": "single",
+      "prompt": "What separates Explainability from Transparency among the Responsible AI principles?",
+      "tags": [
+        "fluency",
+        "ethics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Transparency makes the use, design and training data source available; Explainability is the ability to explain how the system reached its output",
+          "correct": true,
+          "rationale": "Disclosure about the system versus traceability of a specific result."
+        },
+        {
+          "id": "b",
+          "text": "They are the same principle under two names",
+          "correct": false,
+          "rationale": "They are listed separately and mean different things."
+        },
+        {
+          "id": "c",
+          "text": "Transparency applies to the vendor; Explainability applies to the user",
+          "correct": false,
+          "rationale": "Not the distinction drawn."
+        },
+        {
+          "id": "d",
+          "text": "Explainability requires publishing model weights",
+          "correct": false,
+          "rationale": "Nothing of the sort is described."
+        }
+      ],
+      "explanation": "Transparency is about disclosure — making the use, design and training data source available. Explainability is about traceability — being able to explain or reverse engineer how a system arrived at a particular output. One is a property of how you communicate about the system; the other is a property of the system itself.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Diligence"
+        }
+      ]
+    },
+    {
+      "id": "transformer-contribution",
+      "type": "single",
+      "prompt": "What did the Transformer architecture make possible?",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Processing large sequences of text while maintaining relationships between words",
+          "correct": true,
+          "rationale": "Both halves — length *and* retained relationships."
+        },
+        {
+          "id": "b",
+          "text": "Training on unlabelled data for the first time",
+          "correct": false,
+          "rationale": "Not the contribution named."
+        },
+        {
+          "id": "c",
+          "text": "Running models on consumer GPUs",
+          "correct": false,
+          "rationale": "Compute is a separate pillar."
+        },
+        {
+          "id": "d",
+          "text": "Generating images as well as text",
+          "correct": false,
+          "rationale": "Not what is described."
+        }
+      ],
+      "explanation": "The Transformer is singled out within the Algorithms pillar because it made it possible to process large sequences of text *while maintaining the relationships between words*. That second clause is the important one, and it is exactly what Contextualization does inside the Claude API: adjust each token's embedding against the ones around it.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Generative AI Fundamentals"
+        }
+      ]
+    },
+    {
+      "id": "data-pillar-web2",
+      "type": "single",
+      "prompt": "What does the Data pillar of generative AI credit?",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Web2 leading to vast amounts of diverse and specialized data being available in digital format on the open web",
+          "correct": true,
+          "rationale": "The corpus had to exist before it could be trained on."
+        },
+        {
+          "id": "b",
+          "text": "Enterprises digitising their internal records",
+          "correct": false,
+          "rationale": "The credit given is to the open web."
+        },
+        {
+          "id": "c",
+          "text": "Labelled datasets produced by annotation services",
+          "correct": false,
+          "rationale": "Not what the pillar describes."
+        },
+        {
+          "id": "d",
+          "text": "Synthetic data generated by earlier models",
+          "correct": false,
+          "rationale": "Not mentioned."
+        }
+      ],
+      "explanation": "The Data pillar credits Web2 with putting vast amounts of diverse and specialized text on the open web in digital form. It is worth pairing with a limitation: every model has a knowledge cut-off date, because the corpus it learned from was captured at a point in time.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Generative AI Fundamentals"
+        }
+      ]
+    },
+    {
+      "id": "compute-pillar",
+      "type": "multi",
+      "prompt": "Which hardware does the Computation pillar credit? (Select all that apply)",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Graphics Processing Units (GPUs)",
+          "correct": true,
+          "rationale": "Named directly."
+        },
+        {
+          "id": "b",
+          "text": "Tensor Processing Units (TPUs)",
+          "correct": true,
+          "rationale": "Also named."
+        },
+        {
+          "id": "c",
+          "text": "Field-programmable gate arrays (FPGAs)",
+          "correct": false,
+          "rationale": "Not mentioned."
+        },
+        {
+          "id": "d",
+          "text": "Quantum processors",
+          "correct": false,
+          "rationale": "Not mentioned."
+        },
+        {
+          "id": "e",
+          "text": "Multi-core CPUs",
+          "correct": false,
+          "rationale": "Not among the named advances."
+        }
+      ],
+      "explanation": "The Computation pillar credits increases in GPU and TPU power for making it possible to process large amounts of data quickly. All three pillars had to arrive together — the Transformer without the corpus, or the corpus without the hardware, would not have produced generative AI.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Generative AI Fundamentals"
+        }
+      ]
+    },
+    {
+      "id": "scaling-laws-statement",
+      "type": "single",
+      "prompt": "What do the scaling laws state?",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "As models grow larger, train on more data and run on more compute, performance improves in predictable ways and new capabilities emerge",
+          "correct": true,
+          "rationale": "Predictable improvement *plus* emergent capability."
+        },
+        {
+          "id": "b",
+          "text": "Model performance improves logarithmically until it plateaus at a fixed ceiling",
+          "correct": false,
+          "rationale": "No ceiling is claimed."
+        },
+        {
+          "id": "c",
+          "text": "Cost scales linearly with parameter count",
+          "correct": false,
+          "rationale": "The laws are about capability, not price."
+        },
+        {
+          "id": "d",
+          "text": "Larger models require proportionally less training data",
+          "correct": false,
+          "rationale": "More data is part of the scaling, not less."
+        }
+      ],
+      "explanation": "The scaling laws say that growing size, data and compute improves performance *predictably* and causes new capabilities to *emerge*. Those are two different claims, and the second is the striking one — predictable improvement is engineering, but capabilities that were not there before appearing at scale is something else.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Scaling Laws"
+        }
+      ]
+    },
+    {
+      "id": "fine-tuning-definition",
+      "type": "single",
+      "prompt": "What is fine-tuning?",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Creating a more specialized model using domain-specific training data so it suits specific use cases like generating code",
+          "correct": true,
+          "rationale": "Specialisation through additional targeted training."
+        },
+        {
+          "id": "b",
+          "text": "Adjusting temperature and other parameters for a given task",
+          "correct": false,
+          "rationale": "That is tuning inference behaviour, not the model."
+        },
+        {
+          "id": "c",
+          "text": "Rewriting a system prompt based on observed failures",
+          "correct": false,
+          "rationale": "That is prompt engineering, or agent self-improvement."
+        },
+        {
+          "id": "d",
+          "text": "Selecting a smaller model to reduce cost",
+          "correct": false,
+          "rationale": "That is Model Selection."
+        }
+      ],
+      "explanation": "Fine-tuning creates a more specialized model from domain-specific training data, so it performs better on a particular kind of task. Anthropic's stated goals when fine-tuning their models are the same three principles Claude is designed around: helpful, honest and harmless.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Fine-Tuning"
+        }
+      ]
+    },
+    {
+      "id": "ai-capabilities-list",
+      "type": "multi",
+      "prompt": "Which are listed as capabilities of AI systems? (Select all that apply)",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Summarization — condensing a long, detailed report",
+          "correct": true,
+          "rationale": "One of the four."
+        },
+        {
+          "id": "b",
+          "text": "Translation — converting text between languages while retaining meaning",
+          "correct": true,
+          "rationale": "One of the four."
+        },
+        {
+          "id": "c",
+          "text": "Retrieval Augmented Generation — fetching data from external sources",
+          "correct": true,
+          "rationale": "One of the four."
+        },
+        {
+          "id": "d",
+          "text": "Tool use — calling external tools to access data or act on the user's behalf",
+          "correct": true,
+          "rationale": "One of the four."
+        },
+        {
+          "id": "e",
+          "text": "Deterministic reproduction of a previous answer",
+          "correct": false,
+          "rationale": "Non-determinism is a listed *limitation* — the same prompt gets different responses."
+        }
+      ],
+      "explanation": "The four capabilities are summarization, translation, RAG and tool use. Notice that two of them — RAG and tool use — exist largely to work around the listed limitations, fetching current information that a model's knowledge cut-off means it cannot know.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Capabilities and Limitations"
+        }
+      ]
+    },
+    {
+      "id": "human-vs-ai-contributions",
+      "type": "multi",
+      "prompt": "According to the Capabilities and Limitations framing, what do humans contribute that AI does not? (Select all that apply)",
+      "tags": [
+        "fundamentals",
+        "ethics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Critical thinking",
+          "correct": true,
+          "rationale": "One of the four human contributions."
+        },
+        {
+          "id": "b",
+          "text": "Judgement",
+          "correct": true,
+          "rationale": "One of the four."
+        },
+        {
+          "id": "c",
+          "text": "Creativity",
+          "correct": true,
+          "rationale": "One of the four."
+        },
+        {
+          "id": "d",
+          "text": "Ethical oversight",
+          "correct": true,
+          "rationale": "One of the four, and the reason Diligence is a competency."
+        },
+        {
+          "id": "e",
+          "text": "Pattern recognition",
+          "correct": false,
+          "rationale": "That is on the AI side, along with speed, scale and processing."
+        }
+      ],
+      "explanation": "The division is explicit: AI provides speed, scale, pattern recognition and processing; humans provide critical thinking, judgement, creativity and ethical oversight. It is the sentence the whole framework rests on — Delegation is the act of splitting work along that line.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Capabilities and Limitations"
+        }
+      ]
+    },
+    {
+      "id": "chain-of-thought-description",
+      "type": "single",
+      "prompt": "Chain-of-Thought prompting is classified under Description. Which aspect does it describe?",
+      "tags": [
+        "prompting",
+        "fluency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Behaviour — having the model explain its reasoning and prompting in response to that reasoning",
+          "correct": true,
+          "rationale": "You are describing how the AI should conduct itself while working."
+        },
+        {
+          "id": "b",
+          "text": "The final output",
+          "correct": false,
+          "rationale": "That is few-shot prompting, which shows what the answer should look like."
+        },
+        {
+          "id": "c",
+          "text": "The delegation decision",
+          "correct": false,
+          "rationale": "Delegation is a separate competency."
+        },
+        {
+          "id": "d",
+          "text": "The acceptance criteria",
+          "correct": false,
+          "rationale": "Criteria are part of Project Description and are checked under Product Discernment."
+        }
+      ],
+      "explanation": "Most prompt engineering techniques sit under Description because they describe the output, the behaviour, or the approach. Few-shot describes the final output; role/persona and chain-of-thought both describe behaviour. Chain-of-thought is also the formal name for the \"break down complex tasks\" tip.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Description"
+        }
+      ]
+    },
+    {
+      "id": "output-constraints-tip",
+      "type": "single",
+      "prompt": "What does the \"Specify Output Constraints\" prompting tip ask for?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Describing the output with specific things that should and should not be included",
+          "correct": true,
+          "rationale": "Both directions — include and exclude."
+        },
+        {
+          "id": "b",
+          "text": "Setting a hard token limit on the response",
+          "correct": false,
+          "rationale": "`max_tokens` is an API parameter, not a prompting tip."
+        },
+        {
+          "id": "c",
+          "text": "Requiring a JSON schema for the response",
+          "correct": false,
+          "rationale": "That is Structured Outputs, an API feature."
+        },
+        {
+          "id": "d",
+          "text": "Asking the AI to stop when it reaches a marker",
+          "correct": false,
+          "rationale": "That is a stop sequence."
+        }
+      ],
+      "explanation": "Specify Output Constraints means describing the output in terms of what should *and should not* appear in it. The negative half is the underused one — and it echoes the prompt engineering guidance elsewhere that examples come in positive and negative forms, showing both what a good answer looks like and what to avoid.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Description"
+        }
+      ]
+    }
+  ]
+}

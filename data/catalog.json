@@ -5,7 +5,7 @@
       "id": "anthropic",
       "title": "Anthropic",
       "tagline": "Building with Claude — the API, tools, RAG and agent skills.",
-      "description": "Cards drawn from the Anthropic Academy notes: request handling, prompt engineering and evaluation, tool use, retrieval-augmented generation, and the constructs that make up Agent Skills.",
+      "description": "Cards drawn from the Anthropic Academy notes: the Claude API end to end, the Model Context Protocol, the Agents SDK, multi-agent pipelines, Claude in GitHub, and the AI Fluency framework.",
       "status": "available",
       "icon": "sparkles",
       "order": 1
@@ -22,9 +22,9 @@
     {
       "id": "aws",
       "title": "AWS",
-      "tagline": "Solutions Architect Associate and friends — notes pending.",
-      "description": "No AWS notes exist in this repository yet, so there is nothing to generate cards from. Cards here must stay grounded in committed Markdown notes; once a note file lands, a card set can be added without touching application code.",
-      "status": "planned",
+      "tagline": "Marketplace listing types, offers, and the AWS service catalogue.",
+      "description": "Cards drawn from the AWS Marketplace and AWS Certs notes: listing types and how entitlement differs from metering, private offers and renewals, per-listing fulfillment and pricing, the Marketplace API surface, and a working knowledge of the AWS service catalogue.",
+      "status": "available",
       "icon": "cloud",
       "order": 3
     }
@@ -36,9 +36,13 @@
       "path": "anthropic/claude-api",
       "title": "Building with the Claude API",
       "subtitle": "Anthropic Academy",
-      "description": "Model selection, request handling, system prompts, streaming, structured output, prompt evaluation, tool use, RAG, extended thinking and prompt caching.",
-      "sources": ["Anthropic Academy/building_with_claude_api.md"],
-      "cardCount": 34
+      "description": "Model selection and request handling, the SDK, streaming, prefill and stop sequences, tool use and tool choice, structured outputs, RAG end to end, extended thinking, prompt caching, and the workflow patterns.",
+      "sources": [
+        "Anthropic Academy/building_with_claude_api.md",
+        "Anthropic Academy/ToolUseExample.py",
+        "Anthropic Academy/claude_on_google_cloud.md"
+      ],
+      "cardCount": 55
     },
     {
       "id": "agent-skills",
@@ -47,8 +51,10 @@
       "title": "Agent Skills",
       "subtitle": "Anthropic Academy",
       "description": "Choosing between CLAUDE.md, Skills, Hooks and Subagents; skill scopes and precedence; authoring practices; and the four categories of skill failure.",
-      "sources": ["Anthropic Academy/agent_skills.md"],
-      "cardCount": 9
+      "sources": [
+        "Anthropic Academy/agent_skills.md"
+      ],
+      "cardCount": 27
     },
     {
       "id": "github-cicd",
@@ -57,8 +63,10 @@
       "title": "GitHub CI/CD",
       "subtitle": "Teams, CODEOWNERS and Actions",
       "description": "Team hierarchy and notifications, CODEOWNERS precedence and syntax limits, and the Actions model — workflows, jobs, runners, reusable workflows and composite actions.",
-      "sources": ["github_cd-cd.md"],
-      "cardCount": 12
+      "sources": [
+        "github_cd-cd.md"
+      ],
+      "cardCount": 34
     },
     {
       "id": "ansible",
@@ -67,8 +75,129 @@
       "title": "Ansible Fundamentals",
       "subtitle": "Inventory to roles",
       "description": "The agentless model, inventory parameters and grouping, playbook terminology, idempotency, variables and conditionals, roles, and platform constraints.",
-      "sources": ["Ansible.md"],
-      "cardCount": 12
+      "sources": [
+        "Ansible.md"
+      ],
+      "cardCount": 37
+    },
+    {
+      "id": "marketplace",
+      "domainId": "aws",
+      "path": "aws/marketplace",
+      "title": "AWS Marketplace — Listing Types",
+      "subtitle": "Fulfillment, pricing and APIs",
+      "description": "Per-listing fulfillment and pricing for SaaS, AI Agents & Tools, Server (AMI and Container), ML and Data — plus the Marketplace API surface: metering, entitlements, License Manager, deployment and the Catalog API.",
+      "sources": [
+        "AWS Marketplace/saas.md",
+        "AWS Marketplace/agents_and_tools.md",
+        "AWS Marketplace/server_ami.md",
+        "AWS Marketplace/server_container.md",
+        "AWS Marketplace/machine_learning.md",
+        "AWS Marketplace/data_product.md",
+        "AWS Marketplace/marketplace_apis.md"
+      ],
+      "cardCount": 40
+    },
+    {
+      "id": "services",
+      "domainId": "aws",
+      "path": "aws/services",
+      "title": "AWS Services",
+      "subtitle": "Service selection cheatsheet",
+      "description": "Picking the right service: the security suite, networking and firewalls, storage and database selection, scaling policies, the managed AI services, and cost and resilience patterns.",
+      "sources": [
+        "AWS Certs/all_aws_services.md",
+        "AWS Certs/notes.md"
+      ],
+      "cardCount": 38
+    },
+    {
+      "id": "mcp",
+      "domainId": "anthropic",
+      "path": "anthropic/mcp",
+      "title": "Model Context Protocol",
+      "subtitle": "Anthropic Academy",
+      "description": "The client-server model, the three primitives and who controls each, transport types, the SDK request types, and building a server or client.",
+      "sources": [
+        "Anthropic Academy/intro_to_mcp.md"
+      ],
+      "cardCount": 22
+    },
+    {
+      "id": "agents-sdk",
+      "domainId": "anthropic",
+      "path": "anthropic/agents-sdk",
+      "title": "Agents SDK",
+      "subtitle": "Anthropic Academy",
+      "description": "The ReAct loop and its execution controls, built-in tools and parallelism, hook trigger points, and what a subagent does and does not inherit.",
+      "sources": [
+        "Anthropic Academy/agents_sdk.md"
+      ],
+      "cardCount": 31
+    },
+    {
+      "id": "multi-agent",
+      "domainId": "anthropic",
+      "path": "anthropic/multi-agent",
+      "title": "Multi-Agent Pipelines",
+      "subtitle": "Claude Architect — Foundations",
+      "description": "Agents versus workflows, the multi-agent design patterns, prompt engineering as the primary lever, evaluating non-deterministic systems, and reliability practices.",
+      "sources": [
+        "Anthropic Academy/multi_agent_pipelines.md"
+      ],
+      "cardCount": 32
+    },
+    {
+      "id": "code-review-cicd",
+      "domainId": "anthropic",
+      "path": "anthropic/code-review-cicd",
+      "title": "Code Review & CI/CD",
+      "subtitle": "Claude in GitHub",
+      "description": "The Claude GitHub App, interactive versus automation mode on claude-code-action, CLI flags and Skills, cost control, and customizing Code Review with CLAUDE.md and REVIEW.md.",
+      "sources": [
+        "Anthropic Academy/code_review_cicd.md"
+      ],
+      "cardCount": 37
+    },
+    {
+      "id": "ai-fluency",
+      "domainId": "anthropic",
+      "path": "anthropic/ai-fluency",
+      "title": "AI Fluency",
+      "subtitle": "Anthropic Academy",
+      "description": "The three ways of collaborating with AI, the four fluency competencies, responsible AI principles and diligence practices, and the generative AI fundamentals — pillars, scaling laws, fine-tuning, capabilities and limitations.",
+      "sources": [
+        "Anthropic Academy/ai_fluency.md"
+      ],
+      "cardCount": 31
+    },
+    {
+      "id": "claude-101",
+      "domainId": "anthropic",
+      "path": "anthropic/claude-101",
+      "title": "Claude 101",
+      "subtitle": "Anthropic Academy",
+      "description": "Prompting basics and the common-problem fixes, the desktop app's Chat, Cowork and Code modes, Projects, Artifacts and Skills, connectors, Enterprise Search and Research Mode.",
+      "sources": [
+        "Anthropic Academy/claude_101.md"
+      ],
+      "cardCount": 31
+    },
+    {
+      "id": "marketplace-commercials",
+      "domainId": "aws",
+      "path": "aws/marketplace-commercials",
+      "title": "AWS Marketplace — Commercials",
+      "subtitle": "Offers, renewals and Professional Services",
+      "description": "The commercial model shared by every listing: entitlement versus metering, listing types and visibility, private and express offers, renewals and amendments, and the Professional Services listing type end to end.",
+      "sources": [
+        "AWS Marketplace/overview.md",
+        "AWS Marketplace/private_offers.md",
+        "AWS Marketplace/renewals.md",
+        "AWS Marketplace/professional_services.md",
+        "AWS Marketplace/saas.md"
+      ],
+      "cardCount": 32
     }
   ]
 }

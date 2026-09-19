@@ -1,0 +1,1339 @@
+{
+  "id": "multi-agent",
+  "title": "Multi-Agent Pipelines",
+  "cards": [
+    {
+      "id": "agent-vs-workflow",
+      "type": "single",
+      "prompt": "A task has a well-defined goal, but the steps to reach it vary from case to case. Agent or Workflow?",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "An Agent — Models dynamically directing their own process and tool usage",
+          "correct": true,
+          "rationale": "Agents suit prompts where goals are well-defined but the steps to reach them are not."
+        },
+        {
+          "id": "b",
+          "text": "A Workflow — Models and tools orchestrated through predefined code paths",
+          "correct": false,
+          "rationale": "Workflows fit when *both* the goals and the steps are well-defined."
+        },
+        {
+          "id": "c",
+          "text": "Either, since both handle non-deterministic tasks equally well",
+          "correct": false,
+          "rationale": "A workflow's predefined code path is exactly what cannot absorb varying steps."
+        },
+        {
+          "id": "d",
+          "text": "Neither — varying steps require a human in the loop",
+          "correct": false,
+          "rationale": "Dynamic step selection is what an Agent is for."
+        }
+      ],
+      "explanation": "The dividing line is whether the *steps* are known, not whether the goal is. A Workflow orchestrates Models and tools through predefined code paths, and fits when goals and steps are both well-defined. An Agent has the Model dynamically direct its own process and tool usage, and fits when the goal is clear but the route is not.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "effective-agent-principles",
+      "type": "multi",
+      "prompt": "What are the three core principles for implementing agents? (Select all that apply)",
+      "tags": [
+        "fundamentals",
+        "design"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Keep it simple",
+          "correct": true,
+          "rationale": "The first principle, and the one most often violated."
+        },
+        {
+          "id": "b",
+          "text": "Prioritize transparency into your system's reasoning",
+          "correct": true,
+          "rationale": "You cannot debug what you cannot see."
+        },
+        {
+          "id": "c",
+          "text": "Thoroughly document and test your Tools to ensure an intuitive agent-computer interface (ACI)",
+          "correct": true,
+          "rationale": "The tools *are* the agent's interface to the world."
+        },
+        {
+          "id": "d",
+          "text": "Maximise the number of tools available so the agent is never blocked",
+          "correct": false,
+          "rationale": "The opposite — more tools makes tool choice harder, the \"tool overload\" problem."
+        },
+        {
+          "id": "e",
+          "text": "Prefer a single large agent over several specialised ones",
+          "correct": false,
+          "rationale": "Not one of the principles, and it conflicts with the orchestrator-worker pattern."
+        }
+      ],
+      "explanation": "The three principles are: keep it simple, prioritize transparency into the system's reasoning, and thoroughly document and test the Tools so the agent-computer interface is intuitive and useful. That third one is the least obvious — tool descriptions are the agent's only view of what it can do, so a poor description is a functional bug.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Building Effective Agents"
+        }
+      ]
+    },
+    {
+      "id": "orchestrator-worker-pattern",
+      "type": "single",
+      "prompt": "A task is complex and you cannot predict which subtasks will be needed. Which multi-agent design pattern fits?",
+      "tags": [
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Orchestrator-Worker — a lead agent decomposes the task and delegates parts to subagents",
+          "correct": true,
+          "rationale": "Used for complex tasks where subtasks can't be predicted and the workflow needs maximum flexibility."
+        },
+        {
+          "id": "b",
+          "text": "Prompt Chaining — decompose into a fixed sequence of steps",
+          "correct": false,
+          "rationale": "Chaining requires the decomposition to be known in advance, which is precisely what is missing here."
+        },
+        {
+          "id": "c",
+          "text": "Parallelization (sectioning) — run independent subtasks in parallel",
+          "correct": false,
+          "rationale": "You have to know what the sections are before you can divide them."
+        },
+        {
+          "id": "d",
+          "text": "Evaluator-Optimizer — loop output through a grader until it passes",
+          "correct": false,
+          "rationale": "That improves a known task's output; it does not discover what the subtasks are."
+        }
+      ],
+      "explanation": "Orchestrator-Worker is the pattern for unpredictable decomposition: a lead agent breaks the task up at runtime and delegates to subagents. Every other pattern assumes the decomposition is knowable up front — chaining needs a fixed sequence, routing needs known categories, and parallelization needs known sections.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Mutli-Agent Design Patterns"
+        }
+      ]
+    },
+    {
+      "id": "parallelization-variants",
+      "type": "single",
+      "prompt": "The same task is run several times, sometimes across different Models, to get diverse outputs. Which pattern variant is that?",
+      "tags": [
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Parallelization (voting)",
+          "correct": true,
+          "rationale": "Used when multiple perspectives or attempts increase confidence in the result."
+        },
+        {
+          "id": "b",
+          "text": "Parallelization (sectioning)",
+          "correct": false,
+          "rationale": "Sectioning runs *independent sub-tasks* in parallel to improve speed — different work, not the same work repeated."
+        },
+        {
+          "id": "c",
+          "text": "Evaluator-Optimizer",
+          "correct": false,
+          "rationale": "That is one producer and one grader in a feedback loop, not several parallel attempts."
+        },
+        {
+          "id": "d",
+          "text": "Routing",
+          "correct": false,
+          "rationale": "Routing classifies a task and sends it to one specialised workflow."
+        }
+      ],
+      "explanation": "Parallelization has two variants with different purposes. **Sectioning** splits a task into independent sub-tasks that run in parallel, and the goal is speed. **Voting** runs the same task repeatedly — sometimes across different Models — and the goal is confidence, because multiple perspectives surface what one attempt would miss.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Mutli-Agent Design Patterns"
+        }
+      ]
+    },
+    {
+      "id": "routing-fit",
+      "type": "multi",
+      "prompt": "When does the Routing pattern work best? (Select all that apply)",
+      "tags": [
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The classification itself can be handled by a Model",
+          "correct": true,
+          "rationale": "Routing depends on being able to classify the input reliably."
+        },
+        {
+          "id": "b",
+          "text": "The task is complex with distinct sub-categories",
+          "correct": true,
+          "rationale": "Distinct categories are what there is to route between."
+        },
+        {
+          "id": "c",
+          "text": "Optimizing for one class of input hurts performance on the others",
+          "correct": true,
+          "rationale": "This is the real motivation — a single prompt tuned for one class degrades the rest."
+        },
+        {
+          "id": "d",
+          "text": "Every input needs the same processing steps",
+          "correct": false,
+          "rationale": "Then there is nothing to route to, and routing only adds a hop."
+        },
+        {
+          "id": "e",
+          "text": "You are optimizing for simplicity over quality",
+          "correct": false,
+          "rationale": "Routing trades the other way — it is for optimizing quality over simplicity."
+        }
+      ],
+      "explanation": "Routing classifies a task and sends it to a specialised workflow for that class. It fits when a Model can do the classification, when the task has distinct sub-categories, and — the deciding factor — when tuning a single prompt for one class of input degrades the others. It suits systems with three or more meaningful categories and where quality matters more than simplicity.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Mutli-Agent Design Patterns"
+        }
+      ]
+    },
+    {
+      "id": "prompt-engineering-primary-lever",
+      "type": "single",
+      "prompt": "Why is prompt engineering described as the primary lever for improving a multi-agent system?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Each agent is steered by its own prompt, so the prompts are where coordination is actually defined",
+          "correct": true,
+          "rationale": "Orchestration complexity is distributed across many prompts rather than living in one place."
+        },
+        {
+          "id": "b",
+          "text": "Prompts are the only part of the system that can be changed without a deployment",
+          "correct": false,
+          "rationale": "Not the reason given, and rainbow deployments exist precisely because agent changes do get deployed."
+        },
+        {
+          "id": "c",
+          "text": "Model choice has no measurable effect on multi-agent quality",
+          "correct": false,
+          "rationale": "Nothing in the notes claims this; a `model` is a per-agent setting."
+        },
+        {
+          "id": "d",
+          "text": "Prompts replace the need for tool descriptions",
+          "correct": false,
+          "rationale": "Better tool descriptions are the *preferred* fix for tool overload; prompt heuristics are the fallback when you don't control the tool."
+        }
+      ],
+      "explanation": "Multi-agent systems are significantly harder to orchestrate because each agent is steered by its own prompt — so the prompts collectively are the coordination logic. Anthropic's stated philosophy shapes how to write them: instill good heuristics rather than rigid rules, and prompt the system with a framework for collaboration (division of labour, problem-solving approach, effort budget) rather than strict instructions.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Prompt Engineering for Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "orchestrator-delegation",
+      "type": "multi",
+      "prompt": "What should an Orchestrator include in the task definitions it writes for subagents? (Select all that apply)",
+      "tags": [
+        "prompting",
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A well-defined objective",
+          "correct": true,
+          "rationale": "The subagent needs to know what done looks like."
+        },
+        {
+          "id": "b",
+          "text": "A structured output format",
+          "correct": true,
+          "rationale": "So the orchestrator can aggregate results."
+        },
+        {
+          "id": "c",
+          "text": "Guidance on the tools and sources to use",
+          "correct": true,
+          "rationale": "Reduces the chance of poor tool selection."
+        },
+        {
+          "id": "d",
+          "text": "Clear task boundaries",
+          "correct": true,
+          "rationale": "Prevents two subagents duplicating or contradicting each other."
+        },
+        {
+          "id": "e",
+          "text": "The orchestrator's full conversation history for context",
+          "correct": false,
+          "rationale": "Subagents deliberately start from a blank slate — dumping history in defeats the isolation that makes them useful."
+        }
+      ],
+      "explanation": "Teaching the orchestrator how to delegate means defining what goes into a subagent task definition: a well-defined objective, a structured output format, guidance on tools and sources, and clear task boundaries. Paired with this is the practice of embedding **scaling rules** — explicit instructions on how many subagents and tool calls each class of query should use, so a fact-finding query gets one subagent and complex open-ended research gets ten or more with non-overlapping topics.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Prompt Engineering for Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "tool-overload-mitigation",
+      "type": "single",
+      "prompt": "An agent uses a third-party MCP server whose tool definitions you do not control, and it keeps picking the wrong tool. What is the remaining option?",
+      "tags": [
+        "prompting",
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Provide heuristics and a process for evaluating tools in the System Prompt",
+          "correct": true,
+          "rationale": "With the tool description out of your hands, the System Prompt is the only lever left."
+        },
+        {
+          "id": "b",
+          "text": "Rewrite the third-party tool descriptions locally before passing them to the Model",
+          "correct": false,
+          "rationale": "The notes frame the problem precisely as *not controlling* the tool definition; better descriptions are the preferred fix only when you own them."
+        },
+        {
+          "id": "c",
+          "text": "Increase the reasoning effort so the Model evaluates more carefully",
+          "correct": false,
+          "rationale": "Effort deepens reasoning but does not supply the missing information about what each tool is for."
+        },
+        {
+          "id": "d",
+          "text": "Switch to a Workflow, since agents cannot handle many tools",
+          "correct": false,
+          "rationale": "An overreaction — and a workflow only helps if the steps are actually predefined."
+        }
+      ],
+      "explanation": "As an agent's tool inventory grows it becomes harder to choose correctly — called \"choice paralysis\", \"tool overload\", or getting \"lost in the middle\". The best fix is better tool descriptions, but when a third-party MCP server owns those definitions, providing heuristics and an explicit evaluation process in the System Prompt is the only method left.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Prompt Engineering for Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "thinking-modes-by-role",
+      "type": "single",
+      "prompt": "In a multi-agent system, which thinking mode is recommended for the orchestrator and which for the subagents?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Extended Thinking on the orchestrator; Interleaved Thinking on the subagents",
+          "correct": true,
+          "rationale": "Extended Thinking improves the orchestrator's reasoning and instruction following; Interleaved Thinking lets subagents reason between tool calls, improving adaptability."
+        },
+        {
+          "id": "b",
+          "text": "Interleaved Thinking on the orchestrator; Extended Thinking on the subagents",
+          "correct": false,
+          "rationale": "Reversed. Reasoning between tool calls is what a subagent doing the legwork needs."
+        },
+        {
+          "id": "c",
+          "text": "Extended Thinking on both, for consistency",
+          "correct": false,
+          "rationale": "The recommendation differentiates by role rather than applying one mode everywhere."
+        },
+        {
+          "id": "d",
+          "text": "Neither — thinking tokens should be minimised in multi-agent systems to control cost",
+          "correct": false,
+          "rationale": "The guidance is to enable them, because better reasoning is worth the tokens at these decision points."
+        }
+      ],
+      "explanation": "The two modes suit different jobs. The orchestrator plans, so **Extended Thinking** — which generates additional tokens explaining its thought process — improves its reasoning and instruction following. Subagents execute against tools, so **Interleaved Thinking** lets them reason *between* tool calls, which improves their adaptability to new tasks.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Prompt Engineering for Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "multi-agent-evaluation-difficulty",
+      "type": "single",
+      "prompt": "Why are multi-agent systems harder to evaluate than workflows?",
+      "tags": [
+        "evaluation"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Agents choose their own path, so the same input can produce a different number of subagents and different tool calls each run",
+          "correct": true,
+          "rationale": "Non-determinism compounds: each agent is non-deterministic, and a multi-agent system stacks several of them."
+        },
+        {
+          "id": "b",
+          "text": "Multi-agent systems produce more output, so grading takes longer",
+          "correct": false,
+          "rationale": "Volume is not the stated problem; unpredictability of the path is."
+        },
+        {
+          "id": "c",
+          "text": "Benchmark prompts cannot be written for multi-agent systems",
+          "correct": false,
+          "rationale": "They can and should be — starting early with small samples is the first best practice."
+        },
+        {
+          "id": "d",
+          "text": "A Model cannot judge another Model's output",
+          "correct": false,
+          "rationale": "Model-as-judge is the recommended way to scale evaluations."
+        }
+      ],
+      "explanation": "Agents are harder to evaluate than workflows because they choose their own path for handling a prompt. Multi-agent systems compound this: given the same input, the orchestrator might spin up three subagents one time and ten the next, and each subagent might reach the same result by entirely different tool calls. The recommended responses are to start early with small benchmark samples, scale with a Model-as-judge using an explicit rubric, and keep humans in the loop — a judge Model misses hallucinations, system failures, and biases in source selection.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Evaluating Multi-Agent Systems"
+        },
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Best Practices for Evaluating Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "model-judge-rubric",
+      "type": "boolean",
+      "prompt": "A Model acting as judge can reliably catch hallucinations, system failures and biases in source selection, so human evaluation becomes unnecessary.",
+      "tags": [
+        "evaluation"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "Human evaluation remains necessary precisely because a judge Model can miss hallucinations, system failures and biases in source selection. The concrete example given is Anthropic's own research agent, which would often choose SEO-optimized content over more authoritative but lower-ranked sources — a bias a judge Model scoring the output for quality would not notice.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Best Practices for Evaluating Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "rainbow-deployments",
+      "type": "single",
+      "prompt": "What is a rainbow deployment, and why does a multi-agent system need one?",
+      "tags": [
+        "reliability"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Traffic shifts gradually to the new agent version while existing requests finish on the old one, which is only removed after they burn down",
+          "correct": true,
+          "rationale": "Agents are stateful and long-running, so cutting the old version off mid-request would abandon work in flight."
+        },
+        {
+          "id": "b",
+          "text": "Several agent versions run permanently and a router picks the best-performing one per request",
+          "correct": false,
+          "rationale": "That describes routing or a voting pattern, not a deployment strategy."
+        },
+        {
+          "id": "c",
+          "text": "The new version handles all traffic immediately while the old one is kept for rollback",
+          "correct": false,
+          "rationale": "That is a blue/green cutover. A rainbow deployment shifts gradually and lets in-flight work complete."
+        },
+        {
+          "id": "d",
+          "text": "Each subagent is deployed independently so the orchestrator never changes",
+          "correct": false,
+          "rationale": "Not what the term describes."
+        }
+      ],
+      "explanation": "Rainbow deployments gradually phase out old agents: new requests always route to the new version while existing requests continue on the old one, and the old version is removed only once they have all completed or failed. It exists because agents are stateful and non-deterministic — alongside the other reliability practices: make state durable outside the agent process, let agents handle tool errors themselves by telling them how failure is signalled, build full tracing and observability, and use parallel subagents.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Reliability and Engineering Challenges"
+        }
+      ]
+    },
+    {
+      "id": "durable-state",
+      "type": "multi",
+      "prompt": "Which reliability practices does the notes' engineering section recommend for a multi-agent system? (Select all that apply)",
+      "tags": [
+        "reliability"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Store message history externally so a failed agent can restart where it left off",
+          "correct": true,
+          "rationale": "Making state durable is the first practice."
+        },
+        {
+          "id": "b",
+          "text": "Let agents handle tool errors themselves, by specifying how the Model knows a Tool failed",
+          "correct": true,
+          "rationale": "A Model can understand and correct how it calls a tool if it can tell the call failed."
+        },
+        {
+          "id": "c",
+          "text": "Set up full tracing and observability, including decision patterns and interaction structures",
+          "correct": true,
+          "rationale": "So you can see how a prompt was handled and where it broke."
+        },
+        {
+          "id": "d",
+          "text": "Allow the main agent to spin up subagents in parallel",
+          "correct": true,
+          "rationale": "Improves speed and efficiency — at the cost of more orchestration logic, like any parallel system."
+        },
+        {
+          "id": "e",
+          "text": "Keep all state inside the agent process so no external system can corrupt it",
+          "correct": false,
+          "rationale": "The opposite of the first practice — in-process state is lost when the process fails."
+        }
+      ],
+      "explanation": "Agents are non-deterministic *and* stateful, which is what makes reliability a design concern rather than an operational one. The five practices are: make state durable externally, let agents correct their own tool errors (you only need to tell them how failure is signalled), build tracing and observability, use rainbow deployments, and run parallel subagents — accepting that parallelism brings the usual orchestration cost.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Reliability and Engineering Challenges"
+        }
+      ]
+    },
+    {
+      "id": "tool-definition-multiagent",
+      "type": "single",
+      "prompt": "How does the Terminology section define a Tool?",
+      "tags": [
+        "terminology"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "An executable function provided to a Model that it can use to perform actions other than text generation",
+          "correct": true,
+          "rationale": "The defining property is doing something *other* than generating text."
+        },
+        {
+          "id": "b",
+          "text": "A predefined code path the Model is orchestrated through",
+          "correct": false,
+          "rationale": "That is a Workflow."
+        },
+        {
+          "id": "c",
+          "text": "A Model dynamically directing its own process",
+          "correct": false,
+          "rationale": "That is an Agent."
+        },
+        {
+          "id": "d",
+          "text": "A prompt template the user invokes by name",
+          "correct": false,
+          "rationale": "That is an MCP `prompt`."
+        }
+      ],
+      "explanation": "A Tool is an executable function given to a Model so it can perform actions other than text generation. That framing is what makes tool design so consequential in a multi-agent system: the tools *are* the agent's only means of affecting anything, which is why documenting and testing them is one of the three core principles.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "prompt-chaining-pattern",
+      "type": "single",
+      "prompt": "A task decomposes cleanly into a sequence of steps, each handled by a different Model processing the previous step's output. Which pattern?",
+      "tags": [
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Prompt Chaining",
+          "correct": true,
+          "rationale": "Its use cases are exactly a clean decomposition plus trading latency for accuracy."
+        },
+        {
+          "id": "b",
+          "text": "Orchestrator-Worker",
+          "correct": false,
+          "rationale": "That is for tasks whose subtasks cannot be predicted."
+        },
+        {
+          "id": "c",
+          "text": "Routing",
+          "correct": false,
+          "rationale": "Routing classifies a task and sends it to one specialised workflow."
+        },
+        {
+          "id": "d",
+          "text": "Parallelization (sectioning)",
+          "correct": false,
+          "rationale": "Sectioning runs independent subtasks concurrently, not in sequence feeding each other."
+        }
+      ],
+      "explanation": "Prompt Chaining decomposes a task into a sequence where each step is handled by a different Model processing the output of the one before. It fits when the task decomposes easily and cleanly, and when the goal is to trade latency for higher accuracy — each step is slower in aggregate but more focused.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Mutli-Agent Design Patterns"
+        }
+      ]
+    },
+    {
+      "id": "latency-for-accuracy",
+      "type": "boolean",
+      "prompt": "Decomposing a task into easily defined subtasks is a trade of latency for higher accuracy.",
+      "tags": [
+        "design",
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "Stated directly: the goal of easily defined subtasks is to trade latency for higher accuracy. It is the honest framing of why chaining and orchestration are worth the complexity — more model calls in sequence means a slower answer, and the justification has to be that the answer is better.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Building Effective Agents"
+        }
+      ]
+    },
+    {
+      "id": "evaluator-optimizer-fit",
+      "type": "multi",
+      "prompt": "When is the Evaluator-Optimizer pattern a good fit? (Select all that apply)",
+      "tags": [
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Clear evaluation criteria are present",
+          "correct": true,
+          "rationale": "Without criteria the evaluator has nothing to judge against."
+        },
+        {
+          "id": "b",
+          "text": "Human feedback would improve the responses **and** a Model can provide that feedback",
+          "correct": true,
+          "rationale": "Both halves matter — the second is what makes automating it viable."
+        },
+        {
+          "id": "c",
+          "text": "The subtasks cannot be predicted in advance",
+          "correct": false,
+          "rationale": "That is Orchestrator-Worker."
+        },
+        {
+          "id": "d",
+          "text": "Multiple perspectives would increase confidence in the result",
+          "correct": false,
+          "rationale": "That is Parallelization (voting)."
+        },
+        {
+          "id": "e",
+          "text": "Optimizing for one class of input hurts the others",
+          "correct": false,
+          "rationale": "That is Routing."
+        }
+      ],
+      "explanation": "Evaluator-Optimizer uses a Model to evaluate another Model's output and feed back in a loop. Its two conditions are clear evaluation criteria and — the subtle one — that human feedback *would* help and a Model *can* stand in for it. If only a human could judge the output usefully, automating the loop just adds cost.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Mutli-Agent Design Patterns"
+        }
+      ]
+    },
+    {
+      "id": "aci-concept",
+      "type": "single",
+      "prompt": "What does ACI stand for in the context of building effective agents?",
+      "tags": [
+        "design"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Agent-computer interface — the surface an agent works through, formed by its tools",
+          "correct": true,
+          "rationale": "Which is why documenting and testing tools is a core principle."
+        },
+        {
+          "id": "b",
+          "text": "Agent capability index — a score of what an agent can do",
+          "correct": false,
+          "rationale": "Invented."
+        },
+        {
+          "id": "c",
+          "text": "Automated continuous integration",
+          "correct": false,
+          "rationale": "Unrelated."
+        },
+        {
+          "id": "d",
+          "text": "Agent context isolation — keeping subagent contexts separate",
+          "correct": false,
+          "rationale": "Context isolation is real but is not what ACI names."
+        }
+      ],
+      "explanation": "The third core principle is to thoroughly document and test your Tools so the **agent-computer interface** is intuitive and useful. The analogy to a user interface is deliberate: for a human you invest in the UI, and for an agent the tools and their descriptions *are* the UI — a vague tool description is a usability bug.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Building Effective Agents"
+        }
+      ]
+    },
+    {
+      "id": "heuristics-not-rules",
+      "type": "single",
+      "prompt": "What is Anthropic's stated prompting philosophy for steering agents?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Instil good heuristics instead of rigid rules",
+          "correct": true,
+          "rationale": "Heuristics generalise to situations the author did not anticipate."
+        },
+        {
+          "id": "b",
+          "text": "Enumerate every rule the agent must follow, leaving nothing implicit",
+          "correct": false,
+          "rationale": "The opposite of the stated philosophy."
+        },
+        {
+          "id": "c",
+          "text": "Keep System Prompts minimal and let tools carry the guidance",
+          "correct": false,
+          "rationale": "Tool descriptions matter, but prompt engineering is called the *primary* lever."
+        },
+        {
+          "id": "d",
+          "text": "Prefer examples over instructions in every case",
+          "correct": false,
+          "rationale": "Examples are one technique, not the overall philosophy."
+        }
+      ],
+      "explanation": "The philosophy is to instil good heuristics rather than rigid rules, and the same instinct shows up in the recommendation to prompt a multi-agent system with a *framework for collaboration* — division of labour, problem-solving approach, effort budget — rather than strict instructions. A rule covers the cases you thought of; a heuristic travels.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Prompt Engineering for Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "collaboration-framework",
+      "type": "multi",
+      "prompt": "What should a framework for collaboration define when prompting a multi-agent system? (Select all that apply)",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The division of labour",
+          "correct": true,
+          "rationale": "Who does what."
+        },
+        {
+          "id": "b",
+          "text": "The problem solving approach",
+          "correct": true,
+          "rationale": "How to go about it."
+        },
+        {
+          "id": "c",
+          "text": "The effort budget",
+          "correct": true,
+          "rationale": "How much to spend getting there."
+        },
+        {
+          "id": "d",
+          "text": "The exact tool call sequence each agent must follow",
+          "correct": false,
+          "rationale": "That is a rigid rule — the philosophy is heuristics over rules."
+        },
+        {
+          "id": "e",
+          "text": "The model each subagent must use",
+          "correct": false,
+          "rationale": "A per-agent configuration setting rather than part of the collaboration framework."
+        }
+      ],
+      "explanation": "Anthropic recommends prompting a multi-agent system with a framework for collaboration — division of labour, problem-solving approach, and effort budget — rather than strict instructions. Note how effort budget appears here as a *prompt* concern as well as a configuration one: telling agents how much effort a class of task deserves is itself guidance.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Prompt Engineering for Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "observe-and-tune",
+      "type": "single",
+      "prompt": "What does \"observe and fine tune your agent's thinking\" involve in practice?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Running simulations with your exact System Prompt to see how the agent thinks and which tools it calls, then rewriting the prompt from those observations",
+          "correct": true,
+          "rationale": "The exact prompt matters — a paraphrase would not reproduce the behaviour you are debugging."
+        },
+        {
+          "id": "b",
+          "text": "Enabling Extended Thinking so the reasoning is visible in production",
+          "correct": false,
+          "rationale": "A separate recommendation, aimed at improving reasoning rather than at observing it during development."
+        },
+        {
+          "id": "c",
+          "text": "Asking the agent to explain its choices after the fact",
+          "correct": false,
+          "rationale": "Post-hoc explanation is not the same as watching the run."
+        },
+        {
+          "id": "d",
+          "text": "Having a judge Model score the outputs",
+          "correct": false,
+          "rationale": "That is evaluation, which comes later."
+        }
+      ],
+      "explanation": "The first prompt-engineering principle is to run simulations using your *exact* System Prompt so you can watch how an agent reasons and which tools it reaches for, then use those observations to guide it toward correct tool calls and away from bad thinking. It is the multi-agent equivalent of reading the logs before changing the code.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Prompt Engineering for Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "scaling-rules-example",
+      "type": "single",
+      "prompt": "In the embedded scaling rules example, how many subagents and tool calls should a simple fact-finding query use?",
+      "tags": [
+        "prompting",
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "No more than 1 subagent and 3-10 tool calls",
+          "correct": true,
+          "rationale": "The cheapest tier of the classification."
+        },
+        {
+          "id": "b",
+          "text": "2-4 subagents, each using 10-15 tool calls",
+          "correct": false,
+          "rationale": "That is the direct comparison analysis tier."
+        },
+        {
+          "id": "c",
+          "text": "10+ subagents with clearly defined, non-overlapping responsibilities",
+          "correct": false,
+          "rationale": "That is complex open-ended research."
+        },
+        {
+          "id": "d",
+          "text": "As many as the orchestrator judges necessary — the rules deliberately leave it open",
+          "correct": false,
+          "rationale": "The whole point of embedding scaling rules is to make it explicit."
+        }
+      ],
+      "explanation": "Embedding scaling rules means telling the orchestrator how much machinery each class of query deserves: fact finding gets at most 1 subagent and 3-10 tool calls; direct comparison analysis gets 2-4 subagents at 10-15 calls each; complex open-ended research gets 10+ subagents with specific responsibilities and no two researching the same topic. Without this, an orchestrator sizes every task the same way.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "section": "Embedded Scaling Rules Example"
+        }
+      ]
+    },
+    {
+      "id": "agent-self-improvement",
+      "type": "single",
+      "prompt": "What does \"let agents self improve\" mean?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Use a Model to analyse the agent's behaviour and let it rewrite system prompts and tool descriptions to avoid failures",
+          "correct": true,
+          "rationale": "The artifacts being improved are the prompts and descriptions, not the model weights."
+        },
+        {
+          "id": "b",
+          "text": "Fine-tune the underlying model on the agent's successful runs",
+          "correct": false,
+          "rationale": "Fine-tuning is a separate technique and not what this principle describes."
+        },
+        {
+          "id": "c",
+          "text": "Let the agent add new tools to itself as it discovers gaps",
+          "correct": false,
+          "rationale": "Not described — tool inventories are curated precisely to avoid overload."
+        },
+        {
+          "id": "d",
+          "text": "Increase the agent's effort level automatically when it fails",
+          "correct": false,
+          "rationale": "Effort is a configured control."
+        }
+      ],
+      "explanation": "Self-improvement here is prompt-level, not weight-level: a Model analyses the agent's reasoning and tool calling and is allowed to rewrite the system prompts and tool descriptions that led to failures. It closes the loop on the first principle — you observe behaviour to improve prompts, and this automates the improving.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Prompt Engineering for Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "start-wide-then-narrow",
+      "type": "single",
+      "prompt": "How should a research agent sequence its investigation?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Start with a wide, shallow investigation of topics before drilling into specific details",
+          "correct": true,
+          "rationale": "Breadth first avoids committing to a narrow path too early."
+        },
+        {
+          "id": "b",
+          "text": "Start with the most specific question and widen only if it fails",
+          "correct": false,
+          "rationale": "The opposite of the stated principle."
+        },
+        {
+          "id": "c",
+          "text": "Investigate every topic to full depth in parallel",
+          "correct": false,
+          "rationale": "That ignores the scaling rules and wastes effort on dead ends."
+        },
+        {
+          "id": "d",
+          "text": "Let each subagent choose its own depth with no guidance",
+          "correct": false,
+          "rationale": "Depth guidance is exactly what this principle supplies."
+        }
+      ],
+      "explanation": "\"Start wide, then narrow down\" tells a research agent to survey topics broadly and shallowly before drilling in. It pairs with scaling rules and with Research Mode's behaviour in the Claude apps — multiple searches that build on each other, with the next investigation chosen from what the earlier ones surfaced.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Prompt Engineering for Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "parallel-tool-calls-rationale",
+      "type": "single",
+      "prompt": "Why does running multiple subagents in parallel speed up a complex task more than a single agent can manage?",
+      "tags": [
+        "prompting",
+        "reliability"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Each agent can call tools in parallel, whereas a single agent has to call tools sequentially",
+          "correct": true,
+          "rationale": "Parallelism compounds — across agents and within each one."
+        },
+        {
+          "id": "b",
+          "text": "Subagents use cheaper models, so more work fits in the same budget",
+          "correct": false,
+          "rationale": "Model choice is configurable but is not the reason given."
+        },
+        {
+          "id": "c",
+          "text": "Subagents share a context window, avoiding repeated history",
+          "correct": false,
+          "rationale": "Subagents start from a blank slate — they do not share the parent's history."
+        },
+        {
+          "id": "d",
+          "text": "Tool results are cached across subagents",
+          "correct": false,
+          "rationale": "No such sharing is described."
+        }
+      ],
+      "explanation": "The stated reason is that complex tasks finish faster with parallel subagents because each agent can itself call tools in parallel, while a single agent works through its tool calls sequentially. The cost is spelled out too: parallel subagents need more orchestration logic, exactly like any parallel processing application.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Prompt Engineering for Multi-Agent Systems"
+        },
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Reliability and Engineering Challenges"
+        }
+      ]
+    },
+    {
+      "id": "benchmark-prompts-early",
+      "type": "single",
+      "prompt": "What is the first best practice for evaluating a multi-agent system?",
+      "tags": [
+        "evaluation"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Create a small set of benchmark prompts early in development to establish a baseline for each Agent",
+          "correct": true,
+          "rationale": "Small and early beats comprehensive and late."
+        },
+        {
+          "id": "b",
+          "text": "Wait until the orchestration is stable, then build a comprehensive benchmark suite",
+          "correct": false,
+          "rationale": "The advice is explicitly to start early with small samples."
+        },
+        {
+          "id": "c",
+          "text": "Rely on production traces rather than synthetic benchmarks",
+          "correct": false,
+          "rationale": "Tracing is a reliability practice; it does not replace a baseline."
+        },
+        {
+          "id": "d",
+          "text": "Have a judge Model generate the benchmark prompts",
+          "correct": false,
+          "rationale": "A judge Model scores outputs; it is not described as authoring the benchmark."
+        }
+      ],
+      "explanation": "Start early with small samples: a handful of benchmark prompts during development gives each Agent a baseline to measure against. Because agents are non-deterministic, without a baseline there is no way to tell whether a prompt change helped or whether you simply got a different run.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Best Practices for Evaluating Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "judge-rubric",
+      "type": "single",
+      "prompt": "What makes a Model-as-judge evaluation trustworthy enough to scale on?",
+      "tags": [
+        "evaluation"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Specifying a rubric in the judge Model's System Prompt so it judges on criteria that actually matter",
+          "correct": true,
+          "rationale": "Without a rubric the judge scores on whatever it happens to weigh."
+        },
+        {
+          "id": "b",
+          "text": "Using a larger model than the one being judged",
+          "correct": false,
+          "rationale": "Not the stated requirement."
+        },
+        {
+          "id": "c",
+          "text": "Running the judge several times and averaging",
+          "correct": false,
+          "rationale": "That is the voting pattern, applied to production rather than evaluation."
+        },
+        {
+          "id": "d",
+          "text": "Having the judge re-run the agent's tool calls to verify them",
+          "correct": false,
+          "rationale": "Not described."
+        }
+      ],
+      "explanation": "Scaling evaluation with a Model as judge depends on putting a rubric in the judge's System Prompt, so it scores against criteria that matter rather than its own defaults. Even then it is not sufficient — human evaluation stays necessary because a judge can miss hallucinations, system failures and source-selection bias.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Best Practices for Evaluating Multi-Agent Systems"
+        }
+      ]
+    },
+    {
+      "id": "tool-error-handling",
+      "type": "single",
+      "prompt": "What does an engineer need to provide so an Agent can correct its own tool errors?",
+      "tags": [
+        "reliability",
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A way for the Model to know the Tool failed — it can then understand and correct how it calls the tool",
+          "correct": true,
+          "rationale": "The Model supplies the correction; you supply the signal."
+        },
+        {
+          "id": "b",
+          "text": "A retry wrapper around every tool call",
+          "correct": false,
+          "rationale": "Blind retries repeat the same bad call; the point is that the Model can fix it."
+        },
+        {
+          "id": "c",
+          "text": "A fallback tool for each primary tool",
+          "correct": false,
+          "rationale": "Not described."
+        },
+        {
+          "id": "d",
+          "text": "A `PostToolUse` hook that rewrites the arguments",
+          "correct": false,
+          "rationale": "Hooks are an SDK mechanism; the principle here is about signalling failure to the Model."
+        }
+      ],
+      "explanation": "A Model can understand and correct how it calls tools — all you need to do is specify how it knows a Tool failed. This is a deliberately small ask: rather than building error-recovery logic, make failure legible (a clear error in the tool result, `is_error` set) and let the agent's own reasoning do the recovery.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Reliability and Engineering Challenges"
+        }
+      ]
+    },
+    {
+      "id": "tracing-contents",
+      "type": "multi",
+      "prompt": "What should tracing and observability capture in a multi-agent system? (Select all that apply)",
+      "tags": [
+        "reliability"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Request tracing, so a prompt can be followed through the system",
+          "correct": true,
+          "rationale": "The path a request took."
+        },
+        {
+          "id": "b",
+          "text": "Decision patterns",
+          "correct": true,
+          "rationale": "How the system chose what to do."
+        },
+        {
+          "id": "c",
+          "text": "Interaction structures",
+          "correct": true,
+          "rationale": "How agents related to each other on this request."
+        },
+        {
+          "id": "d",
+          "text": "Where the system failed",
+          "correct": true,
+          "rationale": "The point of all of the above."
+        },
+        {
+          "id": "e",
+          "text": "The exact token counts for billing reconciliation",
+          "correct": false,
+          "rationale": "Useful operationally, but not part of what this practice names."
+        }
+      ],
+      "explanation": "The practice is to build in request tracing and observability covering decision patterns and interaction structures, so you can see how a prompt was handled and where things broke. It exists because agents are non-deterministic — you cannot reproduce a failure by re-running the input, so the record of what actually happened is the only evidence.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Reliability and Engineering Challenges"
+        }
+      ]
+    },
+    {
+      "id": "parallel-orchestration-cost",
+      "type": "boolean",
+      "prompt": "Running parallel subagents requires more orchestration logic, just like any parallel processing application.",
+      "tags": [
+        "reliability"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "Parallel subagents improve speed and efficiency, and the note attached to the recommendation is honest about the cost: the orchestration logic grows, exactly as it does in any parallel application. Results have to be collected, partial failures handled, and task boundaries kept clear enough that two agents do not duplicate work.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Reliability and Engineering Challenges"
+        }
+      ]
+    },
+    {
+      "id": "multiagent-sources",
+      "type": "multi",
+      "prompt": "The notes warn that Anthropic has no official course on multi-agent pipelines. Which sources was the material distilled from? (Select all that apply)",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Anthropic's \"How we built our multi-agent research system\" engineering post",
+          "correct": true,
+          "rationale": "The source of the research-agent examples, including the SEO bias one."
+        },
+        {
+          "id": "b",
+          "text": "Anthropic's \"Building effective agents\" post",
+          "correct": true,
+          "rationale": "Where the three core principles and most of the patterns come from."
+        },
+        {
+          "id": "c",
+          "text": "The Claude Agents SDK documentation",
+          "correct": true,
+          "rationale": "The implementation side."
+        },
+        {
+          "id": "d",
+          "text": "A study guide for the Claude Architect - Foundations exam",
+          "correct": true,
+          "rationale": "Generated by Claude, per the note."
+        },
+        {
+          "id": "e",
+          "text": "The Model Context Protocol specification",
+          "correct": false,
+          "rationale": "Not among the listed sources."
+        }
+      ],
+      "explanation": "The document opens with a warning: Anthropic has no official course covering multi-agent pipelines, but the topic is crucial for the Claude Architect - Foundations exam, so the material was distilled from four sources — two Anthropic engineering posts, the Agents SDK documentation, and a Claude-generated study guide. Worth knowing when weighing how authoritative a given claim is.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "section": "Anthropic doesn't officially have a course covering multi-agent pipelines"
+        }
+      ]
+    },
+    {
+      "id": "orchestrator-vs-sectioning",
+      "type": "single",
+      "prompt": "What separates Orchestrator-Worker from Parallelization (sectioning), given both split work across agents?",
+      "tags": [
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Orchestrator-Worker decomposes at runtime because the subtasks cannot be predicted; sectioning divides known independent subtasks",
+          "correct": true,
+          "rationale": "One discovers the decomposition, the other assumes it."
+        },
+        {
+          "id": "b",
+          "text": "Orchestrator-Worker runs sequentially and sectioning runs in parallel",
+          "correct": false,
+          "rationale": "An orchestrator can and should spawn subagents in parallel."
+        },
+        {
+          "id": "c",
+          "text": "Sectioning uses multiple Models while Orchestrator-Worker uses one",
+          "correct": false,
+          "rationale": "Using multiple Models is a property of the voting variant."
+        },
+        {
+          "id": "d",
+          "text": "Orchestrator-Worker requires a Grader in the loop",
+          "correct": false,
+          "rationale": "That is Evaluator-Optimizer."
+        }
+      ],
+      "explanation": "Both fan work out, but they differ on who knows the decomposition. Sectioning is used when subtasks are already known to be independent and the goal is speed. Orchestrator-Worker is used when you *cannot predict* the subtasks and the workflow needs maximum flexibility — a lead agent decomposes the task at runtime and delegates. That is also why it is the harder one to evaluate: the decomposition itself varies run to run.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/multi_agent_pipelines.md",
+          "heading": "Mutli-Agent Design Patterns"
+        }
+      ]
+    }
+  ]
+}
