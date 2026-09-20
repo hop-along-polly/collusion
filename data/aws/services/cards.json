@@ -1,0 +1,1669 @@
+{
+  "id": "services",
+  "title": "AWS Services",
+  "cards": [
+    {
+      "id": "macie-sensitive-data",
+      "type": "single",
+      "prompt": "Which AWS service is used to discover, classify and protect sensitive data stored in S3?",
+      "tags": [
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon CloudWatch",
+          "correct": false,
+          "rationale": "CloudWatch is monitoring and observability — logs, metrics and events. It does not inspect object contents."
+        },
+        {
+          "id": "b",
+          "text": "Amazon GuardDuty",
+          "correct": false,
+          "rationale": "GuardDuty is threat detection: it analyzes logs for compromised credentials and malware. Classifying what is *inside* your objects is a different job."
+        },
+        {
+          "id": "c",
+          "text": "Amazon Macie",
+          "correct": true,
+          "rationale": "Macie discovers, classifies and protects sensitive data in S3 buckets."
+        },
+        {
+          "id": "d",
+          "text": "AWS KMS",
+          "correct": false,
+          "rationale": "KMS creates, manages and rotates cryptographic keys. It protects data you have already decided is sensitive; it does not find it."
+        }
+      ],
+      "explanation": "Macie is the data-classification service: it finds sensitive data sitting in S3. The distinction from the neighbouring security services is what the exam tests — GuardDuty detects threats from logs, Inspector finds software vulnerabilities and network exposure, Detective works out the root cause of an incident, and KMS manages keys.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Security"
+        }
+      ]
+    },
+    {
+      "id": "security-service-selection",
+      "type": "multi",
+      "prompt": "Which service-to-purpose pairings are correct? (Select all that apply)",
+      "tags": [
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Inspector — detects software vulnerabilities and unintended network exposure in EC2, ECR and Lambda",
+          "correct": true,
+          "rationale": "Vulnerability management across those three surfaces."
+        },
+        {
+          "id": "b",
+          "text": "Detective — identifies the root cause of a security incident by analyzing CloudTrail, VPC Flow Logs and GuardDuty findings",
+          "correct": true,
+          "rationale": "It investigates after something has been detected."
+        },
+        {
+          "id": "c",
+          "text": "Shield — managed DDoS protection",
+          "correct": true,
+          "rationale": "Distinct from WAF, which blocks common exploits and malicious bots."
+        },
+        {
+          "id": "d",
+          "text": "GuardDuty — scans EC2 instances for misconfigurations such as open ports",
+          "correct": false,
+          "rationale": "GuardDuty explicitly does **not** scan for instance configurations. It analyzes logs to detect compromised credentials and malware. Configuration assessment is AWS Config, and network exposure is Inspector."
+        },
+        {
+          "id": "e",
+          "text": "AWS Config — centralizes and automates backup management across services",
+          "correct": false,
+          "rationale": "That is AWS Backup. Config assesses, audits and evaluates the configuration of provisioned resources."
+        }
+      ],
+      "explanation": "The security services divide by the question they answer. *What is in my data?* → Macie. *Is something bad happening?* → GuardDuty. *What is vulnerable or exposed?* → Inspector. *Why did this happen?* → Detective. *Is this resource configured correctly?* → Config. The trap is GuardDuty, which is a log-analysis threat detector and not a configuration scanner.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Security"
+        },
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Governance & Management"
+        }
+      ]
+    },
+    {
+      "id": "fargate-serverless",
+      "type": "boolean",
+      "prompt": "AWS Fargate provides a serverless compute engine for container-based compute resources.",
+      "tags": [
+        "compute",
+        "containers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "Fargate is a fully managed serverless compute engine for containers, and it works with both ECS and EKS. It removes the node-management half of container orchestration: the orchestrator still schedules the work, but there are no EC2 instances for you to size, patch or scale.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Containerization"
+        }
+      ]
+    },
+    {
+      "id": "security-groups-vs-nacls",
+      "type": "multi",
+      "prompt": "Which statements correctly distinguish Security Groups from Network ACLs? (Select all that apply)",
+      "tags": [
+        "networking",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Security Groups are stateful and evaluated at the EC2 instance level",
+          "correct": true,
+          "rationale": "Return traffic for an allowed connection is permitted automatically."
+        },
+        {
+          "id": "b",
+          "text": "Network ACLs are stateless and evaluated at the subnet level",
+          "correct": true,
+          "rationale": "Return traffic needs its own explicit rule."
+        },
+        {
+          "id": "c",
+          "text": "Security Groups support allow rules only, and by default allow nothing",
+          "correct": true,
+          "rationale": "There is no deny rule — you widen access by adding allows."
+        },
+        {
+          "id": "d",
+          "text": "Network ACLs support both allow and deny rules, and by default allow all traffic",
+          "correct": true,
+          "rationale": "The default NACL is permissive in both directions, which is the opposite of a Security Group's default."
+        },
+        {
+          "id": "e",
+          "text": "Security Groups can explicitly deny a specific IP range",
+          "correct": false,
+          "rationale": "They cannot — only allow rules exist. Blocking a specific source is a job for a Network ACL."
+        }
+      ],
+      "explanation": "The two firewalls differ on every axis: Security Groups are stateful, instance-level, allow-only, and default to allowing nothing; Network ACLs are stateless, subnet-level, support allow *and* deny, and default to allowing everything. The practical consequence is that blocking a specific bad actor requires a NACL, because a Security Group has no way to express a deny.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Networking"
+        }
+      ]
+    },
+    {
+      "id": "scaling-policies",
+      "type": "single",
+      "prompt": "An Auto Scaling Group should keep average CPU utilization at 60%. Which scaling policy type fits?",
+      "tags": [
+        "compute",
+        "scaling"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Target tracking",
+          "correct": true,
+          "rationale": "It scales resources to maintain a specific target metric, which is exactly a 60% CPU goal."
+        },
+        {
+          "id": "b",
+          "text": "Step",
+          "correct": false,
+          "rationale": "Step scaling works from thresholds — add 1 instance above 70%, add 2 above 80%. It expresses a staircase, not a target."
+        },
+        {
+          "id": "c",
+          "text": "Simple",
+          "correct": false,
+          "rationale": "Simple scaling triggers on a specific CloudWatch alarm and does not continuously evaluate a metric to decide whether further action is needed."
+        },
+        {
+          "id": "d",
+          "text": "Scheduled",
+          "correct": false,
+          "rationale": "Scheduled scaling runs to a clock — up during peak hours, down overnight — and ignores utilization entirely."
+        }
+      ],
+      "explanation": "The four policy types answer different questions. Target tracking holds a metric at a value. Step scales by thresholds with different magnitudes. Simple reacts to a single CloudWatch alarm without continuous evaluation. Scheduled follows a predefined timetable. Worth remembering alongside this: Auto Scaling Groups do not support memory utilization by default.",
+      "citations": [
+        {
+          "file": "AWS Certs/notes.md",
+          "section": "Scaling Policies"
+        },
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Compute"
+        }
+      ]
+    },
+    {
+      "id": "redshift-spectrum-vs-athena",
+      "type": "single",
+      "prompt": "What distinguishes Redshift Spectrum from Amazon Athena?",
+      "tags": [
+        "analytics",
+        "databases"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Spectrum is a feature of Redshift that queries S3 data without loading it into the cluster; Athena is serverless SQL over S3 with no cluster at all",
+          "correct": true,
+          "rationale": "Both read S3 in place; the difference is whether a Redshift cluster is in the picture."
+        },
+        {
+          "id": "b",
+          "text": "Spectrum queries S3 while Athena queries only data already loaded into a warehouse",
+          "correct": false,
+          "rationale": "Backwards — Athena is defined as serverless SQL queries of data stored in S3."
+        },
+        {
+          "id": "c",
+          "text": "Spectrum is serverless while Athena requires a provisioned cluster",
+          "correct": false,
+          "rationale": "Inverted. Athena is the serverless one; Spectrum is a Redshift feature and therefore tied to a cluster."
+        },
+        {
+          "id": "d",
+          "text": "They are the same engine with different names in different consoles",
+          "correct": false,
+          "rationale": "They are separate offerings — one is a Redshift feature, the other a standalone service."
+        }
+      ],
+      "explanation": "Redshift is a petabyte-scale data warehouse that runs SQL against data held in its cluster; **Spectrum** is the feature that lets those same queries reach S3 data without loading it in first. **Athena** is fully serverless SQL over S3 with no cluster to provision. If a warehouse already exists and you want to join against S3, that is Spectrum; if there is no warehouse, that is Athena.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Databases & Data Lakes"
+        }
+      ]
+    },
+    {
+      "id": "storage-with-lambda",
+      "type": "multi",
+      "prompt": "Which storage services can be used with AWS Lambda? (Select all that apply)",
+      "tags": [
+        "storage",
+        "compute"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Elastic File System (EFS)",
+          "correct": true,
+          "rationale": "Serverless auto-scaling file storage that works with EC2, ECS, EKS and Lambda."
+        },
+        {
+          "id": "b",
+          "text": "FSx",
+          "correct": true,
+          "rationale": "Also works with EC2, ECS, EKS and Lambda, providing Windows, NetApp and OpenZFS file systems."
+        },
+        {
+          "id": "c",
+          "text": "S3",
+          "correct": true,
+          "rationale": "Object storage is reachable from anything with the right permissions."
+        },
+        {
+          "id": "d",
+          "text": "Elastic Block Storage (EBS)",
+          "correct": false,
+          "rationale": "EBS is explicitly limited here — it extends the storage of EC2 instances, including those backing ECS and EKS nodes, but cannot be used with Lambda."
+        },
+        {
+          "id": "e",
+          "text": "EBS Snapshots Archive",
+          "correct": false,
+          "rationale": "A low-cost tier for long-term retention of rarely accessed EBS backups, not a Lambda-attachable filesystem."
+        }
+      ],
+      "explanation": "The dividing line is block storage versus file and object storage. EBS is block-level storage attached to an instance, so it needs an instance — that rules out Lambda. EFS and FSx are file systems that mount across EC2, ECS, EKS and Lambda alike, and S3 is object storage reachable over the API from anywhere.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "File System Storage"
+        }
+      ]
+    },
+    {
+      "id": "vpc-gateway-endpoint",
+      "type": "single",
+      "prompt": "Which AWS services does a VPC **Gateway** Endpoint route traffic to privately?",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "S3 and DynamoDB",
+          "correct": true,
+          "rationale": "The Gateway Endpoint is the specific endpoint type for exactly these two."
+        },
+        {
+          "id": "b",
+          "text": "Any AWS service that supports PrivateLink",
+          "correct": false,
+          "rationale": "That describes interface endpoints. The Gateway variant is the narrow one."
+        },
+        {
+          "id": "c",
+          "text": "EC2 and Lambda",
+          "correct": false,
+          "rationale": "Neither is reached through a Gateway Endpoint."
+        },
+        {
+          "id": "d",
+          "text": "On-premises networks over Direct Connect",
+          "correct": false,
+          "rationale": "Direct Connect is a dedicated private link between on-premises and a VPC — a different mechanism entirely."
+        }
+      ],
+      "explanation": "A VPC Endpoint is a virtual device enabling a private, secure connection between a VPC and supported AWS services without an Internet Gateway, NAT device or VPN. The **Gateway** Endpoint is the specific type for S3 and DynamoDB. Keep it separate from PrivateLink (private connectivity between VPCs, AWS services and on-premises), Transit Gateway (a centralized cloud router replacing point-to-point peering), and Direct Connect (a dedicated physical link).",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Networking"
+        }
+      ]
+    },
+    {
+      "id": "load-balancer-layers",
+      "type": "single",
+      "prompt": "Traffic must be routed to different backend applications based on the URL path. Which load balancer?",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Application Load Balancer — Layer 7, host and path based routing",
+          "correct": true,
+          "rationale": "Path is an HTTP concept, so it needs a Layer 7 device."
+        },
+        {
+          "id": "b",
+          "text": "Network Load Balancer — Layer 4 routing",
+          "correct": false,
+          "rationale": "An NLB routes on TCP/UDP, IP and port. It cannot see a URL path."
+        },
+        {
+          "id": "c",
+          "text": "CloudFront — the CDN handles path routing at the edge",
+          "correct": false,
+          "rationale": "CloudFront is a content delivery network with 750+ edge locations, not the VPC load balancer for this job."
+        },
+        {
+          "id": "d",
+          "text": "Transit Gateway — it routes between VPCs by path",
+          "correct": false,
+          "rationale": "Transit Gateway is a cloud router for networks, and \"path\" there means a network route, not a URL."
+        }
+      ],
+      "explanation": "The layer decides what the load balancer can see. An **ALB** works at Layer 7 and can therefore route on host and path, which is what application-aware routing needs. An **NLB** works at Layer 4 — TCP/UDP, IP and port — and is the right choice when raw throughput or non-HTTP protocols matter and content-based routing does not.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Networking"
+        }
+      ]
+    },
+    {
+      "id": "cloudfront-cert-region",
+      "type": "boolean",
+      "prompt": "A certificate used by CloudFront must be in the `us-east-1` Region.",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "CloudFront can only access certificates in the `us-east-1` Region. It is an easy detail to overlook because CloudFront is a global service with 750+ edge locations, which makes a single-Region dependency feel wrong — but a certificate requested anywhere else simply will not be selectable.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Networking"
+        }
+      ]
+    },
+    {
+      "id": "vector-storage-options",
+      "type": "multi",
+      "prompt": "Which AWS options are described as able to store and query vector embeddings for RAG? (Select all that apply)",
+      "tags": [
+        "ai-ml",
+        "storage"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "S3 Vectors",
+          "correct": true,
+          "rationale": "A feature of S3 enabling vector embeddings to be stored and queried in S3."
+        },
+        {
+          "id": "b",
+          "text": "RDS Postgres with pgvector enabled",
+          "correct": true,
+          "rationale": "Supports storing and querying vector embeddings when pgvector is installed."
+        },
+        {
+          "id": "c",
+          "text": "OpenSearch Service",
+          "correct": true,
+          "rationale": "Also supports storing and querying vector embeddings for RAG."
+        },
+        {
+          "id": "d",
+          "text": "Neptune",
+          "correct": false,
+          "rationale": "Neptune is a graph database for highly connected datasets — a different shape of relationship entirely."
+        },
+        {
+          "id": "e",
+          "text": "ElastiCache",
+          "correct": false,
+          "rationale": "An in-memory cache offering sub-millisecond latency, not a vector store."
+        }
+      ],
+      "explanation": "Three options are called out for vector storage: S3 Vectors, RDS Postgres with pgvector, and OpenSearch Service. This matters for a RAG pipeline, where chunks are converted to embeddings and stored somewhere queryable by semantic search. Neptune and ElastiCache both handle specialised access patterns, but neither is a vector database.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Databases & Data Lakes"
+        },
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Search Engines"
+        }
+      ]
+    },
+    {
+      "id": "ai-service-selection",
+      "type": "multi",
+      "prompt": "Which AI/ML service-to-task pairings are correct? (Select all that apply)",
+      "tags": [
+        "ai-ml"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Textract — extracting text from documents, images and handwriting",
+          "correct": true,
+          "rationale": "Document text extraction."
+        },
+        {
+          "id": "b",
+          "text": "Comprehend — discovering insights, sentiment and relationships in unstructured text",
+          "correct": true,
+          "rationale": "Natural Language Processing over text that has already been extracted."
+        },
+        {
+          "id": "c",
+          "text": "Transcribe — converting speech to text (automatic speech recognition)",
+          "correct": true,
+          "rationale": "Speech in, text out."
+        },
+        {
+          "id": "d",
+          "text": "Polly — converting text to speech using SSML tags",
+          "correct": true,
+          "rationale": "The inverse of Transcribe."
+        },
+        {
+          "id": "e",
+          "text": "Rekognition — converting scanned PDFs into structured form data",
+          "correct": false,
+          "rationale": "Rekognition is computer vision for image and video analysis. Pulling text and form data out of documents is Textract."
+        },
+        {
+          "id": "f",
+          "text": "Kendra — generating time-series forecasts from historical data",
+          "correct": false,
+          "rationale": "Kendra is AI-powered enterprise search over dispersed, unstructured repositories. Time-series forecasting is Forecast."
+        }
+      ],
+      "explanation": "The managed AI services pair up neatly by modality: Transcribe and Polly are speech in each direction, Textract and Comprehend are document extraction then language understanding, and Rekognition handles images and video. The two easiest to confuse are Rekognition and Textract — both read images, but one identifies objects and scenes while the other reads the writing.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "AI/ML"
+        }
+      ]
+    },
+    {
+      "id": "sqs-queue-types",
+      "type": "single",
+      "prompt": "An order-processing pipeline must process messages in exactly the order they were sent. Which SQS queue type?",
+      "tags": [
+        "messaging"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "FIFO — it guarantees the first message in is the first message out",
+          "correct": true,
+          "rationale": "Ordering is the guarantee FIFO exists to provide."
+        },
+        {
+          "id": "b",
+          "text": "Standard — it provides maximum throughput with ordering preserved",
+          "correct": false,
+          "rationale": "Standard gives maximum throughput with **best effort** ordering, which is not a guarantee."
+        },
+        {
+          "id": "c",
+          "text": "SNS — a topic delivers to subscribers in publication order",
+          "correct": false,
+          "rationale": "SNS is pub/sub push messaging, a different pattern from a queue."
+        },
+        {
+          "id": "d",
+          "text": "EventBridge Pipes — point-to-point delivery preserves order",
+          "correct": false,
+          "rationale": "Pipes is a point-to-point event bus between one source and one target; ordering is not its selling point."
+        }
+      ],
+      "explanation": "SQS offers two queue types and the trade is throughput against ordering: `Standard` maximizes throughput with best-effort ordering, `FIFO` guarantees first-in-first-out. Around them, SNS is pub/sub push for many-to-many messaging, EventBridge is a serverless event bus for event-driven architectures, and MQ is a managed broker for open protocols like AMQP and MQTT.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Distributed Systems Messaging"
+        }
+      ]
+    },
+    {
+      "id": "observability-services",
+      "type": "single",
+      "prompt": "An auditor needs a record of every API call and user activity across the AWS account. Which service?",
+      "tags": [
+        "observability"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "CloudTrail",
+          "correct": true,
+          "rationale": "The governance and auditing service that records every API call and user activity across AWS infrastructure."
+        },
+        {
+          "id": "b",
+          "text": "CloudWatch",
+          "correct": false,
+          "rationale": "CloudWatch tracks logs, metrics and events for monitoring and observability — it is about how systems are behaving, not who called what."
+        },
+        {
+          "id": "c",
+          "text": "X-Ray",
+          "correct": false,
+          "rationale": "X-Ray is distributed tracing, used to analyze, debug and optimize applications."
+        },
+        {
+          "id": "d",
+          "text": "AWS Config",
+          "correct": false,
+          "rationale": "Config assesses and audits the *configuration* of provisioned resources, not the API calls that produced it."
+        }
+      ],
+      "explanation": "The three core observability services answer different questions. CloudWatch: how is it behaving? X-Ray: where did this request go and what was slow? CloudTrail: who did what, and when? For SQL-based querying over that user and API activity there is also CloudTrail Lake, an immutable audit and security data lake.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Core Services"
+        },
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Misc (Media Processing maybe???)"
+        }
+      ]
+    },
+    {
+      "id": "glacier-retrieval",
+      "type": "single",
+      "prompt": "Archived data must be retrievable within milliseconds. Which S3 Glacier option?",
+      "tags": [
+        "storage"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "S3 Glacier Instant Retrieval",
+          "correct": true,
+          "rationale": "It allows retrieving archive data within milliseconds."
+        },
+        {
+          "id": "b",
+          "text": "S3 Glacier Flexible Retrieval, expedited",
+          "correct": false,
+          "rationale": "Expedited flexible retrieval is 1-5 minutes — fast, but not milliseconds."
+        },
+        {
+          "id": "c",
+          "text": "S3 Glacier Flexible Retrieval, standard",
+          "correct": false,
+          "rationale": "Standard retrieval takes 3-5 hours."
+        },
+        {
+          "id": "d",
+          "text": "EBS Snapshots Archive",
+          "correct": false,
+          "rationale": "A low-cost tier for rarely accessed EBS backups, not an S3 archive class."
+        }
+      ],
+      "explanation": "S3 Glacier is built for low-cost, long-term offline storage, where there is normally a wait between requesting data and receiving it. Instant Retrieval removes that wait entirely. Flexible Retrieval trades latency for cost — 10GB/month of retrieval free, with data available in 3-5 hours standard, 1-5 minutes expedited, or 5-12 hours bulk.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Object Storage"
+        }
+      ]
+    },
+    {
+      "id": "dynamodb-global-tables",
+      "type": "single",
+      "prompt": "An application needs reads *and* writes served from multiple AWS Regions against the same DynamoDB data. Which feature?",
+      "tags": [
+        "databases"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "DynamoDB Global Tables — multi-active, replicating table data across Regions",
+          "correct": true,
+          "rationale": "Multi-active means reads and writes are allowed in any Region."
+        },
+        {
+          "id": "b",
+          "text": "Aurora Global Database — a single DB spanning multiple Regions",
+          "correct": false,
+          "rationale": "Aurora is a relational database compatible with MySQL and Postgres. It is the wrong engine for a DynamoDB workload."
+        },
+        {
+          "id": "c",
+          "text": "Redshift Spectrum",
+          "correct": false,
+          "rationale": "A Redshift feature for querying S3 data in place, unrelated to multi-Region writes."
+        },
+        {
+          "id": "d",
+          "text": "DynamoDB with ElastiCache in each Region",
+          "correct": false,
+          "rationale": "A cache accelerates reads; it does not make writes multi-Region."
+        }
+      ],
+      "explanation": "Global Tables is DynamoDB's fully managed, serverless, **multi-active** replication — the word that matters, because it means any Region accepts writes rather than one primary accepting them and others following. Aurora Global Database is the equivalent idea for the relational side, letting a single Aurora database span Regions.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Databases & Data Lakes"
+        }
+      ]
+    },
+    {
+      "id": "savings-plans",
+      "type": "single",
+      "prompt": "What distinguishes a Compute Savings Plan from an EC2 Savings Plan?",
+      "tags": [
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Compute commits to an hourly spend amount; EC2 commits to a specific instance type in a Region",
+          "correct": true,
+          "rationale": "The Compute plan buys flexibility, the EC2 plan buys a deeper discount on a narrower commitment."
+        },
+        {
+          "id": "b",
+          "text": "Compute applies to containers only; EC2 applies to virtual machines only",
+          "correct": false,
+          "rationale": "The distinction is what you commit to, not which compute form factor you use."
+        },
+        {
+          "id": "c",
+          "text": "Compute is billed monthly; EC2 is billed hourly",
+          "correct": false,
+          "rationale": "Both are commitments expressed per hour."
+        },
+        {
+          "id": "d",
+          "text": "Compute requires no term commitment; EC2 requires three years",
+          "correct": false,
+          "rationale": "The Compute Savings Plan is itself described as a multi-year commitment."
+        }
+      ],
+      "explanation": "Both are flexible pricing models that trade commitment for discount, and they differ in what is committed. A **Compute Savings Plan** commits to a spend rate — say $10/hour for 3+ years — and can be applied wherever that compute runs. An **EC2 Savings Plan** commits to a specific instance type in a Region, which is narrower and therefore discounts more deeply.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Misc (Media Processing maybe???)"
+        }
+      ]
+    },
+    {
+      "id": "pilot-light-dr",
+      "type": "single",
+      "prompt": "Which disaster recovery strategy keeps a minimal set of core infrastructure components always running in a second Region?",
+      "tags": [
+        "resilience"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Pilot Light",
+          "correct": true,
+          "rationale": "A cost-effective strategy that keeps minimal core components warm, ready to be scaled up."
+        },
+        {
+          "id": "b",
+          "text": "Aurora Global Database",
+          "correct": false,
+          "rationale": "A database feature that can support a DR strategy, but not a strategy itself."
+        },
+        {
+          "id": "c",
+          "text": "Auto Scaling with a scheduled policy",
+          "correct": false,
+          "rationale": "Scheduled scaling follows a timetable within a Region; it is not a cross-Region recovery approach."
+        },
+        {
+          "id": "d",
+          "text": "AWS Backup",
+          "correct": false,
+          "rationale": "Backup centralizes and automates backup management. Restoring from backup is a different, slower DR posture than keeping infrastructure warm."
+        }
+      ],
+      "explanation": "Pilot Light is the cost-effective middle ground in disaster recovery: rather than running a full second environment or restoring everything from cold backups, a minimal core stays running in another Region and is scaled up when needed. The name is the mental model — a small flame kept burning so the boiler can be lit quickly.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Misc (Media Processing maybe???)"
+        }
+      ]
+    },
+    {
+      "id": "anywhere-variants",
+      "type": "multi",
+      "prompt": "Which statements about the \"Anywhere\" container variants are correct? (Select all that apply)",
+      "tags": [
+        "containers",
+        "compute"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "ECS Anywhere lets the centralized ECS control plane manage Docker workloads on-premises, in VMs and on edge devices",
+          "correct": true,
+          "rationale": "The control plane stays in AWS; the workloads move out."
+        },
+        {
+          "id": "b",
+          "text": "EKS Anywhere is an open-source deployment option for running Kubernetes on-premises",
+          "correct": true,
+          "rationale": "On vSphere, bare metal and edge devices, with a consistent AWS-managed experience."
+        },
+        {
+          "id": "c",
+          "text": "Fargate works with both ECS and EKS",
+          "correct": true,
+          "rationale": "It is the serverless compute engine behind either orchestrator."
+        },
+        {
+          "id": "d",
+          "text": "EKS Anywhere runs the Kubernetes control plane inside AWS while worker nodes run on-premises",
+          "correct": false,
+          "rationale": "That describes the ECS Anywhere split. EKS Anywhere is an open-source deployment option you operate yourself."
+        },
+        {
+          "id": "e",
+          "text": "Fargate is required to use ECS Anywhere",
+          "correct": false,
+          "rationale": "Fargate is a serverless compute engine within AWS; ECS Anywhere exists precisely to run workloads outside it."
+        }
+      ],
+      "explanation": "ECS and EKS both have an \"Anywhere\" story, and they are structured differently. **ECS Anywhere** keeps ECS's centralized control plane and extends it to on-premises, VM and edge workloads. **EKS Anywhere** is an open-source deployment option that runs Kubernetes on your own infrastructure — vSphere, bare metal, edge — with a consistent AWS-managed experience rather than an AWS-hosted control plane.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Containerization"
+        }
+      ]
+    },
+    {
+      "id": "efa-use-case",
+      "type": "single",
+      "prompt": "What is an Elastic Fabric Adapter (EFA) for?",
+      "tags": [
+        "networking",
+        "compute"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "High inter-node communication between EC2 instances, for HPC, ML model training and computational fluid dynamics",
+          "correct": true,
+          "rationale": "It is a network interface for tightly-coupled workloads where nodes talk to each other constantly."
+        },
+        {
+          "id": "b",
+          "text": "Attaching elastic block storage to multiple instances simultaneously",
+          "correct": false,
+          "rationale": "EFA is a network interface, not a storage feature."
+        },
+        {
+          "id": "c",
+          "text": "Providing a private connection between a VPC and AWS services",
+          "correct": false,
+          "rationale": "That is a VPC Endpoint or PrivateLink."
+        },
+        {
+          "id": "d",
+          "text": "Load balancing traffic across Availability Zones at Layer 4",
+          "correct": false,
+          "rationale": "That is a Network Load Balancer."
+        }
+      ],
+      "explanation": "An EFA is a network interface for EC2 that enables high-performance inter-node communication. It exists for tightly coupled workloads — high-performance computing, AI/ML model training, and computational fluid dynamics — where the bottleneck is nodes talking to each other rather than throughput to storage or to the internet.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Networking"
+        }
+      ]
+    },
+    {
+      "id": "resource-based-policy",
+      "type": "single",
+      "prompt": "What is an IAM resource-based policy, and what is it commonly used for?",
+      "tags": [
+        "iam",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A policy attached to a resource rather than a user or role, defining which principals can access it — commonly used for cross-account access",
+          "correct": true,
+          "rationale": "The resource itself declares who may touch it, which is what makes cross-account access workable."
+        },
+        {
+          "id": "b",
+          "text": "A policy attached to a role that defines which resources the role may access",
+          "correct": false,
+          "rationale": "That is an identity-based policy — the direction of attachment is the whole distinction."
+        },
+        {
+          "id": "c",
+          "text": "A policy that automatically scales permissions with resource usage",
+          "correct": false,
+          "rationale": "IAM policies do not scale with usage."
+        },
+        {
+          "id": "d",
+          "text": "A policy enforced by AWS Config to keep resources compliant",
+          "correct": false,
+          "rationale": "Config assesses and audits configuration; it is not where IAM policies are attached."
+        }
+      ],
+      "explanation": "The attachment point is the distinction. An identity-based policy hangs off a user or role and says what that identity may do. A **resource-based policy** hangs off the resource and names the principals allowed to act on it. That inversion is what makes cross-account access practical — the resource's owner grants access directly rather than every caller needing a role in the owning account.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Identity and Access Management"
+        }
+      ]
+    },
+    {
+      "id": "identity-services",
+      "type": "single",
+      "prompt": "An organization needs single sign-on across multiple AWS accounts. Which service?",
+      "tags": [
+        "iam"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "IAM Identity Center",
+          "correct": true,
+          "rationale": "Fully managed SSO for multiple AWS accounts."
+        },
+        {
+          "id": "b",
+          "text": "Cognito",
+          "correct": false,
+          "rationale": "Cognito is fully managed user management, authentication and authorization for *your application's* users."
+        },
+        {
+          "id": "c",
+          "text": "IAM",
+          "correct": false,
+          "rationale": "IAM is free centralized control of access to AWS resources, but per-account rather than SSO across accounts."
+        },
+        {
+          "id": "d",
+          "text": "Control Tower",
+          "correct": false,
+          "rationale": "Control Tower automates setup and governance of secure multi-account environments — related, but not the SSO service."
+        }
+      ],
+      "explanation": "Three identity services, three audiences. **Cognito** handles your application's end users. **IAM** is free, centralized control of authentication and authorization to AWS resources. **Identity Center** provides SSO across multiple AWS accounts — the workforce case. Control Tower governs multi-account setup, which is adjacent but distinct.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Identity and Access Management"
+        }
+      ]
+    },
+    {
+      "id": "step-functions",
+      "type": "single",
+      "prompt": "Which service orchestrates workflows with sequential and parallel tasks?",
+      "tags": [
+        "compute"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Step Functions",
+          "correct": true,
+          "rationale": "Fully managed workflow orchestration."
+        },
+        {
+          "id": "b",
+          "text": "Lambda",
+          "correct": false,
+          "rationale": "Lambda is fully managed serverless compute — the thing a workflow step often invokes."
+        },
+        {
+          "id": "c",
+          "text": "EventBridge",
+          "correct": false,
+          "rationale": "A serverless event bus for event-driven architectures rather than a workflow orchestrator."
+        },
+        {
+          "id": "d",
+          "text": "SQS",
+          "correct": false,
+          "rationale": "A queueing service; ordering between stages is not the same as orchestration."
+        }
+      ],
+      "explanation": "Step Functions is the fully managed service for orchestrating workflows with sequential and/or parallel tasks. The distinction from EventBridge is worth holding: a workflow has a defined shape you author, while an event bus routes events to whoever is listening.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Compute"
+        }
+      ]
+    },
+    {
+      "id": "messaging-service-selection",
+      "type": "multi",
+      "prompt": "Which messaging service-to-purpose pairings are correct? (Select all that apply)",
+      "tags": [
+        "messaging"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "SNS — pub/sub, enabling push-based many-to-many messaging between applications",
+          "correct": true,
+          "rationale": "Push, fan-out."
+        },
+        {
+          "id": "b",
+          "text": "MQ — a managed message broker for open-source protocols such as AMQP or MQTT",
+          "correct": true,
+          "rationale": "For workloads already speaking those protocols."
+        },
+        {
+          "id": "c",
+          "text": "EventBridge — a serverless event bus for building event-driven architectures",
+          "correct": true,
+          "rationale": "Routing events by rule."
+        },
+        {
+          "id": "d",
+          "text": "EventBridge Pipes — a point-to-point event bus between one source and one target",
+          "correct": true,
+          "rationale": "The narrow, direct variant."
+        },
+        {
+          "id": "e",
+          "text": "SQS — push-based fan-out to many subscribers",
+          "correct": false,
+          "rationale": "SQS is a queue that consumers poll; fan-out to many subscribers is SNS."
+        }
+      ],
+      "explanation": "The messaging services divide by delivery shape. SNS pushes to many subscribers. SQS queues for consumers to pull. EventBridge routes events by rule, with Pipes as the point-to-point special case of one source to one target. MQ exists for workloads that already speak AMQP or MQTT and would rather not be rewritten.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Distributed Systems Messaging"
+        }
+      ]
+    },
+    {
+      "id": "kinesis-streams",
+      "type": "single",
+      "prompt": "What distinguishes Kinesis Video Streams from Kinesis Data Streams?",
+      "tags": [
+        "messaging",
+        "analytics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Video Streams securely streams live video or time-encoded data from devices; Data Streams streams text, logs and telemetry",
+          "correct": true,
+          "rationale": "Both stream to AWS; the payload type differs."
+        },
+        {
+          "id": "b",
+          "text": "Video Streams is serverless while Data Streams requires provisioned shards",
+          "correct": false,
+          "rationale": "Not the distinction drawn."
+        },
+        {
+          "id": "c",
+          "text": "Data Streams is for real-time and Video Streams for batch",
+          "correct": false,
+          "rationale": "Both are real-time; Kinesis is a platform for real-time data."
+        },
+        {
+          "id": "d",
+          "text": "Video Streams transcodes media into device-compatible formats",
+          "correct": false,
+          "rationale": "That is Elastic Transcoder."
+        }
+      ],
+      "explanation": "Kinesis is a *platform* of fully managed services for collecting, processing and analyzing real-time data. Data Streams carries text, logs and telemetry; Video Streams carries live video or other time-encoded data from devices. Keep Elastic Transcoder separate — it converts media files into formats compatible with tablets, PCs and phones.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Distributed Systems Messaging"
+        }
+      ]
+    },
+    {
+      "id": "database-engine-selection",
+      "type": "multi",
+      "prompt": "Which database-to-workload pairings are correct? (Select all that apply)",
+      "tags": [
+        "databases"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Neptune — a highly connected dataset best modelled as a graph",
+          "correct": true,
+          "rationale": "Fully managed graph database."
+        },
+        {
+          "id": "b",
+          "text": "Aurora — a relational workload needing MySQL or Postgres compatibility",
+          "correct": true,
+          "rationale": "Compatible with both."
+        },
+        {
+          "id": "c",
+          "text": "DynamoDB — serverless document storage",
+          "correct": true,
+          "rationale": "Fully managed and serverless."
+        },
+        {
+          "id": "d",
+          "text": "Redshift — petabyte-scale data warehousing with SQL over large datasets",
+          "correct": true,
+          "rationale": "Queries run against data in the Redshift cluster."
+        },
+        {
+          "id": "e",
+          "text": "ElastiCache — durable primary storage for transactional data",
+          "correct": false,
+          "rationale": "ElastiCache is an in-memory cache offering sub-millisecond latency, not a system of record."
+        },
+        {
+          "id": "f",
+          "text": "SimpleDB — the recommended choice for new NoSQL workloads",
+          "correct": false,
+          "rationale": "SimpleDB is legacy, and it uses API requests rather than SQL queries."
+        }
+      ],
+      "explanation": "Pick by data shape: graph → Neptune, relational → RDS or Aurora, document → DynamoDB, warehouse → Redshift, cache → ElastiCache. Two traps sit in this list — ElastiCache is a cache rather than a store, and SimpleDB is explicitly legacy.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Databases & Data Lakes"
+        },
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Caching"
+        }
+      ]
+    },
+    {
+      "id": "s3-object-limit",
+      "type": "single",
+      "prompt": "What is the maximum size of a single S3 object?",
+      "tags": [
+        "storage"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "5TB",
+          "correct": true,
+          "rationale": "The per-object ceiling."
+        },
+        {
+          "id": "b",
+          "text": "5GB",
+          "correct": false,
+          "rationale": "Too small by three orders of magnitude."
+        },
+        {
+          "id": "c",
+          "text": "Unlimited — only the bucket has a limit",
+          "correct": false,
+          "rationale": "Buckets are effectively unlimited; objects are not."
+        },
+        {
+          "id": "d",
+          "text": "500GB",
+          "correct": false,
+          "rationale": "Not the documented limit."
+        }
+      ],
+      "explanation": "S3 is fully managed object storage capable of storing 5TB per object. Worth pairing with the feature that changes what S3 is good for: S3 Vectors lets vector embeddings be stored and queried in S3, putting it alongside RDS Postgres with pgvector and OpenSearch as a RAG-capable store.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Object Storage"
+        }
+      ]
+    },
+    {
+      "id": "storage-gateway",
+      "type": "single",
+      "prompt": "Which service makes cloud storage look and behave like a standard network drive?",
+      "tags": [
+        "storage"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Storage Gateway",
+          "correct": true,
+          "rationale": "The notes compare it to Dropbox or OneDrive."
+        },
+        {
+          "id": "b",
+          "text": "Elastic File System (EFS)",
+          "correct": false,
+          "rationale": "EFS is a serverless auto-scaling file system for AWS compute, not a bridge for on-premises access."
+        },
+        {
+          "id": "c",
+          "text": "FSx",
+          "correct": false,
+          "rationale": "FSx provides Windows, NetApp and OpenZFS file systems within AWS."
+        },
+        {
+          "id": "d",
+          "text": "S3 Glacier Instant Retrieval",
+          "correct": false,
+          "rationale": "An archive storage class."
+        }
+      ],
+      "explanation": "Storage Gateway makes cloud storage — S3, FSx and so on — present as a standard network drive, which the notes liken to Dropbox or OneDrive. It is the answer when existing on-premises systems expect a filesystem and you do not want to rewrite them against an object API.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "File System Storage"
+        }
+      ]
+    },
+    {
+      "id": "vpc-flow-logs",
+      "type": "single",
+      "prompt": "What do VPC Flow Logs capture?",
+      "tags": [
+        "networking",
+        "observability"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Metadata about IP traffic — IPs, ports, protocols and byte counts — in and out of network interfaces",
+          "correct": true,
+          "rationale": "Metadata, not payloads."
+        },
+        {
+          "id": "b",
+          "text": "The full packet contents of traffic crossing the VPC",
+          "correct": false,
+          "rationale": "Flow logs are metadata only."
+        },
+        {
+          "id": "c",
+          "text": "Every API call made within the VPC",
+          "correct": false,
+          "rationale": "That is CloudTrail."
+        },
+        {
+          "id": "d",
+          "text": "Application-level request traces",
+          "correct": false,
+          "rationale": "That is X-Ray."
+        }
+      ],
+      "explanation": "VPC Flow Logs capture *metadata* about IP traffic — source and destination IPs, ports, protocols and byte counts — for network interfaces in your VPCs. They are one of the log sources Detective analyzes when working out the root cause of a security incident, alongside CloudTrail logs and GuardDuty findings.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Networking"
+        }
+      ]
+    },
+    {
+      "id": "gateway-direction",
+      "type": "single",
+      "prompt": "EC2 instances in a private subnet need outbound internet access but must not be reachable from the internet. Which service?",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "NAT Gateway — outbound only, described as a one-way street",
+          "correct": true,
+          "rationale": "It blocks connections initiated from outside."
+        },
+        {
+          "id": "b",
+          "text": "Internet Gateway — it connects the VPC to the internet",
+          "correct": false,
+          "rationale": "An IGW enables *two-way* traffic between a VPC and the public internet."
+        },
+        {
+          "id": "c",
+          "text": "Transit Gateway — a centralized cloud router",
+          "correct": false,
+          "rationale": "It connects VPCs, on-premises networks and VPNs rather than providing internet egress."
+        },
+        {
+          "id": "d",
+          "text": "PrivateLink — private connectivity without exposing traffic to the internet",
+          "correct": false,
+          "rationale": "That reaches AWS services and VPCs privately, not the public internet."
+        }
+      ],
+      "explanation": "The distinction is directionality. An **Internet Gateway** enables two-way traffic between a VPC and the public internet. A **NAT Gateway** lets instances in a private subnet reach out to another VPC or the internet while refusing inbound connections initiated from there — a one-way street.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Networking"
+        }
+      ]
+    },
+    {
+      "id": "private-connectivity-options",
+      "type": "multi",
+      "prompt": "Which options provide private connectivity without traversing the public internet? (Select all that apply)",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "VPC Endpoint — private connection from a VPC to supported AWS services with no IGW, NAT or VPN",
+          "correct": true,
+          "rationale": "Service access without internet egress."
+        },
+        {
+          "id": "b",
+          "text": "PrivateLink — private, secure connection between VPCs, AWS services and on-premises networks",
+          "correct": true,
+          "rationale": "Explicitly without exposing traffic to the public internet."
+        },
+        {
+          "id": "c",
+          "text": "Direct Connect — a dedicated private connection between on-premises and a VPC",
+          "correct": true,
+          "rationale": "A physical private link."
+        },
+        {
+          "id": "d",
+          "text": "Site-to-Site VPN — secure IPsec tunnels between on-premises and a VPC or Transit Gateway",
+          "correct": true,
+          "rationale": "Encrypted tunnels; the traffic is protected in transit."
+        },
+        {
+          "id": "e",
+          "text": "Internet Gateway",
+          "correct": false,
+          "rationale": "Its entire purpose is two-way public internet traffic."
+        }
+      ],
+      "explanation": "Four ways to avoid the public internet, at different scopes. VPC Endpoints reach AWS services from inside a VPC. PrivateLink connects VPCs, services and on-premises. Direct Connect is a dedicated physical link from your datacentre. Site-to-Site VPN builds IPsec tunnels to a VPC or Transit Gateway — the cheaper alternative to Direct Connect when a dedicated circuit is overkill.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Networking"
+        }
+      ]
+    },
+    {
+      "id": "peering-vs-transit",
+      "type": "single",
+      "prompt": "An organization has grown to dozens of VPCs connected by point-to-point peering and wants to simplify. What replaces that mesh?",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Transit Gateway — a centralized cloud router replacing point-to-point peering with a single managed gateway",
+          "correct": true,
+          "rationale": "It also connects on-premises networks and remote VPNs."
+        },
+        {
+          "id": "b",
+          "text": "More VPC Peering connections, which scale linearly",
+          "correct": false,
+          "rationale": "A full mesh grows quadratically — exactly the problem."
+        },
+        {
+          "id": "c",
+          "text": "PrivateLink for every VPC pair",
+          "correct": false,
+          "rationale": "PrivateLink gives private access to services, not general VPC-to-VPC routing at scale."
+        },
+        {
+          "id": "d",
+          "text": "A NAT Gateway in each VPC",
+          "correct": false,
+          "rationale": "That is outbound internet egress."
+        }
+      ],
+      "explanation": "**VPC Peering** is a direct connection allowing traffic between two VPCs using private IPs — fine for a handful, unworkable as a mesh. **Transit Gateway** is a fully managed centralized cloud router that connects VPCs, on-premises networks and remote VPNs, explicitly replacing point-to-point peering with a single managed gateway.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Networking"
+        }
+      ]
+    },
+    {
+      "id": "waf-vs-shield",
+      "type": "single",
+      "prompt": "What does AWS WAF protect against that Shield does not?",
+      "tags": [
+        "security",
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Common cyber exploits, malicious bots and unauthorized traffic at the application layer",
+          "correct": true,
+          "rationale": "Shield is specifically DDoS protection."
+        },
+        {
+          "id": "b",
+          "text": "Distributed denial of service attacks",
+          "correct": false,
+          "rationale": "That is precisely Shield's job."
+        },
+        {
+          "id": "c",
+          "text": "Compromised credentials and malware",
+          "correct": false,
+          "rationale": "That is GuardDuty, working from logs."
+        },
+        {
+          "id": "d",
+          "text": "Unpatched software vulnerabilities",
+          "correct": false,
+          "rationale": "That is Inspector."
+        }
+      ],
+      "explanation": "WAF is a managed security service preventing common exploits, malicious bots and unauthorized traffic — application-layer threats. Shield is managed DDoS protection, which is about volume rather than request content. They are complementary rather than alternatives.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Security"
+        }
+      ]
+    },
+    {
+      "id": "governance-services",
+      "type": "single",
+      "prompt": "Which service automates the setup and governance of a secure multi-account environment?",
+      "tags": [
+        "governance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Control Tower",
+          "correct": true,
+          "rationale": "Multi-account environment setup and governance."
+        },
+        {
+          "id": "b",
+          "text": "AWS Config",
+          "correct": false,
+          "rationale": "Config assesses, audits and evaluates the configuration of provisioned resources."
+        },
+        {
+          "id": "c",
+          "text": "Systems Manager",
+          "correct": false,
+          "rationale": "A centralized hub for operations management — unified visibility and control of resources."
+        },
+        {
+          "id": "d",
+          "text": "CloudTrail",
+          "correct": false,
+          "rationale": "CloudTrail records API calls and user activity."
+        }
+      ],
+      "explanation": "The governance trio answers different questions. **Control Tower**: how do I stand up and govern many accounts safely? **Config**: is this resource configured correctly? **Systems Manager**: can I see and operate my resources from one place? CloudTrail sits alongside as the audit record of who did what.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Governance & Management"
+        }
+      ]
+    },
+    {
+      "id": "connect-features",
+      "type": "multi",
+      "prompt": "Which are features of Amazon Connect? (Select all that apply)",
+      "tags": [
+        "ai-ml"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Wisdom — an agent assistant providing real-time information to contact centre agents",
+          "correct": true,
+          "rationale": "Real-time knowledge surfacing."
+        },
+        {
+          "id": "b",
+          "text": "Q in Connect — a generative AI assistant giving real-time personalized recommendations to agents",
+          "correct": true,
+          "rationale": "The generative AI layer."
+        },
+        {
+          "id": "c",
+          "text": "Contact Lens — using ML to analyze customer-agent interactions in real time or post-call",
+          "correct": true,
+          "rationale": "Interaction analytics."
+        },
+        {
+          "id": "d",
+          "text": "Ground Truth — a managed data labeling service",
+          "correct": false,
+          "rationale": "A SageMaker feature for creating high-quality training datasets."
+        },
+        {
+          "id": "e",
+          "text": "Segment Detection — automatically detecting scene changes in video",
+          "correct": false,
+          "rationale": "A Rekognition feature."
+        }
+      ],
+      "explanation": "Amazon Connect is an AI-powered contact centre as a service, and its three named features all support the human agent: Wisdom surfaces information, Q in Connect adds generative recommendations, and Contact Lens analyzes the conversation live or afterwards. The distractors are features of other services — Ground Truth belongs to SageMaker and Segment Detection to Rekognition.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "AI/ML"
+        }
+      ]
+    },
+    {
+      "id": "rekognition-features",
+      "type": "multi",
+      "prompt": "Which are features of Amazon Rekognition? (Select all that apply)",
+      "tags": [
+        "ai-ml"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Segment Detection — automatically detecting scene changes (shots) when processing video",
+          "correct": true,
+          "rationale": "Video segmentation."
+        },
+        {
+          "id": "b",
+          "text": "Custom Labels — training computer vision models to detect objects, scenes or concepts unique to your business",
+          "correct": true,
+          "rationale": "Domain-specific vision without full ML expertise."
+        },
+        {
+          "id": "c",
+          "text": "Ground Truth — creating high-quality labelled training datasets",
+          "correct": false,
+          "rationale": "A SageMaker feature."
+        },
+        {
+          "id": "d",
+          "text": "Textract-style form extraction from scanned documents",
+          "correct": false,
+          "rationale": "Textract is its own service for extracting text from documents, images and handwriting."
+        },
+        {
+          "id": "e",
+          "text": "Speech-to-text transcription of video audio tracks",
+          "correct": false,
+          "rationale": "That is Transcribe."
+        }
+      ],
+      "explanation": "Rekognition is computer vision for image and video analysis, usable without machine learning experience, and its two named features are Segment Detection (scene changes in video) and Custom Labels (training on objects and concepts specific to your business). Everything text-shaped belongs elsewhere: Textract reads documents, Transcribe converts speech, Comprehend analyzes language.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "AI/ML"
+        }
+      ]
+    },
+    {
+      "id": "routing-policies",
+      "type": "multi",
+      "prompt": "Which are network traffic routing policies listed in the notes? (Select all that apply)",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Weighted",
+          "correct": true,
+          "rationale": "Split traffic by proportion."
+        },
+        {
+          "id": "b",
+          "text": "Geoproximity",
+          "correct": true,
+          "rationale": "Route by distance to resources."
+        },
+        {
+          "id": "c",
+          "text": "Geolocation",
+          "correct": true,
+          "rationale": "Route by where the user is."
+        },
+        {
+          "id": "d",
+          "text": "Multivalue Answer",
+          "correct": true,
+          "rationale": "Return several healthy records."
+        },
+        {
+          "id": "e",
+          "text": "Round Robin",
+          "correct": false,
+          "rationale": "Not among the four listed."
+        },
+        {
+          "id": "f",
+          "text": "Least Connections",
+          "correct": false,
+          "rationale": "A load balancer algorithm rather than one of the listed routing policies."
+        }
+      ],
+      "explanation": "Four routing policies are listed: Weighted, Geoproximity, Geolocation and Multivalue Answer. The two geographic ones are easy to blur — Geolocation routes on where the *user* is, while Geoproximity routes on distance between user and *resources*, and can be biased to shift traffic between regions.",
+      "citations": [
+        {
+          "file": "AWS Certs/notes.md",
+          "section": "Policy Routing for Network traffic"
+        }
+      ]
+    },
+    {
+      "id": "analytics-and-serverless-misc",
+      "type": "multi",
+      "prompt": "Which service-to-purpose pairings are correct? (Select all that apply)",
+      "tags": [
+        "analytics",
+        "compute"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Data Firehose — capturing, transforming and loading real-time stream data into data lakes and analytics services",
+          "correct": true,
+          "rationale": "The delivery half of a streaming pipeline."
+        },
+        {
+          "id": "b",
+          "text": "AppSync — a serverless GraphQL service supporting real-time data subscriptions",
+          "correct": true,
+          "rationale": "Fully managed GraphQL."
+        },
+        {
+          "id": "c",
+          "text": "Elastic Beanstalk — a fully managed PaaS for deploying and scaling web applications",
+          "correct": true,
+          "rationale": "Platform as a service."
+        },
+        {
+          "id": "d",
+          "text": "CloudTrail Lake — an immutable audit and security data lake supporting SQL queries on user and API activity",
+          "correct": true,
+          "rationale": "Queryable audit history."
+        },
+        {
+          "id": "e",
+          "text": "QuickSight — a managed service for labelling machine learning training data",
+          "correct": false,
+          "rationale": "QuickSight is serverless AI-powered business intelligence. Data labelling is SageMaker Ground Truth."
+        }
+      ],
+      "explanation": "Four distinct jobs: Firehose moves and transforms streaming data into stores; AppSync serves GraphQL with real-time subscriptions; Elastic Beanstalk is the PaaS route to deploying a web app; CloudTrail Lake makes audit activity SQL-queryable and immutable. QuickSight is business intelligence — the reporting layer, not the labelling one.",
+      "citations": [
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "Misc (Media Processing maybe???)"
+        },
+        {
+          "file": "AWS Certs/all_aws_services.md",
+          "heading": "AI/ML"
+        }
+      ]
+    }
+  ]
+}

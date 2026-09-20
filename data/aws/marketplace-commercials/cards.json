@@ -1,0 +1,1407 @@
+{
+  "id": "marketplace-commercials",
+  "title": "AWS Marketplace — Commercials",
+  "cards": [
+    {
+      "id": "why-sellers-list",
+      "type": "multi",
+      "prompt": "What makes listing on AWS Marketplace worth a Seller's effort? (Select all that apply)",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Buyers pay through their existing AWS bill instead of opening a new vendor relationship",
+          "correct": true,
+          "rationale": "It removes procurement friction — no new vendor onboarding, no separate invoice."
+        },
+        {
+          "id": "b",
+          "text": "Marketplace spend usually counts toward the Buyer's committed AWS spend",
+          "correct": true,
+          "rationale": "This turns a new purchase into budget the Buyer has already allocated, and is often why Buyers pressure vendors to list."
+        },
+        {
+          "id": "c",
+          "text": "AWS operates the Seller's software on the Seller's behalf",
+          "correct": false,
+          "rationale": "AWS handles the transaction — discovery, contracting and billing. Who operates the software depends entirely on the Listing Type."
+        },
+        {
+          "id": "d",
+          "text": "AWS underwrites the Seller's support obligations to the Buyer",
+          "correct": false,
+          "rationale": "Support stays with the Seller; some listing types even impose explicit support obligations, such as the Professional Services response-time rules."
+        },
+        {
+          "id": "e",
+          "text": "A Foundational Technical Review is completed for the Seller as part of listing",
+          "correct": false,
+          "rationale": "An FTR is not required for any listing type at all — it is only needed if the Seller wants to leverage co-sell."
+        }
+      ],
+      "explanation": "The two named benefits are both commercial rather than technical: the charge lands on an existing AWS bill, and the spend usually counts toward the Buyer's committed AWS spend. That second point is the one that drives Buyer-side pressure to list, because it converts a new purchase into already-allocated budget.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/overview.md",
+          "section": "AWS Marketplace is a catalog where one company sells software to another"
+        }
+      ]
+    },
+    {
+      "id": "ftr-requirement",
+      "type": "boolean",
+      "prompt": "A Foundational Technical Review (FTR) must be completed before any product can be listed on AWS Marketplace.",
+      "tags": [
+        "fundamentals",
+        "listing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "An FTR is not required for any listing type. It is only needed when a Seller wants to leverage co-sell — the arrangement where AWS helps sell their product. Listing and co-selling are separate decisions with separate prerequisites.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/overview.md",
+          "section": "A Foundational Tech Review (FTR) is not required for any listing type"
+        }
+      ]
+    },
+    {
+      "id": "entitlement-vs-metering",
+      "type": "single",
+      "prompt": "A Buyer purchases a Contract + Usage Product. How do Entitlement and Metering divide the billing between them?",
+      "tags": [
+        "billing",
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Entitlements cover consumption up to the committed amount; Metering bills anything beyond it",
+          "correct": true,
+          "rationale": "An Entitlement is a promise made in advance; Metering is a measurement taken afterwards."
+        },
+        {
+          "id": "b",
+          "text": "Metering covers the committed amount; Entitlements bill the overage",
+          "correct": false,
+          "rationale": "Backwards. The committed amount is known up front, which is exactly what an Entitlement is."
+        },
+        {
+          "id": "c",
+          "text": "Both bill the same consumption, and AWS takes whichever produces the lower charge",
+          "correct": false,
+          "rationale": "They describe different consumption, not competing prices for the same consumption."
+        },
+        {
+          "id": "d",
+          "text": "Entitlements are billed monthly in arrears alongside metered usage",
+          "correct": false,
+          "rationale": "Entitlements are known before any usage happens, which is why Contract-based Products bill at purchase time."
+        }
+      ],
+      "explanation": "Entitlement and Metering are the two ways AWS Marketplace decides what to charge, and most of the Marketplace model is downstream of that choice. An Entitlement is what the Buyer is *allowed* to use, agreed and paid for upfront. Metering is the collection and reporting of what the Buyer *actually* used. A Contract-based Product uses only the first and bills at purchase time; a Usage-based Product uses only the second and bills after the fact; a Contract + Usage Product uses Entitlements up to the commitment and Metering beyond it.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/overview.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "product-id-vs-code",
+      "type": "single",
+      "prompt": "A Seller is opening an AWS support case about a billing discrepancy on one of their listings. Which identifier do they quote?",
+      "tags": [
+        "fundamentals",
+        "identifiers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The Product ID — it identifies the listing in the catalog, on the Buyer's bill, and in Seller reports",
+          "correct": true,
+          "rationale": "The ID is what appears on paperwork."
+        },
+        {
+          "id": "b",
+          "text": "The Product Code — it is the canonical identifier for the Product",
+          "correct": false,
+          "rationale": "The Code identifies the *software* to AWS at runtime so usage is billed against the right Product. It is what the running software presents to AWS, not what appears on an invoice."
+        },
+        {
+          "id": "c",
+          "text": "Either one, since they are interchangeable identifiers for the same Product",
+          "correct": false,
+          "rationale": "They are issued at the same time and paired, but explicitly not interchangeable."
+        },
+        {
+          "id": "d",
+          "text": "The offer ID generated when the private offer was created",
+          "correct": false,
+          "rationale": "An offer ID identifies one set of commercial terms, not the listing."
+        }
+      ],
+      "explanation": "Product ID and Product Code are issued together and paired, but do different jobs. The **ID** identifies the listing — in the catalog, on the Buyer's bill, in Seller reports — and is what you quote in a support case or invoice query. The **Code** identifies the software to AWS at runtime; it is stamped into an AMI and returned by `ResolveCustomer` for a SaaS Product.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/overview.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "listing-visibility",
+      "type": "multi",
+      "prompt": "Which listing visibility settings are available on AWS Marketplace? (Select all that apply)",
+      "tags": [
+        "listing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`Restricted` — visible only to current customers",
+          "correct": true,
+          "rationale": "Used to wind a Product down without cutting off existing subscribers."
+        },
+        {
+          "id": "b",
+          "text": "`Limited` — visible only to the Seller's AWS account and accounts on the allowlist",
+          "correct": true,
+          "rationale": "The staging state, used to test a listing before it goes public."
+        },
+        {
+          "id": "c",
+          "text": "`Public` — publicly visible on AWS Marketplace",
+          "correct": true,
+          "rationale": "The fully-launched state."
+        },
+        {
+          "id": "d",
+          "text": "`Private` — visible only to accounts holding a private offer",
+          "correct": false,
+          "rationale": "Private *offers* target named accounts, but that is a property of the offer, not a listing visibility setting."
+        },
+        {
+          "id": "e",
+          "text": "`Archived` — hidden from the catalog but still billable",
+          "correct": false,
+          "rationale": "Archival is a lifecycle stage for AMI *versions*, not a listing visibility setting."
+        }
+      ],
+      "explanation": "The three visibility settings are `Restricted` (current customers only), `Limited` (the Seller's account plus allowlisted accounts), and `Public`. `Limited` is the one to reach for when testing — a SaaS Quick Launch configuration, for instance, has its own visibility lifecycle so it can be exercised while Limited and published separately.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/overview.md",
+          "heading": "Listing Visibility"
+        }
+      ]
+    },
+    {
+      "id": "professional-services-channels",
+      "type": "multi",
+      "prompt": "What commercial channels are available for Professional Services listings on AWS Marketplace? (Select all that apply)",
+      "tags": [
+        "professional-services",
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Private Offers",
+          "correct": true,
+          "rationale": "The only purchase path for this listing type — there is no self-service flow at all."
+        },
+        {
+          "id": "b",
+          "text": "Contract based",
+          "correct": false,
+          "rationale": "Contract-based pricing is a SaaS, AMI and Container pricing model. A Professional Services listing carries no prices at all; pricing is configured on the private offer."
+        },
+        {
+          "id": "c",
+          "text": "Usage based",
+          "correct": false,
+          "rationale": "Nothing is metered for Professional Services — the listing type has no API surface whatsoever."
+        },
+        {
+          "id": "d",
+          "text": "Free",
+          "correct": false,
+          "rationale": "`Free` is a pricing model on other listing types. Professional Services publishes packages, never prices."
+        },
+        {
+          "id": "e",
+          "text": "Express Private Offers",
+          "correct": false,
+          "rationale": "Express Private Offers are limited to SaaS Contract and SaaS Contract with Consumption Products, and are explicitly unavailable for Professional Services."
+        }
+      ],
+      "explanation": "Professional Services is purchased one way only: through a private offer. The listing is a brochure rather than a store — a Buyer finds it, reads what the Seller offers, and contacts the Seller to discuss scope and price. There is no `FulfillmentURL`, no Quick Launch, and no metering or entitlement API to integrate with, because the deliverable is human work.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/professional_services.md",
+          "heading": "Fulfillment (Professional Services)"
+        },
+        {
+          "file": "AWS Marketplace/private_offers.md",
+          "section": "For [Professional Services](./professional_services.md) they are the only purchase path"
+        }
+      ]
+    },
+    {
+      "id": "professional-services-categories",
+      "type": "multi",
+      "prompt": "Which are valid service categories for a Professional Services listing? (Select all that apply)",
+      "tags": [
+        "professional-services"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Assessment",
+          "correct": true,
+          "rationale": "Evaluating the Buyer's current operating environment."
+        },
+        {
+          "id": "b",
+          "text": "Implementation",
+          "correct": true,
+          "rationale": "Configuration, setup and deployment of third-party software."
+        },
+        {
+          "id": "c",
+          "text": "Premium support",
+          "correct": true,
+          "rationale": "Access to guidance and assistance from experts."
+        },
+        {
+          "id": "d",
+          "text": "Managed services",
+          "correct": true,
+          "rationale": "End-to-end environment management on the Buyer's behalf."
+        },
+        {
+          "id": "e",
+          "text": "Training",
+          "correct": true,
+          "rationale": "Tailored workshops and educational tools."
+        },
+        {
+          "id": "f",
+          "text": "Staff augmentation",
+          "correct": false,
+          "rationale": "Not one of the five categories. Selling blocks of time is done as a *dimension* within one of the five, not as a category of its own."
+        }
+      ],
+      "explanation": "There are exactly five categories — Assessment, Implementation, Premium support, Managed services, and Training — and a listing may carry up to three of them. Two rules also constrain what can be listed at all: the service must relate to an AWS service or to at least one public AWS Marketplace product, either by supporting it or by driving more subscriptions to it.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/professional_services.md",
+          "section": "The listing must also fall under at least one of five service categories"
+        }
+      ]
+    },
+    {
+      "id": "professional-services-dimensions",
+      "type": "single",
+      "prompt": "What does a Pricing Dimension on a Professional Services listing consist of?",
+      "tags": [
+        "professional-services",
+        "pricing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A name and a description, and nothing else",
+          "correct": true,
+          "rationale": "No unit, no unit category, no price, no quantity — prices are attached later, per deal, on the private offer."
+        },
+        {
+          "id": "b",
+          "text": "A name, a unit category, and a price per unit",
+          "correct": false,
+          "rationale": "That is the SaaS shape. The six SaaS unit categories are irrelevant here because nothing is metered."
+        },
+        {
+          "id": "c",
+          "text": "A name, a quantity, a price, and a duration",
+          "correct": false,
+          "rationale": "That is a Contract-based dimension. Professional Services dimensions are packages, not units of usage."
+        },
+        {
+          "id": "d",
+          "text": "A name and an hourly rate, since services are sold by time",
+          "correct": false,
+          "rationale": "Blocks of hours are one common packaging pattern, but the dimension is free-form text — AWS defines no structure at all."
+        }
+      ],
+      "explanation": "The form is deliberately minimal: a dimension is a name and a description. A Seller defines at least one and up to 24, and prices are attached per deal on the private offer. Because the fields are free-form, a package is whatever the Seller writes — tiers (`Silver`/`Gold`/`Platinum`), blocks of time, fixed-scope deliverables, or per-unit-of-scope can all sit side by side on one listing.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/professional_services.md",
+          "heading": "Pricing Dimensions (Professional Services)"
+        }
+      ]
+    },
+    {
+      "id": "professional-services-response-times",
+      "type": "multi",
+      "prompt": "Because Professional Services fulfillment is manual, AWS enforces it with obligations rather than technical requirements. Which apply? (Select all that apply)",
+      "tags": [
+        "professional-services"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The Seller must contact the Buyer within two business days of being contacted through the listing",
+          "correct": true,
+          "rationale": "The inbound-enquiry obligation."
+        },
+        {
+          "id": "b",
+          "text": "The Seller must contact the Buyer or provide next steps within two days of a private offer being accepted, unless the offer says otherwise",
+          "correct": true,
+          "rationale": "The post-acceptance obligation."
+        },
+        {
+          "id": "c",
+          "text": "Support contact options must be published on the fulfillment landing page, with a description of the support level",
+          "correct": true,
+          "rationale": "The Buyer needs to know how to reach the Seller and what to expect."
+        },
+        {
+          "id": "d",
+          "text": "The Seller must report engagement hours to AWS monthly through the Metering Service",
+          "correct": false,
+          "rationale": "Professional Services has no API surface at all — nothing is metered and no entitlement is checked programmatically."
+        },
+        {
+          "id": "e",
+          "text": "The Seller may collect the Buyer's payment details directly for work outside the offer",
+          "correct": false,
+          "rationale": "Never permitted. The engagement must be billed entirely through the dimensions listed on AWS Marketplace, and side-invoicing defeats the point of listing."
+        }
+      ],
+      "explanation": "With no artifact to deliver, AWS substitutes response-time obligations for technical requirements: two business days to respond to an enquiry, two days to follow up on an accepted offer, and published support contact options. Two things are firmly out of bounds — a Seller may never collect the Buyer's payment information through the listing, and side-invoicing part of the work defeats the purpose of listing it.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/professional_services.md",
+          "heading": "Fulfillment (Professional Services)"
+        },
+        {
+          "file": "AWS Marketplace/professional_services.md",
+          "heading": "Pricing Models (Professional Services)"
+        }
+      ]
+    },
+    {
+      "id": "external-id-confused-deputy",
+      "type": "single",
+      "prompt": "A Professional Services engagement needs the Seller to access the Buyer's AWS account. Why does the cross-account role's trust policy require an `ExternalId`?",
+      "tags": [
+        "professional-services",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It prevents another of the Seller's customers from inducing the Seller to act against this Buyer's account — the confused deputy problem",
+          "correct": true,
+          "rationale": "The Seller is the deputy; the external ID is the secret that ties a request to the right principal."
+        },
+        {
+          "id": "b",
+          "text": "It encrypts the temporary credentials returned by `sts:AssumeRole`",
+          "correct": false,
+          "rationale": "The external ID is a shared identifier in the trust policy, not a cryptographic key."
+        },
+        {
+          "id": "c",
+          "text": "It lets AWS Marketplace meter the engagement against the right agreement",
+          "correct": false,
+          "rationale": "Nothing about Professional Services is metered."
+        },
+        {
+          "id": "d",
+          "text": "It allows AWS Marketplace to host the CloudFormation template that creates the role",
+          "correct": false,
+          "rationale": "AWS Marketplace will not host a template for a Professional Services listing — the Seller hosts it themselves and links it from Additional resources."
+        }
+      ],
+      "explanation": "Because this listing type has no Quick Launch and no deployment mechanism, the Buyer always takes the first action: they create an IAM role whose trust policy names the Seller's account and requires an `ExternalId`, and the Seller then calls `sts:AssumeRole` for temporary credentials. The external ID guards against the confused deputy problem. What the guidance steers Sellers away from is the alternative — asking the Buyer to create an IAM user and hand over long-lived access keys.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/professional_services.md",
+          "section": "Bootstrapping the Seller's access to the Buyer's AWS Account"
+        }
+      ]
+    },
+    {
+      "id": "private-offer-payment-structures",
+      "type": "multi",
+      "prompt": "Which payment structures can a Private Offer use? (Select all that apply)",
+      "tags": [
+        "offers",
+        "pricing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Upfront payment — the Buyer pays the agreed cost at the start of the term",
+          "correct": true,
+          "rationale": "The simplest structure."
+        },
+        {
+          "id": "b",
+          "text": "Installment plan — an agreed fee split across a schedule the Seller defines",
+          "correct": true,
+          "rationale": "Invoice dates and amounts are the Seller's to set."
+        },
+        {
+          "id": "c",
+          "text": "Variable payments — invoices submitted up to the total contract value",
+          "correct": true,
+          "rationale": "Used when the exact spend within the TCV isn't known in advance."
+        },
+        {
+          "id": "d",
+          "text": "Bring Your Own License — the Buyer supplies a licence purchased outside AWS",
+          "correct": false,
+          "rationale": "Private offers explicitly do not support the `BYOL` pricing model."
+        },
+        {
+          "id": "e",
+          "text": "Metered overage billed monthly in arrears against the offer",
+          "correct": false,
+          "rationale": "Metering belongs to the Product's Pricing Model, not to the offer's payment structure."
+        }
+      ],
+      "explanation": "A private offer uses exactly one of three payment structures — variable payments, installment plan, or upfront payment — and that choice holds even when the offer is extended to several Buyers. Note what private offers cannot do: no `BYOL`, no service limits on consumption, and they can't be created for second-party Products, AMI monthly Products, or multi-AMI CloudFormation delivery.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/private_offers.md",
+          "heading": "Payment Structures"
+        },
+        {
+          "file": "AWS Marketplace/private_offers.md",
+          "heading": "Constraints"
+        }
+      ]
+    },
+    {
+      "id": "private-offer-configuration",
+      "type": "multi",
+      "prompt": "Which statements about configuring a private offer are correct? (Select all that apply)",
+      "tags": [
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "An offer can name up to 24 AWS account IDs",
+          "correct": true,
+          "rationale": "The per-offer Buyer limit."
+        },
+        {
+          "id": "b",
+          "text": "A custom EULA plus up to five files can be attached, merged into a single document",
+          "correct": true,
+          "rationale": "Statements of work, bills of materials, pricing sheets and addendums all land in one merged document."
+        },
+        {
+          "id": "c",
+          "text": "After 23:59:59 UTC on the expiration date the offer is no longer accessible",
+          "correct": true,
+          "rationale": "A hard cutoff on how long the Buyer has to accept."
+        },
+        {
+          "id": "d",
+          "text": "An offer that has not yet been accepted can still be edited",
+          "correct": true,
+          "rationale": "Only accepted offers — agreements — are fixed."
+        },
+        {
+          "id": "e",
+          "text": "The offer can cap how much of the Product the Buyer consumes",
+          "correct": false,
+          "rationale": "There are no service limits in an offer. The Buyer can use as much as they want at the negotiated price unless the Product itself imposes a limit."
+        },
+        {
+          "id": "f",
+          "text": "Adding support for a new instance type extends automatically to Buyers already on a private offer",
+          "correct": false,
+          "rationale": "It does not — a new offer is required."
+        }
+      ],
+      "explanation": "An offer names up to 24 AWS accounts, carries a custom EULA plus up to five merged files, and expires at 23:59:59 UTC on its expiration date. Two constraints catch Sellers out: an offer cannot limit consumption, and changes to the Product's supported instance types or Regions do not reach Buyers already on an offer. Offers above $250,000 may also require additional approval.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/private_offers.md",
+          "heading": "Offer Configuration"
+        },
+        {
+          "file": "AWS Marketplace/private_offers.md",
+          "heading": "Constraints"
+        }
+      ]
+    },
+    {
+      "id": "renewal-mechanisms",
+      "type": "multi",
+      "prompt": "Which renewal mechanisms continue an agreement *automatically*, with no one taking action at the end date? (Select all that apply)",
+      "tags": [
+        "renewals",
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Renewal terms the Seller builds into a private offer using contract pricing",
+          "correct": true,
+          "rationale": "The Buyer opts in when accepting, and the agreement renews at its end date."
+        },
+        {
+          "id": "b",
+          "text": "Auto-renewal a Buyer switches on for their own public contract subscription",
+          "correct": true,
+          "rationale": "The Seller does not configure this and cannot see it as an offer setting — it belongs to the Buyer's subscription."
+        },
+        {
+          "id": "c",
+          "text": "A renewal offer the Seller creates to replace the agreement",
+          "correct": false,
+          "rationale": "This is a fresh offer the Buyer has to accept, so it is not automatic. It is also limited to SaaS contract and SaaS contract with consumption."
+        },
+        {
+          "id": "d",
+          "text": "An amendment to an accepted public offer",
+          "correct": false,
+          "rationale": "The opposite — amending an accepted public offer converts it to a private offer and it no longer auto-renews."
+        }
+      ],
+      "explanation": "Three mechanisms continue an agreement and two of them are called automatic renewal, which is where the confusion comes from. Only the first two are genuinely automatic: renewal terms the **Seller** authors into a private offer, and auto-renewal the **Buyer** switches on for a public contract subscription. A renewal offer is a new offer that must be accepted.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/renewals.md",
+          "section": "Only the first two are automatic"
+        }
+      ]
+    },
+    {
+      "id": "amendment-kills-autorenew",
+      "type": "boolean",
+      "prompt": "Amending an accepted public offer preserves the Buyer's automatic renewal setting.",
+      "tags": [
+        "renewals",
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "Amending an accepted public offer converts it into a private offer, and a private offer does not auto-renew. Automatic renewal requires the Buyer to be subscribed to a *public* offer, so the Buyer's setting is destroyed and the resulting private offer carries only whatever renewal terms the Seller authored into it — which, for an amendment, is usually none. A single amendment can turn a self-renewing customer into one who has to be re-sold.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/renewals.md",
+          "heading": "Auto-renewal on a public offer"
+        }
+      ]
+    },
+    {
+      "id": "renewal-uplift-compounds",
+      "type": "single",
+      "prompt": "A private offer renews annually with a fixed 10% uplift, starting at $100. What does the Buyer pay in the third cycle?",
+      "tags": [
+        "renewals",
+        "pricing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "$121 — the uplift compounds",
+          "correct": true,
+          "rationale": "$100 → $110 → $121. The percentage applies to the previous cycle's price, not the original."
+        },
+        {
+          "id": "b",
+          "text": "$120 — 10% of the original price is added each cycle",
+          "correct": false,
+          "rationale": "That would be simple rather than compound growth, which is not how the fixed percentage uplift behaves."
+        },
+        {
+          "id": "c",
+          "text": "$110 — the uplift applies once, at the first renewal",
+          "correct": false,
+          "rationale": "A fixed percentage uplift applies evenly across all dimensions *every* cycle."
+        },
+        {
+          "id": "d",
+          "text": "$100 — a fixed uplift caps the price at the original figure",
+          "correct": false,
+          "rationale": "That describes the \"no price uplift\" option, which renews at the same price every cycle."
+        }
+      ],
+      "explanation": "A fixed percentage uplift compounds: one percentage applied evenly across all dimensions every cycle, so $100 becomes $110 and then $121. The alternatives are no uplift, a percentage *range* where the Seller finalises the figure before each cycle's adjustment deadline (missing it silently applies a default uplift), or no renewal at all. A renewal maximum can cap how many times the agreement renews.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/renewals.md",
+          "heading": "Renewal terms on a private offer"
+        }
+      ]
+    },
+    {
+      "id": "express-private-offers",
+      "type": "multi",
+      "prompt": "Which statements about Express Private Offers are correct? (Select all that apply)",
+      "tags": [
+        "saas",
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "They are available only for SaaS Contract and SaaS Contract with Consumption Products",
+          "correct": true,
+          "rationale": "Not for Usage-based SaaS, and not for any other listing type."
+        },
+        {
+          "id": "b",
+          "text": "They are driven by rate cards the Seller configures once and the system applies per Buyer",
+          "correct": true,
+          "rationale": "Predefined discounts plus qualification criteria."
+        },
+        {
+          "id": "c",
+          "text": "When two discounts apply they compound multiplicatively, so 10% plus 5% yields 14.5%",
+          "correct": true,
+          "rationale": "Not 15% — the second discount applies to the already-discounted figure."
+        },
+        {
+          "id": "d",
+          "text": "Exceeding the global TCV maximum routes the Buyer to a sales-assisted workflow",
+          "correct": true,
+          "rationale": "This is what keeps large deals in front of a human — unlike exceeding a rate card's highest tier, which simply yields 0% discount."
+        },
+        {
+          "id": "e",
+          "text": "Dimension-based and TCV-based rate cards can be combined with each other",
+          "correct": false,
+          "rationale": "They cannot — they represent conflicting pricing approaches. Either one may be combined with buyer-profile qualification."
+        },
+        {
+          "id": "f",
+          "text": "The usage component of a Contract + Usage Product can be discounted through a rate card",
+          "correct": false,
+          "rationale": "It cannot, and stays at public offer pricing."
+        }
+      ],
+      "explanation": "Express Private Offers automate negotiation for standard deals while routing unusual or high-value requests to a human. The mechanism is a rate card — dimension-based, TCV-based, or buyer-profile based. The two numeric types are mutually exclusive; either can pair with profile qualification. Two behaviours are easy to get wrong: discounts compound multiplicatively, and exceeding the *global* TCV maximum routes to sales rather than simply yielding no discount.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/saas.md",
+          "heading": "Express Private Offers"
+        }
+      ]
+    },
+    {
+      "id": "amendments-scope",
+      "type": "single",
+      "prompt": "Which Products can have an accepted agreement amended, in the sense of the Seller creating a new offer that replaces it?",
+      "tags": [
+        "saas",
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "SaaS Contract and SaaS Contract with Consumption only",
+          "correct": true,
+          "rationale": "Usage-based SaaS, AMI, container, server contract and Professional Services all appear on the Agreements tab but cannot be amended."
+        },
+        {
+          "id": "b",
+          "text": "Any Product using contract pricing, regardless of listing type",
+          "correct": false,
+          "rationale": "Server contracts use contract pricing and still cannot be amended — changing terms there means issuing an entirely new offer."
+        },
+        {
+          "id": "c",
+          "text": "Any Product that appears on the Agreements tab",
+          "correct": false,
+          "rationale": "Appearing on that tab is not the same as being amendable; most listing types appear there and cannot be amended."
+        },
+        {
+          "id": "d",
+          "text": "All listing types except Professional Services",
+          "correct": false,
+          "rationale": "Too broad — AMI, container and usage-based SaaS are also excluded."
+        }
+      ],
+      "explanation": "Upgrading, renewing and amending are one mechanism under three names: a new offer replaces an active agreement. It is limited to SaaS Contract and SaaS Contract with Consumption. One narrow exception sits outside the mechanism entirely — a Buyer on an AMI `Hourly with Annual` plan can change their own agreement without the Seller creating any offer, as long as the prorated cost of the change is greater than zero.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/saas.md",
+          "heading": "Amendments and Renewals"
+        },
+        {
+          "file": "AWS Marketplace/server_ami.md",
+          "heading": "Annual agreement amendments (AMI)"
+        }
+      ]
+    },
+    {
+      "id": "delivery-method-vs-fulfillment-option",
+      "type": "single",
+      "prompt": "What is the difference between a Delivery Method and a Fulfillment Option?",
+      "tags": [
+        "fundamentals",
+        "listing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A Delivery Method is the kind of artifact AWS defines; a Fulfillment Option is one concrete way the Seller lets a Buyer deploy it, built on a single delivery method",
+          "correct": true,
+          "rationale": "A method is a type; an option is an instance. One Product can carry several options over the same method."
+        },
+        {
+          "id": "b",
+          "text": "They are the same thing; AWS documentation uses both names interchangeably",
+          "correct": false,
+          "rationale": "Fulfillment option and *delivery option* are interchangeable, but a delivery *method* is the type the option is built on."
+        },
+        {
+          "id": "c",
+          "text": "A Delivery Method is chosen by the Buyer; a Fulfillment Option is chosen by the Seller",
+          "correct": false,
+          "rationale": "The Seller authors the options; the Buyer picks among them after subscribing."
+        },
+        {
+          "id": "d",
+          "text": "A Delivery Method applies to software and a Fulfillment Option applies to services",
+          "correct": false,
+          "rationale": "Professional Services has a Fulfillment option too — it is just delivered manually."
+        }
+      ],
+      "explanation": "A Delivery Method is the *kind* of artifact the Buyer receives, chosen from a fixed AWS list — an AMI, a container image or Helm chart, a dataset, API credentials. A Fulfillment Option (also called a delivery option) is one specific way a Buyer can deploy the Product, built on a single delivery method. The distinction matters because one Product can support several options over the same method: a Container Product can publish two different Helm charts, one for production topology and one for evaluation.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/overview.md",
+          "heading": "Terminology"
+        },
+        {
+          "file": "AWS Marketplace/server_container.md",
+          "heading": "Fulfillment"
+        }
+      ]
+    },
+    {
+      "id": "offer-vs-agreement",
+      "type": "boolean",
+      "prompt": "Amendments target offers, not agreements.",
+      "tags": [
+        "offers",
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "It is the other way around: amendments always target *agreements*, never offers. An **offer** is a set of commercial terms — pricing model, price per unit, duration, payment schedule, EULA — and may be public or private. An **agreement** is an offer a Buyer has accepted. The distinction is precisely why the vocabulary matters: an amendment creates a new offer that replaces an active agreement, and the Buyer chooses between accepting it and continuing the original.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/overview.md",
+          "heading": "Terminology"
+        },
+        {
+          "file": "AWS Marketplace/saas.md",
+          "heading": "Amendments and Renewals"
+        }
+      ]
+    },
+    {
+      "id": "scmp",
+      "type": "single",
+      "prompt": "What is the SCMP, and why would a Seller use it?",
+      "tags": [
+        "fundamentals",
+        "legal"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The Standard Contract for AWS Marketplace — a EULA template Buyers' legal teams have often already reviewed, taking a legal review out of the sales cycle",
+          "correct": true,
+          "rationale": "The value is procurement speed, not the terms themselves."
+        },
+        {
+          "id": "b",
+          "text": "A standard pricing template for contract-based listings",
+          "correct": false,
+          "rationale": "It is a EULA template, not a pricing one."
+        },
+        {
+          "id": "c",
+          "text": "The mandatory agreement every Seller signs with AWS to list",
+          "correct": false,
+          "rationale": "It is an option a Seller may use *in place of their own* EULA, not a seller agreement."
+        },
+        {
+          "id": "d",
+          "text": "AWS Data Exchange's default data subscription agreement",
+          "correct": false,
+          "rationale": "That is the DSA, which fills the same role specifically within AWS Data Exchange."
+        }
+      ],
+      "explanation": "The Standard Contract for AWS Marketplace is a EULA template AWS wrote that a Seller can use instead of their own. Its value is commercial: Buyers' legal teams have frequently reviewed it already, so it removes a legal review from the sales cycle. AWS Data Exchange has its own equivalent, the Data Subscription Agreement.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/overview.md",
+          "heading": "Terminology"
+        },
+        {
+          "file": "AWS Marketplace/data_product.md",
+          "heading": "Pricing Models (Data)"
+        }
+      ]
+    },
+    {
+      "id": "change-request",
+      "type": "boolean",
+      "prompt": "Listing changes such as new versions, price changes and visibility changes take effect immediately once submitted.",
+      "tags": [
+        "listing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "Any listing change goes to AWS as a **Change Request** for approval, and requests are queued and reviewed — so changes are not instant. The programmatic equivalent is the Catalog API's `StartChangeSet`: every console change request is a change set underneath, and `DescribeChangeSet` / `ListChangeSets` report status including validation errors.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/overview.md",
+          "heading": "Terminology"
+        },
+        {
+          "file": "AWS Marketplace/marketplace_apis.md",
+          "heading": "AWS Marketplace Catalog API"
+        }
+      ]
+    },
+    {
+      "id": "pricing-dimension-shape",
+      "type": "single",
+      "prompt": "How does a Pricing Dimension differ between a Contract-based and a Usage-based Product?",
+      "tags": [
+        "pricing",
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A contract dimension carries a quantity, a price and a duration; a usage dimension carries only a price per unit",
+          "correct": true,
+          "rationale": "Quantity is unknown until the Buyer consumes it."
+        },
+        {
+          "id": "b",
+          "text": "A contract dimension carries only a price; a usage dimension adds quantity and duration",
+          "correct": false,
+          "rationale": "Reversed."
+        },
+        {
+          "id": "c",
+          "text": "Both carry quantity, price and duration; only the billing timing differs",
+          "correct": false,
+          "rationale": "A usage dimension cannot carry a quantity in advance."
+        },
+        {
+          "id": "d",
+          "text": "Neither carries a price — prices always live on the offer",
+          "correct": false,
+          "rationale": "That is true of Professional Services specifically, not of dimensions generally."
+        }
+      ],
+      "explanation": "A Pricing Dimension is the unit of value the Buyer bought — a seat, a licence, a scanned host, throughput in GB — like a line item on an itemized receipt. For Contract-based pricing it carries a quantity, a price and a duration, because the entitlement is known in advance. For Usage-based pricing it carries only a price per unit, because the quantity is not known until consumption happens.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/overview.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "express-rate-card-phases",
+      "type": "single",
+      "prompt": "In the Express Private Offers workflow, what happens after a Buyer chooses \"Get Express Private Offer\"?",
+      "tags": [
+        "saas",
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "An AI agent qualifies them against the Seller's criteria, asking questions where profile-based qualification is configured",
+          "correct": true,
+          "rationale": "Qualification sits between the request and the generated offer."
+        },
+        {
+          "id": "b",
+          "text": "An offer is generated immediately with all applicable discounts",
+          "correct": false,
+          "rationale": "That is the third phase, and only for Buyers who qualify."
+        },
+        {
+          "id": "c",
+          "text": "The request is routed to the Seller's sales team for review",
+          "correct": false,
+          "rationale": "That happens only for Buyers who fall outside the criteria."
+        },
+        {
+          "id": "d",
+          "text": "The Seller is notified to configure a rate card",
+          "correct": false,
+          "rationale": "Rate card setup is phase one, done once in advance."
+        }
+      ],
+      "explanation": "Three phases: the Seller configures a rate card once (base pricing, dimension descriptions of at least 250 characters, contract duration limits, EULA requirements, expiration timeframes); the Buyer requests an offer and an AI agent qualifies them; qualifying Buyers get an instant offer with discounts applied, while those outside the criteria are redirected to a sales-assisted workflow.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/saas.md",
+          "heading": "Express Private Offers"
+        }
+      ]
+    },
+    {
+      "id": "buyer-profile-rate-card",
+      "type": "multi",
+      "prompt": "Which statements about buyer-profile-based rate cards are correct? (Select all that apply)",
+      "tags": [
+        "saas",
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The Seller describes their qualification strategy in natural language and the system turns it into a Buyer questionnaire",
+          "correct": true,
+          "rationale": "Which is why complex rules need very specific wording."
+        },
+        {
+          "id": "b",
+          "text": "Up to five qualifiers are supported",
+          "correct": true,
+          "rationale": "The documented limit."
+        },
+        {
+          "id": "c",
+          "text": "Qualifiers can both grant extra discount and exclude Buyers entirely",
+          "correct": true,
+          "rationale": "Two different uses of the same mechanism."
+        },
+        {
+          "id": "d",
+          "text": "AWS does not verify the Buyer's answers",
+          "correct": true,
+          "rationale": "Self-reported attributes are taken at face value."
+        },
+        {
+          "id": "e",
+          "text": "Qualifications may discriminate on protected characteristics if the Seller's policy allows",
+          "correct": false,
+          "rationale": "Explicitly must not."
+        }
+      ],
+      "explanation": "Buyer-profile rate cards discount on self-reported attributes, with up to five qualifiers that can grant discount or exclude a Buyer. Two caveats matter in practice: AWS does not verify the answers, and because a natural language description drives the questionnaire, complex dimension rules need extremely specific wording to be interpreted correctly. Profile qualification can combine with either dimension-based or TCV-based cards.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/saas.md",
+          "heading": "Express Private Offers"
+        }
+      ]
+    },
+    {
+      "id": "amendment-timing",
+      "type": "multi",
+      "prompt": "Which statements about an amended offer are correct? (Select all that apply)",
+      "tags": [
+        "saas",
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It appears on the Private offers page within roughly 45 minutes",
+          "correct": true,
+          "rationale": "Not instant, but same-hour."
+        },
+        {
+          "id": "b",
+          "text": "If the Buyer accepts, remaining scheduled payments from the previous agreement are cancelled",
+          "correct": true,
+          "rationale": "Existing invoices are unaffected; pending schedules are replaced."
+        },
+        {
+          "id": "c",
+          "text": "If the Buyer does not accept before expiry, the original agreement continues unchanged",
+          "correct": true,
+          "rationale": "Declining is safe for the Buyer."
+        },
+        {
+          "id": "d",
+          "text": "It cannot carry a future start date",
+          "correct": true,
+          "rationale": "It targets an active agreement and takes effect on acceptance."
+        },
+        {
+          "id": "e",
+          "text": "The seller of record can be changed from the original agreement",
+          "correct": false,
+          "rationale": "Explicitly cannot be changed."
+        }
+      ],
+      "explanation": "An amendment is a new offer replacing an active agreement, and the Buyer chooses between it and continuing as they are. A Seller can change service dates, dimensions, currency, payment schedule, usage dimensions, renewal status, EULA and expiration — but not the seller of record. Because it targets a live agreement it cannot have a future start date.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/saas.md",
+          "heading": "Amendments and Renewals"
+        }
+      ]
+    },
+    {
+      "id": "contract-durations",
+      "type": "multi",
+      "prompt": "Which contract durations are available on a public SaaS contract offer? (Select all that apply)",
+      "tags": [
+        "pricing",
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "1 month",
+          "correct": true,
+          "rationale": "The shortest public term."
+        },
+        {
+          "id": "b",
+          "text": "12 months",
+          "correct": true,
+          "rationale": "The common annual term."
+        },
+        {
+          "id": "c",
+          "text": "24 months",
+          "correct": true,
+          "rationale": "Two years."
+        },
+        {
+          "id": "d",
+          "text": "36 months",
+          "correct": true,
+          "rationale": "Three years."
+        },
+        {
+          "id": "e",
+          "text": "A custom duration in months, set per deal",
+          "correct": false,
+          "rationale": "Custom durations in months are a *private offer* capability, available to Professional Services and other contract Products."
+        }
+      ],
+      "explanation": "A public SaaS contract commits the Buyer to a specified quantity for 1, 12, 24 or 36 months, billed at purchase time. Custom durations come from private offers — and the ceilings differ sharply by listing type: AMI contract pricing reaches 144 months privately, and `Hourly with Multi-Annual` reaches 12 years.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/saas.md",
+          "heading": "Pricing Models"
+        },
+        {
+          "file": "AWS Marketplace/private_offers.md",
+          "heading": "Offer Configuration"
+        }
+      ]
+    },
+    {
+      "id": "offer-currency-region",
+      "type": "single",
+      "prompt": "A private offer is denominated in a particular currency. What must be true of the Buyer?",
+      "tags": [
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "They must have an AWS account in a Region where that currency is supported",
+          "correct": true,
+          "rationale": "Currency support is Region-bound."
+        },
+        {
+          "id": "b",
+          "text": "They must be invoiced through a local AWS reseller",
+          "correct": false,
+          "rationale": "Not a stated requirement."
+        },
+        {
+          "id": "c",
+          "text": "They must accept the offer in that currency's business hours",
+          "correct": false,
+          "rationale": "Expiration is a UTC timestamp, unrelated to currency."
+        },
+        {
+          "id": "d",
+          "text": "Nothing — AWS converts at the prevailing rate",
+          "correct": false,
+          "rationale": "No conversion is described; the account's Region must support the currency."
+        }
+      ],
+      "explanation": "Offer currency is one of the settings a Seller chooses when creating a private offer, and it constrains who can accept: the Buyer must hold an AWS account in a Region where that currency is supported. Worth contrasting with Data Products, where the only supported currency is USD.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/private_offers.md",
+          "heading": "Offer Configuration"
+        },
+        {
+          "file": "AWS Marketplace/data_product.md",
+          "heading": "Pricing Models (Data)"
+        }
+      ]
+    },
+    {
+      "id": "private-marketplace-account",
+      "type": "single",
+      "prompt": "A Buyer's account is managed through a private marketplace. What must a private offer include?",
+      "tags": [
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Both the Buyer's account and the account holding their private marketplace administrator",
+          "correct": true,
+          "rationale": "Otherwise the administrator cannot approve the product for their catalog."
+        },
+        {
+          "id": "b",
+          "text": "Only the Buyer's account — the administrator inherits visibility",
+          "correct": false,
+          "rationale": "Visibility does not propagate; the admin account must be named."
+        },
+        {
+          "id": "c",
+          "text": "A separate offer for the administrator",
+          "correct": false,
+          "rationale": "One offer naming both accounts, not two offers."
+        },
+        {
+          "id": "d",
+          "text": "The private marketplace's own AWS Organizations ID",
+          "correct": false,
+          "rationale": "Offers name AWS account IDs, up to 24 of them."
+        }
+      ],
+      "explanation": "Private offers are visible only to the accounts they were extended to, and a Buyer inside a private marketplace needs their administrator to be able to see it too — so both the Buyer's account and the private marketplace administrator's account must be included. It is one of several constraints worth checking before publishing, alongside the $250,000 approval threshold and the exclusion of second-party Products, AMI monthly Products, and multi-AMI CloudFormation delivery.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/private_offers.md",
+          "heading": "Constraints"
+        }
+      ]
+    },
+    {
+      "id": "offer-url-distribution",
+      "type": "single",
+      "prompt": "How does a Buyer receive a published private offer?",
+      "tags": [
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The Seller copies the offer URL from the Manage private offers page and sends it to them",
+          "correct": true,
+          "rationale": "A unique offer ID and URL are generated when the Seller specifies the Product."
+        },
+        {
+          "id": "b",
+          "text": "AWS emails it to every named account automatically",
+          "correct": false,
+          "rationale": "Distribution is the Seller's job."
+        },
+        {
+          "id": "c",
+          "text": "It appears on the Product's public listing page for those accounts",
+          "correct": false,
+          "rationale": "The public offer appears on the listing page; a private offer is visible only to named accounts once they are signed in."
+        },
+        {
+          "id": "d",
+          "text": "The Buyer requests it through the Request Private Offer button",
+          "correct": false,
+          "rationale": "That button belongs to the Express Private Offers flow, which requires separate onboarding."
+        }
+      ],
+      "explanation": "Specifying the Product generates a unique offer ID and URL, and once published the Seller copies that URL from the **Manage private offers** page and sends it to the Buyer. The Buyer must be signed into one of the named accounts to see it, and an offer that has not yet been accepted can still be edited.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/private_offers.md",
+          "heading": "Offer Configuration"
+        }
+      ]
+    },
+    {
+      "id": "one-subscription-at-a-time",
+      "type": "boolean",
+      "prompt": "A Buyer who receives a private offer can choose between it and the public offer, but can only be subscribed to one at a time.",
+      "tags": [
+        "offers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "The Buyer chooses between the private offer and the public one, and can hold only one subscription at a time. Once accepted, an offer becomes an **Agreement** — which is the distinction that matters downstream, because amendments target agreements rather than offers.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/private_offers.md",
+          "section": "A Buyer receiving a private offer can choose between it and the public offer"
+        },
+        {
+          "file": "AWS Marketplace/overview.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "renewal-decision-deadline",
+      "type": "multi",
+      "prompt": "Which statements about renewal terms on a private offer are correct? (Select all that apply)",
+      "tags": [
+        "renewals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The Buyer opts in when first accepting the offer",
+          "correct": true,
+          "rationale": "Opt-in at acceptance."
+        },
+        {
+          "id": "b",
+          "text": "The Buyer can change that preference any time before the renewal decision deadline",
+          "correct": true,
+          "rationale": "Not locked at acceptance."
+        },
+        {
+          "id": "c",
+          "text": "The Seller can disable renewal before the same deadline",
+          "correct": true,
+          "rationale": "Either side can change its mind up to that point."
+        },
+        {
+          "id": "d",
+          "text": "A renewal maximum can cap how many times the agreement renews, or be unlimited",
+          "correct": true,
+          "rationale": "A separate ceiling from the pricing behaviour."
+        },
+        {
+          "id": "e",
+          "text": "It is available for any Pricing Model",
+          "correct": false,
+          "rationale": "Only offers using contract pricing — SaaS contracts, server contracts, AMI and Container contracts, and Professional Services."
+        }
+      ],
+      "explanation": "Renewal terms built into a private offer let an agreement renew at its end date with no action from anyone. Both sides retain flexibility until the **renewal decision deadline**: the Buyer can change their opt-in, and the Seller can disable it. A renewal maximum caps the number of cycles. The whole mechanism requires contract pricing.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/renewals.md",
+          "heading": "Renewal terms on a private offer"
+        }
+      ]
+    },
+    {
+      "id": "percentage-range-tradeoff",
+      "type": "single",
+      "prompt": "Why would a Seller choose a percentage *range* rather than a fixed uplift for renewals, and what does it cost them?",
+      "tags": [
+        "renewals",
+        "pricing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It suits deals where the uplift shouldn't be decided years ahead — such as indexing to CPI — but commits the Seller to an annual obligation, since missing the adjustment deadline silently applies a default uplift",
+          "correct": true,
+          "rationale": "Flexibility bought with a recurring deadline."
+        },
+        {
+          "id": "b",
+          "text": "It compounds more favourably than a fixed percentage",
+          "correct": false,
+          "rationale": "Compounding is a property of the fixed percentage option."
+        },
+        {
+          "id": "c",
+          "text": "It allows the Seller to change the uplift after a cycle has begun",
+          "correct": false,
+          "rationale": "The figure is finalised before each cycle's adjustment deadline."
+        },
+        {
+          "id": "d",
+          "text": "It removes the need for a renewal maximum",
+          "correct": false,
+          "rationale": "Unrelated — the maximum caps cycle count either way."
+        }
+      ],
+      "explanation": "A percentage range lets the Seller set a minimum and maximum and finalise the actual figure before each cycle's **adjustment deadline** — one flat percentage or a different uplift per dimension, as long as each stays in range. AWS gives CPI indexing as the motivating example. The cost is an annual obligation: miss the deadline and a **default uplift** applies silently. A fixed percentage is less work and more predictable for both sides.",
+      "citations": [
+        {
+          "file": "AWS Marketplace/renewals.md",
+          "heading": "Renewal terms on a private offer"
+        }
+      ]
+    }
+  ]
+}

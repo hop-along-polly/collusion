@@ -1,0 +1,1351 @@
+{
+  "id": "claude-101",
+  "title": "Claude 101",
+  "cards": [
+    {
+      "id": "claude-guiding-principles",
+      "type": "multi",
+      "prompt": "What are Claude's guiding design principles, and Anthropic's goals for fine-tuning? (Select all that apply)",
+      "tags": [
+        "claude-101"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Helpful",
+          "correct": true,
+          "rationale": "One of the three."
+        },
+        {
+          "id": "b",
+          "text": "Harmless",
+          "correct": true,
+          "rationale": "One of the three."
+        },
+        {
+          "id": "c",
+          "text": "Honest",
+          "correct": true,
+          "rationale": "One of the three."
+        },
+        {
+          "id": "d",
+          "text": "Deterministic",
+          "correct": false,
+          "rationale": "Non-determinism is an inherent limitation of these systems, not a design goal."
+        },
+        {
+          "id": "e",
+          "text": "Autonomous",
+          "correct": false,
+          "rationale": "Autonomy is how AWS distinguishes an AI *agent*; it is not one of Claude's guiding principles."
+        }
+      ],
+      "explanation": "Claude's guiding principles are to be helpful, harmless and honest — and the same three are named as Anthropic's goals when fine-tuning their models. Fine-tuning itself is the technique of using domain-specific training data to produce a model better suited to a particular use case, such as generating code.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Claudes Guiding Design Principles"
+        },
+        {
+          "file": "Anthropic Academy/ai_fluency.md",
+          "heading": "Fine-Tuning"
+        }
+      ]
+    },
+    {
+      "id": "common-ai-challenges",
+      "type": "single",
+      "prompt": "Claude confidently states something that turns out to be wrong. What does the troubleshooting table recommend?",
+      "tags": [
+        "claude-101",
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Enable features like web search and specify the confidence level Claude should have before presenting something as fact",
+          "correct": true,
+          "rationale": "Plus the standing advice to always verify key facts independently."
+        },
+        {
+          "id": "b",
+          "text": "Include examples of the output format you want",
+          "correct": false,
+          "rationale": "That is the fix for Claude not following the output format."
+        },
+        {
+          "id": "c",
+          "text": "Specify word or paragraph counts in the goals",
+          "correct": false,
+          "rationale": "That is the fix for a response being too long or too short."
+        },
+        {
+          "id": "d",
+          "text": "Include audience, role and goals in the prompt",
+          "correct": false,
+          "rationale": "That is the fix for generic responses."
+        }
+      ],
+      "explanation": "Each common problem has its own lever. Generic responses → add audience, role and goals. Wrong length → specify word or paragraph counts. Format ignored → include examples of the format. Hallucination → enable web search, specify a confidence threshold, and verify key facts independently. Wrong tone → state the tone and make sure your examples match it.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Common AI Challenges"
+        }
+      ]
+    },
+    {
+      "id": "prompt-framing",
+      "type": "single",
+      "prompt": "The Prompting Basics guidance frames a prompt in three moves. What are they, in order?",
+      "tags": [
+        "claude-101",
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Set the stage, define the task, specify rules",
+          "correct": true,
+          "rationale": "Context and role first, then the action, then style, tone and examples."
+        },
+        {
+          "id": "b",
+          "text": "Define the task, set the stage, specify rules",
+          "correct": false,
+          "rationale": "Context comes first — the task lands better once the role and objectives are established."
+        },
+        {
+          "id": "c",
+          "text": "Specify rules, set the stage, define the task",
+          "correct": false,
+          "rationale": "Rules about style, tone and examples come last."
+        },
+        {
+          "id": "d",
+          "text": "Delegate, describe, discern",
+          "correct": false,
+          "rationale": "Those are AI Fluency competencies, not the prompt-framing moves."
+        }
+      ],
+      "explanation": "The framing is: **set the stage** (your role and objectives, plus any context about your work), **define the task** (the actions you want taken), then **specify rules** (style, tone, examples). Alongside it sits the iteration mindset — treat the first prompt as a starting point, give specific feedback on responses to refine the output, and know when it is time to start over.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Prompting Basics"
+        }
+      ]
+    },
+    {
+      "id": "desktop-app-modes",
+      "type": "single",
+      "prompt": "Work that draws on multiple information sources, requires multi-tasking, and produces a final deliverable such as a presentation. Which Claude desktop mode?",
+      "tags": [
+        "claude-101",
+        "apps"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Cowork",
+          "correct": true,
+          "rationale": "Exactly its stated use case, and it multitasks by breaking a problem into subtasks handled by parallel subagents."
+        },
+        {
+          "id": "b",
+          "text": "Chat",
+          "correct": false,
+          "rationale": "Chat is for brainstorming, drafting messages or documents, and working through problems collaboratively."
+        },
+        {
+          "id": "c",
+          "text": "Code",
+          "correct": false,
+          "rationale": "Code is a full IDE running in the desktop app."
+        },
+        {
+          "id": "d",
+          "text": "Research Mode",
+          "correct": false,
+          "rationale": "Research Mode is a tool that changes how Claude finds and analyzes information — not one of the three desktop modes."
+        }
+      ],
+      "explanation": "The desktop app has three modes. **Chat** for brainstorming, drafts and collaborative problem solving. **Cowork** for multi-source, multi-tasking work producing a deliverable — it splits a complex problem into subtasks run by parallel subagents, and adds folder access, scheduled tasks, dispatch, projects, browser and computer use, plugins, and a sandboxed protected environment. **Code** is a full IDE, supporting `local` and `remote` work locations and three interaction modes: Ask, Code and Plan.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Cowork"
+        },
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Claude Desktop App"
+        }
+      ]
+    },
+    {
+      "id": "artifact-criteria",
+      "type": "multi",
+      "prompt": "Claude automatically creates an Artifact when the content meets certain criteria. Which are they? (Select all that apply)",
+      "tags": [
+        "claude-101",
+        "artifacts"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It is significant and self-contained, typically over 15 lines",
+          "correct": true,
+          "rationale": "The size and independence threshold."
+        },
+        {
+          "id": "b",
+          "text": "It is something you will likely want to edit, iterate on or reuse",
+          "correct": true,
+          "rationale": "Reusability."
+        },
+        {
+          "id": "c",
+          "text": "It represents stand-alone complex content",
+          "correct": true,
+          "rationale": "Complexity in its own right."
+        },
+        {
+          "id": "d",
+          "text": "It is something you may want to reference later",
+          "correct": true,
+          "rationale": "Durability."
+        },
+        {
+          "id": "e",
+          "text": "It contains code in a language Claude can execute",
+          "correct": false,
+          "rationale": "Executability is not a criterion. Code snippets become artifacts because they are long and reusable, and React components are a distinct artifact type because they can be rendered and interacted with."
+        }
+      ],
+      "explanation": "Artifacts are interactive outputs — documents, code snippets, HTML, SVG images, Mermaid diagrams, and React components — created so that long content does not fill up the context window. The four criteria are significance and self-containment (typically over 15 lines), likely editing or reuse, stand-alone complexity, and later reference. React components are called out as distinct from code snippets because they can be rendered and interacted with inside Claude.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Artifacts"
+        }
+      ]
+    },
+    {
+      "id": "project-features",
+      "type": "multi",
+      "prompt": "Which statements about Claude Projects are correct? (Select all that apply)",
+      "tags": [
+        "claude-101",
+        "projects"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Knowledge is an internal knowledge base referenced across all chats in the project",
+          "correct": true,
+          "rationale": "Uploaded docs improve Claude's understanding of the project."
+        },
+        {
+          "id": "b",
+          "text": "Project Instructions are referenced with every chat, and are a good place to define role, tone and audience",
+          "correct": true,
+          "rationale": "The project-wide equivalent of a system prompt."
+        },
+        {
+          "id": "c",
+          "text": "RAG is enabled automatically as the knowledge base approaches the context window limit, expanding capacity roughly 10x",
+          "correct": true,
+          "rationale": "Which is why a project's knowledge base can outgrow a single context window."
+        },
+        {
+          "id": "d",
+          "text": "Sharing offers View, Edit and Owner permission sets",
+          "correct": true,
+          "rationale": "View can read and chat; Edit can modify the KB, instructions and members; Owner has full ownership including org visibility."
+        },
+        {
+          "id": "e",
+          "text": "A member with View permission can change project settings",
+          "correct": false,
+          "rationale": "View can see contents, access the knowledge base and chat, but cannot change project settings."
+        }
+      ],
+      "explanation": "A Project is a self-contained workspace with its own settings, knowledge base and chat history. Its three key features are Knowledge (a KB referenced across every chat), Project Instructions (referenced every chat — the natural home for role, tone and audience), and auto-enabled RAG once the KB nears the context window limit, expanding capacity about tenfold. Sharing comes in View, Edit and Owner, and in Cowork, Projects can only be shared on a Claude for Work plan.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Projects"
+        }
+      ]
+    },
+    {
+      "id": "research-mode",
+      "type": "multi",
+      "prompt": "How does Research Mode change the way Claude finds and analyzes information? (Select all that apply)",
+      "tags": [
+        "claude-101",
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Multiple searches are performed instead of one",
+          "correct": true,
+          "rationale": "Breadth rather than a single query."
+        },
+        {
+          "id": "b",
+          "text": "Searches build on each other, with Claude deciding what to investigate next",
+          "correct": true,
+          "rationale": "The searches are adaptive rather than planned up front."
+        },
+        {
+          "id": "c",
+          "text": "The topic is researched from multiple angles and viewpoints",
+          "correct": true,
+          "rationale": "Giving a complete overview rather than one perspective."
+        },
+        {
+          "id": "d",
+          "text": "Citations are included so the original sources can be referenced",
+          "correct": true,
+          "rationale": "Traceability back to the source."
+        },
+        {
+          "id": "e",
+          "text": "It completes faster than a normal search because work runs in parallel",
+          "correct": false,
+          "rationale": "The opposite — Research Mode takes 5-45 minutes precisely because it does far more work."
+        }
+      ],
+      "explanation": "Research Mode forces Claude to examine multiple sources and cite them, and it takes 5-45 minutes. Its four behaviours are: many searches instead of one, searches that build on each other with Claude choosing what to pursue next, coverage from multiple angles, and citations in the response. It sits alongside the other Claude tools — web search, connectors, extended thinking, and model selection.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Research Mode"
+        },
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Claude Tools"
+        }
+      ]
+    },
+    {
+      "id": "connector-types",
+      "type": "single",
+      "prompt": "What is the difference between a Web connector and a Desktop Extension connector?",
+      "tags": [
+        "claude-101",
+        "connectors"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Web connects to a cloud service such as Gmail or Notion; Desktop Extension connects to a tool on your computer such as file access or browser control",
+          "correct": true,
+          "rationale": "The distinction is where the thing being connected to lives."
+        },
+        {
+          "id": "b",
+          "text": "Web connectors work in the browser app; Desktop Extensions work in the desktop app",
+          "correct": false,
+          "rationale": "The split is about the target, not about which Claude client you use."
+        },
+        {
+          "id": "c",
+          "text": "Web connectors are read-only; Desktop Extensions can write",
+          "correct": false,
+          "rationale": "Access is governed by the permissions you granted when configuring the connector, in both cases."
+        },
+        {
+          "id": "d",
+          "text": "Web connectors require an admin to enable them; Desktop Extensions do not",
+          "correct": false,
+          "rationale": "Admin enablement is a requirement of Enterprise Search, not of Web connectors generally."
+        }
+      ],
+      "explanation": "Connectors are how Claude reaches third-party tools and services, and they split by where the target lives: **Web** for cloud services like Gmail or Notion, **Desktop Extension** for things on your own computer like file access or browser control. Either way, a connector can only access what you granted permission for when configuring it.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Types of Connectors"
+        }
+      ]
+    },
+    {
+      "id": "enterprise-search",
+      "type": "boolean",
+      "prompt": "Enterprise Search is essentially a pre-built Project for the whole organization, and requires an admin to enable it before anyone can use it.",
+      "tags": [
+        "claude-101"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "Enterprise Search adds a dedicated \"Ask <Your Org Name>\" entry to the Claude desktop app sidebar, and is described as essentially a pre-built Project for the entire organization. There are two setup steps, not one: an admin enables it, and then each person who wants to use it authenticates with their personal account.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Enterprise Search"
+        }
+      ]
+    },
+    {
+      "id": "what-is-claude",
+      "type": "multi",
+      "prompt": "How can Claude be accessed, per the Claude 101 notes? (Select all that apply)",
+      "tags": [
+        "fundamentals"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Directly from the API",
+          "correct": true,
+          "rationale": "Claude is described as the API for interacting with Anthropic's LLMs."
+        },
+        {
+          "id": "b",
+          "text": "Through tools like Claude Code",
+          "correct": true,
+          "rationale": "One of the named access paths."
+        },
+        {
+          "id": "c",
+          "text": "Through Claude CoWork",
+          "correct": true,
+          "rationale": "Also named."
+        },
+        {
+          "id": "d",
+          "text": "Through third-party integrations such as `@Claude` in Slack",
+          "correct": true,
+          "rationale": "The integration example given."
+        },
+        {
+          "id": "e",
+          "text": "By downloading model weights to run locally",
+          "correct": false,
+          "rationale": "Not an access path — Anthropic's models are served, not distributed."
+        }
+      ],
+      "explanation": "Claude is framed as the API for interacting with Anthropic's LLMs — Haiku, Sonnet, Opus — reachable directly, through tools like Claude Code and CoWork, and through third-party integrations such as `@Claude` in Slack. The same model tier can therefore show up behind several very different interfaces.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "section": "What is Claude?"
+        }
+      ]
+    },
+    {
+      "id": "claude-tools-list",
+      "type": "multi",
+      "prompt": "Which are listed as Claude tools? (Select all that apply)",
+      "tags": [
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Web-search — getting current data absent from training data",
+          "correct": true,
+          "rationale": "The standard mitigation for a knowledge cut-off."
+        },
+        {
+          "id": "b",
+          "text": "Connectors — connecting Claude to third-party data sources like Google Drive",
+          "correct": true,
+          "rationale": "Account and information access."
+        },
+        {
+          "id": "c",
+          "text": "Research Mode — examining multiple sources with citations, taking 5-45 minutes",
+          "correct": true,
+          "rationale": "The long-running deep investigation tool."
+        },
+        {
+          "id": "d",
+          "text": "Extended Thinking — telling Claude to think deeper and longer before responding",
+          "correct": true,
+          "rationale": "Sometimes called Reasoning."
+        },
+        {
+          "id": "e",
+          "text": "Model Selection — switching the model used for a conversation",
+          "correct": true,
+          "rationale": "To balance results against cost efficiency."
+        },
+        {
+          "id": "f",
+          "text": "Fine-Tuning — training a custom model on your own data",
+          "correct": false,
+          "rationale": "Fine-tuning is a technique for creating specialised models, not one of the tools available in a conversation."
+        }
+      ],
+      "explanation": "Five tools are listed: web-search, connectors, Research Mode, Extended Thinking and Model Selection. They divide neatly into reaching outside Claude (web-search, connectors), thinking harder (Research Mode, Extended Thinking), and choosing what does the thinking (Model Selection).",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Claude Tools"
+        }
+      ]
+    },
+    {
+      "id": "research-mode-duration",
+      "type": "single",
+      "prompt": "How long does Research Mode take?",
+      "tags": [
+        "tools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "5-45 minutes",
+          "correct": true,
+          "rationale": "It performs many searches that build on each other, from multiple angles."
+        },
+        {
+          "id": "b",
+          "text": "A few seconds, like a normal web search",
+          "correct": false,
+          "rationale": "A single search is fast; Research Mode is deliberately not one."
+        },
+        {
+          "id": "c",
+          "text": "5-45 seconds",
+          "correct": false,
+          "rationale": "Off by a factor of sixty."
+        },
+        {
+          "id": "d",
+          "text": "It runs indefinitely until stopped",
+          "correct": false,
+          "rationale": "A range is given."
+        }
+      ],
+      "explanation": "Research Mode takes 5-45 minutes because it forces Claude to examine multiple data sources: many searches instead of one, each building on the last, covering the topic from several angles, with citations in the response. The duration *is* the feature — it is the price of breadth and traceability.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Claude Tools"
+        }
+      ]
+    },
+    {
+      "id": "chat-mode-use-cases",
+      "type": "single",
+      "prompt": "What is Chat mode best suited to?",
+      "tags": [
+        "apps"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Brainstorming, drafting messages or documents, and collaboratively working through problems",
+          "correct": true,
+          "rationale": "Conversational work with a person in the loop."
+        },
+        {
+          "id": "b",
+          "text": "Multi-source work producing a presentation or report",
+          "correct": false,
+          "rationale": "That is Cowork."
+        },
+        {
+          "id": "c",
+          "text": "Editing a code base in a full IDE",
+          "correct": false,
+          "rationale": "That is Code."
+        },
+        {
+          "id": "d",
+          "text": "Scheduling recurring tasks on your behalf",
+          "correct": false,
+          "rationale": "Scheduled Tasks is a Cowork feature."
+        }
+      ],
+      "explanation": "Chat is for brainstorming, drafts and thinking a problem through together. It is also available in a browser at claude.ai — but several of its features are desktop-only, which is the distinction worth remembering when someone says \"it works in Chat\".",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Chat"
+        }
+      ]
+    },
+    {
+      "id": "desktop-only-chat-features",
+      "type": "multi",
+      "prompt": "Which Chat features are available only in the desktop app, not in the browser? (Select all that apply)",
+      "tags": [
+        "apps"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Quick Entry — pressing ⌥ twice on a Mac to open a compact window over your current work",
+          "correct": true,
+          "rationale": "Needs OS-level key handling."
+        },
+        {
+          "id": "b",
+          "text": "Screenshots and window sharing",
+          "correct": true,
+          "rationale": "Needs access to the desktop."
+        },
+        {
+          "id": "c",
+          "text": "Dictation — speaking prompts, with Claude able to respond by voice",
+          "correct": true,
+          "rationale": "Desktop-only."
+        },
+        {
+          "id": "d",
+          "text": "Desktop Connectors — connecting tools and services on your computer",
+          "correct": true,
+          "rationale": "By definition local."
+        },
+        {
+          "id": "e",
+          "text": "Extended Thinking",
+          "correct": false,
+          "rationale": "A Claude tool available generally, not a desktop-specific feature."
+        }
+      ],
+      "explanation": "Chat runs in the browser too, but four features need the desktop app: Quick Entry (⌥ twice on a Mac), screenshots and window sharing, dictation, and desktop connectors. What they have in common is that each needs access to the machine itself, which a web page cannot have.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Chat"
+        }
+      ]
+    },
+    {
+      "id": "cowork-multitasking",
+      "type": "single",
+      "prompt": "How does Cowork multitask?",
+      "tags": [
+        "apps"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It breaks a complex problem into smaller problems and creates subagents for each, executed in parallel",
+          "correct": true,
+          "rationale": "The same orchestrator-worker shape seen in multi-agent systems."
+        },
+        {
+          "id": "b",
+          "text": "It queues each task and works through them in order",
+          "correct": false,
+          "rationale": "That would be sequential, not multitasking."
+        },
+        {
+          "id": "c",
+          "text": "It opens a separate chat per task for the user to switch between",
+          "correct": false,
+          "rationale": "The parallelism is Claude's, not the user's."
+        },
+        {
+          "id": "d",
+          "text": "It schedules tasks for later execution",
+          "correct": false,
+          "rationale": "Scheduled Tasks is a separate Cowork feature."
+        }
+      ],
+      "explanation": "Cowork decomposes a complex problem into smaller ones and spins up a subagent per sub-task, running them in parallel. It is the orchestrator-worker pattern surfaced as a product feature — which is also why parallel subagents show up as a named Cowork capability.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Cowork"
+        }
+      ]
+    },
+    {
+      "id": "cowork-features",
+      "type": "multi",
+      "prompt": "Which are Cowork features? (Select all that apply)",
+      "tags": [
+        "apps"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Folder Access — pointing Claude at files and folders so it can read and write them",
+          "correct": true,
+          "rationale": "Filesystem reach."
+        },
+        {
+          "id": "b",
+          "text": "Dispatch — reaching a conversation from your phone while Claude keeps access to the host computer",
+          "correct": true,
+          "rationale": "Remote control of a local session."
+        },
+        {
+          "id": "c",
+          "text": "Protected Environments — Cowork runs in a contained sandbox with access only to what you shared",
+          "correct": true,
+          "rationale": "The containment guarantee."
+        },
+        {
+          "id": "d",
+          "text": "Scheduled Tasks — scheduling actions for Cowork to take on your behalf",
+          "correct": true,
+          "rationale": "Time-triggered work."
+        },
+        {
+          "id": "e",
+          "text": "Quick Entry — a compact window opened with ⌥⌥",
+          "correct": false,
+          "rationale": "A Chat feature, not a Cowork one."
+        },
+        {
+          "id": "f",
+          "text": "Work Location — choosing between `local` and `remote`",
+          "correct": false,
+          "rationale": "That belongs to Code."
+        }
+      ],
+      "explanation": "Cowork's features are about reaching beyond the conversation: Folder Access, Scheduled Tasks, Dispatch, Subagents, Projects, Browser use, Computer use, Plugins, and Protected Environments. The three distractor-adjacent features — Quick Entry, Work Location, and Modes — belong to Chat and Code, and keeping the three modes' feature sets apart is most of what this section tests.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Cowork"
+        }
+      ]
+    },
+    {
+      "id": "computer-use-when",
+      "type": "single",
+      "prompt": "When is Cowork's Computer use feature the right choice?",
+      "tags": [
+        "apps"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "When a data connector is not available for what you need to reach",
+          "correct": true,
+          "rationale": "It is the fallback, not the first option."
+        },
+        {
+          "id": "b",
+          "text": "Whenever Claude needs to read a local file",
+          "correct": false,
+          "rationale": "Folder Access covers that more directly."
+        },
+        {
+          "id": "c",
+          "text": "Whenever a website is involved",
+          "correct": false,
+          "rationale": "Browser use covers interacting with websites."
+        },
+        {
+          "id": "d",
+          "text": "For any task that would otherwise need a subagent",
+          "correct": false,
+          "rationale": "Unrelated — subagents are about parallel decomposition."
+        }
+      ],
+      "explanation": "Computer use lets Claude access and interact with your computer, and it is described as best used *when a data connector is not available*. Treating it as a fallback matters because driving a UI is slower and more brittle than calling an API. Note also that it is in preview and only on Pro and Max plans.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Cowork"
+        }
+      ]
+    },
+    {
+      "id": "code-work-locations",
+      "type": "single",
+      "prompt": "In Code, what is the difference between the `local` and `remote` work locations?",
+      "tags": [
+        "apps"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`local` changes the code base on your computer; `remote` connects to a GitHub repository and changes the remote repository",
+          "correct": true,
+          "rationale": "Where the edits actually land."
+        },
+        {
+          "id": "b",
+          "text": "`local` runs the model on your machine; `remote` runs it in Anthropic's cloud",
+          "correct": false,
+          "rationale": "The model always runs remotely; this setting is about the code."
+        },
+        {
+          "id": "c",
+          "text": "`local` is read-only and `remote` can write",
+          "correct": false,
+          "rationale": "Both can change code; they differ in which copy."
+        },
+        {
+          "id": "d",
+          "text": "`local` is for a single repository and `remote` for many",
+          "correct": false,
+          "rationale": "Not the distinction."
+        }
+      ],
+      "explanation": "Code supports two work locations: `local`, where changes happen on your computer, and `remote`, where Claude Code is connected to a GitHub repository and all changes are made there. Alongside that sit its three interaction modes — `Ask` (propose and request permission), `Code` (apply automatically), and `Plan` (outline the full approach before changing anything).",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Code"
+        }
+      ]
+    },
+    {
+      "id": "code-modes",
+      "type": "single",
+      "prompt": "A developer wants Claude to outline its full approach before touching any files. Which Code mode?",
+      "tags": [
+        "apps"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`Plan` — Claude outlines its full approach before changing anything",
+          "correct": true,
+          "rationale": "Review the plan, then decide."
+        },
+        {
+          "id": "b",
+          "text": "`Ask` — Claude proposes changes and asks permission",
+          "correct": false,
+          "rationale": "Close, but `Ask` gates each change rather than presenting an overall approach up front."
+        },
+        {
+          "id": "c",
+          "text": "`Code` — changes are applied automatically",
+          "correct": false,
+          "rationale": "The least supervised mode."
+        },
+        {
+          "id": "d",
+          "text": "`remote` — the work location for GitHub-connected repositories",
+          "correct": false,
+          "rationale": "A work location, not a mode."
+        }
+      ],
+      "explanation": "The three modes are a spectrum of supervision: `Plan` shows the whole approach before anything changes, `Ask` proposes changes and requests permission as it goes, and `Code` applies changes automatically. Mode controls *how much you see first*; work location (`local` or `remote`) controls *where the changes land*.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Code"
+        }
+      ]
+    },
+    {
+      "id": "artifact-types",
+      "type": "multi",
+      "prompt": "Which are listed Artifact types? (Select all that apply)",
+      "tags": [
+        "artifacts"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Documents",
+          "correct": true,
+          "rationale": "One of the six."
+        },
+        {
+          "id": "b",
+          "text": "Code Snippets",
+          "correct": true,
+          "rationale": "One of the six."
+        },
+        {
+          "id": "c",
+          "text": "SVG images",
+          "correct": true,
+          "rationale": "One of the six."
+        },
+        {
+          "id": "d",
+          "text": "Mermaid diagrams",
+          "correct": true,
+          "rationale": "One of the six."
+        },
+        {
+          "id": "e",
+          "text": "React Components",
+          "correct": true,
+          "rationale": "Distinct from code snippets because they can be rendered and interacted with."
+        },
+        {
+          "id": "f",
+          "text": "Spreadsheets",
+          "correct": false,
+          "rationale": "Not among the listed types."
+        }
+      ],
+      "explanation": "The artifact types are documents, code snippets, HTML, SVG images, Mermaid diagrams and React components. React components are called out as different from code snippets specifically because they can be rendered and interacted with inside Claude rather than only read.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Artifacts"
+        }
+      ]
+    },
+    {
+      "id": "artifacts-context-window",
+      "type": "single",
+      "prompt": "Why does Claude put long content into an Artifact rather than into the conversation?",
+      "tags": [
+        "artifacts"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "So it does not fill up the context window",
+          "correct": true,
+          "rationale": "The stated reason — images and long code blocks are the examples."
+        },
+        {
+          "id": "b",
+          "text": "So it can be shared with other users",
+          "correct": false,
+          "rationale": "Sharing is a Projects permission concern."
+        },
+        {
+          "id": "c",
+          "text": "So it can be edited by Claude later",
+          "correct": false,
+          "rationale": "Editing and iterating is one of the *criteria* for creating an artifact, not the reason the mechanism exists."
+        },
+        {
+          "id": "d",
+          "text": "So it is excluded from the conversation history entirely",
+          "correct": false,
+          "rationale": "The point is context economy, not exclusion."
+        }
+      ],
+      "explanation": "Artifacts exist so that significant content — images, long blocks of code — does not consume the context window. It connects to one of the four limitations of AI systems: the context window is always finite, so anything that keeps bulky output out of it buys room for the actual conversation.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Artifacts"
+        }
+      ]
+    },
+    {
+      "id": "project-sharing-permissions",
+      "type": "single",
+      "prompt": "Which Project permission set allows modifying the knowledge base and managing members, but is not full ownership?",
+      "tags": [
+        "projects"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`Edit`",
+          "correct": true,
+          "rationale": "Modify KB, instructions and members."
+        },
+        {
+          "id": "b",
+          "text": "`View`",
+          "correct": false,
+          "rationale": "View can see contents, use the KB and chat, but cannot change project settings."
+        },
+        {
+          "id": "c",
+          "text": "`Owner`",
+          "correct": false,
+          "rationale": "Owner is full ownership, including the project's visibility within an organization."
+        },
+        {
+          "id": "d",
+          "text": "`Admin`",
+          "correct": false,
+          "rationale": "Not one of the three permission sets."
+        }
+      ],
+      "explanation": "Projects share three ways. `View` can see contents, access the knowledge base and chat, but cannot change settings. `Edit` can modify the knowledge base, the instructions, and the membership. `Owner` has full ownership including visibility of the project within an organization. In Cowork, sharing a Project at all requires a Claude for Work plan.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Projects"
+        }
+      ]
+    },
+    {
+      "id": "project-auto-rag",
+      "type": "single",
+      "prompt": "What happens when a Project's knowledge base approaches the context window limit?",
+      "tags": [
+        "projects"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "RAG is enabled automatically, expanding capacity by roughly 10x",
+          "correct": true,
+          "rationale": "Retrieval replaces trying to hold everything in context."
+        },
+        {
+          "id": "b",
+          "text": "The oldest documents are evicted from the knowledge base",
+          "correct": false,
+          "rationale": "Nothing is discarded."
+        },
+        {
+          "id": "c",
+          "text": "Further uploads are rejected until documents are removed",
+          "correct": false,
+          "rationale": "Capacity expands rather than closing."
+        },
+        {
+          "id": "d",
+          "text": "The project switches to a model with a larger context window",
+          "correct": false,
+          "rationale": "Model Selection is a manual tool, and this is not how the limit is handled."
+        }
+      ],
+      "explanation": "Auto-enabled RAG is the Projects feature that handles a knowledge base outgrowing the context window: retrieval-augmented generation kicks in and expands capacity about tenfold. It is the same technique described for large documents generally — chunk, embed, store, retrieve only what is relevant — applied automatically.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Projects"
+        }
+      ]
+    },
+    {
+      "id": "project-instructions-purpose",
+      "type": "single",
+      "prompt": "What are Project Instructions a good place to define?",
+      "tags": [
+        "projects"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Role, tone and audience — they are referenced with every chat in the project",
+          "correct": true,
+          "rationale": "The project-wide equivalent of a system prompt."
+        },
+        {
+          "id": "b",
+          "text": "The documents Claude should reference",
+          "correct": false,
+          "rationale": "That is Knowledge, the project's knowledge base."
+        },
+        {
+          "id": "c",
+          "text": "Which members can change project settings",
+          "correct": false,
+          "rationale": "That is the sharing permission set."
+        },
+        {
+          "id": "d",
+          "text": "The model each chat should use",
+          "correct": false,
+          "rationale": "Model Selection is per conversation."
+        }
+      ],
+      "explanation": "Project Instructions are referenced with every chat in the project, which makes them the natural home for role, tone and audience. The parallel with `CLAUDE.md` is close: always-applied context belongs in the standing instructions, while task-specific expertise belongs in a Skill.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Projects"
+        }
+      ]
+    },
+    {
+      "id": "skill-folder-contents",
+      "type": "multi",
+      "prompt": "What does a Skill's self-contained folder hold? (Select all that apply)",
+      "tags": [
+        "skills"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A Markdown file with the instructions and steps for the task",
+          "correct": true,
+          "rationale": "The skill's core."
+        },
+        {
+          "id": "b",
+          "text": "Any scripts — bash, Python and so on — needed to accomplish the task",
+          "correct": true,
+          "rationale": "Executable helpers."
+        },
+        {
+          "id": "c",
+          "text": "Any resources such as documents or images needed for the task",
+          "correct": true,
+          "rationale": "Supporting material."
+        },
+        {
+          "id": "d",
+          "text": "The conversation history of previous runs",
+          "correct": false,
+          "rationale": "Skills are instructions, not state."
+        },
+        {
+          "id": "e",
+          "text": "A model selection for the task",
+          "correct": false,
+          "rationale": "Not part of a skill folder."
+        }
+      ],
+      "explanation": "A Skill is a self-contained folder containing the Markdown instructions describing how to complete a repeatable task, plus any scripts and any resources the task needs. Self-contained is the operative word — everything required travels with the skill, which is what lets it be shared or distributed as a unit.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Skills"
+        }
+      ]
+    },
+    {
+      "id": "two-skill-types",
+      "type": "single",
+      "prompt": "What distinguishes an `Anthropic` skill from a `Custom` skill?",
+      "tags": [
+        "skills"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Anthropic skills are created, maintained and published by Anthropic and are built into the desktop app; Custom skills are created by your organization",
+          "correct": true,
+          "rationale": "Authorship and distribution."
+        },
+        {
+          "id": "b",
+          "text": "Anthropic skills can run scripts; Custom skills cannot",
+          "correct": false,
+          "rationale": "Both are folders that may contain scripts."
+        },
+        {
+          "id": "c",
+          "text": "Anthropic skills apply to every project; Custom skills apply to one",
+          "correct": false,
+          "rationale": "Not the distinction drawn here."
+        },
+        {
+          "id": "d",
+          "text": "Custom skills take precedence over Anthropic skills",
+          "correct": false,
+          "rationale": "Precedence between *scopes* is a separate topic — here the split is simply who wrote it."
+        }
+      ],
+      "explanation": "Two types: `Anthropic` skills are created, maintained and published by Anthropic and ship built into the Claude desktop app; `Custom` skills are written by your own organization for a specialised task. The distinction is authorship and distribution, which is a different axis from the scope precedence that governs same-named skills.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "2 Types of Skills"
+        }
+      ]
+    },
+    {
+      "id": "connector-permission-limit",
+      "type": "boolean",
+      "prompt": "A configured Connector can access only the things you granted it permission to when you set it up.",
+      "tags": [
+        "connectors",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "A Connector can only access what you granted it permission to during configuration. This is the same containment principle as Cowork's Protected Environments, which runs in a sandbox with access only to what was explicitly shared — in both cases the guarantee is scoped by what you handed over, not by what Claude chooses to touch.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Types of Connectors"
+        },
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Cowork"
+        }
+      ]
+    },
+    {
+      "id": "iteration-mindset",
+      "type": "single",
+      "prompt": "What does the Iteration Mindset advise?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Treat the first prompt as a starting point, give specific feedback on responses, and know when to start over",
+          "correct": true,
+          "rationale": "All three parts, including the permission to abandon a thread."
+        },
+        {
+          "id": "b",
+          "text": "Write the most detailed prompt possible so no iteration is needed",
+          "correct": false,
+          "rationale": "The opposite of a starting point."
+        },
+        {
+          "id": "c",
+          "text": "Re-run the same prompt several times and pick the best response",
+          "correct": false,
+          "rationale": "That is the voting pattern applied to prompting, not the advice given."
+        },
+        {
+          "id": "d",
+          "text": "Always begin a new conversation for each refinement",
+          "correct": false,
+          "rationale": "Starting over is one option, not the default."
+        }
+      ],
+      "explanation": "The Iteration Mindset has three parts: the first prompt is a starting point, refinement comes from giving *specific* feedback on responses, and sometimes the right move is to start over. That last clause matters — a conversation that has gone sideways carries its confusion forward in the history.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Prompting Basics"
+        }
+      ]
+    },
+    {
+      "id": "prompting-naturally",
+      "type": "single",
+      "prompt": "How do the notes describe the best way to communicate with Claude?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Naturally, concisely and conversationally",
+          "correct": true,
+          "rationale": "Plain language rather than keyword incantations."
+        },
+        {
+          "id": "b",
+          "text": "In structured XML with every section tagged",
+          "correct": false,
+          "rationale": "XML structuring is a *prompt engineering* technique for system prompts, not the baseline advice for talking to Claude."
+        },
+        {
+          "id": "c",
+          "text": "With as much detail as possible, however long it takes",
+          "correct": false,
+          "rationale": "Concision is explicitly part of the advice."
+        },
+        {
+          "id": "d",
+          "text": "Using keywords rather than sentences, to save tokens",
+          "correct": false,
+          "rationale": "The opposite of conversational."
+        }
+      ],
+      "explanation": "The advice is to communicate naturally, concisely and conversationally, then frame the prompt in three moves: set the stage, define the task, specify rules. It is worth contrasting with the system-prompt engineering guidance elsewhere, which is far more structured — the difference is that a system prompt is authored once and reused, so the investment pays off.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Prompting Basics"
+        }
+      ]
+    },
+    {
+      "id": "generic-response-fix",
+      "type": "single",
+      "prompt": "Claude keeps producing generic, could-be-anyone responses. What does the troubleshooting table suggest?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Use prompt engineering techniques such as including audience, role and goals",
+          "correct": true,
+          "rationale": "Specificity about who and why."
+        },
+        {
+          "id": "b",
+          "text": "Enable web-search so the answer is grounded in current data",
+          "correct": false,
+          "rationale": "That is the hallucination fix."
+        },
+        {
+          "id": "c",
+          "text": "Specify a word or paragraph count",
+          "correct": false,
+          "rationale": "That is the too-long/too-short fix."
+        },
+        {
+          "id": "d",
+          "text": "Include examples of the desired output format",
+          "correct": false,
+          "rationale": "That is the format fix."
+        }
+      ],
+      "explanation": "Generic responses are a specificity problem, and the fix is to supply audience, role and goals. Each row of the troubleshooting table has its own distinct lever, and the value is in matching the symptom to the right one rather than reaching for more detail in general.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Common AI Challenges"
+        }
+      ]
+    },
+    {
+      "id": "tone-fix",
+      "type": "single",
+      "prompt": "The tone of Claude's responses is not right. What are the two things to do?",
+      "tags": [
+        "prompting"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Specify the desired tone in the prompt, and ensure any examples you provide match that tone",
+          "correct": true,
+          "rationale": "An example in the wrong tone quietly overrides the instruction."
+        },
+        {
+          "id": "b",
+          "text": "Specify the tone and lower the temperature",
+          "correct": false,
+          "rationale": "Temperature governs creativity and determinism rather than tone."
+        },
+        {
+          "id": "c",
+          "text": "Switch to a higher-intelligence model",
+          "correct": false,
+          "rationale": "Model Selection balances results and cost; it is not the tone lever."
+        },
+        {
+          "id": "d",
+          "text": "Enable Extended Thinking so Claude reasons about tone",
+          "correct": false,
+          "rationale": "Extended Thinking deepens reasoning, not style matching."
+        }
+      ],
+      "explanation": "Two steps, and the second is the one people miss: state the tone you want, *and* make sure your examples match it. Few-shot examples are powerful precisely because the model patterns off them — so an example written in the wrong register will quietly outweigh the instruction asking for a different one.",
+      "citations": [
+        {
+          "file": "Anthropic Academy/claude_101.md",
+          "heading": "Common AI Challenges"
+        }
+      ]
+    }
+  ]
+}
