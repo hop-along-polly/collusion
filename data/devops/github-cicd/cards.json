@@ -68,7 +68,7 @@
           "correct": true
         }
       ],
-      "explanation": "Notification flows downward only. Mentioning the parent team notifies the child teams, but mentioning a child team does not notify the parent. That asymmetry is what makes the notes' example work: a `devops` parent with `azure` and `aws` children lets other teams tag just the AWS experts without pulling in every DevOps engineer. Permissions, by contrast, are inherited downward — a child team inherits whatever the parent was granted.",
+      "explanation": "Notification flows downward only. Mentioning the parent team notifies the child teams, but mentioning a child team does not notify the parent. That asymmetry is what makes nesting useful: a `devops` parent with `azure` and `aws` children lets other teams tag just the AWS experts without pulling in every DevOps engineer. Permissions, by contrast, are inherited downward — a child team inherits whatever the parent was granted.",
       "citations": [
         {
           "file": "github_cd-cd.md",
@@ -109,7 +109,7 @@
           "rationale": "There is no conflict to resolve; the file's ordering is the resolution."
         }
       ],
-      "explanation": "The last matching pattern in a `CODEOWNERS` file determines who is tagged. Both `/build` and `*.go` match a Go file under `build/`, so the later `*.go` entry wins and only `@ttestofferson` is requested. The practical consequence is stated in the notes' own example: a global fallback rule must be the *first* rule in the file, because anything after it would override it.",
+      "explanation": "The last matching pattern in a `CODEOWNERS` file determines who is tagged. Both `/build` and `*.go` match a Go file under `build/`, so the later `*.go` entry wins and only `@ttestofferson` is requested. The practical consequence is that a global fallback rule must be the *first* rule in the file, because anything after it would override it.",
       "citations": [
         {
           "file": "github_cd-cd.md",
@@ -205,13 +205,13 @@
           "id": "d",
           "text": "`*` as a wildcard, e.g. `*.go`",
           "correct": false,
-          "rationale": "Supported — the notes' own precedence example uses `*.go`."
+          "rationale": "Supported — `*.go` is an ordinary wildcard pattern."
         },
         {
           "id": "e",
           "text": "`**` to match nested directories, e.g. `build/**/*.tf`",
           "correct": false,
-          "rationale": "Supported — this exact pattern appears in the notes' example file."
+          "rationale": "Supported — `build/**/*.tf` is a valid nested-directory pattern."
         },
         {
           "id": "f",
@@ -295,7 +295,7 @@
           "id": "a",
           "text": "Nothing further — it cannot call another workflow, because nesting cannot exceed 4 levels",
           "correct": true,
-          "rationale": "A → B → C → D is the maximum depth described in the notes."
+          "rationale": "A → B → C → D is the maximum depth, so D is already at the fourth level."
         },
         {
           "id": "b",
@@ -355,7 +355,7 @@
           "id": "d",
           "text": "The caller cannot define service containers that spin up before calling the workflow",
           "correct": true,
-          "rationale": "Explicitly called out in the notes."
+          "rationale": "Service containers cannot be spun up ahead of a called workflow."
         },
         {
           "id": "e",
@@ -412,7 +412,7 @@
           "rationale": "`.github/actions/` holds custom Actions, which are a different construct used as a Step."
         }
       ],
-      "explanation": "A workflow becomes callable by adding `workflow_call` to its `on:` triggers, where it can declare typed `inputs` and `secrets` with descriptions and `required` flags. The notes suggest \"Callable Workflow\" would have been the clearer name, since the trigger is what grants the capability.",
+      "explanation": "A workflow becomes callable by adding `workflow_call` to its `on:` triggers, where it can declare typed `inputs` and `secrets` with descriptions and `required` flags. \"Callable Workflow\" would arguably be the clearer name, since it is the trigger that grants the capability.",
       "citations": [
         {
           "file": "github_cd-cd.md",
@@ -433,7 +433,7 @@
           "id": "a",
           "text": "GitHub offers Ubuntu, Windows and macOS runners",
           "correct": true,
-          "rationale": "The three hosted platforms named in the notes."
+          "rationale": "The three hosted platforms GitHub provides."
         },
         {
           "id": "b",
@@ -585,7 +585,7 @@
           "id": "d",
           "text": "A team can have at most one child team",
           "correct": false,
-          "rationale": "The notes' own example nests two children — `azure` and `aws` — under a `devops` parent."
+          "rationale": "Nesting is not limited to one child — a `devops` parent can hold both an `azure` and an `aws` team."
         },
         {
           "id": "e",
@@ -756,7 +756,7 @@
           "rationale": "Only the first file found is used at all, by the precedence `.github/` > root > `docs/`."
         }
       ],
-      "explanation": "Because the **last** matching pattern determines the owners, a catch-all must come first — any rule below it will win for the paths it matches. The notes' own example file comments on exactly this: the global rule is placed first *because* it would otherwise take precedence over the rules defined before it.",
+      "explanation": "Because the **last** matching pattern determines the owners, a catch-all must come first — any rule below it will win for the paths it matches. This is why a catch-all is written at the top of the file: placed lower, it would take precedence over every rule above it.",
       "citations": [
         {
           "file": "github_cd-cd.md",
@@ -850,7 +850,7 @@
     {
       "id": "actions-components",
       "type": "multi",
-      "prompt": "Which definitions from the GitHub Actions Components section are correct? (Select all that apply)",
+      "prompt": "Which GitHub Actions component definitions are correct? (Select all that apply)",
       "tags": [
         "actions",
         "terminology"
@@ -1032,7 +1032,7 @@
           "id": "c",
           "text": "Standard Workflows — ordinary workflows without special functionality",
           "correct": true,
-          "rationale": "Not an official GitHub term, but the notes use it for the run-of-the-mill case."
+          "rationale": "Not an official GitHub term, but a useful label for the run-of-the-mill case."
         },
         {
           "id": "d",
@@ -1194,7 +1194,7 @@
     {
       "id": "custom-action-inputs",
       "type": "multi",
-      "prompt": "Which fields appear in the custom Action definition shown in the notes? (Select all that apply)",
+      "prompt": "Which fields make up a custom Action definition? (Select all that apply)",
       "tags": [
         "actions"
       ],
@@ -1366,7 +1366,7 @@
     {
       "id": "pr-event-filter-example",
       "type": "single",
-      "prompt": "A workflow should run when a PR is opened against `main` or any branch under `releases/`. Which filter shape does the notes' example use?",
+      "prompt": "A workflow should run when a PR is opened against `main` or any branch under `releases/`. Which filter shape expresses that?",
       "tags": [
         "actions",
         "events"
@@ -1406,47 +1406,6 @@
       ]
     },
     {
-      "id": "workflow-variables",
-      "type": "single",
-      "prompt": "Where are the environment variables GitHub predefines for a workflow documented?",
-      "tags": [
-        "actions"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "In GitHub's default environment variables reference, linked from the Components section",
-          "correct": true,
-          "rationale": "`Variables` is listed as a component precisely to point at that reference."
-        },
-        {
-          "id": "b",
-          "text": "In the repository's `.github/variables` directory",
-          "correct": false,
-          "rationale": "No such directory exists."
-        },
-        {
-          "id": "c",
-          "text": "In each Action's `inputs` block",
-          "correct": false,
-          "rationale": "Those are an Action's own parameters, not workflow-wide variables."
-        },
-        {
-          "id": "d",
-          "text": "They must be declared per job with `needs`",
-          "correct": false,
-          "rationale": "`needs` orders jobs."
-        }
-      ],
-      "explanation": "`Variables` appears as one of the Actions components mainly as a pointer: GitHub predefines a set of environment variables available to every workflow, and the reference list is the place to look rather than guessing names. It sits alongside Workflow, Runner, Event, Job and Action in the component vocabulary.",
-      "citations": [
-        {
-          "file": "github_cd-cd.md",
-          "heading": "Components"
-        }
-      ]
-    },
-    {
       "id": "actions-maintenance-use",
       "type": "boolean",
       "prompt": "GitHub Actions is only for build, test and deployment workflows.",
@@ -1466,48 +1425,6 @@
         }
       ],
       "explanation": "GitHub Actions is the CI/CD feature — defining automated build, testing and deployment workflows in YAML alongside the source code — but it is explicitly also used to automate repository maintenance tasks. Scheduled housekeeping, triage automation and similar jobs are as much a fit as a build pipeline.",
-      "citations": [
-        {
-          "file": "github_cd-cd.md",
-          "heading": "Github Actions"
-        }
-      ]
-    },
-    {
-      "id": "proper-noun-convention",
-      "type": "single",
-      "prompt": "The notes capitalise terms like \"Action\", \"Event\" and \"Job\". What does that convention signal?",
-      "tags": [
-        "actions",
-        "terminology"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "The capitalised form refers to the specific GitHub Actions concept, not the everyday word",
-          "correct": true,
-          "rationale": "GitHub reuses very general words for very specific constructs."
-        },
-        {
-          "id": "b",
-          "text": "Capitalised terms are YAML keys and lower-case ones are values",
-          "correct": false,
-          "rationale": "The convention is about prose, not syntax."
-        },
-        {
-          "id": "c",
-          "text": "Capitalised terms are GitHub Enterprise features only",
-          "correct": false,
-          "rationale": "No such distinction is drawn."
-        },
-        {
-          "id": "d",
-          "text": "Capitalised terms are deprecated",
-          "correct": false,
-          "rationale": "Nothing of the sort."
-        }
-      ],
-      "explanation": "GitHub Actions overloads ordinary words — an \"action\" is any action, but an **Action** is a plug-and-play unit used as a Step. The notes capitalise the proper nouns to keep the two readings apart, which matters most for Action, Event and Job, where the general and specific meanings are easy to conflate.",
       "citations": [
         {
           "file": "github_cd-cd.md",

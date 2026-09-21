@@ -170,7 +170,7 @@
           "rationale": "Both resources and prompts can be templated — the word does not decide the primitive."
         }
       ],
-      "explanation": "Resources come in two types. A `direct` resource has a static URI with no parameters — think an S3 object URL. A `templated` resource has parameters in the URI, exactly like a REST GET endpoint. The way to keep resources separate from tools is the REST analogy the notes use: a resource is anything a GET endpoint would return, while a tool takes an action.",
+      "explanation": "Resources come in two types. A `direct` resource has a static URI with no parameters — think an S3 object URL. A `templated` resource has parameters in the URI, exactly like a REST GET endpoint. The REST analogy keeps resources separate from tools: a resource is anything a GET endpoint would return, while a tool takes an action.",
       "citations": [
         {
           "file": "Anthropic Academy/intro_to_mcp.md",
@@ -529,7 +529,7 @@
           "rationale": "A message broker protocol, not an MCP transport."
         }
       ],
-      "explanation": "MCP communication can use many protocols; the common ones named are Standard IO, HTTP(s) and Websockets. The Transport Types section then narrows to the two that matter in practice — `stdio` for same-machine, and `Streamable HTTP` as the preferred choice for remote, multi-client servers.",
+      "explanation": "MCP communication can use many protocols; the common ones named are Standard IO, HTTP(s) and Websockets. In practice two of them matter: `stdio` for same-machine, and `Streamable HTTP` as the preferred choice for remote, multi-client servers.",
       "citations": [
         {
           "file": "Anthropic Academy/intro_to_mcp.md",
@@ -904,7 +904,7 @@
           "rationale": "Not described."
         }
       ],
-      "explanation": "`prompts` are pre-defined prompt templates the client can invoke, and the notes make the mapping concrete: they are essentially the slash commands available in Claude Code. That is exactly why they are classified as *user controlled* — the user decides when to run `/<prompt-name>`.",
+      "explanation": "`prompts` are pre-defined prompt templates the client can invoke — essentially the slash commands available in Claude Code. That is exactly why they are classified as *user controlled* — the user decides when to run `/<prompt-name>`.",
       "citations": [
         {
           "file": "Anthropic Academy/intro_to_mcp.md",

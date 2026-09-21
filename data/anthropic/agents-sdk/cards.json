@@ -895,7 +895,7 @@
           "id": "b",
           "text": "Only after a User message is submitted",
           "correct": false,
-          "rationale": "The notes specify both User and Assistant."
+          "rationale": "It covers both User and Assistant prompts, not User alone."
         },
         {
           "id": "c",
@@ -1059,7 +1059,7 @@
           "id": "b",
           "text": "Only the project memory directory, excluding user memory",
           "correct": false,
-          "rationale": "The notes describe `project` as *additionally* loading project memory."
+          "rationale": "`project` *additionally* loads project memory, so user memory comes along with it."
         },
         {
           "id": "c",

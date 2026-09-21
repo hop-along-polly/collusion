@@ -715,7 +715,7 @@
           "rationale": "That belongs to Code."
         }
       ],
-      "explanation": "Cowork's features are about reaching beyond the conversation: Folder Access, Scheduled Tasks, Dispatch, Subagents, Projects, Browser use, Computer use, Plugins, and Protected Environments. The three distractor-adjacent features — Quick Entry, Work Location, and Modes — belong to Chat and Code, and keeping the three modes' feature sets apart is most of what this section tests.",
+      "explanation": "Cowork's features are about reaching beyond the conversation: Folder Access, Scheduled Tasks, Dispatch, Subagents, Projects, Browser use, Computer use, Plugins, and Protected Environments. Quick Entry, Work Location and Modes all belong to Chat and Code instead, so keeping the three modes' feature sets apart is the thing worth getting straight.",
       "citations": [
         {
           "file": "Anthropic Academy/claude_101.md",
@@ -1227,7 +1227,7 @@
     {
       "id": "prompting-naturally",
       "type": "single",
-      "prompt": "How do the notes describe the best way to communicate with Claude?",
+      "prompt": "What is the best way to communicate with Claude?",
       "tags": [
         "prompting"
       ],

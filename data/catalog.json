@@ -66,7 +66,7 @@
       "sources": [
         "github_cd-cd.md"
       ],
-      "cardCount": 34
+      "cardCount": 32
     },
     {
       "id": "ansible",
@@ -145,7 +145,7 @@
       "sources": [
         "Anthropic Academy/multi_agent_pipelines.md"
       ],
-      "cardCount": 32
+      "cardCount": 31
     },
     {
       "id": "code-review-cicd",

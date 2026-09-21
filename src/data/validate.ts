@@ -27,9 +27,59 @@ const DOMAIN_ICONS = new Set(['sparkles', 'cloud', 'workflow', 'terminal'])
 
 /**
  * Options that let a learner shortcut the question rather than reason about it.
- * Flagged, not rejected — the notes could genuinely support one.
+ * Flagged, not rejected — a source note could genuinely support one.
  */
 const LAZY_OPTION_PATTERN = /^(all|none) of the above$/i
+
+/**
+ * Phrases that talk *about the source note* instead of about the subject.
+ *
+ * A card has to stand on its own. "The notes look it up in Python's `globals()`"
+ * fails twice over: it makes the learner recall a document rather than a fact, and
+ * it elevates one example's implementation detail into the general rule. The citation
+ * panel already says where an answer came from, so the prose never needs to.
+ *
+ * Deliberately narrow. Plenty of neighbouring words are legitimate subject
+ * vocabulary — a RAG *document*, a `DocumentBlock`, Parallelization *sectioning*,
+ * "thoroughly *document* your tools" — so only document-reference phrasings match.
+ */
+const META_REFERENCE_PATTERNS: [RegExp, string][] = [
+  [/\bthe notes?\b/i, 'refers to the source note instead of stating the fact'],
+  [/\bnotes['’]/i, 'refers to the source note instead of stating the fact'],
+  [/\b(?:per|according to) the note/i, 'attributes the fact to a document'],
+  [/\bthis document\b/i, 'refers to the source note instead of stating the fact'],
+  [/\bthe material\b/i, 'refers to the source note instead of stating the fact'],
+  [/\bcheat ?sheet\b/i, 'refers to the source note instead of stating the fact'],
+  // "the Variables section", "this section", "the Model Based Grading section"
+  [/\b(?:the|this|that)\s+(?:\S+\s+){0,3}sections?\b/i, 'refers to a heading in the source note'],
+]
+
+/** Card text that must read as a standalone statement about the subject. */
+function checkMetaReferences(raw: Record<string, unknown>, at: string, issues: Issue[]): void {
+  const fields: [string, unknown][] = [
+    [`${at}.prompt`, raw.prompt],
+    [`${at}.explanation`, raw.explanation],
+  ]
+
+  if (Array.isArray(raw.options)) {
+    raw.options.forEach((option, index) => {
+      if (isRecord(option) && option.rationale !== undefined) {
+        fields.push([`${at}.options[${index}].rationale`, option.rationale])
+      }
+    })
+  }
+
+  for (const [path, value] of fields) {
+    if (typeof value !== 'string') continue
+    for (const [pattern, message] of META_REFERENCE_PATTERNS) {
+      const match = pattern.exec(value)
+      if (match) {
+        issues.push({ path, message: `"${match[0].trim()}" ${message}`, severity: 'error' })
+        break
+      }
+    }
+  }
+}
 
 export function hasErrors(issues: Issue[]): boolean {
   return issues.some((issue) => issue.severity === 'error')
@@ -118,6 +168,7 @@ export function validateCards(input: unknown, basePath = 'cards'): ValidationRes
 
     validateCitations(raw.citations, `${at}.citations`, issues)
     validateOptions(raw.options, type, `${at}.options`, issues)
+    checkMetaReferences(raw, at, issues)
 
     if (raw.tags !== undefined) {
       if (!Array.isArray(raw.tags) || raw.tags.some((tag) => !isNonEmptyString(tag))) {

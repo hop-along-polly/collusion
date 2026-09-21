@@ -306,7 +306,7 @@
     {
       "id": "cost-optimization",
       "type": "single",
-      "prompt": "Which single change does the notes call the best optimization for reducing GitHub Action minutes consumed by `claude-code-action`?",
+      "prompt": "What is the single best optimization for reducing the GitHub Action minutes `claude-code-action` consumes?",
       "tags": [
         "action",
         "cost"
@@ -1165,7 +1165,7 @@
     {
       "id": "auth-error-troubleshooting",
       "type": "multi",
-      "prompt": "A workflow fails with an authentication error. Which checks does the troubleshooting section give? (Select all that apply)",
+      "prompt": "A workflow fails with an authentication error. What should be checked? (Select all that apply)",
       "tags": [
         "action",
         "troubleshooting"

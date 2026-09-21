@@ -437,7 +437,7 @@
           "id": "b",
           "text": "Understanding how transformer models work internally",
           "correct": false,
-          "rationale": "Technical fundamentals are a section of the material, not the definition."
+          "rationale": "Technical fundamentals are part of the subject, but not what the term denotes."
         },
         {
           "id": "c",
@@ -493,7 +493,7 @@
           "rationale": "Tool use is listed as a capability, not the defining property."
         }
       ],
-      "explanation": "Generative AI is defined as AI systems that can create new content instead of just analyzing existing data. Everything else in the fundamentals section explains how that became possible — the Transformer architecture, Web2's corpus of digital text, and GPU/TPU compute.",
+      "explanation": "Generative AI is defined as AI systems that can create new content instead of just analyzing existing data. Three developments made that possible — the Transformer architecture, Web2's corpus of digital text, and GPU/TPU compute.",
       "citations": [
         {
           "file": "Anthropic Academy/ai_fluency.md",

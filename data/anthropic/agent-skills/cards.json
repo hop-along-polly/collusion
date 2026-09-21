@@ -14,7 +14,7 @@
           "id": "a",
           "text": "`CLAUDE.md` — context, standards and constraints that always apply to the repo",
           "correct": true,
-          "rationale": "\"Always applies\" is exactly the dividing line the notes draw."
+          "rationale": "\"Always applies\" is exactly the dividing line: repo-wide context belongs here rather than in a task-specific construct."
         },
         {
           "id": "b",
@@ -275,7 +275,7 @@
     {
       "id": "skill-authoring-practices",
       "type": "multi",
-      "prompt": "Which practices does the notes' Best Practices section recommend when authoring a skill? (Select all that apply)",
+      "prompt": "Which practices are recommended when authoring a skill? (Select all that apply)",
       "tags": [
         "best-practices"
       ],
@@ -352,7 +352,7 @@
           "rationale": "The filename must be exactly `SKILL.md`, and filename has nothing to do with trigger matching."
         }
       ],
-      "explanation": "Claude uses semantic matching to pick a skill for a prompt, so the name and description have to overlap with how users phrase their requests. The notes' own example is that \"Release the Kraken\" will not trigger an App Deploy skill unless \"Release\" and/or \"Kraken\" appear in the description. Note this is a different failure from a skill that does not *load* — that one is a spelling or directory problem.",
+      "explanation": "Claude uses semantic matching to pick a skill for a prompt, so the name and description have to overlap with how users phrase their requests. For example, prompting \"Release the Kraken\" will not trigger an App Deploy skill unless \"Release\" and/or \"Kraken\" appear in its description. Note this is a different failure from a skill that does not *load* — that one is a spelling or directory problem.",
       "citations": [
         {
           "file": "Anthropic Academy/agent_skills.md",
@@ -363,7 +363,7 @@
     {
       "id": "skill-runtime-failure",
       "type": "multi",
-      "prompt": "A skill is found and triggered but fails partway through execution. Which checks does the troubleshooting section suggest? (Select all that apply)",
+      "prompt": "A skill is found and triggered but fails partway through execution. What should be checked? (Select all that apply)",
       "tags": [
         "troubleshooting"
       ],
@@ -410,7 +410,7 @@
     {
       "id": "subagent-definition",
       "type": "single",
-      "prompt": "How is a Subagent defined in the Terminology section?",
+      "prompt": "What is a Subagent?",
       "tags": [
         "terminology"
       ],
@@ -1138,7 +1138,7 @@
           "id": "a",
           "text": "Claude Code's skills frontmatter reference",
           "correct": true,
-          "rationale": "The single resource the notes link to."
+          "rationale": "The canonical list of metadata fields a skill can declare."
         },
         {
           "id": "b",
@@ -1159,7 +1159,7 @@
           "rationale": "Unrelated — MCP `prompts` are a different construct."
         }
       ],
-      "explanation": "The Resources section links to Claude Code's skills frontmatter reference for the full list of metadata fields. Worth knowing because two of those fields — name and description — are the ones semantic matching runs against, so \"which fields exist\" and \"why won't my skill trigger\" are closely related questions.",
+      "explanation": "Claude Code's skills frontmatter reference is the canonical list of metadata fields a skill can declare. Worth knowing because two of those fields — name and description — are the ones semantic matching runs against, so \"which fields exist\" and \"why won't my skill trigger\" are closely related questions.",
       "citations": [
         {
           "file": "Anthropic Academy/agent_skills.md",

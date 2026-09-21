@@ -1183,7 +1183,7 @@
           "id": "a",
           "text": "Storage Gateway",
           "correct": true,
-          "rationale": "The notes compare it to Dropbox or OneDrive."
+          "rationale": "It presents cloud storage as a standard network drive, comparable to Dropbox or OneDrive."
         },
         {
           "id": "b",
@@ -1204,7 +1204,7 @@
           "rationale": "An archive storage class."
         }
       ],
-      "explanation": "Storage Gateway makes cloud storage — S3, FSx and so on — present as a standard network drive, which the notes liken to Dropbox or OneDrive. It is the answer when existing on-premises systems expect a filesystem and you do not want to rewrite them against an object API.",
+      "explanation": "Storage Gateway makes cloud storage — S3, FSx and so on — present as a standard network drive, much like Dropbox or OneDrive. It is the answer when existing on-premises systems expect a filesystem and you do not want to rewrite them against an object API.",
       "citations": [
         {
           "file": "AWS Certs/all_aws_services.md",
@@ -1563,7 +1563,7 @@
     {
       "id": "routing-policies",
       "type": "multi",
-      "prompt": "Which are network traffic routing policies listed in the notes? (Select all that apply)",
+      "prompt": "Which of these are network traffic routing policies? (Select all that apply)",
       "tags": [
         "networking"
       ],

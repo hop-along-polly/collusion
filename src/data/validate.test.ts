@@ -90,6 +90,47 @@ describe('validateCards', () => {
   })
 })
 
+describe('meta-reference rule', () => {
+  // A card must read as a standalone statement about its subject. Talking about the
+  // source note makes it a document-recall question, and it invites overreach: one
+  // rejected card presented Python's `globals()` as *the* way to dispatch a tool call.
+  const CASES: [string, Record<string, unknown>][] = [
+    ['prompt', { prompt: 'Which practices does the API Best Practices section recommend?' }],
+    ['explanation', { explanation: 'The notes state the opposite.' }],
+    ['prompt naming the notes', { prompt: 'What do the notes say about streaming?' }],
+    ['possessive', { explanation: "The notes' own example uses `*.go`." }],
+    ['attribution', { explanation: 'Python is named according to the note.' }],
+    ['this document', { explanation: 'This document opens with a warning.' }],
+    ['this section', { explanation: 'That is what this section tests.' }],
+  ]
+
+  for (const [label, overrides] of CASES) {
+    it(`rejects a ${label} that refers to the source note`, () => {
+      const result = validateCards([baseCard(overrides)])
+      expect(hasErrors(result.issues)).toBe(true)
+    })
+  }
+
+  it('rejects a meta-reference hiding in an option rationale', () => {
+    const options = baseCard().options.map((option, index) =>
+      index === 0 ? { ...option, rationale: 'The notes look it up in `globals()`.' } : option,
+    )
+    expect(hasErrors(validateCards([baseCard({ options })]).issues)).toBe(true)
+  })
+
+  it('allows subject vocabulary that merely looks similar', () => {
+    const card = baseCard({
+      // "document" as the thing being chunked, "sectioning" as a pattern name,
+      // "document" as a verb, and "release notes" as a real feature.
+      prompt: 'Which chunking strategy splits a document by structure?',
+      explanation:
+        'Parallelization (sectioning) divides independent subtasks. Thoroughly document your tools. ' +
+        'A Seller can update a version release notes after publishing.',
+    })
+    expect(hasErrors(validateCards([card]).issues)).toBe(false)
+  })
+})
+
 describe('validateCatalog', () => {
   const domain = {
     id: 'anthropic',

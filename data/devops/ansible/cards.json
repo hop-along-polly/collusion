@@ -89,7 +89,7 @@
           "id": "f",
           "text": "Passwords are best stored directly in the inventory with `ansible_ssh_pass`",
           "correct": false,
-          "rationale": "The parameter exists, but the notes recommend Ansible Vault for passwords rather than putting them in the inventory."
+          "rationale": "The parameter exists, but Ansible Vault is the recommended home for credentials rather than the inventory file."
         }
       ],
       "explanation": "The inventory is an INI-style file, `/etc/ansible/hosts` by default, holding hosts and their connection parameters. Two details catch people out: any arbitrary parameter you invent is interpreted as a string rather than a Python literal, and although `ansible_ssh_pass` / `ansible_password` exist, the recommended home for credentials is Ansible Vault.",
@@ -124,7 +124,7 @@
           "id": "c",
           "text": "`ansible_winrm_pass`",
           "correct": false,
-          "rationale": "Plausible by symmetry with `ansible_ssh_pass`, but not the parameter named in the notes."
+          "rationale": "Plausible by symmetry with `ansible_ssh_pass`, but not a real parameter."
         },
         {
           "id": "d",
@@ -215,7 +215,7 @@
           "rationale": "Not valid syntax. `all` is conventionally the *name* of a top-level group of groups, as in `[all:children]`."
         }
       ],
-      "explanation": "`[groupname:children]` declares a group of groups, with each nested group named on its own line — the notes' example uses `[all:children]` containing `web_servers` and `databases`. Targeting the parent then acts on every host in every child group.",
+      "explanation": "`[groupname:children]` declares a group of groups, with each nested group named on its own line — for instance `[all:children]` containing `web_servers` and `databases`. Targeting the parent then acts on every host in every child group.",
       "citations": [
         {
           "file": "Ansible.md",
@@ -307,7 +307,7 @@
     {
       "id": "variable-declaration-sites",
       "type": "multi",
-      "prompt": "Where can variables be declared, according to the Variables section? (Select all that apply)",
+      "prompt": "Where can Ansible variables be declared? (Select all that apply)",
       "tags": [
         "variables"
       ],
@@ -390,7 +390,7 @@
           "id": "a",
           "text": "Stores the output of a module so a later task can test it",
           "correct": true,
-          "rationale": "The notes register `cat /etc/resolv.conf` output and then test `name_servers.stdout.find(...)` in a `when` clause."
+          "rationale": "For example, registering `cat /etc/resolv.conf` output and then testing `name_servers.stdout.find(...)` in a `when` clause."
         },
         {
           "id": "b",
@@ -475,7 +475,7 @@
     {
       "id": "advanced-platform-facts",
       "type": "multi",
-      "prompt": "Which statements from the Advanced topics section are correct? (Select all that apply)",
+      "prompt": "Which of these platform and tooling statements about Ansible are correct? (Select all that apply)",
       "tags": [
         "advanced"
       ],
@@ -575,7 +575,7 @@
     {
       "id": "ansible-vault",
       "type": "single",
-      "prompt": "Where do the notes recommend keeping passwords used by Ansible?",
+      "prompt": "Where should passwords used by Ansible be kept?",
       "tags": [
         "inventory",
         "security"
@@ -925,7 +925,7 @@
           "id": "a",
           "text": "The variable is being used inside a string value, so it has to be quoted",
           "correct": true,
-          "rationale": "The notes flag the quotes as required in exactly this case."
+          "rationale": "A value beginning with `{` would otherwise be parsed as a YAML mapping, so quoting is required here."
         },
         {
           "id": "b",
@@ -943,10 +943,10 @@
           "id": "d",
           "text": "They are optional and included only for readability",
           "correct": false,
-          "rationale": "The notes state they are required here."
+          "rationale": "They are required — without them the value is ambiguous to the YAML parser."
         }
       ],
-      "explanation": "Jinja2 templating — `{{ var_name }}` — is how variables are read, and quoting comes from YAML rather than from Ansible: a value that begins with `{` would otherwise be parsed as a YAML mapping. Hence the note in the playbook examples that the Jinja2 syntax is being used *because the variable appears inside a string*, and that the quotes are required.",
+      "explanation": "Jinja2 templating — `{{ var_name }}` — is how variables are read, and quoting comes from YAML rather than from Ansible: a value that begins with `{` would otherwise be parsed as a YAML mapping. So the quotes are required whenever the reference sits inside a string value, and optional when the whole value is the variable.",
       "citations": [
         {
           "file": "Ansible.md",
@@ -1025,7 +1025,7 @@
     {
       "id": "when-on-connection-type",
       "type": "single",
-      "prompt": "A play uses `when: ansible_connection == 'ssh'` to skip Windows hosts. Why do the notes call this a poor use of conditionals?",
+      "prompt": "A play uses `when: ansible_connection == 'ssh'` to skip Windows hosts. Why is this a poor use of conditionals?",
       "tags": [
         "conditionals",
         "design"
@@ -1053,7 +1053,7 @@
           "id": "d",
           "text": "Conditionals cannot be combined with `or`",
           "correct": false,
-          "rationale": "The notes' own example combines two comparisons with `or`."
+          "rationale": "`when` supports combining comparisons with `or`; the objection here is about design, not syntax."
         }
       ],
       "explanation": "The example works but is flagged as unidiomatic: hosts of different types belong in different groups, targeted by different plays. Reaching for `when` to re-derive something the inventory already knows pushes structure into the wrong layer, and every task in the play then pays the cost of the check.",
@@ -1344,7 +1344,7 @@
           "id": "a",
           "text": "It is a repository for Ansible Roles, similar to the Docker Store",
           "correct": true,
-          "rationale": "The analogy the notes use."
+          "rationale": "A public repository of shareable roles, comparable to the Docker Store for images."
         },
         {
           "id": "b",
@@ -1371,7 +1371,7 @@
           "rationale": "Dynamic inventory is a script you pass to `ansible-playbook -i`, unrelated to Galaxy."
         }
       ],
-      "explanation": "Ansible Galaxy is the community repository for roles, with the `ansible-galaxy` CLI as its client — the notes compare it to the Docker Store. It is worth checking before writing a role from scratch, for the same reason it is worth checking for an official MCP server before writing one of those.",
+      "explanation": "Ansible Galaxy is the community repository for roles, with the `ansible-galaxy` CLI as its client — much like the Docker Store for images. It is worth checking before writing a role from scratch, for the same reason it is worth checking for an official MCP server before writing one of those.",
       "citations": [
         {
           "file": "Ansible.md",
@@ -1452,7 +1452,7 @@
           "id": "d",
           "text": "Any language, as long as it is installed on the control machine",
           "correct": false,
-          "rationale": "The notes name Python specifically, and templates are provided for it."
+          "rationale": "Modules are written in Python specifically, and templates are provided for it."
         }
       ],
       "explanation": "Custom modules are written in Python, and module templates can be found in the Ansible docs. It is a useful reminder of the layering: YAML describes *what* should happen (playbooks, roles), and Python implements *how* (modules) — which is also why arbitrary inventory parameters are read as strings rather than as Python literals.",

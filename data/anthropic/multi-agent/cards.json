@@ -115,7 +115,7 @@
           "id": "c",
           "text": "Parallelization (sectioning) — run independent subtasks in parallel",
           "correct": false,
-          "rationale": "You have to know what the sections are before you can divide them."
+          "rationale": "You have to know what the independent subtasks are before you can divide them."
         },
         {
           "id": "d",
@@ -124,7 +124,7 @@
           "rationale": "That improves a known task's output; it does not discover what the subtasks are."
         }
       ],
-      "explanation": "Orchestrator-Worker is the pattern for unpredictable decomposition: a lead agent breaks the task up at runtime and delegates to subagents. Every other pattern assumes the decomposition is knowable up front — chaining needs a fixed sequence, routing needs known categories, and parallelization needs known sections.",
+      "explanation": "Orchestrator-Worker is the pattern for unpredictable decomposition: a lead agent breaks the task up at runtime and delegates to subagents. Every other pattern assumes the decomposition is knowable up front — chaining needs a fixed sequence, routing needs known categories, and parallelization needs subtasks already known to be independent.",
       "citations": [
         {
           "file": "Anthropic Academy/multi_agent_pipelines.md",
@@ -244,7 +244,7 @@
           "id": "c",
           "text": "Model choice has no measurable effect on multi-agent quality",
           "correct": false,
-          "rationale": "Nothing in the notes claims this; a `model` is a per-agent setting."
+          "rationale": "Model choice is a per-agent setting and does affect quality; it is simply not the lever identified as primary."
         },
         {
           "id": "d",
@@ -328,7 +328,7 @@
           "id": "b",
           "text": "Rewrite the third-party tool descriptions locally before passing them to the Model",
           "correct": false,
-          "rationale": "The notes frame the problem precisely as *not controlling* the tool definition; better descriptions are the preferred fix only when you own them."
+          "rationale": "The premise is that you do *not* control the third-party tool definition; better descriptions are the preferred fix only where you own them."
         },
         {
           "id": "c",
@@ -508,7 +508,7 @@
     {
       "id": "durable-state",
       "type": "multi",
-      "prompt": "Which reliability practices does the notes' engineering section recommend for a multi-agent system? (Select all that apply)",
+      "prompt": "Which reliability practices are recommended for a multi-agent system? (Select all that apply)",
       "tags": [
         "reliability"
       ],
@@ -555,7 +555,7 @@
     {
       "id": "tool-definition-multiagent",
       "type": "single",
-      "prompt": "How does the Terminology section define a Tool?",
+      "prompt": "What is a Tool?",
       "tags": [
         "terminology"
       ],
@@ -1239,58 +1239,11 @@
           "correct": false
         }
       ],
-      "explanation": "Parallel subagents improve speed and efficiency, and the note attached to the recommendation is honest about the cost: the orchestration logic grows, exactly as it does in any parallel application. Results have to be collected, partial failures handled, and task boundaries kept clear enough that two agents do not duplicate work.",
+      "explanation": "Parallel subagents improve speed and efficiency, and the cost is the usual one: the orchestration logic grows, exactly as it does in any parallel application. Results have to be collected, partial failures handled, and task boundaries kept clear enough that two agents do not duplicate work.",
       "citations": [
         {
           "file": "Anthropic Academy/multi_agent_pipelines.md",
           "heading": "Reliability and Engineering Challenges"
-        }
-      ]
-    },
-    {
-      "id": "multiagent-sources",
-      "type": "multi",
-      "prompt": "The notes warn that Anthropic has no official course on multi-agent pipelines. Which sources was the material distilled from? (Select all that apply)",
-      "tags": [
-        "fundamentals"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "Anthropic's \"How we built our multi-agent research system\" engineering post",
-          "correct": true,
-          "rationale": "The source of the research-agent examples, including the SEO bias one."
-        },
-        {
-          "id": "b",
-          "text": "Anthropic's \"Building effective agents\" post",
-          "correct": true,
-          "rationale": "Where the three core principles and most of the patterns come from."
-        },
-        {
-          "id": "c",
-          "text": "The Claude Agents SDK documentation",
-          "correct": true,
-          "rationale": "The implementation side."
-        },
-        {
-          "id": "d",
-          "text": "A study guide for the Claude Architect - Foundations exam",
-          "correct": true,
-          "rationale": "Generated by Claude, per the note."
-        },
-        {
-          "id": "e",
-          "text": "The Model Context Protocol specification",
-          "correct": false,
-          "rationale": "Not among the listed sources."
-        }
-      ],
-      "explanation": "The document opens with a warning: Anthropic has no official course covering multi-agent pipelines, but the topic is crucial for the Claude Architect - Foundations exam, so the material was distilled from four sources — two Anthropic engineering posts, the Agents SDK documentation, and a Claude-generated study guide. Worth knowing when weighing how authoritative a given claim is.",
-      "citations": [
-        {
-          "file": "Anthropic Academy/multi_agent_pipelines.md",
-          "section": "Anthropic doesn't officially have a course covering multi-agent pipelines"
         }
       ]
     },
