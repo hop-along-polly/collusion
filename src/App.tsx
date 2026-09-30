@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 
 import { Layout } from './components/Layout'
 import { CoursePage } from './routes/CoursePage'
+import { CourseQuizPage } from './routes/CourseQuizPage'
 import { CoursesPage } from './routes/CoursesPage'
 import { DomainPage } from './routes/DomainPage'
 import { HomePage } from './routes/HomePage'
@@ -30,6 +31,7 @@ export function App() {
 
         <Route path="courses" element={<CoursesPage />} />
         <Route path="courses/:domainId/:courseId" element={<CoursePage />} />
+        <Route path="courses/:domainId/:courseId/quiz" element={<CourseQuizPage />} />
 
         <Route path="notes" element={<NotesPage />} />
         <Route path="notes/:domainId/:noteId" element={<NotePage />} />

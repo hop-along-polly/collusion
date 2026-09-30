@@ -14,6 +14,9 @@ import { Icon } from '@/components/ui/Icon'
 import { Badge, Card } from '@/components/ui/Surface'
 import { NotFoundPage } from './NotFoundPage'
 
+/** Kept in step with `SESSION_SIZE` in `CourseQuizPage`. */
+const COURSE_SESSION_SIZE = 40
+
 function SetRow({ set }: { set: CardSetMeta }) {
   const { snapshot } = useProgress()
   const progress = getSetProgress(snapshot, set.path)
@@ -112,12 +115,22 @@ export function CoursePage() {
                   ))}
                 </ul>
                 <ButtonLink
-                  to={`/${first.domainId}/${first.id}`}
+                  to={`/courses/${course.path}/quiz`}
                   size="lg"
                   className="mt-5 w-full justify-center"
                 >
-                  Start with {first.title}
+                  <Icon name="target" size={18} />
+                  Start course quiz
                 </ButtonLink>
+                {/*
+                  A course quiz draws a shuffled sample rather than every card, so say so
+                  here instead of letting the session's count come as a surprise.
+                */}
+                <p className="mt-2 text-center font-body text-xs text-content-subtle">
+                  {totalCards > COURSE_SESSION_SIZE
+                    ? `${COURSE_SESSION_SIZE} cards drawn from all ${sets.length} sets, reshuffled each time.`
+                    : 'Every card from every set in this course.'}
+                </p>
               </>
             ) : (
               <p className="mt-4 font-body text-sm text-content-muted">
