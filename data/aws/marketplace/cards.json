@@ -25,11 +25,11 @@
       "explanation": "It is a *category* layered over the existing product types, introduced so AI-related products are easier to search for. Both of its paths land on an existing listing: API deployment produces a SaaS Product using the `Agents API` Fulfillment option, and Container deployment produces a Server Product using the `Container image` Fulfillment option. Pricing Models and Pricing Dimensions are inherited from whichever it resolves to rather than defined by the category.",
       "citations": [
         {
-          "file": "AWS Marketplace/agents_and_tools.md",
+          "file": "courses/aws/marketplace/agents_and_tools.md",
           "section": "is a category rather than a product type"
         },
         {
-          "file": "AWS Marketplace/overview.md",
+          "file": "courses/aws/marketplace/overview.md",
           "heading": "Terminology"
         }
       ]
@@ -71,7 +71,7 @@
       "explanation": "One question decides the path: whose infrastructure does the agent run on. Seller-hosted → a SaaS listing using `Agents API`, where the Buyer's data leaves their account and the Seller ships fixes once for everyone. Buyer-hosted → a Container Product, where data never leaves the Buyer's environment but the Seller ends up supporting many versions in environments they cannot see.",
       "citations": [
         {
-          "file": "AWS Marketplace/agents_and_tools.md",
+          "file": "courses/aws/marketplace/agents_and_tools.md",
           "heading": "Fulfillment (AI Agents & Tools)"
         }
       ]
@@ -119,7 +119,7 @@
       "explanation": "AgentCore Runtime is AWS's managed hosting environment for agents — the Buyer points it at the Seller's image rather than managing servers. It imposes an ARM64 build, blocks the `Hourly` and `Usage with long-term contract` pricing models, and hides the Product from the AI agents and tools page until a version supporting AgentCore exists. The Seller also declares one of three container types: `AI Agent`, `MCP Server`, or `A2A Server`.",
       "citations": [
         {
-          "file": "AWS Marketplace/agents_and_tools.md",
+          "file": "courses/aws/marketplace/agents_and_tools.md",
           "heading": "Container deployment"
         }
       ]
@@ -167,7 +167,7 @@
       "explanation": "Fulfillment connects \"I subscribed\" to \"I can now use this\". The `FulfillmentURL` is the registration landing page, reached by a browser-originated POST that carries a token valid for roughly an hour. The critical operational point is that the POST depends on the Buyer clicking through — so a Seller who relies on it alone will have paying customers they cannot identify. Subscription events must be handled independently.",
       "citations": [
         {
-          "file": "AWS Marketplace/saas.md",
+          "file": "courses/aws/marketplace/saas.md",
           "heading": "Fulfillment"
         }
       ]
@@ -221,7 +221,7 @@
       "explanation": "SaaS has four Pricing Models: `Free`, `Contract-based`, `Usage-based`, and `Contract + Usage`. The distinction that matters is *when* billing happens — contract at purchase time because the entitlement is known in advance, usage after the fact because it has to be measured first. `BYOL` and `Hourly` belong to Server Products, where the Buyer runs the software in their own account.",
       "citations": [
         {
-          "file": "AWS Marketplace/saas.md",
+          "file": "courses/aws/marketplace/saas.md",
           "heading": "Pricing Models"
         }
       ]
@@ -263,7 +263,7 @@
       "explanation": "`Hosts`, `Requests`, `Units` and `Users` are labels, not mechanisms — every category bills as quantity × price per unit, and AWS never interprets which one was chosen. What does matter is that the category is chosen **once for the whole Product**, so a Product priced on `Users` cannot also expose a `Requests` dimension. `Units` is the documented fallback for anything that needs to mix. The other real distinction is that `Hosts` and `Users` are time-denominated in hours while `Requests` and `Units` are not.",
       "citations": [
         {
-          "file": "AWS Marketplace/saas.md",
+          "file": "courses/aws/marketplace/saas.md",
           "heading": "Pricing Dimensions"
         }
       ]
@@ -305,7 +305,7 @@
       "explanation": "The split between `BatchMeterUsage` and `MeterUsage` is about who owns the compute. `BatchMeterUsage` is called by the Seller's service with the Seller's credentials; `MeterUsage` is called by software in the Buyer's account and must be signed with credentials that runtime injects — an EC2 instance role, IRSA on EKS, the task role on ECS, or the AgentCore Runtime execution role. Long-term access keys are never supported.",
       "citations": [
         {
-          "file": "AWS Marketplace/marketplace_apis.md",
+          "file": "courses/aws/marketplace/marketplace_apis.md",
           "heading": "AWS Marketplace Metering Service"
         }
       ]
@@ -359,7 +359,7 @@
       "explanation": "`MeterUsage` accepts one record per hour per dimension, values cannot be amended, and anything submitted more than six hours late is rejected. Together these mean the Seller has one shot per hour and no correction path, so reporting early in an hour is a decision, not a detail. AgentCore Runtime is the single exception, accepting multiple records per hour when each carries a unique `ClientToken`.",
       "citations": [
         {
-          "file": "AWS Marketplace/marketplace_apis.md",
+          "file": "courses/aws/marketplace/marketplace_apis.md",
           "heading": "AWS Marketplace Metering Service"
         }
       ]
@@ -401,11 +401,11 @@
       "explanation": "This is the sharpest distinction in the API surface. `GetEntitlements` returns what a Buyer purchased and nothing more — no drawdown, no decrement, no enforcement — so the Seller's application must track consumption and refuse service once it is exhausted. AWS License Manager, used for AMI and Container contracts, performs real drawdown: `CheckoutLicense` consumes entitlement and `CheckinLicense` returns it, with counts enforced by AWS. A checked-out license auto-checks-in after one hour if not returned.",
       "citations": [
         {
-          "file": "AWS Marketplace/marketplace_apis.md",
+          "file": "courses/aws/marketplace/marketplace_apis.md",
           "heading": "AWS Marketplace Entitlement Service"
         },
         {
-          "file": "AWS Marketplace/marketplace_apis.md",
+          "file": "courses/aws/marketplace/marketplace_apis.md",
           "heading": "AWS License Manager"
         }
       ]
@@ -433,7 +433,7 @@
       "explanation": "Entitlement is enforced only at startup. `RegisterUsage` throws `CustomerNotSubscribedException` on the initial call only, so a Buyer who unsubscribes mid-run keeps working until the task ends — and AWS bills for running tasks and pods regardless of subscription state, which removes the need for the Seller's software to run entitlement checks at runtime. `RegisterUsage` must be called within the first six hours of launch and in the same Region the task was launched in.",
       "citations": [
         {
-          "file": "AWS Marketplace/marketplace_apis.md",
+          "file": "courses/aws/marketplace/marketplace_apis.md",
           "heading": "AWS Marketplace Metering Service"
         }
       ]
@@ -487,11 +487,11 @@
       "explanation": "Four properties define an AMI Product: exactly one image (versioned over time), submitted from us-east-1 and cloned into every offered Region, carrying a Product Code that survives copying, and scanned on every version. The image rules that most often force a rebuild are the prohibitions — no passwords, no baked-in secrets, no requesting AWS credentials, no Seller access to Buyer instances — plus the requirement to be reachable by AWS Marketplace's scanner.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_ami.md",
+          "file": "courses/aws/marketplace/server_ami.md",
           "section": "An AMI Product contains exactly one AMI"
         },
         {
-          "file": "AWS Marketplace/server_ami.md",
+          "file": "courses/aws/marketplace/server_ami.md",
           "heading": "Amazon Machine Image (single AMI)"
         }
       ]
@@ -534,11 +534,11 @@
       "explanation": "Hourly AMI charges round up to the whole hour, while a container billed per pod hourly is charged per second with a one-minute minimum. The consequence is a design one: software whose value comes in short bursts is priced badly as an hourly AMI. Another difference in the same pair — an hourly AMI needs no integration code at all because the Product Code is in the image, while an hourly container has to call `RegisterUsage`.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_ami.md",
+          "file": "courses/aws/marketplace/server_ami.md",
           "section": "Hourly AMI charges round up to the whole hour"
         },
         {
-          "file": "AWS Marketplace/server_container.md",
+          "file": "courses/aws/marketplace/server_container.md",
           "heading": "Pricing Models"
         }
       ]
@@ -580,7 +580,7 @@
       "explanation": "Restriction is not deletion. A restricted version simply cannot be selected by new Buyers; existing Buyers keep using it, and AWS Marketplace guidelines require the Seller to continue supporting them for 90 days. After two years restricted the version is archived — new Buyers can't launch it, existing Buyers still can by AMI ID through launch templates and Auto Scaling groups. An archived version that launches no new instance for 13 months is deleted, and that cannot be undone. A Seller cannot restrict the last remaining public version.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_ami.md",
+          "file": "courses/aws/marketplace/server_ami.md",
           "heading": "Versions and archival (AMI)"
         }
       ]
@@ -622,7 +622,7 @@
       "explanation": "The Pricing Model decides portability, not the delivery method. `Free` and `BYOL` Products never call AWS Marketplace at runtime, so they run on any Docker-compatible (OCI) runtime. Metered Products depend on credentials injected by ECS, EKS or Fargate, and the metering calls throw `PlatformNotSupportedException` anywhere else — which is also why local development of a metered container surfaces the exception.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_container.md",
+          "file": "courses/aws/marketplace/server_container.md",
           "heading": "Running on other OCI runtimes"
         }
       ]
@@ -664,7 +664,7 @@
       "explanation": "Price changes are asymmetric. A decrease reaches existing Buyers immediately; an increase requires 90 days' notice and takes effect on the first day of the month *following* that window. New Buyers pay the new price immediately either way. The asymmetry exists to protect Buyers from surprise increases on software they already depend on.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_container.md",
+          "file": "courses/aws/marketplace/server_container.md",
           "heading": "Pricing Models"
         }
       ]
@@ -706,7 +706,7 @@
       "explanation": "A long-term contract lets a Buyer commit upfront at a reduced rate to a Product that is otherwise billed by consumption, much like a Reserved Instance. It works by entitlement: one contract covers a fixed rate of consumption for the term, and anything above that bills at the standard metered price. Because it is layered on metered pricing, the Seller keeps their metering integration. `Contract-based pricing` replaces metering altogether and is enforced through AWS License Manager.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_container.md",
+          "file": "courses/aws/marketplace/server_container.md",
           "heading": "Long-term contracts"
         }
       ]
@@ -753,7 +753,7 @@
       "explanation": "SageMaker AI deploys AWS Marketplace images with no access to the network or AWS service endpoints, so everything the model needs must be packaged inside it. That rules out mid-inference API calls, runtime licence checks, Serverless Inference, and fetching decryption keys. The arrangement is deliberately blind in both directions — the Seller cannot see the Buyer's data and the Buyer cannot see the Seller's model.",
       "citations": [
         {
-          "file": "AWS Marketplace/machine_learning.md",
+          "file": "courses/aws/marketplace/machine_learning.md",
           "section": "An ML Product runs with the internet unplugged"
         }
       ]
@@ -801,11 +801,11 @@
       "explanation": "Inference pricing charges per prediction rather than per hour of uptime, and applies to real-time endpoints only. Two details change what a Seller earns: only `2XX` responses are billed, and a call that scores a batch can declare its real count through the `X-Amzn-Inference-Metering` response header. ML Products otherwise need no integration — SageMaker AI reports usage and AWS bills from it, which is just as well given the model cannot reach the network.",
       "citations": [
         {
-          "file": "AWS Marketplace/machine_learning.md",
+          "file": "courses/aws/marketplace/machine_learning.md",
           "heading": "Pricing Dimensions (ML)"
         },
         {
-          "file": "AWS Marketplace/machine_learning.md",
+          "file": "courses/aws/marketplace/machine_learning.md",
           "heading": "Pricing Models (ML)"
         }
       ]
@@ -846,7 +846,7 @@
       "explanation": "The difference is simply whether the Buyer brings their own training data. A `Model package` is pre-trained and every Buyer gets the same model — right when the Seller's corpus is the product. An `Algorithm` ships the training method plus the inference component, and the Buyer trains against their own dataset. One trap for algorithms: training output lands in the Buyer's account where the Seller cannot reach it, and encrypting it runs into network isolation, since the keys must be packaged with the image.",
       "citations": [
         {
-          "file": "AWS Marketplace/machine_learning.md",
+          "file": "courses/aws/marketplace/machine_learning.md",
           "heading": "Fulfillment (ML)"
         }
       ]
@@ -887,7 +887,7 @@
       "explanation": "The data set type controls whether the Buyer receives a copy of the data or queries it in place, which is usually the deciding factor. `Files` is the only type that produces an independent copy. Data in AWS Data Exchange is organised as Asset → Revision → Data set, all data sets in one Product must share an AWS Region, and the vocabulary shifts too — the Seller is a *provider* and the Buyer a *subscriber*.",
       "citations": [
         {
-          "file": "AWS Marketplace/data_product.md",
+          "file": "courses/aws/marketplace/data_product.md",
           "heading": "Fulfillment (Data)"
         }
       ]
@@ -935,11 +935,11 @@
       "explanation": "For four of the five data set types there are no pricing dimensions at all; the price and duration pair on the offer does that job, with up to five combinations from 1 to 36 months, in USD only. API data sets are the exception and can be metered per request, per successful request, per byte, or against a custom key reported in the `x-amz-dataexchange-metering` header. Two permanence traps: the auto-renewal decision is fixed at offer creation, and a metered cost's `Key` cannot be edited afterwards.",
       "citations": [
         {
-          "file": "AWS Marketplace/data_product.md",
+          "file": "courses/aws/marketplace/data_product.md",
           "heading": "Pricing Dimensions (Data)"
         },
         {
-          "file": "AWS Marketplace/data_product.md",
+          "file": "courses/aws/marketplace/data_product.md",
           "heading": "Metered costs (API data sets only)"
         }
       ]
@@ -981,11 +981,11 @@
       "explanation": "A Container Product can carry 1 to 4 Fulfillment Options, and because there are only a handful of delivery methods, filling all four means reusing at least one — typically two different Helm charts, one for production topology and one for evaluation, since a production chart's prerequisites will not install on a small single-AZ cluster. An AMI Product reaches the same ceiling differently: one standalone AMI plus up to three CloudFormation templates.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_container.md",
+          "file": "courses/aws/marketplace/server_container.md",
           "heading": "Fulfillment"
         },
         {
-          "file": "AWS Marketplace/server_ami.md",
+          "file": "courses/aws/marketplace/server_ami.md",
           "heading": "Fulfillment (AMI)"
         }
       ]
@@ -1027,7 +1027,7 @@
       "explanation": "AWS Marketplace hosts the images in an ECR registry, and access ends with the subscription: a cancelling Buyer can no longer pull new versions the Seller publishes. Images already pulled may still be in their possession, which is worth knowing — for containers, as for the `Files` data set type, a copy already taken is effectively unrecoverable.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_container.md",
+          "file": "courses/aws/marketplace/server_container.md",
           "heading": "Fulfillment"
         }
       ]
@@ -1069,7 +1069,7 @@
       "explanation": "`Add on for Amazon EKS` puts the Product in the EKS console's add-on catalog, installed through the console or native add-on APIs. It serves platform teams that manage every cluster component the same way they manage their CNI or CSI drivers. Note the Seller supplies Helm chart paths in an ECR repository created through the AWS Marketplace console.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_container.md",
+          "file": "courses/aws/marketplace/server_container.md",
           "heading": "Fulfillment"
         }
       ]
@@ -1097,7 +1097,7 @@
       "explanation": "Only the first half is true. Quick Launch for Helm was discontinued on March 1, 2026, but deployments already running are unaffected — new Buyers must deploy using standard Helm commands, or use container images on Amazon ECS instead. It had created a whole new EKS cluster from an AWS Marketplace-owned CloudFormation template, taking around 60 minutes.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_container.md",
+          "file": "courses/aws/marketplace/server_container.md",
           "heading": "Fulfillment"
         }
       ]
@@ -1145,7 +1145,7 @@
       "explanation": "Container dimensions are entirely Seller-defined — there is no fixed category list, so `admin users` at $2 and `regular users` at $1 can coexist as separate dimensions. Up to 24 per Product. The exception is per task or per pod pricing, which needs no dimensions because AWS meters the usage itself.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_container.md",
+          "file": "courses/aws/marketplace/server_container.md",
           "heading": "Pricing Dimensions"
         }
       ]
@@ -1193,7 +1193,7 @@
       "explanation": "An AMI ID identifies one image in one Region and changes with every version, which is awkward to automate against. The AMI alias is a stable, Region-independent name that AWS maps to the right Regional AMI ID. `latest` resolves to the newest release but is flagged as risky: with both a 1.x and 2.x line, `latest` can hand over 2.x when the truly newest release was a 1.x bug fix.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_ami.md",
+          "file": "courses/aws/marketplace/server_ami.md",
           "heading": "Amazon Machine Image (single AMI)"
         }
       ]
@@ -1241,7 +1241,7 @@
       "explanation": "Metering needs two things from the Buyer, whether they realise it or not: an IAM role with metering permissions attached at launch, and outbound internet access. If either is missing the software cannot report, so the Seller must pick a failure mode — and it ships inside the AMI, unchangeable afterwards. AWS advises against failing closed inside two hours and suggests partial degradation as the middle path.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_ami.md",
+          "file": "courses/aws/marketplace/server_ami.md",
           "heading": "Custom metering (`Paid usage`)"
         }
       ]
@@ -1283,7 +1283,7 @@
       "explanation": "The setting that decides an offer's shape is whether a dimension allows multiple purchases. **Tiered**: the Buyer picks one dimension and quantity is meaningless — `Basic` / `Standard` / `Pro`. **Non-tiered**: they can buy several dimensions and multiple units of each — 40GB encrypted storage plus 100GB unencrypted plus 5 admin seats. Note that durations must be the same across every dimension.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_ami.md",
+          "file": "courses/aws/marketplace/server_ami.md",
           "heading": "Contract dimensions (`AMI with contract pricing`)"
         }
       ]
@@ -1325,7 +1325,7 @@
       "explanation": "AMI charges reach the Buyer as two line items: Infrastructure Pricing Details (EC2 and related AWS costs, defined by AWS and varying by Region) and Software Pricing Details (the Seller's charge). It matters for competitive comparison — a Buyer weighing an AMI against a SaaS Product is comparing software-plus-infrastructure-they-operate against a single all-in price.",
       "citations": [
         {
-          "file": "AWS Marketplace/server_ami.md",
+          "file": "courses/aws/marketplace/server_ami.md",
           "heading": "Pricing Models (AMI)"
         }
       ]
@@ -1366,7 +1366,7 @@
       "explanation": "Both `Model package` and `Algorithm` products must ship a sample Jupyter notebook on GitHub containing a runnable walkthrough, and AWS requires it to work *without asking the Buyer to upload or find any data* — so the Seller supplies working sample data. It is the closest thing to a trial for a product the Buyer cannot inspect, since the Seller's model is opaque to them by design.",
       "citations": [
         {
-          "file": "AWS Marketplace/machine_learning.md",
+          "file": "courses/aws/marketplace/machine_learning.md",
           "heading": "Fulfillment (ML)"
         }
       ]
@@ -1413,7 +1413,7 @@
       "explanation": "These limits decide product viability rather than just performance. A model that needs three minutes to think, or expects a 200MB input, simply cannot be served from a real-time endpoint and has to be sold as batch-only. And because `Inference` pricing applies to real-time endpoints only, a batch-only product is billed hourly whether the Seller wanted that or not.",
       "citations": [
         {
-          "file": "AWS Marketplace/machine_learning.md",
+          "file": "courses/aws/marketplace/machine_learning.md",
           "heading": "Pricing Dimensions (ML)"
         }
       ]
@@ -1454,7 +1454,7 @@
       "explanation": "A model trained using a SageMaker AI built-in algorithm — or an algorithm the Seller subscribed to on AWS Marketplace — cannot be published as a model package. The resulting artifacts can still be used, but publishing requires the Seller's own inference image. Note the converse is permissive: a model may be trained anywhere at all, not necessarily in SageMaker AI.",
       "citations": [
         {
-          "file": "AWS Marketplace/machine_learning.md",
+          "file": "courses/aws/marketplace/machine_learning.md",
           "heading": "Model package"
         }
       ]
@@ -1501,7 +1501,7 @@
       "explanation": "Data Products are listed and fulfilled through AWS Data Exchange, a distinct service, and that has two practical consequences: the work spans two consoles — Management Portal for products and offers, Data Exchange console for data sets — and the vocabulary shifts, with Seller becoming *provider* and Buyer becoming *subscriber*. Provider eligibility is its own process.",
       "citations": [
         {
-          "file": "AWS Marketplace/data_product.md",
+          "file": "courses/aws/marketplace/data_product.md",
           "section": "Data Products are listed and fulfilled through"
         }
       ]
@@ -1543,7 +1543,7 @@
       "explanation": "With no dimensions for four of the five types, the offer's price-and-duration pair does the pricing work and **revision access** is the remaining lever: how much history the Buyer gets, from none up to all, and whether future Revisions arrive during the term. Scope across data sets is not adjustable — a subscription covers all of them, so selling two tiers means publishing two Products.",
       "citations": [
         {
-          "file": "AWS Marketplace/data_product.md",
+          "file": "courses/aws/marketplace/data_product.md",
           "heading": "Pricing Dimensions (Data)"
         }
       ]
@@ -1585,7 +1585,7 @@
       "explanation": "Subscription verification is an optional gate: the prospective Buyer completes a questionnaire and must be approved before access is granted, rather than subscribing instantly. It has no equivalent in the other listing types, and sits alongside the Data Subscription Agreement — AWS Data Exchange's standard EULA template, which a Seller can use as-is, amend, or replace with custom terms.",
       "citations": [
         {
-          "file": "AWS Marketplace/data_product.md",
+          "file": "courses/aws/marketplace/data_product.md",
           "heading": "Pricing Models (Data)"
         }
       ]
@@ -1627,7 +1627,7 @@
       "explanation": "Agentic-ness is the determining factor: a Product that uses AI to reason, plan or complete tasks on behalf of humans or systems uses `Agents API`; anything else uses `Classic SaaS`. Classic SaaS covers the Buyer accessing a web UI *and/or* integrating the Product's API — so exposing an API is not itself the deciding factor.",
       "citations": [
         {
-          "file": "AWS Marketplace/saas.md",
+          "file": "courses/aws/marketplace/saas.md",
           "heading": "Fulfillment"
         }
       ]
@@ -1675,11 +1675,11 @@
       "explanation": "Quick Launch means different things in each option. Classic SaaS: optional, modifiable later, delivers a CloudFormation template for infrastructure in the Buyer's account. Agents API: recommended but optional, **permanent once published**, and uses the Deployment API to place API keys in the Buyer's account. A dynamic `EndpointURL` forces the Quick Launch fulfillment method — and if Quick Launch is not used, the `FulfillmentURL` should redirect the Buyer to a portal where they generate keys themselves.",
       "citations": [
         {
-          "file": "AWS Marketplace/saas.md",
+          "file": "courses/aws/marketplace/saas.md",
           "heading": "Classic SaaS"
         },
         {
-          "file": "AWS Marketplace/saas.md",
+          "file": "courses/aws/marketplace/saas.md",
           "heading": "Agents API"
         }
       ]
@@ -1727,7 +1727,7 @@
       "explanation": "The Deployment Service is the one place a Seller hands something *to* a Buyer: `PutDeploymentParameter` writes a secret into the Buyer's Secrets Manager. It serves both meanings of Quick Launch — CloudFormation deployment parameters for Classic SaaS, API credentials and endpoint parameters for Agents API — with credentials and endpoint parameters sent in separate calls, and only after `ResolveCustomer` has provided the account ID and product code.",
       "citations": [
         {
-          "file": "AWS Marketplace/marketplace_apis.md",
+          "file": "courses/aws/marketplace/marketplace_apis.md",
           "heading": "AWS Marketplace Deployment Service"
         }
       ]
@@ -1769,7 +1769,7 @@
       "explanation": "Change types are named per operation — `AddDeliveryOptions`, `UpdateDeliveryOptions`, `UpdateDeliveryOptionsVisibility`, `CreateExpressPrivateOfferConfiguration` — and IAM policies can be scoped to individual ones with the `catalog:ChangeType` condition key. That lets a Seller grant someone the ability to publish a new version without also granting the ability to change pricing or visibility.",
       "citations": [
         {
-          "file": "AWS Marketplace/marketplace_apis.md",
+          "file": "courses/aws/marketplace/marketplace_apis.md",
           "heading": "AWS Marketplace Catalog API"
         }
       ]

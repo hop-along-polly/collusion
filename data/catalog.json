@@ -38,9 +38,9 @@
       "subtitle": "Anthropic Academy",
       "description": "Model selection and request handling, the SDK, streaming, prefill and stop sequences, tool use and tool choice, structured outputs, RAG end to end, extended thinking, prompt caching, and the workflow patterns.",
       "sources": [
-        "Anthropic Academy/building_with_claude_api.md",
-        "Anthropic Academy/ToolUseExample.py",
-        "Anthropic Academy/claude_on_google_cloud.md"
+        "courses/anthropic/claude-api/building_with_claude_api.md",
+        "courses/anthropic/claude-api/ToolUseExample.py",
+        "courses/anthropic/claude-api/claude_on_google_cloud.md"
       ],
       "cardCount": 55
     },
@@ -52,7 +52,7 @@
       "subtitle": "Anthropic Academy",
       "description": "Choosing between CLAUDE.md, Skills, Hooks and Subagents; skill scopes and precedence; authoring practices; and the four categories of skill failure.",
       "sources": [
-        "Anthropic Academy/agent_skills.md"
+        "courses/anthropic/agent-skills/agent_skills.md"
       ],
       "cardCount": 27
     },
@@ -64,7 +64,7 @@
       "subtitle": "Teams, CODEOWNERS and Actions",
       "description": "Team hierarchy and notifications, CODEOWNERS precedence and syntax limits, and the Actions model — workflows, jobs, runners, reusable workflows and composite actions.",
       "sources": [
-        "github_cd-cd.md"
+        "courses/devops/github-cicd/github_cd-cd.md"
       ],
       "cardCount": 32
     },
@@ -76,7 +76,7 @@
       "subtitle": "Inventory to roles",
       "description": "The agentless model, inventory parameters and grouping, playbook terminology, idempotency, variables and conditionals, roles, and platform constraints.",
       "sources": [
-        "Ansible.md"
+        "courses/devops/ansible/Ansible.md"
       ],
       "cardCount": 37
     },
@@ -88,13 +88,13 @@
       "subtitle": "Fulfillment, pricing and APIs",
       "description": "Per-listing fulfillment and pricing for SaaS, AI Agents & Tools, Server (AMI and Container), ML and Data — plus the Marketplace API surface: metering, entitlements, License Manager, deployment and the Catalog API.",
       "sources": [
-        "AWS Marketplace/saas.md",
-        "AWS Marketplace/agents_and_tools.md",
-        "AWS Marketplace/server_ami.md",
-        "AWS Marketplace/server_container.md",
-        "AWS Marketplace/machine_learning.md",
-        "AWS Marketplace/data_product.md",
-        "AWS Marketplace/marketplace_apis.md"
+        "courses/aws/marketplace/saas.md",
+        "courses/aws/marketplace/agents_and_tools.md",
+        "courses/aws/marketplace/server_ami.md",
+        "courses/aws/marketplace/server_container.md",
+        "courses/aws/marketplace/machine_learning.md",
+        "courses/aws/marketplace/data_product.md",
+        "courses/aws/marketplace/marketplace_apis.md"
       ],
       "cardCount": 40
     },
@@ -106,8 +106,8 @@
       "subtitle": "Service selection cheatsheet",
       "description": "Picking the right service: the security suite, networking and firewalls, storage and database selection, scaling policies, the managed AI services, and cost and resilience patterns.",
       "sources": [
-        "AWS Certs/all_aws_services.md",
-        "AWS Certs/notes.md"
+        "courses/aws/services/all_aws_services.md",
+        "courses/aws/services/notes.md"
       ],
       "cardCount": 38
     },
@@ -119,7 +119,7 @@
       "subtitle": "Anthropic Academy",
       "description": "The client-server model, the three primitives and who controls each, transport types, the SDK request types, and building a server or client.",
       "sources": [
-        "Anthropic Academy/intro_to_mcp.md"
+        "courses/anthropic/mcp/intro_to_mcp.md"
       ],
       "cardCount": 22
     },
@@ -131,7 +131,7 @@
       "subtitle": "Anthropic Academy",
       "description": "The ReAct loop and its execution controls, built-in tools and parallelism, hook trigger points, and what a subagent does and does not inherit.",
       "sources": [
-        "Anthropic Academy/agents_sdk.md"
+        "courses/anthropic/agents-sdk/agents_sdk.md"
       ],
       "cardCount": 31
     },
@@ -143,7 +143,7 @@
       "subtitle": "Claude Architect — Foundations",
       "description": "Agents versus workflows, the multi-agent design patterns, prompt engineering as the primary lever, evaluating non-deterministic systems, and reliability practices.",
       "sources": [
-        "Anthropic Academy/multi_agent_pipelines.md"
+        "courses/anthropic/multi-agent/multi_agent_pipelines.md"
       ],
       "cardCount": 31
     },
@@ -155,7 +155,7 @@
       "subtitle": "Claude in GitHub",
       "description": "The Claude GitHub App, interactive versus automation mode on claude-code-action, CLI flags and Skills, cost control, and customizing Code Review with CLAUDE.md and REVIEW.md.",
       "sources": [
-        "Anthropic Academy/code_review_cicd.md"
+        "courses/anthropic/code-review-cicd/code_review_cicd.md"
       ],
       "cardCount": 37
     },
@@ -167,7 +167,7 @@
       "subtitle": "Anthropic Academy",
       "description": "The three ways of collaborating with AI, the four fluency competencies, responsible AI principles and diligence practices, and the generative AI fundamentals — pillars, scaling laws, fine-tuning, capabilities and limitations.",
       "sources": [
-        "Anthropic Academy/ai_fluency.md"
+        "courses/anthropic/ai-fluency/ai_fluency.md"
       ],
       "cardCount": 31
     },
@@ -179,7 +179,7 @@
       "subtitle": "Anthropic Academy",
       "description": "Prompting basics and the common-problem fixes, the desktop app's Chat, Cowork and Code modes, Projects, Artifacts and Skills, connectors, Enterprise Search and Research Mode.",
       "sources": [
-        "Anthropic Academy/claude_101.md"
+        "courses/anthropic/claude-101/claude_101.md"
       ],
       "cardCount": 31
     },
@@ -191,11 +191,11 @@
       "subtitle": "Offers, renewals and Professional Services",
       "description": "The commercial model shared by every listing: entitlement versus metering, listing types and visibility, private and express offers, renewals and amendments, and the Professional Services listing type end to end.",
       "sources": [
-        "AWS Marketplace/overview.md",
-        "AWS Marketplace/private_offers.md",
-        "AWS Marketplace/renewals.md",
-        "AWS Marketplace/professional_services.md",
-        "AWS Marketplace/saas.md"
+        "courses/aws/marketplace/overview.md",
+        "courses/aws/marketplace/private_offers.md",
+        "courses/aws/marketplace/renewals.md",
+        "courses/aws/marketplace/professional_services.md",
+        "courses/aws/marketplace/saas.md"
       ],
       "cardCount": 32
     }
