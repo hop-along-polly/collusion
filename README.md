@@ -9,9 +9,9 @@ it came from — a build-time gate fails the build if a citation stops resolving
 
 | | |
 |---|---|
-| **Notes** | [`Anthropic Academy/`](Anthropic%20Academy), [`AWS Marketplace/`](AWS%20Marketplace), [`AWS Certs/`](AWS%20Certs), [`Ansible.md`](Ansible.md), [`github_cd-cd.md`](github_cd-cd.md) |
+| **Notes** | [`courses/`](courses) — one directory per course or certification, as `courses/<company>/<cert-id>/` |
 | **App** | Vite + React + TypeScript + React Router, Tailwind CSS |
-| **Cards** | 447 across 13 sets in 3 domains — see [Card sets](#card-sets) |
+| **Cards** | 444 across 13 sets in 3 domains — see [Card sets](#card-sets) |
 | **Hosting** | GitHub Pages, fully static — no backend, no database, no accounts |
 | **Style** | [CodeScribes Brand Style Guide](https://github.com/hop-along-polly/codescribes-styleguide/blob/main/BRAND_STYLE_GUIDE.md) |
 
@@ -58,12 +58,12 @@ to finish. Sets are split when a single note corpus turns out to be two study un
 | Anthropic | Agent Skills | 27 † | `agent_skills.md` |
 | Anthropic | Model Context Protocol | 22 † | `intro_to_mcp.md` |
 | AWS | AWS Marketplace — Listing Types | 40 | `saas.md`, `agents_and_tools.md`, `server_ami.md`, `server_container.md`, `machine_learning.md`, `data_product.md`, `marketplace_apis.md` |
-| AWS | AWS Services | 38 | `AWS Certs/all_aws_services.md`, `notes.md` |
+| AWS | AWS Services | 38 | `all_aws_services.md`, `notes.md` |
 | AWS | AWS Marketplace — Commercials | 32 | `overview.md`, `private_offers.md`, `renewals.md`, `professional_services.md`, `saas.md` |
 | DevOps | Ansible Fundamentals | 37 | `Ansible.md` |
 | DevOps | GitHub CI/CD | 34 | `github_cd-cd.md` |
 
-**447 cards, 516 citations** — 244 select-one, 158 select-all-that-apply, 45 true/false.
+**444 cards, 513 citations** — 242 select-one, 157 select-all-that-apply, 45 true/false.
 
 † **Below the 30-card target because the source note is too thin, not because the set is
 unfinished.** `agent_skills.md` is 67 lines and `intro_to_mcp.md` is 59; both are already
@@ -106,7 +106,7 @@ needs to be touched.
   ],
   "explanation": "Prose shown after Submit: why the key is the key.",
   "citations": [
-    { "file": "Anthropic Academy/building_with_claude_api.md", "heading": "Prompt Caching" }
+    { "file": "courses/anthropic/claude-api/building_with_claude_api.md", "heading": "Prompt Caching" }
   ]
 }
 ```
@@ -116,7 +116,7 @@ needs to be touched.
 
 **Citations:** use `heading` when the label is a real Markdown `#` heading — the citation then
 deep-links to GitHub's anchor. Use `section` when it is a labelled region that is *not* a
-heading (Ansible.md numbers its sections as list items; `github_cd-cd.md` marks some with bold
+heading (`Ansible.md` numbers its sections as list items; `github_cd-cd.md` marks some with bold
 text) — the citation names the region and links to the file, never to an anchor that does not
 exist. The validator enforces this both ways, so a dead anchor cannot ship.
 
@@ -211,7 +211,7 @@ What is explicitly *not* built: authentication, payments, leaderboards, or any s
 ## Repository layout
 
 ```
-Ansible.md, github_cd-cd.md, Anthropic Academy/   the study notes (source of truth)
+courses/<company>/<cert-id>/*.md                  the study notes (source of truth)
 data/
   catalog.json                                    domains + set registry
   <domain>/<set>/cards.json                       card content, one lazy chunk per set

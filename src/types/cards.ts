@@ -22,7 +22,7 @@ export type CardType = 'single' | 'multi' | 'boolean'
  * distinction against the actual note files.
  */
 export interface Citation {
-  /** Repo-relative path, e.g. `Anthropic Academy/building_with_claude_api.md`. */
+  /** Repo-relative path, e.g. `courses/anthropic/claude-api/building_with_claude_api.md`. */
   file: string
   /** A real Markdown heading inside that file, e.g. `Handling ToolUseBlock`. */
   heading?: string
