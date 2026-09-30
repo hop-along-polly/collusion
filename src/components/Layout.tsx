@@ -34,6 +34,14 @@ function Brand() {
   )
 }
 
+/** Shared header link styling — active state is the brand fill. */
+function navLinkClass({ isActive }: { isActive: boolean }): string {
+  return cn(
+    'flex min-h-[44px] shrink-0 items-center rounded-lg px-3 font-body text-sm transition-colors',
+    isActive ? 'bg-brand-fill text-brand' : 'text-content-muted hover:bg-surface-2 hover:text-content',
+  )
+}
+
 /**
  * Moves focus to the main landmark on every navigation. Without this a single-page app
  * leaves focus on the link that was clicked, so keyboard and screen-reader users have
@@ -71,22 +79,24 @@ export function Layout() {
           <Brand />
 
           <nav
-            aria-label="Domains"
+            aria-label="Main"
             className="order-3 -mx-1 flex w-full items-center gap-1 overflow-x-auto sm:order-2 sm:mx-0 sm:ml-auto sm:w-auto sm:overflow-visible"
           >
+            {/*
+              Courses and Notes lead, because they are how the content is meant to be
+              approached; the domains that follow are a shortcut to the card sets.
+            */}
+            <NavLink key="courses" to="/courses" className={navLinkClass}>
+              Courses
+            </NavLink>
+            <NavLink key="notes" to="/notes" className={navLinkClass}>
+              Notes
+            </NavLink>
+
+            <span className="mx-1 h-5 w-px shrink-0 bg-line" aria-hidden="true" />
+
             {domains.map((domain) => (
-              <NavLink
-                key={domain.id}
-                to={`/${domain.id}`}
-                className={({ isActive }) =>
-                  cn(
-                    'flex min-h-[44px] shrink-0 items-center rounded-lg px-3 font-body text-sm transition-colors',
-                    isActive
-                      ? 'bg-brand-fill text-brand'
-                      : 'text-content-muted hover:bg-surface-2 hover:text-content',
-                  )
-                }
-              >
+              <NavLink key={domain.id} to={`/${domain.id}`} className={navLinkClass}>
                 {domain.title}
               </NavLink>
             ))}
