@@ -61,14 +61,14 @@ export function CourseQuizPage() {
 
   return (
     <QuizRunner
-      key={`${deck.id}:${mode}:${attempt}`}
+      key={`${deck.progressKey}:${mode}:${attempt}`}
       deck={deck}
       mode={mode}
       onRestart={() => setAttempt((value) => value + 1)}
       footer={
         <p className="font-body text-sm text-content-subtle">
-          Answers are recorded against each card's own set, so progress shows up whether
-          you study through the course or a single set.{' '}
+          Results are recorded against {course.title} specifically, so studying a shared
+          topic for another certification does not move this one.{' '}
           <Link to={`/courses/${course.path}`} className="text-brand underline-offset-2 hover:underline">
             Back to {course.title}
           </Link>

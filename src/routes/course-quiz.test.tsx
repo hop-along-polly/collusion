@@ -33,7 +33,7 @@ function renderAt(path: string) {
 }
 
 function storedSnapshot() {
-  return JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '{"sets":{}}')
+  return JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '{"courses":{}}')
 }
 
 beforeEach(() => {
@@ -61,7 +61,7 @@ describe('a course quiz', () => {
     ).toBeNull()
   })
 
-  it('records an answer against the set the card came from, not the course', async () => {
+  it('records an answer against the course, not against a card set', async () => {
     const user = userEvent.setup()
     renderAt('/courses/aws/aif-c01/quiz')
 
@@ -73,16 +73,14 @@ describe('a course quiz', () => {
     await user.click(submit)
 
     await waitFor(() => {
-      const snapshot = storedSnapshot()
-      const setKeys = Object.keys(snapshot.sets)
-      // Progress lands under a real set path, never under a course key.
-      expect(setKeys.length).toBe(1)
-      expect(courseSets(AIF).map((set) => set.path)).toContain(setKeys[0])
-      expect(setKeys[0]?.startsWith('course:')).toBe(false)
+      const keys = Object.keys(storedSnapshot().courses)
+      // One bucket, named for the course being studied for — never for a card set.
+      expect(keys).toEqual([AIF.path])
+      expect(courseSets(AIF).map((set) => set.path)).not.toContain(keys[0])
     })
   })
 
-  it('stores the card under its own id, with no session namespacing leaked in', async () => {
+  it('namespaces stored card ids by set, so two sets in one course cannot collide', async () => {
     const user = userEvent.setup()
     renderAt('/courses/aws/aif-c01/quiz')
 
@@ -92,13 +90,12 @@ describe('a course quiz', () => {
     await user.click(submit)
 
     await waitFor(() => {
-      const snapshot = storedSnapshot()
-      const setKey = Object.keys(snapshot.sets)[0]!
-      const cardIds = Object.keys(snapshot.sets[setKey].cards)
+      const cardIds = Object.keys(storedSnapshot().courses[AIF.path].cards)
       expect(cardIds.length).toBe(1)
-      // `::` is the session namespace separator; a stored id carrying it would mean the
-      // same card could never be matched again from its own set page.
-      expect(cardIds[0]).not.toContain('::')
+      // Card ids are unique within a set but not across them, so the stored id carries
+      // the set it came from.
+      const [setId] = cardIds[0]!.split('::')
+      expect(courseSets(AIF).map((set) => set.id)).toContain(setId)
     })
   })
 

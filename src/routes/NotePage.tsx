@@ -1,9 +1,8 @@
 import { Link, useParams } from 'react-router-dom'
 
-import { catalog, coursesForNote, findDomain } from '@/data/catalog'
+import { coursesForNote, findDomain } from '@/data/catalog'
 import { findNoteRef, githubUrl } from '@/data/content'
 import { useNote } from '@/hooks/useContent'
-import { pluralize } from '@/utils/format'
 import { Markdown } from '@/components/Markdown'
 import { EmptyState } from '@/components/ui/Feedback'
 import { Icon } from '@/components/ui/Icon'
@@ -18,8 +17,11 @@ export function NotePage() {
 
   if (!ref || !domain) return <NotFoundPage />
 
-  // Which card sets were built from this note, and which courses read it.
-  const sets = catalog.sets.filter((set) => set.sources.includes(ref.file))
+  /**
+   * Courses that read this note. There is deliberately no way to start flashcards from
+   * here: a session has to be launched from a course so its results are recorded against
+   * the certification being studied for.
+   */
   const courses = coursesForNote(ref.file)
 
   return (
@@ -44,39 +46,14 @@ export function NotePage() {
         </Card>
 
         <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
-          <Card tone="parchment">
-            <h2 className="font-heading text-2xl">Test yourself</h2>
-            {sets.length > 0 ? (
-              <>
-                <p className="mt-2 font-body text-sm text-content-muted">
-                  {pluralize(sets.length, 'card set')} drawn from this note.
-                </p>
-                <ul className="mt-3 space-y-2">
-                  {sets.map((set) => (
-                    <li key={set.id}>
-                      <Link
-                        to={`/${set.domainId}/${set.id}`}
-                        className="font-body text-brand underline-offset-2 hover:underline"
-                      >
-                        {set.title}
-                      </Link>
-                      <span className="ml-2 font-body text-sm text-content-subtle">
-                        {pluralize(set.cardCount, 'card')}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            ) : (
-              <p className="mt-2 font-body text-sm text-content-muted">
-                No flashcards have been generated from this note yet.
-              </p>
-            )}
-          </Card>
-
           {courses.length > 0 ? (
-            <Card>
-              <h2 className="font-heading text-xl">Read for</h2>
+            <Card tone="parchment">
+              <h2 className="font-heading text-2xl">Flashcards</h2>
+              <p className="mt-2 font-body text-sm text-content-muted">
+                Cards from this note are quizzed as part of the course you are studying for,
+                so results count toward that certification.
+              </p>
+              <h3 className="mt-4 font-heading text-base text-content-strong">Read for</h3>
               <ul className="mt-3 space-y-2">
                 {courses.map((course) => (
                   <li key={`${course.domainId}/${course.id}`} className="flex flex-wrap items-center gap-2">

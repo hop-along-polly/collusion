@@ -10,7 +10,7 @@ import { gradeCard } from '@/engine/grade'
 import { createQuiz, createQuizReducer, missedCardIds, selectView } from '@/engine/quiz'
 import { randomSeed, shuffle } from '@/engine/shuffle'
 import { useProgress } from '@/hooks/useProgress'
-import { groupBySet, type Deck } from '@/quiz/deck'
+import type { Deck } from '@/quiz/deck'
 import type { Card as CardType } from '@/types/cards'
 import type { QuizMode, QuizStats } from '@/types/quiz'
 import { pluralize } from '@/utils/format'
@@ -18,10 +18,9 @@ import { pluralize } from '@/utils/format'
 /**
  * Runs one quiz session over a `Deck`.
  *
- * Extracted from `QuizPage` so a course session — the union of several sets — reuses the
- * flow rather than copying it. Everything set-specific now arrives through the deck, and
- * results are written back through `deck.originOf` so each card's progress lands on the
- * set it actually came from, no matter which page started the session.
+ * A deck is always a course, so every result is recorded under that course's key. Studying
+ * the same card for a different certification is a separate record — readiness for one
+ * exam says nothing about readiness for another.
  */
 
 interface QuizRunnerProps {
@@ -46,24 +45,18 @@ export function QuizRunner({ deck, mode, onRestart, footer }: QuizRunnerProps) {
    */
   const [sessionCards] = useState<CardType[]>(() => {
     if (mode === 'review') {
-      const eligible = new Set<string>()
-      for (const [setKey, entries] of groupBySet(deck)) {
-        const reviewable = new Set(
-          progress.reviewableCardIds(
-            setKey,
-            entries.map((entry) => entry.cardId),
-          ),
-        )
-        for (const entry of entries) {
-          if (reviewable.has(entry.cardId)) eligible.add(entry.sessionId)
-        }
-      }
+      const eligible = new Set(
+        progress.reviewableCardIds(
+          deck.progressKey,
+          deck.cards.map((card) => card.id),
+        ),
+      )
       // Review is already a filtered subset, so it is never capped — the whole point is
       // to see everything still outstanding.
       return deck.cards.filter((card) => eligible.has(card.id))
     }
 
-    if (!deck.sessionLimit || deck.cards.length <= deck.sessionLimit) return deck.cards
+    if (deck.cards.length <= deck.sessionLimit) return deck.cards
 
     // Shuffle before slicing, or a capped deck would serve the same opening cards every
     // time. `createQuiz` shuffles too, but only what it is given.
@@ -73,23 +66,14 @@ export function QuizRunner({ deck, mode, onRestart, footer }: QuizRunnerProps) {
   })
 
   const [initialMarked] = useState<string[]>(() => {
-    const marked: string[] = []
-    const inSession = new Set(sessionCards.map((card) => card.id))
-    for (const [setKey, entries] of groupBySet(deck)) {
-      const stored = progress.snapshot.sets[setKey]?.cards ?? {}
-      for (const entry of entries) {
-        if (inSession.has(entry.sessionId) && stored[entry.cardId]?.marked) {
-          marked.push(entry.sessionId)
-        }
-      }
-    }
-    return marked
+    const stored = progress.snapshot.courses[deck.progressKey]?.cards ?? {}
+    return sessionCards.filter((card) => stored[card.id]?.marked).map((card) => card.id)
   })
 
   const reducer = useMemo(() => createQuizReducer(sessionCards), [sessionCards])
   const [quiz, dispatch] = useReducer(
     reducer,
-    { setId: deck.id, mode, cards: sessionCards, marked: initialMarked },
+    { setId: deck.progressKey, mode, cards: sessionCards, marked: initialMarked },
     createQuiz,
   )
 
@@ -101,8 +85,7 @@ export function QuizRunner({ deck, mode, onRestart, footer }: QuizRunnerProps) {
   // identity on every answer, and including it would re-record the session repeatedly.
   useEffect(() => {
     if (!finished) return
-    // A course session touches several sets; each gets its own "last studied" stamp.
-    for (const setKey of deck.setKeys) progress.completeSession(setKey)
+    progress.completeSession(deck.progressKey)
   }, [finished]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const currentCard = view.card
@@ -115,15 +98,13 @@ export function QuizRunner({ deck, mode, onRestart, footer }: QuizRunnerProps) {
     // The reducer stays pure; persistence happens here, using the same grading
     // function the reducer uses so the two can never disagree.
     const answer = gradeCard(currentCard, currentSelection, Date.now())
-    const origin = deck.originOf(currentCard.id)
-    if (origin) progress.recordAnswer(origin.setKey, origin.cardId, answer.isCorrect)
+    progress.recordAnswer(deck.progressKey, currentCard.id, answer.isCorrect)
   }, [currentCard, currentSelection, deck, progress])
 
   const handleToggleMark = useCallback(() => {
     if (!currentCard) return
     dispatch({ type: 'toggleMark' })
-    const origin = deck.originOf(currentCard.id)
-    if (origin) progress.setMarked(origin.setKey, origin.cardId, !currentMarked)
+    progress.setMarked(deck.progressKey, currentCard.id, !currentMarked)
   }, [currentCard, currentMarked, deck, progress])
 
   const handleNext = useCallback(() => dispatch({ type: 'next' }), [])
@@ -182,7 +163,7 @@ export function QuizRunner({ deck, mode, onRestart, footer }: QuizRunnerProps) {
         </Link>
         {mode === 'review' ? <Badge tone="warning">Review mode</Badge> : <Badge tone="brand">Practice</Badge>}
         {/* A capped session says so, or the card count looks like the whole course. */}
-        {mode !== 'review' && deck.sessionLimit && deck.cards.length > deck.sessionLimit ? (
+        {mode !== 'review' && deck.cards.length > deck.sessionLimit ? (
           <Badge>
             {sessionCards.length} of {deck.cards.length}
           </Badge>

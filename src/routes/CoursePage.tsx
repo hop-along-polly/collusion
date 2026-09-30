@@ -4,7 +4,7 @@ import { courseSets, findCourse, findDomain } from '@/data/catalog'
 import { githubUrl } from '@/data/content'
 import { useCourseGuide } from '@/hooks/useContent'
 import { useProgress } from '@/hooks/useProgress'
-import { getSetProgress } from '@/storage/progress'
+import { getCourseProgress } from '@/storage/progress'
 import type { CardSetMeta } from '@/types/cards'
 import { pluralize } from '@/utils/format'
 import { Markdown } from '@/components/Markdown'
@@ -17,38 +17,30 @@ import { NotFoundPage } from './NotFoundPage'
 /** Kept in step with `SESSION_SIZE` in `CourseQuizPage`. */
 const COURSE_SESSION_SIZE = 40
 
-function SetRow({ set }: { set: CardSetMeta }) {
-  const { snapshot } = useProgress()
-  const progress = getSetProgress(snapshot, set.path)
-  const attempted = Object.values(progress.cards).filter((card) => card.attempts > 0).length
-
+/**
+ * A card set is an authoring unit, not a destination: sets exist so a long note can be
+ * split and so cards can be regenerated one topic at a time. Listing them tells a learner
+ * what the course covers without implying they can be studied separately — flashcards are
+ * only launched from the course, so results land against the certification.
+ */
+function SetList({ sets }: { sets: CardSetMeta[] }) {
   return (
-    <li className="border-b border-line py-4 last:border-b-0 last:pb-0">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <h3 className="font-heading text-xl">
-          <Link to={`/${set.domainId}/${set.id}`} className="hover:text-brand">
-            {set.title}
-          </Link>
-        </h3>
-        <span className="font-body text-sm text-content-subtle">
-          {pluralize(set.cardCount, 'card')}
-        </span>
-      </div>
-      {attempted > 0 ? (
-        <div className="mt-2">
-          <ProgressBar
-            value={attempted}
-            max={set.cardCount}
-            label={`${set.title}: ${attempted} of ${set.cardCount} cards seen`}
-          />
-        </div>
-      ) : null}
-    </li>
+    <ul className="mt-4 space-y-2">
+      {sets.map((set) => (
+        <li key={set.id} className="flex flex-wrap items-baseline justify-between gap-x-4">
+          <span className="font-body text-sm text-content">{set.title}</span>
+          <span className="font-body text-sm text-content-subtle">
+            {pluralize(set.cardCount, 'card')}
+          </span>
+        </li>
+      ))}
+    </ul>
   )
 }
 
 export function CoursePage() {
   const { domainId, courseId } = useParams<{ domainId: string; courseId: string }>()
+  const { snapshot } = useProgress()
   const course = domainId && courseId ? findCourse(domainId, courseId) : undefined
   const domain = domainId ? findDomain(domainId) : undefined
   const guide = useCourseGuide(course)
@@ -59,6 +51,14 @@ export function CoursePage() {
   const totalCards = sets.reduce((total, set) => total + set.cardCount, 0)
   // The study guide lists sets in study order, so the first is where a learner starts.
   const first = sets[0]
+  /**
+   * Read straight from the stored record rather than through `summarize`, which needs the
+   * full card id list and would mean downloading every card chunk to render a count.
+   */
+  const stored = getCourseProgress(snapshot, course.path)
+  const answered = Object.values(stored.cards).filter((card) => card.attempts > 0)
+  const correct = answered.filter((card) => card.lastResult === 'correct').length
+  const accuracy = answered.length === 0 ? 0 : Math.round((correct / answered.length) * 100)
 
   return (
     <div>
@@ -109,11 +109,20 @@ export function CoursePage() {
 
             {first ? (
               <>
-                <ul className="mt-4">
-                  {sets.map((set) => (
-                    <SetRow key={set.id} set={set} />
-                  ))}
-                </ul>
+                {answered.length > 0 ? (
+                  <div className="mt-4">
+                    <ProgressBar
+                      value={answered.length}
+                      max={totalCards}
+                      label={`${course.title}: ${answered.length} of ${totalCards} cards seen`}
+                    />
+                    <p className="mt-2 font-body text-sm text-content-muted">
+                      {answered.length} of {totalCards} seen · {accuracy}% accuracy
+                    </p>
+                  </div>
+                ) : null}
+
+                <SetList sets={sets} />
                 <ButtonLink
                   to={`/courses/${course.path}/quiz`}
                   size="lg"

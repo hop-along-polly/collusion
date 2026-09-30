@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-import { catalog, listSets, totalCardCount } from '@/data/catalog'
+import { catalog, courseSets, listCourses, totalCardCount } from '@/data/catalog'
 import { useProgress } from '@/hooks/useProgress'
 import { overallSummary } from '@/storage/progress'
 import type { DomainMeta } from '@/types/cards'
@@ -11,8 +11,11 @@ import { Stat } from '@/components/ui/Feedback'
 import { ButtonLink } from '@/components/ui/Button'
 
 function DomainCard({ domain }: { domain: DomainMeta }) {
-  const sets = listSets(domain.id)
-  const cards = sets.reduce((total, set) => total + set.cardCount, 0)
+  const courses = listCourses(domain.id)
+  const cards = courses.reduce(
+    (total, course) => total + courseSets(course).reduce((sum, set) => sum + set.cardCount, 0),
+    0,
+  )
   const planned = domain.status === 'planned'
 
   return (
@@ -36,7 +39,7 @@ function DomainCard({ domain }: { domain: DomainMeta }) {
           <Badge tone="warning">Notes pending</Badge>
         ) : (
           <>
-            <Badge tone="brand">{pluralize(sets.length, 'set')}</Badge>
+            <Badge tone="brand">{pluralize(courses.length, 'course')}</Badge>
             <Badge>{pluralize(cards, 'card')}</Badge>
           </>
         )}
@@ -97,7 +100,7 @@ export function HomePage() {
         {overall.reviewable > 0 ? (
           <p className="mt-6 font-body text-sm text-content-muted">
             You have {pluralize(overall.reviewable, 'card')} waiting in review across{' '}
-            {pluralize(overall.setsStarted, 'set')}.
+            {pluralize(overall.coursesStarted, 'course')}.
           </p>
         ) : null}
       </section>

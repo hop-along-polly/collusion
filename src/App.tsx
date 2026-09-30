@@ -9,19 +9,16 @@ import { HomePage } from './routes/HomePage'
 import { NotePage } from './routes/NotePage'
 import { NotesPage } from './routes/NotesPage'
 import { NotFoundPage } from './routes/NotFoundPage'
-import { QuizPage } from './routes/QuizPage'
-import { SetPage } from './routes/SetPage'
 
 /**
- * Three entities, three route families, each mirroring a directory:
+ * Two things a learner navigates, each mirroring a directory:
  *
  *   /courses/:domainId/:courseId   courses/<domainId>/<courseId>.md
  *   /notes/:domainId/:noteId       notes/<domainId>/<noteId>.md
- *   /:domainId/:setId              flashcards/<domainId>/<setId>.json
  *
- * The card-set family is left unprefixed because those URLs predate the other two and
- * are also the progress storage key. `courses` and `notes` are declared first so they
- * are never mistaken for a domain id.
+ * Flashcards have no route of their own. A card set is an authoring unit, not a
+ * destination: cards are only ever launched from a course, so that results are recorded
+ * against the certification being studied for. `/:domainId` lists both for one company.
  */
 export function App() {
   return (
@@ -37,8 +34,6 @@ export function App() {
         <Route path="notes/:domainId/:noteId" element={<NotePage />} />
 
         <Route path=":domainId" element={<DomainPage />} />
-        <Route path=":domainId/:setId" element={<SetPage />} />
-        <Route path=":domainId/:setId/quiz" element={<QuizPage />} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Route>
