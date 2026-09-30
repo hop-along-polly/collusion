@@ -116,7 +116,35 @@ export interface DomainMeta {
 
 export type DomainIcon = 'sparkles' | 'cloud' | 'workflow' | 'terminal'
 
+/**
+ * A course: the study guide for one certification (or one non-exam track), mapping the
+ * notes to read to the card sets that test them.
+ *
+ * Courses are the third entity alongside notes and flashcards. A note may appear in
+ * several courses, and a course draws on several card sets, so neither relationship is
+ * one-to-one — which is why the mapping lives here rather than being inferred from paths.
+ */
+export interface CourseMeta {
+  /** Unique within its domain. For a certification this is the exam code, e.g. `aif-c01`. */
+  id: string
+  domainId: string
+  /** Study guide location under `courses/`, without the extension, e.g. `aws/aif-c01`. */
+  path: string
+  title: string
+  /** Short qualifier shown under the title, e.g. the exam code. */
+  subtitle?: string
+  description: string
+  /**
+   * `certification` sits an exam; `track` is a study path with no exam behind it.
+   * Rendered as a badge so a learner can tell the two apart.
+   */
+  kind: 'certification' | 'track'
+  /** Card set ids this course quizzes, in study order. A course quiz is their union. */
+  setIds: string[]
+}
+
 export interface Catalog {
   domains: DomainMeta[]
   sets: CardSetMeta[]
+  courses: CourseMeta[]
 }

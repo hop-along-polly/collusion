@@ -7,7 +7,7 @@
  */
 
 // Relative (not aliased) so the Node-based build gate can import this module directly.
-import type { Card, CardSetMeta, Catalog, DomainMeta } from '../types/cards'
+import type { Card, CardSetMeta, Catalog, CourseMeta, DomainMeta } from '../types/cards'
 
 export interface Issue {
   /** Dotted path to the offending value, e.g. `cards[3].options[1].id`. */
@@ -24,6 +24,7 @@ export interface ValidationResult<T> {
 const CARD_TYPES = new Set(['single', 'multi', 'boolean'])
 const DOMAIN_STATUSES = new Set(['available', 'planned'])
 const DOMAIN_ICONS = new Set(['sparkles', 'cloud', 'workflow', 'terminal'])
+const COURSE_KINDS = new Set(['certification', 'track'])
 
 /**
  * Options that let a learner shortcut the question rather than reason about it.
@@ -420,12 +421,79 @@ export function validateCatalog(input: unknown): ValidationResult<Catalog> {
     })
   }
 
+  const courseKeys = new Set<string>()
+  if (!Array.isArray(input.courses)) {
+    issues.push({ path: 'catalog.courses', message: 'expected an array', severity: 'error' })
+  } else {
+    input.courses.forEach((raw, index) => {
+      const at = `catalog.courses[${index}]`
+      if (!isRecord(raw)) {
+        issues.push({ path: at, message: 'expected an object', severity: 'error' })
+        return
+      }
+      for (const key of ['id', 'domainId', 'path', 'title', 'description'] as const) {
+        if (!isNonEmptyString(raw[key])) {
+          issues.push({ path: `${at}.${key}`, message: 'missing or empty', severity: 'error' })
+        }
+      }
+      if (isNonEmptyString(raw.domainId) && domainIds.size > 0 && !domainIds.has(raw.domainId)) {
+        issues.push({
+          path: `${at}.domainId`,
+          message: `"${raw.domainId}" is not a declared domain`,
+          severity: 'error',
+        })
+      }
+      if (isNonEmptyString(raw.domainId) && isNonEmptyString(raw.id)) {
+        const key = `${raw.domainId}/${raw.id}`
+        if (courseKeys.has(key)) {
+          issues.push({ path: `${at}.id`, message: `duplicate course "${key}"`, severity: 'error' })
+        }
+        courseKeys.add(key)
+        if (raw.path !== key) {
+          issues.push({
+            path: `${at}.path`,
+            message: `expected "${key}" so the study guide file matches the route`,
+            severity: 'error',
+          })
+        }
+      }
+      if (typeof raw.kind !== 'string' || !COURSE_KINDS.has(raw.kind)) {
+        issues.push({
+          path: `${at}.kind`,
+          message: `expected one of ${[...COURSE_KINDS].join(', ')}`,
+          severity: 'error',
+        })
+      }
+      // A course with no sets would render a study guide and a dead quiz button.
+      if (!Array.isArray(raw.setIds) || raw.setIds.length === 0) {
+        issues.push({
+          path: `${at}.setIds`,
+          message: 'list the card set id(s) this course quizzes',
+          severity: 'error',
+        })
+      } else if (raw.setIds.some((setId) => !isNonEmptyString(setId))) {
+        issues.push({ path: `${at}.setIds`, message: 'expected non-empty strings', severity: 'error' })
+      } else if (isNonEmptyString(raw.domainId) && setKeys.size > 0) {
+        for (const setId of raw.setIds as string[]) {
+          if (!setKeys.has(`${raw.domainId}/${setId}`)) {
+            issues.push({
+              path: `${at}.setIds`,
+              message: `"${setId}" is not a card set in domain "${raw.domainId}"`,
+              severity: 'error',
+            })
+          }
+        }
+      }
+    })
+  }
+
   if (hasErrors(issues)) return { value: null, issues }
 
   return {
     value: {
       domains: (input.domains as DomainMeta[]).slice().sort((a, b) => a.order - b.order),
       sets: input.sets as CardSetMeta[],
+      courses: input.courses as CourseMeta[],
     },
     issues,
   }

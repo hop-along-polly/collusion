@@ -4,7 +4,7 @@
  * are fetched lazily and code-split per set — see `loader.ts`.
  */
 
-import catalogJson from '../../data/catalog.json'
+import catalogJson from '../../catalog.json'
 import type { CardSetMeta, Catalog, DomainMeta } from '../types/cards'
 import { formatIssues, validateCatalog } from './validate'
 
@@ -12,7 +12,7 @@ const result = validateCatalog(catalogJson)
 
 if (!result.value) {
   // Unreachable in a released build: `npm run validate:data` gates `npm run build`.
-  throw new Error(`data/catalog.json is invalid:\n${formatIssues(result.issues)}`)
+  throw new Error(`catalog.json is invalid:\n${formatIssues(result.issues)}`)
 }
 
 export const catalog: Catalog = result.value
