@@ -198,6 +198,30 @@
         "notes/aws/saas.md"
       ],
       "cardCount": 32
+    },
+    {
+      "id": "ai-practitioner-foundations",
+      "domainId": "aws",
+      "path": "aws/ai-practitioner-foundations",
+      "title": "AI Practitioner — Concepts & Metrics",
+      "subtitle": "AIF-C01",
+      "description": "Core terminology, foundation versus frontier models, data types, the three learning paradigms and RLHF, and the evaluation metrics for classification, regression and generative models.",
+      "sources": [
+        "notes/aws/ai_practitioner.md"
+      ],
+      "cardCount": 34
+    },
+    {
+      "id": "ai-practitioner-aws",
+      "domainId": "aws",
+      "path": "aws/ai-practitioner-aws",
+      "title": "AI Practitioner — AWS Services",
+      "subtitle": "AIF-C01",
+      "description": "Amazon's foundation models, the pre-trained AI services, Bedrock end to end, SageMaker AI across the ML lifecycle, choosing between them, and responsible AI.",
+      "sources": [
+        "notes/aws/ai_practitioner.md"
+      ],
+      "cardCount": 42
     }
   ],
   "courses": [
@@ -229,6 +253,8 @@
       "description": "AWS's foundational AI and machine learning certification: core concepts, evaluation metrics, Amazon foundation models, the managed AI services, Bedrock, SageMaker AI, and responsible AI.",
       "kind": "certification",
       "setIds": [
+        "ai-practitioner-foundations",
+        "ai-practitioner-aws",
         "services"
       ]
     },
@@ -246,15 +272,26 @@
       ]
     },
     {
-      "id": "fundamentals",
+      "id": "github-actions",
       "domainId": "devops",
-      "path": "devops/fundamentals",
-      "title": "DevOps Fundamentals",
-      "subtitle": "CI/CD and configuration management",
-      "description": "Two halves of automating software delivery: continuous integration and deployment with GitHub Actions, and configuration management with Ansible.",
+      "path": "devops/github-actions",
+      "title": "GitHub Actions",
+      "subtitle": "CI/CD track",
+      "description": "Automating software delivery on GitHub: team hierarchy and CODEOWNERS precedence, workflows, jobs and runners, and the reusable pieces that stop every repository reinventing its pipeline.",
       "kind": "track",
       "setIds": [
-        "github-cicd",
+        "github-cicd"
+      ]
+    },
+    {
+      "id": "ansible",
+      "domainId": "devops",
+      "path": "devops/ansible",
+      "title": "Ansible",
+      "subtitle": "Configuration management track",
+      "description": "Configuration management with Ansible: the agentless model, inventory parameters and grouping, playbook terminology and idempotency, variables, conditionals and roles.",
+      "kind": "track",
+      "setIds": [
         "ansible"
       ]
     }

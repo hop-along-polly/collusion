@@ -8,15 +8,16 @@ the right AWS service for a scenario, and recognize responsible-AI obligations.
 
 | # | Topic | Notes | Flashcards |
 |---|-------|-------|------------|
-| 1 | Core concepts, data types and ML paradigms | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | *not yet generated* |
-| 2 | Evaluation metrics — classification, regression, generative | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | *not yet generated* |
-| 3 | Amazon foundation models and the managed AI services | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | *not yet generated* |
-| 4 | Bedrock and SageMaker AI | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | *not yet generated* |
-| 5 | Responsible AI | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | *not yet generated* |
-| 6 | AWS service selection | [all_aws_services.md](../../notes/aws/all_aws_services.md), [notes.md](../../notes/aws/notes.md) | [AWS Services](/aws/services) |
+| 1 | Core concepts, data types and ML paradigms | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [Concepts & Metrics](/aws/ai-practitioner-foundations) |
+| 2 | Evaluation metrics — classification, regression, generative | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [Concepts & Metrics](/aws/ai-practitioner-foundations) |
+| 3 | Amazon foundation models and the managed AI services | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [AWS Services](/aws/ai-practitioner-aws) |
+| 4 | Bedrock and SageMaker AI | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [AWS Services](/aws/ai-practitioner-aws) |
+| 5 | Responsible AI | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [AWS Services](/aws/ai-practitioner-aws) |
+| 6 | AWS service selection | [all_aws_services.md](../../notes/aws/all_aws_services.md), [notes.md](../../notes/aws/notes.md) | [Service Selection](/aws/services) |
 
-> Flashcards for `ai_practitioner.md` have not been generated yet. Run the
-> `generate-flashcards` skill against `notes/aws/ai_practitioner.md` to create them.
+> The AI Practitioner notes are covered by two card sets rather than one. At 76 cards the
+> material is two study units: the vendor-neutral concepts and metrics, and the AWS service
+> catalogue built on top of them.
 
 ## What the exam weights
 
