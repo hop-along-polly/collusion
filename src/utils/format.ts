@@ -1,7 +1,5 @@
 import type { Citation } from '@/types/cards'
-
-/** The repository these notes live in - citations link back to it. */
-const REPO_BLOB_URL = 'https://github.com/hop-along-polly/collusion/blob/master'
+import { githubUrl } from '@/utils/github'
 
 /** GitHub's heading-anchor slug. Mirrored in `scripts/validate-data.ts`. */
 export function slugify(heading: string): string {
@@ -18,8 +16,7 @@ export function slugify(heading: string): string {
  * the file rather than pointing at an anchor that does not exist.
  */
 export function citationUrl(citation: Citation): string {
-  const path = citation.file.split('/').map(encodeURIComponent).join('/')
-  const base = `${REPO_BLOB_URL}/${path}`
+  const base = githubUrl(citation.file)
 
   if (citation.anchor) return `${base}#${citation.anchor}`
   if (citation.heading) return `${base}#${slugify(citation.heading)}`
