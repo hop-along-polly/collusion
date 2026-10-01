@@ -13,11 +13,17 @@ the right AWS service for a scenario, and recognize responsible-AI obligations.
 | 3 | Amazon foundation models and the managed AI services | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [AWS Services](/aws/ai-practitioner-aws) |
 | 4 | Bedrock and SageMaker AI | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [AWS Services](/aws/ai-practitioner-aws) |
 | 5 | Responsible AI | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [AWS Services](/aws/ai-practitioner-aws) |
-| 6 | AWS service selection | [all_aws_services.md](../../notes/aws/all_aws_services.md), [notes.md](../../notes/aws/notes.md) | [Service Selection](/aws/services) |
+| 6 | AWS service selection | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Core Services](/aws/services) |
+| 7 | The analytics and applied AI services, and where embeddings are stored | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Analytics and AI Services](/aws/analytics-and-ai) |
 
 > The AI Practitioner notes are covered by two card sets rather than one. At 76 cards the
 > material is two study units: the vendor-neutral concepts and metrics, and the AWS service
 > catalogue built on top of them.
+>
+> Topics 6 and 7 draw on the service catalogue instead, which this certification shares with the
+> Cloud Practitioner. Topic 7 is worth the time even though it reaches past the exam guide: the
+> applied AI services and the vector storage options are where scenario questions about picking a
+> service, rather than describing a technique, tend to land.
 
 ## What the exam weights
 

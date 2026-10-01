@@ -1,96 +1,502 @@
 {
   "id": "services",
-  "title": "AWS Services",
+  "title": "AWS Core Services",
   "cards": [
     {
-      "id": "macie-sensitive-data",
+      "id": "ec2-responsibility-line",
       "type": "single",
-      "prompt": "Which AWS service is used to discover, classify and protect sensitive data stored in S3?",
+      "prompt": "On an EC2 instance, who is responsible for patching the guest operating system?",
       "tags": [
-        "security"
+        "compute",
+        "shared-responsibility"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Amazon CloudWatch",
+          "text": "AWS, as part of the managed service",
           "correct": false,
-          "rationale": "CloudWatch is monitoring and observability - logs, metrics and events. It does not inspect object contents."
+          "rationale": "AWS patches the hardware and the hypervisor underneath the instance. It never touches the operating system you booted."
         },
         {
           "id": "b",
-          "text": "Amazon GuardDuty",
-          "correct": false,
-          "rationale": "GuardDuty is threat detection: it analyzes logs for compromised credentials and malware. Classifying what is *inside* your objects is a different job."
+          "text": "The customer, because EC2 is self-managed above the hypervisor",
+          "correct": true,
+          "rationale": "AWS owns the hardware and hypervisor; the customer owns the operating system and everything above it."
         },
         {
           "id": "c",
-          "text": "Amazon Macie",
-          "correct": true,
-          "rationale": "Macie discovers, classifies and protects sensitive data in S3 buckets."
+          "text": "AWS, but only for Amazon Linux images",
+          "correct": false,
+          "rationale": "The image's origin does not move the responsibility line. An Amazon-published AMI still boots an operating system the customer then owns."
         },
         {
           "id": "d",
-          "text": "AWS KMS",
+          "text": "Neither, because instances are replaced rather than patched",
           "correct": false,
-          "rationale": "KMS creates, manages and rotates cryptographic keys. It protects data you have already decided is sensitive; it does not find it."
+          "rationale": "Replacing instances from a freshly built image is a valid strategy, but it is the customer choosing how to patch, not an absence of responsibility."
         }
       ],
-      "explanation": "Macie is the data-classification service: it finds sensitive data sitting in S3. The distinction from the neighbouring security services is what the exam tests - GuardDuty detects threats from logs, Inspector finds software vulnerabilities and network exposure, Detective works out the root cause of an incident, and KMS manages keys.",
+      "explanation": "EC2 is the archetype of a self-managed service: AWS runs the facility, the hardware and the hypervisor, and the customer owns the guest operating system, the software on it and its configuration. The line moves with the service, which is the real point. On Lambda there is no operating system for a customer to patch at all.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Security"
+          "heading": "Compute"
         }
       ]
     },
     {
-      "id": "security-service-selection",
-      "type": "multi",
-      "prompt": "Which service-to-purpose pairings are correct? (Select all that apply)",
+      "id": "ami-purpose",
+      "type": "single",
+      "prompt": "What does an Amazon Machine Image (AMI) provide?",
       "tags": [
-        "security"
+        "compute"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Inspector - detects software vulnerabilities and unintended network exposure in EC2, ECR and Lambda",
+          "text": "A template of an operating system plus installed software that an instance launches from",
           "correct": true,
-          "rationale": "Vulnerability management across those three surfaces."
+          "rationale": "An AMI is the launch template: a snapshot of a whole server as it was when the image was made."
         },
         {
           "id": "b",
-          "text": "Detective - identifies the root cause of a security incident by analyzing CloudTrail, VPC Flow Logs and GuardDuty findings",
-          "correct": true,
-          "rationale": "It investigates after something has been detected."
+          "text": "A running virtual machine that can be moved between Availability Zones",
+          "correct": false,
+          "rationale": "That describes an instance, not an image. An AMI is static and launches new instances."
         },
         {
           "id": "c",
-          "text": "Shield - managed DDoS protection",
-          "correct": true,
-          "rationale": "Distinct from WAF, which blocks common exploits and malicious bots."
+          "text": "A block device attached to an instance for persistent storage",
+          "correct": false,
+          "rationale": "That is an EBS volume. An AMI may reference snapshots, but it is not itself attachable storage."
         },
         {
           "id": "d",
-          "text": "GuardDuty - scans EC2 instances for misconfigurations such as open ports",
+          "text": "A policy describing how many instances to run and when to scale them",
           "correct": false,
-          "rationale": "GuardDuty explicitly does **not** scan for instance configurations. It analyzes logs to detect compromised credentials and malware. Configuration assessment is AWS Config, and network exposure is Inspector."
-        },
-        {
-          "id": "e",
-          "text": "AWS Config - centralizes and automates backup management across services",
-          "correct": false,
-          "rationale": "That is AWS Backup. Config assesses, audits and evaluates the configuration of provisioned resources."
+          "rationale": "That is an Auto Scaling Group and its scaling policies, which decide capacity rather than content."
         }
       ],
-      "explanation": "The security services divide by the question they answer. *What is in my data?* → Macie. *Is something bad happening?* → GuardDuty. *What is vulnerable or exposed?* → Inspector. *Why did this happen?* → Detective. *Is this resource configured correctly?* → Config. The trap is GuardDuty, which is a log-analysis threat detector and not a configuration scanner.",
+      "explanation": "An AMI answers the question *what boots*, while the instance type answers *on what hardware* and the Auto Scaling Group answers *how many*. Treating these three as separate decisions is what makes a question about rebuilding or scaling a fleet straightforward.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Security"
+          "heading": "Compute"
+        }
+      ]
+    },
+    {
+      "id": "instance-store-volatility",
+      "type": "boolean",
+      "prompt": "Data written to an EC2 instance store volume survives stopping the instance.",
+      "tags": [
+        "compute",
+        "storage"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
         },
         {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "An instance store is disk physically attached to the host, which is what makes it fast and free with the instance, and it is erased when the instance stops. That limits it to caches, scratch space and data reproducible from somewhere else. Anything that must outlive the instance belongs on EBS, EFS or S3.",
+      "citations": [
+        {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Governance & Management"
+          "heading": "Compute"
+        }
+      ]
+    },
+    {
+      "id": "asg-memory-metric",
+      "type": "single",
+      "prompt": "An Auto Scaling Group must scale on memory utilization. What has to happen first?",
+      "tags": [
+        "compute",
+        "monitoring"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Nothing, memory utilization is a default EC2 metric",
+          "correct": false,
+          "rationale": "EC2 publishes CPU, network and disk I/O by default. Memory is not among them, because the hypervisor cannot see inside the guest."
+        },
+        {
+          "id": "b",
+          "text": "Switch the group to predictive scaling, which infers memory pressure",
+          "correct": false,
+          "rationale": "Predictive scaling forecasts from historical values of a metric. It cannot forecast a metric that is never published."
+        },
+        {
+          "id": "c",
+          "text": "Install the CloudWatch agent so the instances publish a memory metric",
+          "correct": true,
+          "rationale": "The agent runs inside the guest, which is the only place memory utilization is visible, and publishes it to CloudWatch for a policy to target."
+        },
+        {
+          "id": "d",
+          "text": "Enable detailed monitoring on the instances",
+          "correct": false,
+          "rationale": "Detailed monitoring raises the publishing frequency of existing metrics from five minutes to one. It adds no new metrics."
+        }
+      ],
+      "explanation": "The reason memory is missing is architectural: AWS measures from outside the virtual machine, and memory usage is only meaningful inside it. Any scenario about scaling on memory, disk space used, or an application-level number implies the CloudWatch agent or a custom metric first, and the scaling policy second.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Compute"
+        }
+      ]
+    },
+    {
+      "id": "scaling-policies",
+      "type": "single",
+      "prompt": "An Auto Scaling Group should keep average CPU utilization at 60%. Which scaling policy type fits?",
+      "tags": [
+        "compute",
+        "scaling"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Target tracking",
+          "correct": true,
+          "rationale": "Target tracking holds a metric at a value you name, adding and removing capacity to stay there."
+        },
+        {
+          "id": "b",
+          "text": "Step scaling",
+          "correct": false,
+          "rationale": "Step scaling responds in graduated amounts to how far a threshold was breached. It fits \"add one above 70%, two above 80%\", not \"hold at 60%\"."
+        },
+        {
+          "id": "c",
+          "text": "Scheduled scaling",
+          "correct": false,
+          "rationale": "Scheduled scaling changes capacity on a clock, for load you can predict by time of day rather than by metric."
+        },
+        {
+          "id": "d",
+          "text": "Simple scaling",
+          "correct": false,
+          "rationale": "Simple scaling makes one adjustment when an alarm fires and then waits out a cooldown without re-evaluating, which is why AWS steers people to step scaling instead."
+        }
+      ],
+      "explanation": "The wording of the scenario picks the policy. A level to maintain is target tracking. Graduated responses to a breach are step scaling. A clock is scheduled scaling. A recurring pattern learned from history is predictive scaling. Simple scaling is the legacy option and is rarely the intended answer.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Auto Scaling policies"
+        }
+      ]
+    },
+    {
+      "id": "scaling-policy-match",
+      "type": "multi",
+      "prompt": "Which pairings of situation and Auto Scaling policy type are correct? (Select all that apply)",
+      "tags": [
+        "compute",
+        "scaling"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Traffic rises every weekday at 09:00 and falls at 18:00, so capacity is changed on that timetable: scheduled",
+          "correct": true,
+          "rationale": "Scheduled scaling acts on a clock, which is what a known timetable calls for."
+        },
+        {
+          "id": "b",
+          "text": "Add one instance above 70% CPU and two above 80%: step",
+          "correct": true,
+          "rationale": "Step scaling sizes its response to how far the threshold was breached."
+        },
+        {
+          "id": "c",
+          "text": "A recurring weekly load pattern should be met with capacity added before the rise, learned from history: predictive",
+          "correct": true,
+          "rationale": "Predictive scaling uses machine learning on past load to provision ahead of a repeating pattern."
+        },
+        {
+          "id": "d",
+          "text": "Hold the group at a named metric value with no thresholds to maintain: simple",
+          "correct": false,
+          "rationale": "Holding a named value is target tracking. Simple scaling makes a single adjustment per alarm and waits out a cooldown."
+        },
+        {
+          "id": "e",
+          "text": "Capacity must change the instant an alarm fires and keep re-evaluating while it waits: simple",
+          "correct": false,
+          "rationale": "The second half is exactly what simple scaling does not do. It stops evaluating during the cooldown, which is its main weakness."
+        }
+      ],
+      "explanation": "Four of the five policy types map onto a distinct kind of signal: a target to hold, a threshold breached by some margin, a clock, or a learned pattern. Simple scaling is the legacy one-shot behaviour, and recognising its cooldown blind spot is usually how a question rules it out.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Auto Scaling policies"
+        }
+      ]
+    },
+    {
+      "id": "lambda-time-limit",
+      "type": "single",
+      "prompt": "A job takes about 40 minutes to run and is triggered a few times a day. Why is Lambda the wrong choice?",
+      "tags": [
+        "compute",
+        "serverless"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Lambda cannot be triggered on a schedule",
+          "correct": false,
+          "rationale": "EventBridge Scheduler invokes Lambda on a timetable, so triggering is not the problem."
+        },
+        {
+          "id": "b",
+          "text": "A single Lambda invocation is capped at 15 minutes",
+          "correct": true,
+          "rationale": "The execution limit is 15 minutes, so a 40 minute job cannot finish in one invocation."
+        },
+        {
+          "id": "c",
+          "text": "Lambda cannot write to durable storage",
+          "correct": false,
+          "rationale": "Lambda can write to S3, DynamoDB and EFS. Only EBS is unavailable to it."
+        },
+        {
+          "id": "d",
+          "text": "Lambda bills for idle time between invocations",
+          "correct": false,
+          "rationale": "The opposite is true: Lambda bills per request and per millisecond of execution, with no idle cost."
+        }
+      ],
+      "explanation": "Lambda's 15 minute ceiling is the single most useful number to remember about it, because it decides a whole class of questions. Long-running work belongs on Fargate, ECS, Batch or a Step Functions workflow that breaks the job into steps.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Compute"
+        }
+      ]
+    },
+    {
+      "id": "batch-vs-lambda",
+      "type": "single",
+      "prompt": "Which service queues and runs long or heavily parallel batch jobs, provisioning compute for them and shutting it down afterwards?",
+      "tags": [
+        "compute"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Batch",
+          "correct": true,
+          "rationale": "Batch exists for exactly this: a job queue, compute provisioned to drain it, and nothing left running afterwards."
+        },
+        {
+          "id": "b",
+          "text": "AWS Lambda",
+          "correct": false,
+          "rationale": "Lambda suits short event-driven work. Its 15 minute limit rules out most batch jobs."
+        },
+        {
+          "id": "c",
+          "text": "Amazon SQS",
+          "correct": false,
+          "rationale": "SQS holds the messages but runs nothing. Something still has to consume the queue."
+        },
+        {
+          "id": "d",
+          "text": "AWS Step Functions",
+          "correct": false,
+          "rationale": "Step Functions orchestrates the steps of a workflow. It coordinates work rather than providing the compute that performs it."
+        }
+      ],
+      "explanation": "Batch is the answer when the scenario has a pile of independent jobs, no interactive user, and a wish not to keep a cluster running between runs. Step Functions and SQS often appear alongside it, which is why it helps to separate orchestration, queueing and the compute that does the work.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Compute"
+        }
+      ]
+    },
+    {
+      "id": "beanstalk-vs-app-runner",
+      "type": "single",
+      "prompt": "What distinguishes Elastic Beanstalk from App Runner?",
+      "tags": [
+        "compute"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Beanstalk leaves you access to the EC2 instances and load balancer it provisions, while App Runner exposes no infrastructure at all",
+          "correct": true,
+          "rationale": "Both take code and run it, and the difference is whether the underlying resources remain visible and tunable."
+        },
+        {
+          "id": "b",
+          "text": "Beanstalk only runs containers, while App Runner only runs source repositories",
+          "correct": false,
+          "rationale": "App Runner accepts either a container image or a source repository, and Beanstalk supports several language platforms as well as Docker."
+        },
+        {
+          "id": "c",
+          "text": "Beanstalk is serverless and App Runner is not",
+          "correct": false,
+          "rationale": "It is the other way round in spirit: App Runner hides the servers, Beanstalk provisions ones you can see."
+        },
+        {
+          "id": "d",
+          "text": "Beanstalk cannot scale automatically",
+          "correct": false,
+          "rationale": "Beanstalk provisions an Auto Scaling Group and a load balancer as part of its environment."
+        }
+      ],
+      "explanation": "The useful axis is how much infrastructure stays visible. App Runner is fully managed and shows you nothing; Beanstalk is managed and hands back the resources so you can tune or escape them; EC2 shows you everything. A scenario that wants \"no infrastructure to manage\" and a scenario that wants \"the ability to adjust the instances later\" are asking for different services.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Compute"
+        }
+      ]
+    },
+    {
+      "id": "lightsail-purpose",
+      "type": "single",
+      "prompt": "Which service offers pre-sized virtual servers, databases and load balancers at a flat monthly price?",
+      "tags": [
+        "compute",
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Lightsail",
+          "correct": true,
+          "rationale": "Lightsail bundles a fixed configuration at a predictable monthly price, for workloads that do not need the EC2 console's choices."
+        },
+        {
+          "id": "b",
+          "text": "Amazon EC2 with a Savings Plan",
+          "correct": false,
+          "rationale": "A Savings Plan discounts committed usage but does not turn EC2 into a flat monthly bundle, and all the sizing choices remain."
+        },
+        {
+          "id": "c",
+          "text": "AWS Elastic Beanstalk",
+          "correct": false,
+          "rationale": "Beanstalk provisions resources for an application and bills for them individually at normal rates."
+        },
+        {
+          "id": "d",
+          "text": "AWS Outposts",
+          "correct": false,
+          "rationale": "Outposts places AWS-owned racks in your own data centre, for latency or data residency rather than simplicity."
+        }
+      ],
+      "explanation": "Lightsail trades flexibility for predictability, which makes it the answer whenever a scenario stresses a simple workload, a fixed monthly cost, or a team that does not want to make instance decisions.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Compute"
+        }
+      ]
+    },
+    {
+      "id": "edge-compute-options",
+      "type": "multi",
+      "prompt": "Which statements about running AWS compute outside a Region are correct? (Select all that apply)",
+      "tags": [
+        "compute",
+        "edge"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Outposts places AWS-owned racks in a customer data centre and runs services such as EC2 and EBS locally",
+          "correct": true,
+          "rationale": "Outposts is AWS hardware on your premises, managed by AWS and anchored to a Region."
+        },
+        {
+          "id": "b",
+          "text": "Local Zones extend a Region into a metropolitan area for lower latency to nearby users",
+          "correct": true,
+          "rationale": "A Local Zone is an extension of a parent Region placed closer to a population centre."
+        },
+        {
+          "id": "c",
+          "text": "Wavelength places infrastructure inside telecom networks for low latency to mobile users",
+          "correct": true,
+          "rationale": "Wavelength zones sit in carrier networks, which is what removes the hops between a mobile device and the application."
+        },
+        {
+          "id": "d",
+          "text": "Data residency requirements are a common reason to choose Outposts",
+          "correct": true,
+          "rationale": "Keeping data physically in a country or building is one of the two standard justifications, alongside latency."
+        },
+        {
+          "id": "e",
+          "text": "These options exist to reduce cost compared with running in a Region",
+          "correct": false,
+          "rationale": "They generally cost more. They are bought for latency or data residency, not savings."
+        }
+      ],
+      "explanation": "All three options answer the same pair of problems: the speed of light and the law. If a scenario mentions a factory floor, a stadium, a mobile network or a rule about where data may sit, the answer is at the edge. If it mentions saving money, it is not.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Compute"
+        }
+      ]
+    },
+    {
+      "id": "ecs-vs-eks",
+      "type": "single",
+      "prompt": "A team is migrating an application that already runs on Kubernetes on-premises and wants to keep its existing manifests and tooling. Which service?",
+      "tags": [
+        "containers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon EKS",
+          "correct": true,
+          "rationale": "EKS runs an actual Kubernetes control plane, so existing manifests, operators and tooling continue to work."
+        },
+        {
+          "id": "b",
+          "text": "Amazon ECS",
+          "correct": false,
+          "rationale": "ECS is AWS's own orchestrator with its own task definitions. It would mean rewriting the deployment descriptions."
+        },
+        {
+          "id": "c",
+          "text": "AWS App Runner",
+          "correct": false,
+          "rationale": "App Runner runs a single containerised service and exposes no orchestrator, so cluster-level configuration has nowhere to go."
+        },
+        {
+          "id": "d",
+          "text": "AWS Elastic Beanstalk",
+          "correct": false,
+          "rationale": "Beanstalk can run a Docker image but provides no Kubernetes API."
+        }
+      ],
+      "explanation": "The deciding word is Kubernetes. EKS is chosen for compatibility and portability, and the price is operating node groups and Kubernetes itself. ECS is simpler and more tightly integrated with AWS, and the price is that its configuration is AWS-specific.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Containers"
         }
       ]
     },
@@ -114,409 +520,135 @@
           "correct": false
         }
       ],
-      "explanation": "Fargate is a fully managed serverless compute engine for containers, and it works with both ECS and EKS. It removes the node-management half of container orchestration: the orchestrator still schedules the work, but there are no EC2 instances for you to size, patch or scale.",
+      "explanation": "Fargate is a fully managed serverless compute engine for containers, and it works behind both ECS and EKS. It removes the node-management half of container orchestration: the orchestrator still schedules the work, but there are no instances for you to size, patch or scale.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Containerization"
+          "heading": "Containers"
         }
       ]
     },
     {
-      "id": "security-groups-vs-nacls",
+      "id": "anywhere-variants",
       "type": "multi",
-      "prompt": "Which statements correctly distinguish Security Groups from Network ACLs? (Select all that apply)",
+      "prompt": "Which statements about the \"Anywhere\" container variants are correct? (Select all that apply)",
       "tags": [
-        "networking",
-        "security"
+        "containers",
+        "hybrid"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Security Groups are stateful and evaluated at the EC2 instance level",
+          "text": "ECS Anywhere lets the AWS-hosted ECS control plane run workloads on hardware you own",
           "correct": true,
-          "rationale": "Return traffic for an allowed connection is permitted automatically."
+          "rationale": "The control plane stays in AWS while the capacity is on-premises, in your own VMs or on edge devices."
         },
         {
           "id": "b",
-          "text": "Network ACLs are stateless and evaluated at the subnet level",
+          "text": "EKS Anywhere is a deployment option for running Kubernetes on your own infrastructure",
           "correct": true,
-          "rationale": "Return traffic needs its own explicit rule."
+          "rationale": "EKS Anywhere runs on vSphere, bare metal and edge devices while keeping a consistent AWS-managed experience."
         },
         {
           "id": "c",
-          "text": "Security Groups support allow rules only, and by default allow nothing",
+          "text": "Both exist to support workloads that cannot move into a Region",
           "correct": true,
-          "rationale": "There is no deny rule - you widen access by adding allows."
+          "rationale": "Latency, data residency and existing hardware investment are the usual reasons, which is the same problem Outposts solves at the infrastructure layer."
         },
         {
           "id": "d",
-          "text": "Network ACLs support both allow and deny rules, and by default allow all traffic",
-          "correct": true,
-          "rationale": "The default NACL is permissive in both directions, which is the opposite of a Security Group's default."
-        },
-        {
-          "id": "e",
-          "text": "Security Groups can explicitly deny a specific IP range",
+          "text": "Both require AWS-supplied hardware",
           "correct": false,
-          "rationale": "They cannot - only allow rules exist. Blocking a specific source is a job for a Network ACL."
+          "rationale": "That is Outposts. The Anywhere variants run on hardware the customer already owns."
         }
       ],
-      "explanation": "The two firewalls differ on every axis: Security Groups are stateful, instance-level, allow-only, and default to allowing nothing; Network ACLs are stateless, subnet-level, support allow *and* deny, and default to allowing everything. The practical consequence is that blocking a specific bad actor requires a NACL, because a Security Group has no way to express a deny.",
+      "explanation": "The pattern is the same in both cases: keep the control plane in AWS, put the capacity where the workload has to live. Distinguishing that from Outposts, where AWS also supplies the hardware, is what a hybrid question usually turns on.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Networking"
+          "heading": "Containers"
         }
       ]
     },
     {
-      "id": "scaling-policies",
+      "id": "ecr-purpose",
       "type": "single",
-      "prompt": "An Auto Scaling Group should keep average CPU utilization at 60%. Which scaling policy type fits?",
+      "prompt": "What is Amazon ECR?",
       "tags": [
-        "compute",
-        "scaling"
+        "containers"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Target tracking",
+          "text": "A private container image registry integrated with IAM and vulnerability scanning",
           "correct": true,
-          "rationale": "It scales resources to maintain a specific target metric, which is exactly a 60% CPU goal."
+          "rationale": "ECR stores images, controls access through IAM, and can be scanned by Inspector."
         },
         {
           "id": "b",
-          "text": "Step",
+          "text": "A managed Kubernetes control plane",
           "correct": false,
-          "rationale": "Step scaling works from thresholds - add 1 instance above 70%, add 2 above 80%. It expresses a staircase, not a target."
+          "rationale": "That is EKS. A registry stores images; it does not schedule them."
         },
         {
           "id": "c",
-          "text": "Simple",
+          "text": "A serverless compute engine for containers",
           "correct": false,
-          "rationale": "Simple scaling triggers on a specific CloudWatch alarm and does not continuously evaluate a metric to decide whether further action is needed."
+          "rationale": "That is Fargate, which runs images rather than storing them."
         },
         {
           "id": "d",
-          "text": "Scheduled",
+          "text": "A build service that compiles container images from source",
           "correct": false,
-          "rationale": "Scheduled scaling runs to a clock - up during peak hours, down overnight - and ignores utilization entirely."
+          "rationale": "That is CodeBuild. ECR is the destination for the image a build produces."
         }
       ],
-      "explanation": "The four policy types answer different questions. Target tracking holds a metric at a value. Step scales by thresholds with different magnitudes. Simple reacts to a single CloudWatch alarm without continuous evaluation. Scheduled follows a predefined timetable. Worth remembering alongside this: Auto Scaling Groups do not support memory utilization by default.",
+      "explanation": "A container pipeline has three distinct pieces that questions like to blur: something that builds the image, something that stores it, and something that runs it. ECR is the middle one, and the fact that access is IAM-controlled is why it appears in security scenarios too.",
       "citations": [
         {
-          "file": "notes/aws/notes.md",
-          "section": "Scaling Policies"
-        },
-        {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Compute"
+          "heading": "Containers"
         }
       ]
     },
     {
-      "id": "redshift-spectrum-vs-athena",
+      "id": "sns-vs-sqs",
       "type": "single",
-      "prompt": "What distinguishes Redshift Spectrum from Amazon Athena?",
+      "prompt": "An event must reach four independent subscribers at the same time, each processing it separately. Which service fits?",
       "tags": [
-        "analytics",
-        "databases"
+        "messaging"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Spectrum is a feature of Redshift that queries S3 data without loading it into the cluster; Athena is serverless SQL over S3 with no cluster at all",
+          "text": "Amazon SNS",
           "correct": true,
-          "rationale": "Both read S3 in place; the difference is whether a Redshift cluster is in the picture."
+          "rationale": "SNS pushes each published message to every subscriber of the topic, which is one-to-many fan-out."
         },
         {
           "id": "b",
-          "text": "Spectrum queries S3 while Athena queries only data already loaded into a warehouse",
+          "text": "Amazon SQS",
           "correct": false,
-          "rationale": "Backwards - Athena is defined as serverless SQL queries of data stored in S3."
+          "rationale": "A message in a queue is consumed once. Four consumers on one queue would split the work rather than each receiving everything."
         },
         {
           "id": "c",
-          "text": "Spectrum is serverless while Athena requires a provisioned cluster",
+          "text": "Amazon MQ",
           "correct": false,
-          "rationale": "Inverted. Athena is the serverless one; Spectrum is a Redshift feature and therefore tied to a cluster."
+          "rationale": "MQ can do publish and subscribe, but it is chosen for protocol compatibility during a migration rather than as a default."
         },
         {
           "id": "d",
-          "text": "They are the same engine with different names in different consoles",
+          "text": "AWS Step Functions",
           "correct": false,
-          "rationale": "They are separate offerings - one is a Redshift feature, the other a standalone service."
+          "rationale": "Step Functions coordinates the steps of one workflow rather than distributing an event to independent consumers."
         }
       ],
-      "explanation": "Redshift is a petabyte-scale data warehouse that runs SQL against data held in its cluster; **Spectrum** is the feature that lets those same queries reach S3 data without loading it in first. **Athena** is fully serverless SQL over S3 with no cluster to provision. If a warehouse already exists and you want to join against S3, that is Spectrum; if there is no warehouse, that is Athena.",
+      "explanation": "Fan-out versus work distribution is the distinction. SNS delivers a copy to every subscriber; SQS hands each message to exactly one consumer so a fleet can share a workload. The two are often combined, with SNS publishing to several queues, which gives fan-out and buffering at once.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Databases & Data Lakes"
-        }
-      ]
-    },
-    {
-      "id": "storage-with-lambda",
-      "type": "multi",
-      "prompt": "Which storage services can be used with AWS Lambda? (Select all that apply)",
-      "tags": [
-        "storage",
-        "compute"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "Elastic File System (EFS)",
-          "correct": true,
-          "rationale": "Serverless auto-scaling file storage that works with EC2, ECS, EKS and Lambda."
-        },
-        {
-          "id": "b",
-          "text": "FSx",
-          "correct": true,
-          "rationale": "Also works with EC2, ECS, EKS and Lambda, providing Windows, NetApp and OpenZFS file systems."
-        },
-        {
-          "id": "c",
-          "text": "S3",
-          "correct": true,
-          "rationale": "Object storage is reachable from anything with the right permissions."
-        },
-        {
-          "id": "d",
-          "text": "Elastic Block Storage (EBS)",
-          "correct": false,
-          "rationale": "EBS is explicitly limited here - it extends the storage of EC2 instances, including those backing ECS and EKS nodes, but cannot be used with Lambda."
-        },
-        {
-          "id": "e",
-          "text": "EBS Snapshots Archive",
-          "correct": false,
-          "rationale": "A low-cost tier for long-term retention of rarely accessed EBS backups, not a Lambda-attachable filesystem."
-        }
-      ],
-      "explanation": "The dividing line is block storage versus file and object storage. EBS is block-level storage attached to an instance, so it needs an instance - that rules out Lambda. EFS and FSx are file systems that mount across EC2, ECS, EKS and Lambda alike, and S3 is object storage reachable over the API from anywhere.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "File System Storage"
-        }
-      ]
-    },
-    {
-      "id": "vpc-gateway-endpoint",
-      "type": "single",
-      "prompt": "Which AWS services does a VPC **Gateway** Endpoint route traffic to privately?",
-      "tags": [
-        "networking"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "S3 and DynamoDB",
-          "correct": true,
-          "rationale": "The Gateway Endpoint is the specific endpoint type for exactly these two."
-        },
-        {
-          "id": "b",
-          "text": "Any AWS service that supports PrivateLink",
-          "correct": false,
-          "rationale": "That describes interface endpoints. The Gateway variant is the narrow one."
-        },
-        {
-          "id": "c",
-          "text": "EC2 and Lambda",
-          "correct": false,
-          "rationale": "Neither is reached through a Gateway Endpoint."
-        },
-        {
-          "id": "d",
-          "text": "On-premises networks over Direct Connect",
-          "correct": false,
-          "rationale": "Direct Connect is a dedicated private link between on-premises and a VPC - a different mechanism entirely."
-        }
-      ],
-      "explanation": "A VPC Endpoint is a virtual device enabling a private, secure connection between a VPC and supported AWS services without an Internet Gateway, NAT device or VPN. The **Gateway** Endpoint is the specific type for S3 and DynamoDB. Keep it separate from PrivateLink (private connectivity between VPCs, AWS services and on-premises), Transit Gateway (a centralized cloud router replacing point-to-point peering), and Direct Connect (a dedicated physical link).",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Networking"
-        }
-      ]
-    },
-    {
-      "id": "load-balancer-layers",
-      "type": "single",
-      "prompt": "Traffic must be routed to different backend applications based on the URL path. Which load balancer?",
-      "tags": [
-        "networking"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "Application Load Balancer - Layer 7, host and path based routing",
-          "correct": true,
-          "rationale": "Path is an HTTP concept, so it needs a Layer 7 device."
-        },
-        {
-          "id": "b",
-          "text": "Network Load Balancer - Layer 4 routing",
-          "correct": false,
-          "rationale": "An NLB routes on TCP/UDP, IP and port. It cannot see a URL path."
-        },
-        {
-          "id": "c",
-          "text": "CloudFront - the CDN handles path routing at the edge",
-          "correct": false,
-          "rationale": "CloudFront is a content delivery network with 750+ edge locations, not the VPC load balancer for this job."
-        },
-        {
-          "id": "d",
-          "text": "Transit Gateway - it routes between VPCs by path",
-          "correct": false,
-          "rationale": "Transit Gateway is a cloud router for networks, and \"path\" there means a network route, not a URL."
-        }
-      ],
-      "explanation": "The layer decides what the load balancer can see. An **ALB** works at Layer 7 and can therefore route on host and path, which is what application-aware routing needs. An **NLB** works at Layer 4 - TCP/UDP, IP and port - and is the right choice when raw throughput or non-HTTP protocols matter and content-based routing does not.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Networking"
-        }
-      ]
-    },
-    {
-      "id": "cloudfront-cert-region",
-      "type": "boolean",
-      "prompt": "A certificate used by CloudFront must be in the `us-east-1` Region.",
-      "tags": [
-        "networking"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "True",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "False",
-          "correct": false
-        }
-      ],
-      "explanation": "CloudFront can only access certificates in the `us-east-1` Region. It is an easy detail to overlook because CloudFront is a global service with 750+ edge locations, which makes a single-Region dependency feel wrong - but a certificate requested anywhere else simply will not be selectable.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Networking"
-        }
-      ]
-    },
-    {
-      "id": "vector-storage-options",
-      "type": "multi",
-      "prompt": "Which AWS options are described as able to store and query vector embeddings for RAG? (Select all that apply)",
-      "tags": [
-        "ai-ml",
-        "storage"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "S3 Vectors",
-          "correct": true,
-          "rationale": "A feature of S3 enabling vector embeddings to be stored and queried in S3."
-        },
-        {
-          "id": "b",
-          "text": "RDS Postgres with pgvector enabled",
-          "correct": true,
-          "rationale": "Supports storing and querying vector embeddings when pgvector is installed."
-        },
-        {
-          "id": "c",
-          "text": "OpenSearch Service",
-          "correct": true,
-          "rationale": "Also supports storing and querying vector embeddings for RAG."
-        },
-        {
-          "id": "d",
-          "text": "Neptune",
-          "correct": false,
-          "rationale": "Neptune is a graph database for highly connected datasets - a different shape of relationship entirely."
-        },
-        {
-          "id": "e",
-          "text": "ElastiCache",
-          "correct": false,
-          "rationale": "An in-memory cache offering sub-millisecond latency, not a vector store."
-        }
-      ],
-      "explanation": "Three options are called out for vector storage: S3 Vectors, RDS Postgres with pgvector, and OpenSearch Service. This matters for a RAG pipeline, where chunks are converted to embeddings and stored somewhere queryable by semantic search. Neptune and ElastiCache both handle specialised access patterns, but neither is a vector database.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Databases & Data Lakes"
-        },
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Search Engines"
-        }
-      ]
-    },
-    {
-      "id": "ai-service-selection",
-      "type": "multi",
-      "prompt": "Which AI/ML service-to-task pairings are correct? (Select all that apply)",
-      "tags": [
-        "ai-ml"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "Textract - extracting text from documents, images and handwriting",
-          "correct": true,
-          "rationale": "Document text extraction."
-        },
-        {
-          "id": "b",
-          "text": "Comprehend - discovering insights, sentiment and relationships in unstructured text",
-          "correct": true,
-          "rationale": "Natural Language Processing over text that has already been extracted."
-        },
-        {
-          "id": "c",
-          "text": "Transcribe - converting speech to text (automatic speech recognition)",
-          "correct": true,
-          "rationale": "Speech in, text out."
-        },
-        {
-          "id": "d",
-          "text": "Polly - converting text to speech using SSML tags",
-          "correct": true,
-          "rationale": "The inverse of Transcribe."
-        },
-        {
-          "id": "e",
-          "text": "Rekognition - converting scanned PDFs into structured form data",
-          "correct": false,
-          "rationale": "Rekognition is computer vision for image and video analysis. Pulling text and form data out of documents is Textract."
-        },
-        {
-          "id": "f",
-          "text": "Kendra - generating time-series forecasts from historical data",
-          "correct": false,
-          "rationale": "Kendra is AI-powered enterprise search over dispersed, unstructured repositories. Time-series forecasting is Forecast."
-        }
-      ],
-      "explanation": "The managed AI services pair up neatly by modality: Transcribe and Polly are speech in each direction, Textract and Comprehend are document extraction then language understanding, and Rekognition handles images and video. The two easiest to confuse are Rekognition and Textract - both read images, but one identifies objects and scenes while the other reads the writing.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "AI/ML"
+          "heading": "Messaging and Application Integration"
         }
       ]
     },
@@ -530,457 +662,76 @@
       "options": [
         {
           "id": "a",
-          "text": "FIFO - it guarantees the first message in is the first message out",
+          "text": "FIFO",
           "correct": true,
-          "rationale": "Ordering is the guarantee FIFO exists to provide."
+          "rationale": "A FIFO queue guarantees first in, first out, and exactly-once processing."
         },
         {
           "id": "b",
-          "text": "Standard - it provides maximum throughput with ordering preserved",
+          "text": "Standard",
           "correct": false,
-          "rationale": "Standard gives maximum throughput with **best effort** ordering, which is not a guarantee."
+          "rationale": "A standard queue maximises throughput and offers only best-effort ordering, so messages can arrive out of sequence."
         },
         {
           "id": "c",
-          "text": "SNS - a topic delivers to subscribers in publication order",
+          "text": "Dead-letter",
           "correct": false,
-          "rationale": "SNS is pub/sub push messaging, a different pattern from a queue."
+          "rationale": "A dead-letter queue is where repeatedly failing messages are set aside. It is a destination, not a queue type you send to."
         },
         {
           "id": "d",
-          "text": "EventBridge Pipes - point-to-point delivery preserves order",
+          "text": "Delay",
           "correct": false,
-          "rationale": "Pipes is a point-to-point event bus between one source and one target; ordering is not its selling point."
+          "rationale": "A delay is a setting that postpones delivery. It does not change ordering guarantees."
         }
       ],
-      "explanation": "SQS offers two queue types and the trade is throughput against ordering: `Standard` maximizes throughput with best-effort ordering, `FIFO` guarantees first-in-first-out. Around them, SNS is pub/sub push for many-to-many messaging, EventBridge is a serverless event bus for event-driven architectures, and MQ is a managed broker for open protocols like AMQP and MQTT.",
+      "explanation": "Ordering is the deciding factor, and it is a trade: FIFO's guarantees cost throughput, which is why standard queues remain the default. Any scenario naming a sequence, a ledger, or an operation that must not be applied twice is pointing at FIFO.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Distributed Systems Messaging"
+          "heading": "Messaging and Application Integration"
         }
       ]
     },
     {
-      "id": "observability-services",
+      "id": "sqs-dlq-purpose",
       "type": "single",
-      "prompt": "An auditor needs a record of every API call and user activity across the AWS account. Which service?",
+      "prompt": "One malformed message keeps failing and is blocking a queue. Which SQS feature addresses this?",
       "tags": [
-        "observability"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "CloudTrail",
-          "correct": true,
-          "rationale": "The governance and auditing service that records every API call and user activity across AWS infrastructure."
-        },
-        {
-          "id": "b",
-          "text": "CloudWatch",
-          "correct": false,
-          "rationale": "CloudWatch tracks logs, metrics and events for monitoring and observability - it is about how systems are behaving, not who called what."
-        },
-        {
-          "id": "c",
-          "text": "X-Ray",
-          "correct": false,
-          "rationale": "X-Ray is distributed tracing, used to analyze, debug and optimize applications."
-        },
-        {
-          "id": "d",
-          "text": "AWS Config",
-          "correct": false,
-          "rationale": "Config assesses and audits the *configuration* of provisioned resources, not the API calls that produced it."
-        }
-      ],
-      "explanation": "The three core observability services answer different questions. CloudWatch: how is it behaving? X-Ray: where did this request go and what was slow? CloudTrail: who did what, and when? For SQL-based querying over that user and API activity there is also CloudTrail Lake, an immutable audit and security data lake.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Core Services"
-        },
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Misc (Media Processing maybe???)"
-        }
-      ]
-    },
-    {
-      "id": "glacier-retrieval",
-      "type": "single",
-      "prompt": "Archived data must be retrievable within milliseconds. Which S3 Glacier option?",
-      "tags": [
-        "storage"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "S3 Glacier Instant Retrieval",
-          "correct": true,
-          "rationale": "It allows retrieving archive data within milliseconds."
-        },
-        {
-          "id": "b",
-          "text": "S3 Glacier Flexible Retrieval, expedited",
-          "correct": false,
-          "rationale": "Expedited flexible retrieval is 1-5 minutes - fast, but not milliseconds."
-        },
-        {
-          "id": "c",
-          "text": "S3 Glacier Flexible Retrieval, standard",
-          "correct": false,
-          "rationale": "Standard retrieval takes 3-5 hours."
-        },
-        {
-          "id": "d",
-          "text": "EBS Snapshots Archive",
-          "correct": false,
-          "rationale": "A low-cost tier for rarely accessed EBS backups, not an S3 archive class."
-        }
-      ],
-      "explanation": "S3 Glacier is built for low-cost, long-term offline storage, where there is normally a wait between requesting data and receiving it. Instant Retrieval removes that wait entirely. Flexible Retrieval trades latency for cost - 10GB/month of retrieval free, with data available in 3-5 hours standard, 1-5 minutes expedited, or 5-12 hours bulk.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Object Storage"
-        }
-      ]
-    },
-    {
-      "id": "dynamodb-global-tables",
-      "type": "single",
-      "prompt": "An application needs reads *and* writes served from multiple AWS Regions against the same DynamoDB data. Which feature?",
-      "tags": [
-        "databases"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "DynamoDB Global Tables - multi-active, replicating table data across Regions",
-          "correct": true,
-          "rationale": "Multi-active means reads and writes are allowed in any Region."
-        },
-        {
-          "id": "b",
-          "text": "Aurora Global Database - a single DB spanning multiple Regions",
-          "correct": false,
-          "rationale": "Aurora is a relational database compatible with MySQL and Postgres. It is the wrong engine for a DynamoDB workload."
-        },
-        {
-          "id": "c",
-          "text": "Redshift Spectrum",
-          "correct": false,
-          "rationale": "A Redshift feature for querying S3 data in place, unrelated to multi-Region writes."
-        },
-        {
-          "id": "d",
-          "text": "DynamoDB with ElastiCache in each Region",
-          "correct": false,
-          "rationale": "A cache accelerates reads; it does not make writes multi-Region."
-        }
-      ],
-      "explanation": "Global Tables is DynamoDB's fully managed, serverless, **multi-active** replication - the word that matters, because it means any Region accepts writes rather than one primary accepting them and others following. Aurora Global Database is the equivalent idea for the relational side, letting a single Aurora database span Regions.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Databases & Data Lakes"
-        }
-      ]
-    },
-    {
-      "id": "savings-plans",
-      "type": "single",
-      "prompt": "What distinguishes a Compute Savings Plan from an EC2 Savings Plan?",
-      "tags": [
-        "cost"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "Compute commits to an hourly spend amount; EC2 commits to a specific instance type in a Region",
-          "correct": true,
-          "rationale": "The Compute plan buys flexibility, the EC2 plan buys a deeper discount on a narrower commitment."
-        },
-        {
-          "id": "b",
-          "text": "Compute applies to containers only; EC2 applies to virtual machines only",
-          "correct": false,
-          "rationale": "The distinction is what you commit to, not which compute form factor you use."
-        },
-        {
-          "id": "c",
-          "text": "Compute is billed monthly; EC2 is billed hourly",
-          "correct": false,
-          "rationale": "Both are commitments expressed per hour."
-        },
-        {
-          "id": "d",
-          "text": "Compute requires no term commitment; EC2 requires three years",
-          "correct": false,
-          "rationale": "The Compute Savings Plan is itself described as a multi-year commitment."
-        }
-      ],
-      "explanation": "Both are flexible pricing models that trade commitment for discount, and they differ in what is committed. A **Compute Savings Plan** commits to a spend rate - say $10/hour for 3+ years - and can be applied wherever that compute runs. An **EC2 Savings Plan** commits to a specific instance type in a Region, which is narrower and therefore discounts more deeply.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Misc (Media Processing maybe???)"
-        }
-      ]
-    },
-    {
-      "id": "pilot-light-dr",
-      "type": "single",
-      "prompt": "Which disaster recovery strategy keeps a minimal set of core infrastructure components always running in a second Region?",
-      "tags": [
+        "messaging",
         "resilience"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Pilot Light",
+          "text": "A dead-letter queue",
           "correct": true,
-          "rationale": "A cost-effective strategy that keeps minimal core components warm, ready to be scaled up."
+          "rationale": "After a set number of failed receives the message is moved aside, so the rest of the queue continues."
         },
         {
           "id": "b",
-          "text": "Aurora Global Database",
+          "text": "A longer visibility timeout",
           "correct": false,
-          "rationale": "A database feature that can support a DR strategy, but not a strategy itself."
+          "rationale": "A longer timeout gives a consumer more time to finish. It would make the blockage last longer, not shorter."
         },
         {
           "id": "c",
-          "text": "Auto Scaling with a scheduled policy",
+          "text": "Switching the queue to FIFO",
           "correct": false,
-          "rationale": "Scheduled scaling follows a timetable within a Region; it is not a cross-Region recovery approach."
+          "rationale": "FIFO strengthens ordering, which makes a stuck message at the head of the queue worse."
         },
         {
           "id": "d",
-          "text": "AWS Backup",
+          "text": "Enabling long polling",
           "correct": false,
-          "rationale": "Backup centralizes and automates backup management. Restoring from backup is a different, slower DR posture than keeping infrastructure warm."
+          "rationale": "Long polling reduces empty responses and request cost. It has nothing to do with failing messages."
         }
       ],
-      "explanation": "Pilot Light is the cost-effective middle ground in disaster recovery: rather than running a full second environment or restoring everything from cold backups, a minimal core stays running in another Region and is scaled up when needed. The name is the mental model - a small flame kept burning so the boiler can be lit quickly.",
+      "explanation": "A dead-letter queue turns a poison message from an outage into an item for later inspection, which is why it belongs in every queue design. The visibility timeout is the neighbouring concept worth keeping separate: it is how long a message is hidden while one consumer works on it.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Misc (Media Processing maybe???)"
-        }
-      ]
-    },
-    {
-      "id": "anywhere-variants",
-      "type": "multi",
-      "prompt": "Which statements about the \"Anywhere\" container variants are correct? (Select all that apply)",
-      "tags": [
-        "containers",
-        "compute"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "ECS Anywhere lets the centralized ECS control plane manage Docker workloads on-premises, in VMs and on edge devices",
-          "correct": true,
-          "rationale": "The control plane stays in AWS; the workloads move out."
-        },
-        {
-          "id": "b",
-          "text": "EKS Anywhere is an open-source deployment option for running Kubernetes on-premises",
-          "correct": true,
-          "rationale": "On vSphere, bare metal and edge devices, with a consistent AWS-managed experience."
-        },
-        {
-          "id": "c",
-          "text": "Fargate works with both ECS and EKS",
-          "correct": true,
-          "rationale": "It is the serverless compute engine behind either orchestrator."
-        },
-        {
-          "id": "d",
-          "text": "EKS Anywhere runs the Kubernetes control plane inside AWS while worker nodes run on-premises",
-          "correct": false,
-          "rationale": "That describes the ECS Anywhere split. EKS Anywhere is an open-source deployment option you operate yourself."
-        },
-        {
-          "id": "e",
-          "text": "Fargate is required to use ECS Anywhere",
-          "correct": false,
-          "rationale": "Fargate is a serverless compute engine within AWS; ECS Anywhere exists precisely to run workloads outside it."
-        }
-      ],
-      "explanation": "ECS and EKS both have an \"Anywhere\" story, and they are structured differently. **ECS Anywhere** keeps ECS's centralized control plane and extends it to on-premises, VM and edge workloads. **EKS Anywhere** is an open-source deployment option that runs Kubernetes on your own infrastructure - vSphere, bare metal, edge - with a consistent AWS-managed experience rather than an AWS-hosted control plane.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Containerization"
-        }
-      ]
-    },
-    {
-      "id": "efa-use-case",
-      "type": "single",
-      "prompt": "What is an Elastic Fabric Adapter (EFA) for?",
-      "tags": [
-        "networking",
-        "compute"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "High inter-node communication between EC2 instances, for HPC, ML model training and computational fluid dynamics",
-          "correct": true,
-          "rationale": "It is a network interface for tightly-coupled workloads where nodes talk to each other constantly."
-        },
-        {
-          "id": "b",
-          "text": "Attaching elastic block storage to multiple instances simultaneously",
-          "correct": false,
-          "rationale": "EFA is a network interface, not a storage feature."
-        },
-        {
-          "id": "c",
-          "text": "Providing a private connection between a VPC and AWS services",
-          "correct": false,
-          "rationale": "That is a VPC Endpoint or PrivateLink."
-        },
-        {
-          "id": "d",
-          "text": "Load balancing traffic across Availability Zones at Layer 4",
-          "correct": false,
-          "rationale": "That is a Network Load Balancer."
-        }
-      ],
-      "explanation": "An EFA is a network interface for EC2 that enables high-performance inter-node communication. It exists for tightly coupled workloads - high-performance computing, AI/ML model training, and computational fluid dynamics - where the bottleneck is nodes talking to each other rather than throughput to storage or to the internet.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Networking"
-        }
-      ]
-    },
-    {
-      "id": "resource-based-policy",
-      "type": "single",
-      "prompt": "What is an IAM resource-based policy, and what is it commonly used for?",
-      "tags": [
-        "iam",
-        "security"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "A policy attached to a resource rather than a user or role, defining which principals can access it - commonly used for cross-account access",
-          "correct": true,
-          "rationale": "The resource itself declares who may touch it, which is what makes cross-account access workable."
-        },
-        {
-          "id": "b",
-          "text": "A policy attached to a role that defines which resources the role may access",
-          "correct": false,
-          "rationale": "That is an identity-based policy - the direction of attachment is the whole distinction."
-        },
-        {
-          "id": "c",
-          "text": "A policy that automatically scales permissions with resource usage",
-          "correct": false,
-          "rationale": "IAM policies do not scale with usage."
-        },
-        {
-          "id": "d",
-          "text": "A policy enforced by AWS Config to keep resources compliant",
-          "correct": false,
-          "rationale": "Config assesses and audits configuration; it is not where IAM policies are attached."
-        }
-      ],
-      "explanation": "The attachment point is the distinction. An identity-based policy hangs off a user or role and says what that identity may do. A **resource-based policy** hangs off the resource and names the principals allowed to act on it. That inversion is what makes cross-account access practical - the resource's owner grants access directly rather than every caller needing a role in the owning account.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Identity and Access Management"
-        }
-      ]
-    },
-    {
-      "id": "identity-services",
-      "type": "single",
-      "prompt": "An organization needs single sign-on across multiple AWS accounts. Which service?",
-      "tags": [
-        "iam"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "IAM Identity Center",
-          "correct": true,
-          "rationale": "Fully managed SSO for multiple AWS accounts."
-        },
-        {
-          "id": "b",
-          "text": "Cognito",
-          "correct": false,
-          "rationale": "Cognito is fully managed user management, authentication and authorization for *your application's* users."
-        },
-        {
-          "id": "c",
-          "text": "IAM",
-          "correct": false,
-          "rationale": "IAM is free centralized control of access to AWS resources, but per-account rather than SSO across accounts."
-        },
-        {
-          "id": "d",
-          "text": "Control Tower",
-          "correct": false,
-          "rationale": "Control Tower automates setup and governance of secure multi-account environments - related, but not the SSO service."
-        }
-      ],
-      "explanation": "Three identity services, three audiences. **Cognito** handles your application's end users. **IAM** is free, centralized control of authentication and authorization to AWS resources. **Identity Center** provides SSO across multiple AWS accounts - the workforce case. Control Tower governs multi-account setup, which is adjacent but distinct.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Identity and Access Management"
-        }
-      ]
-    },
-    {
-      "id": "step-functions",
-      "type": "single",
-      "prompt": "Which service orchestrates workflows with sequential and parallel tasks?",
-      "tags": [
-        "compute"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "Step Functions",
-          "correct": true,
-          "rationale": "Fully managed workflow orchestration."
-        },
-        {
-          "id": "b",
-          "text": "Lambda",
-          "correct": false,
-          "rationale": "Lambda is fully managed serverless compute - the thing a workflow step often invokes."
-        },
-        {
-          "id": "c",
-          "text": "EventBridge",
-          "correct": false,
-          "rationale": "A serverless event bus for event-driven architectures rather than a workflow orchestrator."
-        },
-        {
-          "id": "d",
-          "text": "SQS",
-          "correct": false,
-          "rationale": "A queueing service; ordering between stages is not the same as orchestration."
-        }
-      ],
-      "explanation": "Step Functions is the fully managed service for orchestrating workflows with sequential and/or parallel tasks. The distinction from EventBridge is worth holding: a workflow has a defined shape you author, while an event bus routes events to whoever is listening.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Compute"
+          "heading": "Messaging and Application Integration"
         }
       ]
     },
@@ -994,139 +745,152 @@
       "options": [
         {
           "id": "a",
-          "text": "SNS - pub/sub, enabling push-based many-to-many messaging between applications",
+          "text": "EventBridge: routing events by rule from AWS services, your own applications and third-party SaaS",
           "correct": true,
-          "rationale": "Push, fan-out."
+          "rationale": "EventBridge is a rules-based event bus, which is what lets a producer stay unaware of its consumers."
         },
         {
           "id": "b",
-          "text": "MQ - a managed message broker for open-source protocols such as AMQP or MQTT",
+          "text": "Amazon MQ: keeping an existing application speaking AMQP or MQTT during a migration",
           "correct": true,
-          "rationale": "For workloads already speaking those protocols."
+          "rationale": "Protocol compatibility is the reason to pick MQ over the native services."
         },
         {
           "id": "c",
-          "text": "EventBridge - a serverless event bus for building event-driven architectures",
+          "text": "AppSync: resolving a single GraphQL query across several data sources",
           "correct": true,
-          "rationale": "Routing events by rule."
+          "rationale": "AppSync is managed GraphQL, including subscriptions for real-time updates."
         },
         {
           "id": "d",
-          "text": "EventBridge Pipes - a point-to-point event bus between one source and one target",
+          "text": "API Gateway: throttling, authorizing and validating requests before they reach your code",
           "correct": true,
-          "rationale": "The narrow, direct variant."
+          "rationale": "API Gateway is the front door, and doing this work before invoking a backend is the point of it."
         },
         {
           "id": "e",
-          "text": "SQS - push-based fan-out to many subscribers",
+          "text": "SQS: delivering one message to many independent subscribers at once",
           "correct": false,
-          "rationale": "SQS is a queue that consumers poll; fan-out to many subscribers is SNS."
+          "rationale": "That is SNS. A queued message is consumed once."
         }
       ],
-      "explanation": "The messaging services divide by delivery shape. SNS pushes to many subscribers. SQS queues for consumers to pull. EventBridge routes events by rule, with Pipes as the point-to-point special case of one source to one target. MQ exists for workloads that already speak AMQP or MQTT and would rather not be rewritten.",
+      "explanation": "Integration services separate along what they do to a message: SNS copies it to everyone, SQS holds it for one consumer, EventBridge routes it by content, MQ speaks legacy protocols, Step Functions sequences work, and API Gateway and AppSync are front doors for synchronous callers.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Distributed Systems Messaging"
+          "heading": "Messaging and Application Integration"
         }
       ]
     },
     {
-      "id": "kinesis-streams",
+      "id": "step-functions",
       "type": "single",
-      "prompt": "What distinguishes Kinesis Video Streams from Kinesis Data Streams?",
+      "prompt": "Which service orchestrates workflows with sequential and parallel tasks, handling retries and branching?",
       "tags": [
         "messaging",
-        "analytics"
+        "orchestration"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Video Streams securely streams live video or time-encoded data from devices; Data Streams streams text, logs and telemetry",
+          "text": "AWS Step Functions",
           "correct": true,
-          "rationale": "Both stream to AWS; the payload type differs."
+          "rationale": "Step Functions models a workflow as a state machine, so retries, branching and waits are configuration rather than code."
         },
         {
           "id": "b",
-          "text": "Video Streams is serverless while Data Streams requires provisioned shards",
+          "text": "Amazon SQS",
           "correct": false,
-          "rationale": "Not the distinction drawn."
+          "rationale": "A queue decouples two components. It has no notion of a workflow's shape or its current state."
         },
         {
           "id": "c",
-          "text": "Data Streams is for real-time and Video Streams for batch",
+          "text": "Amazon EventBridge",
           "correct": false,
-          "rationale": "Both are real-time; Kinesis is a platform for real-time data."
+          "rationale": "EventBridge routes individual events by rule. It does not track the progress of a multi-step process."
         },
         {
           "id": "d",
-          "text": "Video Streams transcodes media into device-compatible formats",
+          "text": "AWS Batch",
           "correct": false,
-          "rationale": "That is Elastic Transcoder."
+          "rationale": "Batch runs queued jobs on provisioned compute. It is a worker rather than a coordinator."
         }
       ],
-      "explanation": "Kinesis is a *platform* of fully managed services for collecting, processing and analyzing real-time data. Data Streams carries text, logs and telemetry; Video Streams carries live video or other time-encoded data from devices. Keep Elastic Transcoder separate - it converts media files into formats compatible with tablets, PCs and phones.",
+      "explanation": "The signal for Step Functions is state that has to survive between steps: a process with branches, retries, human approval or a wait. Writing that logic by hand inside a Lambda function is the anti-pattern the service exists to replace.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Distributed Systems Messaging"
+          "heading": "Messaging and Application Integration"
         }
       ]
     },
     {
-      "id": "database-engine-selection",
-      "type": "multi",
-      "prompt": "Which database-to-workload pairings are correct? (Select all that apply)",
+      "id": "step-functions-workflow-types",
+      "type": "single",
+      "prompt": "What distinguishes a Step Functions Express workflow from a Standard one?",
       "tags": [
-        "databases"
+        "messaging",
+        "orchestration"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Neptune - a highly connected dataset best modelled as a graph",
+          "text": "Express is at-least-once and suits high-volume short-lived workflows, while Standard is exactly-once and can run for up to a year",
           "correct": true,
-          "rationale": "Fully managed graph database."
+          "rationale": "The trade is duration and delivery guarantee against volume and cost."
         },
         {
           "id": "b",
-          "text": "Aurora - a relational workload needing MySQL or Postgres compatibility",
-          "correct": true,
-          "rationale": "Compatible with both."
+          "text": "Express workflows can only invoke Lambda functions",
+          "correct": false,
+          "rationale": "Both types integrate with a wide range of services."
         },
         {
           "id": "c",
-          "text": "DynamoDB - serverless document storage",
-          "correct": true,
-          "rationale": "Fully managed and serverless."
+          "text": "Standard workflows cannot run steps in parallel",
+          "correct": false,
+          "rationale": "Parallel states are available in both."
         },
         {
           "id": "d",
-          "text": "Redshift - petabyte-scale data warehousing with SQL over large datasets",
-          "correct": true,
-          "rationale": "Queries run against data in the Redshift cluster."
-        },
-        {
-          "id": "e",
-          "text": "ElastiCache - durable primary storage for transactional data",
+          "text": "Express workflows keep a full execution history for auditing",
           "correct": false,
-          "rationale": "ElastiCache is an in-memory cache offering sub-millisecond latency, not a system of record."
-        },
-        {
-          "id": "f",
-          "text": "SimpleDB - the recommended choice for new NoSQL workloads",
-          "correct": false,
-          "rationale": "SimpleDB is legacy, and it uses API requests rather than SQL queries."
+          "rationale": "Full execution history is a Standard workflow feature, and it is part of why Standard costs more per transition."
         }
       ],
-      "explanation": "Pick by data shape: graph → Neptune, relational → RDS or Aurora, document → DynamoDB, warehouse → Redshift, cache → ElastiCache. Two traps sit in this list - ElastiCache is a cache rather than a store, and SimpleDB is explicitly legacy.",
+      "explanation": "Pick Standard when each execution matters individually and may be long or audited. Pick Express when there are very many short executions and the occasional duplicate is tolerable. A scenario about an order that must not be processed twice is Standard; a scenario about ingesting a stream of events is Express.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Databases & Data Lakes"
+          "heading": "Messaging and Application Integration"
+        }
+      ]
+    },
+    {
+      "id": "api-gateway-front-door",
+      "type": "boolean",
+      "prompt": "API Gateway can enforce throttling and authorization before any of your application code runs.",
+      "tags": [
+        "messaging",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
         },
         {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "API Gateway is a front door rather than a proxy: throttling, authorization, caching and request validation all happen in the managed layer, so a bad or excessive request never reaches the backend and never costs you compute. That is also why it appears in cost and security answers, not only architecture ones.",
+      "citations": [
+        {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Caching"
+          "heading": "Messaging and Application Integration"
         }
       ]
     },
@@ -1140,30 +904,30 @@
       "options": [
         {
           "id": "a",
-          "text": "5TB",
-          "correct": true,
-          "rationale": "The per-object ceiling."
+          "text": "5 GB",
+          "correct": false,
+          "rationale": "5 GB is the threshold above which an upload must be multipart, not the object limit."
         },
         {
           "id": "b",
-          "text": "5GB",
-          "correct": false,
-          "rationale": "Too small by three orders of magnitude."
+          "text": "5 TB",
+          "correct": true,
+          "rationale": "A single object is capped at 5 TB."
         },
         {
           "id": "c",
-          "text": "Unlimited - only the bucket has a limit",
+          "text": "50 TB",
           "correct": false,
-          "rationale": "Buckets are effectively unlimited; objects are not."
+          "rationale": "There is no 50 TB object limit. Total storage in a bucket is unlimited, which is a different number."
         },
         {
           "id": "d",
-          "text": "500GB",
+          "text": "500 GB",
           "correct": false,
-          "rationale": "Not the documented limit."
+          "rationale": "Not a limit S3 defines."
         }
       ],
-      "explanation": "S3 is fully managed object storage capable of storing 5TB per object. Worth pairing with the feature that changes what S3 is good for: S3 Vectors lets vector embeddings be stored and queried in S3, putting it alongside RDS Postgres with pgvector and OpenSearch as a RAG-capable store.",
+      "explanation": "Two numbers travel together and are easy to swap: a single object can be up to 5 TB, and any upload over 5 GB must use multipart upload. Bucket capacity itself is unlimited, so a question about \"how much can I store\" is never answered with a number.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
@@ -1172,39 +936,298 @@
       ]
     },
     {
-      "id": "storage-gateway",
+      "id": "s3-bucket-policy",
       "type": "single",
-      "prompt": "Which service makes cloud storage look and behave like a standard network drive?",
+      "prompt": "Every request to a bucket must be refused unless it arrives over HTTPS. Where is that enforced?",
       "tags": [
-        "storage"
+        "storage",
+        "security"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Storage Gateway",
+          "text": "A bucket policy with a condition on the request",
           "correct": true,
-          "rationale": "It presents cloud storage as a standard network drive, comparable to Dropbox or OneDrive."
+          "rationale": "A bucket policy is a resource-based policy evaluated on every request, so a condition can deny anything not meeting it."
         },
         {
           "id": "b",
-          "text": "Elastic File System (EFS)",
+          "text": "An IAM policy on each user who might call the bucket",
           "correct": false,
-          "rationale": "EFS is a serverless auto-scaling file system for AWS compute, not a bridge for on-premises access."
+          "rationale": "That would have to be applied to every identity, including ones in other accounts, and would still miss anonymous requests."
         },
         {
           "id": "c",
-          "text": "FSx",
+          "text": "Default encryption on the bucket",
           "correct": false,
-          "rationale": "FSx provides Windows, NetApp and OpenZFS file systems within AWS."
+          "rationale": "Default encryption protects data at rest. It says nothing about the transport the request used."
         },
         {
           "id": "d",
-          "text": "S3 Glacier Instant Retrieval",
+          "text": "A VPC endpoint policy",
           "correct": false,
-          "rationale": "An archive storage class."
+          "rationale": "An endpoint policy constrains traffic arriving through that endpoint only, so requests from elsewhere are unaffected."
         }
       ],
-      "explanation": "Storage Gateway makes cloud storage - S3, FSx and so on - present as a standard network drive, much like Dropbox or OneDrive. It is the answer when existing on-premises systems expect a filesystem and you do not want to rewrite them against an object API.",
+      "explanation": "A bucket policy is the right tool whenever the rule belongs to the resource rather than to an identity: requiring encryption or HTTPS, granting another account access, or restricting by source network. Attaching rules to identities cannot cover callers you do not control.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Object Storage"
+        }
+      ]
+    },
+    {
+      "id": "s3-storage-class-unknown-pattern",
+      "type": "single",
+      "prompt": "Access patterns for a large set of objects are unknown and expected to change. Which S3 storage class?",
+      "tags": [
+        "storage",
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "S3 Intelligent-Tiering",
+          "correct": true,
+          "rationale": "Intelligent-Tiering moves objects between tiers from observed access, which is exactly the case where a human cannot pick."
+        },
+        {
+          "id": "b",
+          "text": "S3 Standard-IA",
+          "correct": false,
+          "rationale": "Standard-IA assumes infrequent access. Frequently read objects would attract retrieval fees."
+        },
+        {
+          "id": "c",
+          "text": "S3 One Zone-IA",
+          "correct": false,
+          "rationale": "One Zone-IA both assumes infrequent access and gives up multi-zone durability, which is unrelated to unpredictability."
+        },
+        {
+          "id": "d",
+          "text": "S3 Glacier Deep Archive",
+          "correct": false,
+          "rationale": "Deep Archive is for data that is almost never read and tolerates retrieval measured in hours."
+        }
+      ],
+      "explanation": "Storage class questions are usually decided by what the scenario claims to know. A stated pattern points at a specific class; an unknown or changing pattern points at Intelligent-Tiering; reproducible data points at One Zone-IA; and a stated retrieval window points at a Glacier tier.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Object Storage"
+        }
+      ]
+    },
+    {
+      "id": "one-zone-ia-tradeoff",
+      "type": "single",
+      "prompt": "What is given up by choosing S3 One Zone-IA?",
+      "tags": [
+        "storage",
+        "resilience"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The data is held in a single Availability Zone and is lost if that zone is lost",
+          "correct": true,
+          "rationale": "One Zone-IA trades multi-zone durability for a lower price, which is why it suits only reproducible data."
+        },
+        {
+          "id": "b",
+          "text": "Objects can no longer be versioned",
+          "correct": false,
+          "rationale": "Versioning is a bucket feature and works across storage classes."
+        },
+        {
+          "id": "c",
+          "text": "Retrieval takes hours rather than milliseconds",
+          "correct": false,
+          "rationale": "That is a Glacier characteristic. One Zone-IA reads are immediate."
+        },
+        {
+          "id": "d",
+          "text": "The objects cannot be served through CloudFront",
+          "correct": false,
+          "rationale": "Storage class does not change whether CloudFront can use the bucket as an origin."
+        }
+      ],
+      "explanation": "Every cheaper storage class gives something up, and it is worth knowing which currency: Standard-IA gives up free retrieval, One Zone-IA gives up a zone of durability, and the Glacier tiers give up retrieval time. A scenario about derived thumbnails or a secondary copy is the classic One Zone-IA case.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Object Storage"
+        }
+      ]
+    },
+    {
+      "id": "glacier-retrieval",
+      "type": "single",
+      "prompt": "Archived data must be retrievable within milliseconds. Which S3 Glacier option?",
+      "tags": [
+        "storage",
+        "archival"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "S3 Glacier Instant Retrieval",
+          "correct": true,
+          "rationale": "Instant Retrieval pairs archive pricing with millisecond access."
+        },
+        {
+          "id": "b",
+          "text": "S3 Glacier Flexible Retrieval, expedited",
+          "correct": false,
+          "rationale": "Expedited retrieval is 1 to 5 minutes, which is fast but not milliseconds."
+        },
+        {
+          "id": "c",
+          "text": "S3 Glacier Flexible Retrieval, standard",
+          "correct": false,
+          "rationale": "Standard retrieval takes 3 to 5 hours."
+        },
+        {
+          "id": "d",
+          "text": "S3 Glacier Deep Archive",
+          "correct": false,
+          "rationale": "Deep Archive is the cheapest and slowest, with retrieval in 12 to 48 hours."
+        }
+      ],
+      "explanation": "The Glacier tiers are priced by patience. Instant Retrieval is milliseconds, Flexible Retrieval ranges from minutes to half a day depending on which retrieval you request, and Deep Archive is measured in half-days. A stated recovery window in a question is enough to pick one.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Object Storage"
+        }
+      ]
+    },
+    {
+      "id": "s3-durability-features",
+      "type": "multi",
+      "prompt": "Which S3 features help recover from, or prevent, unwanted changes to objects? (Select all that apply)",
+      "tags": [
+        "storage",
+        "resilience"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Versioning, which keeps previous versions so an overwrite or delete can be undone",
+          "correct": true,
+          "rationale": "Versioning is the first line of defence against accidental loss, including a deletion."
+        },
+        {
+          "id": "b",
+          "text": "Object Lock, which prevents deletion for a fixed retention period",
+          "correct": true,
+          "rationale": "Object Lock gives write-once-read-many behaviour for compliance requirements."
+        },
+        {
+          "id": "c",
+          "text": "Cross-Region Replication, which copies objects to a bucket in another Region",
+          "correct": true,
+          "rationale": "Replication protects against the loss of a whole Region, and is also used to put data nearer readers."
+        },
+        {
+          "id": "d",
+          "text": "Lifecycle policies, which transition or expire objects on an age schedule",
+          "correct": false,
+          "rationale": "Lifecycle rules manage cost by moving or deleting data on purpose. They are a cause of deletion, not a protection against it."
+        },
+        {
+          "id": "e",
+          "text": "Transfer Acceleration, which routes uploads through an edge location",
+          "correct": false,
+          "rationale": "Transfer Acceleration is about upload speed over long distances and offers no protection."
+        }
+      ],
+      "explanation": "Durability and protection are different things. S3's eleven nines of durability covers hardware failure, not human error or malice, so versioning, Object Lock and replication are what answer a question about an accidental delete, a ransomware requirement or a regional outage.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Object Storage"
+        }
+      ]
+    },
+    {
+      "id": "ebs-zonal-scope",
+      "type": "single",
+      "prompt": "An EBS volume must be made available to an instance in a different Availability Zone. What is required?",
+      "tags": [
+        "storage",
+        "resilience"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Take a snapshot and create a new volume from it in the target zone",
+          "correct": true,
+          "rationale": "A volume cannot cross a zone boundary, but a snapshot is stored in S3 and can seed a volume anywhere."
+        },
+        {
+          "id": "b",
+          "text": "Attach the volume to both instances at once",
+          "correct": false,
+          "rationale": "Multi-Attach allows several instances in the *same* zone to share a volume. It does not cross zones."
+        },
+        {
+          "id": "c",
+          "text": "Enable cross-zone replication on the volume",
+          "correct": false,
+          "rationale": "EBS has no such setting. Resilience across zones comes from snapshots or from a different storage service."
+        },
+        {
+          "id": "d",
+          "text": "Convert the volume to an instance store",
+          "correct": false,
+          "rationale": "An instance store is host-local and ephemeral, which is less available rather than more."
+        }
+      ],
+      "explanation": "EBS being zonal is one of the most consequential scope facts in AWS: it means a volume is a single point of failure and that moving data between zones is a copy, not an attach. When a scenario needs the same files on many instances across zones, the answer is EFS rather than EBS.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Block Storage"
+        }
+      ]
+    },
+    {
+      "id": "storage-with-lambda",
+      "type": "multi",
+      "prompt": "Which storage services can be used with AWS Lambda? (Select all that apply)",
+      "tags": [
+        "storage",
+        "serverless"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon EFS",
+          "correct": true,
+          "rationale": "EFS can be mounted by a Lambda function, which is how a function gets a shared durable file system."
+        },
+        {
+          "id": "b",
+          "text": "Amazon S3",
+          "correct": true,
+          "rationale": "S3 is reached over its API and is the usual destination for data a function produces."
+        },
+        {
+          "id": "c",
+          "text": "Amazon FSx",
+          "correct": true,
+          "rationale": "FSx works with EC2, ECS, EKS and Lambda."
+        },
+        {
+          "id": "d",
+          "text": "Amazon EBS",
+          "correct": false,
+          "rationale": "EBS attaches to an instance, and a Lambda function has no instance to attach it to."
+        }
+      ],
+      "explanation": "EBS is the one storage service Lambda cannot use, because EBS is defined by attachment to a virtual machine. Remembering that single exclusion answers a family of questions about giving serverless functions durable or shared storage.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
@@ -1213,455 +1236,732 @@
       ]
     },
     {
-      "id": "vpc-flow-logs",
-      "type": "single",
-      "prompt": "What do VPC Flow Logs capture?",
-      "tags": [
-        "networking",
-        "observability"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "Metadata about IP traffic - IPs, ports, protocols and byte counts - in and out of network interfaces",
-          "correct": true,
-          "rationale": "Metadata, not payloads."
-        },
-        {
-          "id": "b",
-          "text": "The full packet contents of traffic crossing the VPC",
-          "correct": false,
-          "rationale": "Flow logs are metadata only."
-        },
-        {
-          "id": "c",
-          "text": "Every API call made within the VPC",
-          "correct": false,
-          "rationale": "That is CloudTrail."
-        },
-        {
-          "id": "d",
-          "text": "Application-level request traces",
-          "correct": false,
-          "rationale": "That is X-Ray."
-        }
-      ],
-      "explanation": "VPC Flow Logs capture *metadata* about IP traffic - source and destination IPs, ports, protocols and byte counts - for network interfaces in your VPCs. They are one of the log sources Detective analyzes when working out the root cause of a security incident, alongside CloudTrail logs and GuardDuty findings.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Networking"
-        }
-      ]
-    },
-    {
-      "id": "gateway-direction",
-      "type": "single",
-      "prompt": "EC2 instances in a private subnet need outbound internet access but must not be reachable from the internet. Which service?",
-      "tags": [
-        "networking"
-      ],
-      "options": [
-        {
-          "id": "a",
-          "text": "NAT Gateway - outbound only, described as a one-way street",
-          "correct": true,
-          "rationale": "It blocks connections initiated from outside."
-        },
-        {
-          "id": "b",
-          "text": "Internet Gateway - it connects the VPC to the internet",
-          "correct": false,
-          "rationale": "An IGW enables *two-way* traffic between a VPC and the public internet."
-        },
-        {
-          "id": "c",
-          "text": "Transit Gateway - a centralized cloud router",
-          "correct": false,
-          "rationale": "It connects VPCs, on-premises networks and VPNs rather than providing internet egress."
-        },
-        {
-          "id": "d",
-          "text": "PrivateLink - private connectivity without exposing traffic to the internet",
-          "correct": false,
-          "rationale": "That reaches AWS services and VPCs privately, not the public internet."
-        }
-      ],
-      "explanation": "The distinction is directionality. An **Internet Gateway** enables two-way traffic between a VPC and the public internet. A **NAT Gateway** lets instances in a private subnet reach out to another VPC or the internet while refusing inbound connections initiated from there - a one-way street.",
-      "citations": [
-        {
-          "file": "notes/aws/all_aws_services.md",
-          "heading": "Networking"
-        }
-      ]
-    },
-    {
-      "id": "private-connectivity-options",
+      "id": "ebs-volume-types",
       "type": "multi",
-      "prompt": "Which options provide private connectivity without traversing the public internet? (Select all that apply)",
+      "prompt": "Which EBS volume type descriptions are correct? (Select all that apply)",
       "tags": [
-        "networking"
+        "storage",
+        "performance"
       ],
       "options": [
         {
           "id": "a",
-          "text": "VPC Endpoint - private connection from a VPC to supported AWS services with no IGW, NAT or VPN",
+          "text": "gp3 is general purpose SSD",
           "correct": true,
-          "rationale": "Service access without internet egress."
+          "rationale": "gp3 is the general purpose SSD type and the usual default."
         },
         {
           "id": "b",
-          "text": "PrivateLink - private, secure connection between VPCs, AWS services and on-premises networks",
+          "text": "io1 and io2 are provisioned IOPS SSD for the highest performance",
           "correct": true,
-          "rationale": "Explicitly without exposing traffic to the public internet."
+          "rationale": "The provisioned IOPS families exist for workloads that need guaranteed I/O, typically demanding databases."
         },
         {
           "id": "c",
-          "text": "Direct Connect - a dedicated private connection between on-premises and a VPC",
+          "text": "st1 is throughput-optimized HDD for sequential workloads",
           "correct": true,
-          "rationale": "A physical private link."
+          "rationale": "st1 suits large sequential reads and writes such as log processing and big data."
         },
         {
           "id": "d",
-          "text": "Site-to-Site VPN - secure IPsec tunnels between on-premises and a VPC or Transit Gateway",
+          "text": "sc1 is the cheapest capacity, a cold HDD",
           "correct": true,
-          "rationale": "Encrypted tunnels; the traffic is protected in transit."
+          "rationale": "sc1 is the lowest-cost option, for data accessed rarely."
         },
         {
           "id": "e",
-          "text": "Internet Gateway",
+          "text": "Instance store is an EBS volume type optimized for caching",
           "correct": false,
-          "rationale": "Its entire purpose is two-way public internet traffic."
+          "rationale": "Instance store is not EBS at all. It is disk attached to the host and is erased when the instance stops."
         }
       ],
-      "explanation": "Four ways to avoid the public internet, at different scopes. VPC Endpoints reach AWS services from inside a VPC. PrivateLink connects VPCs, services and on-premises. Direct Connect is a dedicated physical link from your datacentre. Site-to-Site VPN builds IPsec tunnels to a VPC or Transit Gateway - the cheaper alternative to Direct Connect when a dedicated circuit is overkill.",
+      "explanation": "The volume types sort into SSD for random access and HDD for sequential throughput, with a provisioned tier on the SSD side for guaranteed I/O. A scenario naming a transactional database points at SSD, one naming log or streaming processing points at st1, and one naming archival capacity points at sc1.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Networking"
+          "heading": "Block Storage"
         }
       ]
     },
     {
-      "id": "peering-vs-transit",
+      "id": "efs-shared-mounts",
       "type": "single",
-      "prompt": "An organization has grown to dozens of VPCs connected by point-to-point peering and wants to simplify. What replaces that mesh?",
+      "prompt": "A fleet of instances across three Availability Zones must read and write the same files at the same time. Which service?",
       "tags": [
-        "networking"
+        "storage"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Transit Gateway - a centralized cloud router replacing point-to-point peering with a single managed gateway",
+          "text": "Amazon EFS",
           "correct": true,
-          "rationale": "It also connects on-premises networks and remote VPNs."
+          "rationale": "EFS is a regional, auto-scaling NFS file system that many compute resources mount concurrently."
         },
         {
           "id": "b",
-          "text": "More VPC Peering connections, which scale linearly",
+          "text": "Amazon EBS",
           "correct": false,
-          "rationale": "A full mesh grows quadratically - exactly the problem."
+          "rationale": "An EBS volume lives in one zone and normally attaches to one instance, so it cannot serve a fleet spread across zones."
         },
         {
           "id": "c",
-          "text": "PrivateLink for every VPC pair",
+          "text": "AWS Storage Gateway",
           "correct": false,
-          "rationale": "PrivateLink gives private access to services, not general VPC-to-VPC routing at scale."
+          "rationale": "Storage Gateway exists to present cloud storage to on-premises systems, not to share files between instances inside AWS."
         },
         {
           "id": "d",
-          "text": "A NAT Gateway in each VPC",
+          "text": "Amazon S3 Glacier",
           "correct": false,
-          "rationale": "That is outbound internet egress."
+          "rationale": "Glacier is archival object storage with retrieval delays, and it is not a file system."
         }
       ],
-      "explanation": "**VPC Peering** is a direct connection allowing traffic between two VPCs using private IPs - fine for a handful, unworkable as a mesh. **Transit Gateway** is a fully managed centralized cloud router that connects VPCs, on-premises networks and remote VPNs, explicitly replacing point-to-point peering with a single managed gateway.",
+      "explanation": "Three signals point at EFS: many writers, a POSIX file system rather than object keys, and more than one Availability Zone. If the scenario mentions SMB, Windows or Active Directory instead, the answer moves to FSx for Windows File Server.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Networking"
+          "heading": "File System Storage"
         }
       ]
     },
     {
-      "id": "waf-vs-shield",
-      "type": "single",
-      "prompt": "What does AWS WAF protect against that Shield does not?",
+      "id": "fsx-variants",
+      "type": "multi",
+      "prompt": "Which FSx file system matches which requirement? (Select all that apply)",
       "tags": [
-        "security",
-        "networking"
+        "storage"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Common cyber exploits, malicious bots and unauthorized traffic at the application layer",
+          "text": "FSx for Windows File Server: SMB shares integrated with Active Directory",
           "correct": true,
-          "rationale": "Shield is specifically DDoS protection."
+          "rationale": "It is the Windows-native option, which is why Active Directory in a scenario points here."
         },
         {
           "id": "b",
-          "text": "Distributed denial of service attacks",
-          "correct": false,
-          "rationale": "That is precisely Shield's job."
+          "text": "FSx for Lustre: high-performance computing and machine learning training",
+          "correct": true,
+          "rationale": "Lustre is built for very high throughput to a compute cluster."
         },
         {
           "id": "c",
-          "text": "Compromised credentials and malware",
-          "correct": false,
-          "rationale": "That is GuardDuty, working from logs."
+          "text": "FSx for NetApp ONTAP: an existing NetApp estate moving to AWS",
+          "correct": true,
+          "rationale": "The reason to choose it is compatibility with tooling and features a team already depends on."
         },
         {
           "id": "d",
-          "text": "Unpatched software vulnerabilities",
+          "text": "FSx for OpenZFS: an existing ZFS estate moving to AWS",
+          "correct": true,
+          "rationale": "Same logic as ONTAP: the file system is chosen to match what the workload expects."
+        },
+        {
+          "id": "e",
+          "text": "FSx for Lustre: cheap archival storage for rarely read data",
           "correct": false,
-          "rationale": "That is Inspector."
+          "rationale": "Lustre is a performance product. Archival storage is a Glacier tier."
         }
       ],
-      "explanation": "WAF is a managed security service preventing common exploits, malicious bots and unauthorized traffic - application-layer threats. Shield is managed DDoS protection, which is about volume rather than request content. They are complementary rather than alternatives.",
+      "explanation": "FSx exists because some workloads need a specific file system rather than a generic one. The pattern in every FSx question is a named technology or protocol in the scenario, and the answer is the matching variant. Where no specific file system is named and the clients are Linux, EFS is usually the simpler answer.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Security"
+          "heading": "File System Storage"
         }
       ]
     },
     {
-      "id": "governance-services",
+      "id": "storage-gateway",
       "type": "single",
-      "prompt": "Which service automates the setup and governance of a secure multi-account environment?",
+      "prompt": "Which service makes cloud storage look and behave like a standard network drive to on-premises systems?",
       "tags": [
+        "storage",
+        "hybrid"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Storage Gateway",
+          "correct": true,
+          "rationale": "Storage Gateway presents S3 and other cloud storage through NFS, SMB, iSCSI or a virtual tape interface."
+        },
+        {
+          "id": "b",
+          "text": "AWS DataSync",
+          "correct": false,
+          "rationale": "DataSync copies data on a schedule. It moves files rather than presenting an ongoing share."
+        },
+        {
+          "id": "c",
+          "text": "Amazon EFS",
+          "correct": false,
+          "rationale": "EFS is a file system for AWS compute. It is not a translation layer for existing on-premises applications."
+        },
+        {
+          "id": "d",
+          "text": "AWS Transfer Family",
+          "correct": false,
+          "rationale": "Transfer Family offers SFTP, FTPS, FTP and AS2 endpoints for partners sending files, rather than a mounted drive."
+        }
+      ],
+      "explanation": "Storage Gateway's purpose is that nothing on the existing side has to change: backup software still sees tapes, applications still see a share, and the data lands in AWS. That makes it the answer when a scenario stresses existing on-premises software that cannot be modified.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "File System Storage"
+        }
+      ]
+    },
+    {
+      "id": "aws-backup-central",
+      "type": "single",
+      "prompt": "An organization wants one place to define and audit backup policy across EBS, RDS, DynamoDB and EFS. Which service?",
+      "tags": [
+        "storage",
         "governance"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Control Tower",
+          "text": "AWS Backup",
           "correct": true,
-          "rationale": "Multi-account environment setup and governance."
+          "rationale": "Backup centralises policy, scheduling and retention across many services instead of each one's own mechanism."
         },
         {
           "id": "b",
+          "text": "Amazon S3 Lifecycle policies",
+          "correct": false,
+          "rationale": "Lifecycle rules apply to objects in a bucket and know nothing about other services."
+        },
+        {
+          "id": "c",
+          "text": "AWS Elastic Disaster Recovery",
+          "correct": false,
+          "rationale": "DRS replicates servers for failover. It answers recovery of a running system, not scheduled backup policy."
+        },
+        {
+          "id": "d",
           "text": "AWS Config",
           "correct": false,
-          "rationale": "Config assesses, audits and evaluates the configuration of provisioned resources."
-        },
-        {
-          "id": "c",
-          "text": "Systems Manager",
-          "correct": false,
-          "rationale": "A centralized hub for operations management - unified visibility and control of resources."
-        },
-        {
-          "id": "d",
-          "text": "CloudTrail",
-          "correct": false,
-          "rationale": "CloudTrail records API calls and user activity."
+          "rationale": "Config records and evaluates resource configuration. It can report that backups are missing but does not take them."
         }
       ],
-      "explanation": "The governance trio answers different questions. **Control Tower**: how do I stand up and govern many accounts safely? **Config**: is this resource configured correctly? **Systems Manager**: can I see and operate my resources from one place? CloudTrail sits alongside as the audit record of who did what.",
+      "explanation": "The giveaway is the word *across*. Each service has its own snapshot mechanism, and AWS Backup exists so that policy, retention and cross-Region copies are defined once and provable to an auditor.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Governance & Management"
+          "heading": "Data Protection"
         }
       ]
     },
     {
-      "id": "connect-features",
-      "type": "multi",
-      "prompt": "Which are features of Amazon Connect? (Select all that apply)",
+      "id": "db-vs-data-lake",
+      "type": "single",
+      "prompt": "What distinguishes a data lake from a database?",
       "tags": [
-        "ai-ml"
+        "databases",
+        "analytics"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Wisdom - an agent assistant providing real-time information to contact centre agents",
+          "text": "A data lake stores raw data of any shape and applies structure when something reads it, while a database stores data in a schema defined up front",
           "correct": true,
-          "rationale": "Real-time knowledge surfacing."
+          "rationale": "The trade is query speed against the freedom not to decide the schema before the data arrives."
         },
         {
           "id": "b",
-          "text": "Q in Connect - a generative AI assistant giving real-time personalized recommendations to agents",
-          "correct": true,
-          "rationale": "The generative AI layer."
+          "text": "A data lake is always relational and a database is not",
+          "correct": false,
+          "rationale": "It is nearer the reverse. A lake imposes no model, while many databases are relational."
         },
         {
           "id": "c",
-          "text": "Contact Lens - using ML to analyze customer-agent interactions in real time or post-call",
-          "correct": true,
-          "rationale": "Interaction analytics."
+          "text": "A data lake can only hold data that has already been aggregated",
+          "correct": false,
+          "rationale": "Aggregated data is what a warehouse typically holds. A lake's defining feature is keeping the raw form."
         },
         {
           "id": "d",
-          "text": "Ground Truth - a managed data labeling service",
+          "text": "A data lake guarantees transactional consistency across writers",
           "correct": false,
-          "rationale": "A SageMaker feature for creating high-quality training datasets."
-        },
-        {
-          "id": "e",
-          "text": "Segment Detection - automatically detecting scene changes in video",
-          "correct": false,
-          "rationale": "A Rekognition feature."
+          "rationale": "Transactional guarantees are a database property. A lake is usually object storage."
         }
       ],
-      "explanation": "Amazon Connect is an AI-powered contact centre as a service, and its three named features all support the human agent: Wisdom surfaces information, Q in Connect adds generative recommendations, and Contact Lens analyzes the conversation live or afterwards. The distractors are features of other services - Ground Truth belongs to SageMaker and Segment Detection to Rekognition.",
+      "explanation": "The pattern this explains is why analytics pipelines have both: raw data lands in a lake on S3 because the questions are not all known yet, and the parts worth querying repeatedly are loaded into a warehouse where a schema and indexes make them fast.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "AI/ML"
+          "heading": "Databases"
         }
       ]
     },
     {
-      "id": "rekognition-features",
-      "type": "multi",
-      "prompt": "Which are features of Amazon Rekognition? (Select all that apply)",
+      "id": "rds-multiaz-vs-read-replica",
+      "type": "single",
+      "prompt": "An RDS database must survive the loss of an Availability Zone with automatic failover. Which feature?",
       "tags": [
-        "ai-ml"
+        "databases",
+        "resilience"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Segment Detection - automatically detecting scene changes (shots) when processing video",
+          "text": "Multi-AZ deployment",
           "correct": true,
-          "rationale": "Video segmentation."
+          "rationale": "Multi-AZ keeps a synchronous standby in another zone and fails over to it automatically."
         },
         {
           "id": "b",
-          "text": "Custom Labels - training computer vision models to detect objects, scenes or concepts unique to your business",
-          "correct": true,
-          "rationale": "Domain-specific vision without full ML expertise."
+          "text": "A read replica in another Availability Zone",
+          "correct": false,
+          "rationale": "A read replica is asynchronous and exists to serve reads. Promoting one is a manual act and can lose recent writes."
         },
         {
           "id": "c",
-          "text": "Ground Truth - creating high-quality labelled training datasets",
+          "text": "Automated snapshots",
           "correct": false,
-          "rationale": "A SageMaker feature."
+          "rationale": "Snapshots allow a restore, which is recovery measured in minutes or hours rather than automatic failover."
         },
         {
           "id": "d",
-          "text": "Textract-style form extraction from scanned documents",
+          "text": "A larger instance class",
           "correct": false,
-          "rationale": "Textract is its own service for extracting text from documents, images and handwriting."
-        },
-        {
-          "id": "e",
-          "text": "Speech-to-text transcription of video audio tracks",
-          "correct": false,
-          "rationale": "That is Transcribe."
+          "rationale": "Capacity does not address the failure of the zone the instance sits in."
         }
       ],
-      "explanation": "Rekognition is computer vision for image and video analysis, usable without machine learning experience, and its two named features are Segment Detection (scene changes in video) and Custom Labels (training on objects and concepts specific to your business). Everything text-shaped belongs elsewhere: Textract reads documents, Transcribe converts speech, Comprehend analyzes language.",
+      "explanation": "Multi-AZ is for availability and the standby serves no traffic; read replicas are for scale and can be promoted. Mixing the two up is one of the most reliably tested confusions in RDS, and the tell is whether the scenario says *survive a failure* or *handle more reads*.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "AI/ML"
+          "heading": "Relational"
         }
       ]
     },
     {
-      "id": "routing-policies",
-      "type": "multi",
-      "prompt": "Which of these are network traffic routing policies? (Select all that apply)",
+      "id": "aurora-serverless-v2",
+      "type": "single",
+      "prompt": "A relational workload is busy for a few hours a day and nearly idle the rest of the time. Which option fits best?",
       "tags": [
-        "networking"
+        "databases",
+        "cost"
       ],
       "options": [
         {
           "id": "a",
-          "text": "Weighted",
+          "text": "Aurora Serverless v2",
           "correct": true,
-          "rationale": "Split traffic by proportion."
+          "rationale": "It scales capacity with load, including down to very little, so idle time is not paid for at full rate."
         },
         {
           "id": "b",
-          "text": "Geoproximity",
-          "correct": true,
-          "rationale": "Route by distance to resources."
+          "text": "A provisioned Aurora cluster sized for the peak",
+          "correct": false,
+          "rationale": "That pays peak capacity around the clock, which is the cost the scenario is describing."
         },
         {
           "id": "c",
-          "text": "Geolocation",
-          "correct": true,
-          "rationale": "Route by where the user is."
+          "text": "DynamoDB with provisioned capacity",
+          "correct": false,
+          "rationale": "Switching to a key-value model is a rewrite, and provisioned capacity has the same idle-cost problem."
         },
         {
           "id": "d",
-          "text": "Multivalue Answer",
-          "correct": true,
-          "rationale": "Return several healthy records."
-        },
-        {
-          "id": "e",
-          "text": "Round Robin",
+          "text": "RDS with a read replica",
           "correct": false,
-          "rationale": "Not among the four listed."
-        },
-        {
-          "id": "f",
-          "text": "Least Connections",
-          "correct": false,
-          "rationale": "A load balancer algorithm rather than one of the listed routing policies."
+          "rationale": "A replica adds read capacity and cost. It does nothing about paying for idle time."
         }
       ],
-      "explanation": "Four routing policies are listed: Weighted, Geoproximity, Geolocation and Multivalue Answer. The two geographic ones are easy to blur - Geolocation routes on where the *user* is, while Geoproximity routes on distance between user and *resources*, and can be biased to shift traffic between regions.",
+      "explanation": "Intermittent or unpredictable load is the signature of a serverless answer, whether that is Aurora Serverless v2, DynamoDB on-demand, Lambda or Fargate. Steady, predictable load is where provisioned capacity plus a commitment discount wins instead.",
       "citations": [
         {
-          "file": "notes/aws/notes.md",
-          "section": "Policy Routing for Network traffic"
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Relational"
         }
       ]
     },
     {
-      "id": "analytics-and-serverless-misc",
-      "type": "multi",
-      "prompt": "Which service-to-purpose pairings are correct? (Select all that apply)",
+      "id": "dynamodb-global-tables",
+      "type": "single",
+      "prompt": "An application needs reads *and* writes served from multiple AWS Regions against the same table. Which feature?",
       "tags": [
-        "analytics",
+        "databases",
+        "multi-region"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "DynamoDB Global Tables",
+          "correct": true,
+          "rationale": "Global Tables are multi-active, so each Region accepts writes as well as reads."
+        },
+        {
+          "id": "b",
+          "text": "DynamoDB Accelerator (DAX)",
+          "correct": false,
+          "rationale": "DAX is an in-memory read cache in front of a table. It adds speed, not another writable Region."
+        },
+        {
+          "id": "c",
+          "text": "Aurora Global Database",
+          "correct": false,
+          "rationale": "Aurora Global Database serves reads from secondary Regions and promotes one for disaster recovery. Writes go to the primary."
+        },
+        {
+          "id": "d",
+          "text": "Cross-Region read replicas",
+          "correct": false,
+          "rationale": "A read replica is read-only by definition, which is the opposite of what the scenario asks for."
+        }
+      ],
+      "explanation": "The word that decides this is *writes*. Most multi-Region features give local reads with a single writable primary; DynamoDB Global Tables is the common exception with multi-active writes in every Region. If a scenario only needs local reads or a failover target, the cheaper replica options are enough.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "NoSQL and purpose built"
+        }
+      ]
+    },
+    {
+      "id": "dax-purpose",
+      "type": "single",
+      "prompt": "DynamoDB read latency must drop from single-digit milliseconds to microseconds without changing application logic. What is added?",
+      "tags": [
+        "databases",
+        "performance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "DynamoDB Accelerator (DAX)",
+          "correct": true,
+          "rationale": "DAX is a DynamoDB-aware in-memory cache that the existing API calls pass through."
+        },
+        {
+          "id": "b",
+          "text": "ElastiCache for Memcached",
+          "correct": false,
+          "rationale": "It could cache the data, but the application would have to manage the cache itself, which the scenario rules out."
+        },
+        {
+          "id": "c",
+          "text": "A global secondary index",
+          "correct": false,
+          "rationale": "An index enables a different query pattern. It does not move data into memory."
+        },
+        {
+          "id": "d",
+          "text": "Provisioned capacity with auto scaling",
+          "correct": false,
+          "rationale": "Capacity controls throughput and throttling, not per-request latency."
+        }
+      ],
+      "explanation": "The phrase *without changing application logic* is what makes DAX the answer rather than a general-purpose cache: it is API-compatible, so the cache is transparent. A question that allows code changes opens ElastiCache back up as a valid option.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "NoSQL and purpose built"
+        }
+      ]
+    },
+    {
+      "id": "database-engine-selection",
+      "type": "multi",
+      "prompt": "Which database-to-workload pairings are correct? (Select all that apply)",
+      "tags": [
+        "databases"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Neptune: queries about relationships, such as fraud rings and recommendations",
+          "correct": true,
+          "rationale": "Neptune is a graph database, and highly connected data is what graphs are for."
+        },
+        {
+          "id": "b",
+          "text": "Timestream: metrics, telemetry and IoT readings over time",
+          "correct": true,
+          "rationale": "Timestream is purpose-built for time series, including retention tiers that age data out automatically."
+        },
+        {
+          "id": "c",
+          "text": "DocumentDB: migrating an existing MongoDB application",
+          "correct": true,
+          "rationale": "Compatibility with MongoDB is the reason to choose it over DynamoDB."
+        },
+        {
+          "id": "d",
+          "text": "Keyspaces: an existing Apache Cassandra workload",
+          "correct": true,
+          "rationale": "Keyspaces is the Cassandra-compatible wide-column option."
+        },
+        {
+          "id": "e",
+          "text": "ElastiCache: the durable system of record for financial transactions",
+          "correct": false,
+          "rationale": "ElastiCache is a cache. MemoryDB is the durable in-memory option, and a transactional system of record usually belongs in a relational database."
+        }
+      ],
+      "explanation": "AWS's purpose-built databases are chosen by the shape of the question being asked, not by preference: relationships point to a graph, time to a time-series store, documents to DocumentDB or DynamoDB, and wide-column to Keyspaces. Naming an existing engine in a scenario is almost always a signal to pick the compatible service rather than the native one.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Databases"
+        }
+      ]
+    },
+    {
+      "id": "elasticache-engine-choice",
+      "type": "single",
+      "prompt": "What distinguishes ElastiCache for Memcached from the Valkey and Redis options?",
+      "tags": [
+        "databases",
+        "caching"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Memcached is a simple cache with no persistence, while Valkey and Redis add replication, persistence and richer data structures",
+          "correct": true,
+          "rationale": "That capability gap is the whole basis for choosing between them."
+        },
+        {
+          "id": "b",
+          "text": "Memcached is durable and Valkey is not",
+          "correct": false,
+          "rationale": "It is the other way round. Memcached is the volatile option."
+        },
+        {
+          "id": "c",
+          "text": "Memcached supports multi-Region replication and Redis does not",
+          "correct": false,
+          "rationale": "Replication is a Redis and Valkey capability, not a Memcached one."
+        },
+        {
+          "id": "d",
+          "text": "Only Memcached can be used in front of a relational database",
+          "correct": false,
+          "rationale": "Either engine can cache query results. The engine choice is about features, not what sits behind it."
+        }
+      ],
+      "explanation": "Caching questions turn on whether losing the cache matters. If the scenario can simply repopulate from the source, Memcached is sufficient and simplest. If it needs failover, persistence, sorted sets or pub/sub, it needs Valkey or Redis, and if it needs the data to *be* the system of record, it needs MemoryDB.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "In-memory and caching"
+        }
+      ]
+    },
+    {
+      "id": "memorydb-vs-elasticache",
+      "type": "boolean",
+      "prompt": "MemoryDB is durable enough to serve as a primary data store rather than only a cache.",
+      "tags": [
+        "databases",
+        "caching"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "MemoryDB is Valkey and Redis-compatible but writes a multi-AZ transaction log, which is what makes it a database rather than a cache. The practical difference from ElastiCache is what happens after a failure: a cache can be rebuilt from the source of truth, while MemoryDB *is* the source of truth.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "In-memory and caching"
+        }
+      ]
+    },
+    {
+      "id": "dynamodb-capacity-modes",
+      "type": "single",
+      "prompt": "A new DynamoDB table has traffic nobody can predict yet. Which capacity mode is the safer starting point?",
+      "tags": [
+        "databases",
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "On-demand, which bills per request",
+          "correct": true,
+          "rationale": "On-demand absorbs unknown traffic without throttling and without a capacity guess."
+        },
+        {
+          "id": "b",
+          "text": "Provisioned, sized to the expected peak",
+          "correct": false,
+          "rationale": "Sizing to a peak nobody can predict means either throttling or paying for capacity that is never used."
+        },
+        {
+          "id": "c",
+          "text": "Provisioned, with reserved capacity purchased for a year",
+          "correct": false,
+          "rationale": "A commitment is the opposite of what unknown traffic calls for."
+        },
+        {
+          "id": "d",
+          "text": "On-demand with DAX required",
+          "correct": false,
+          "rationale": "DAX is an optional read cache and has nothing to do with choosing a capacity mode."
+        }
+      ],
+      "explanation": "The general rule holds across AWS: unpredictable usage favours per-request pricing, and steady usage favours provisioned capacity with a commitment discount. Starting on-demand and moving to provisioned once a pattern is visible is the normal progression.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "NoSQL and purpose built"
+        }
+      ]
+    },
+    {
+      "id": "serverless-compute-options",
+      "type": "multi",
+      "prompt": "Which statements about choosing a compute option are correct? (Select all that apply)",
+      "tags": [
         "compute"
       ],
       "options": [
         {
           "id": "a",
-          "text": "AWS Data Firehose - capturing, transforming and loading real-time stream data into data lakes and analytics services",
+          "text": "Lambda bills per request and per millisecond, with no cost while idle",
           "correct": true,
-          "rationale": "The delivery half of a streaming pipeline."
+          "rationale": "Paying nothing between invocations is the defining economic property of Lambda."
         },
         {
           "id": "b",
-          "text": "AppSync - a serverless GraphQL service supporting real-time data subscriptions",
+          "text": "Fargate removes the need to size, patch or scale container hosts",
           "correct": true,
-          "rationale": "Fully managed GraphQL."
+          "rationale": "It is the serverless capacity layer behind both ECS and EKS."
         },
         {
           "id": "c",
-          "text": "Elastic Beanstalk - a fully managed PaaS for deploying and scaling web applications",
+          "text": "App Runner exposes no infrastructure, while Elastic Beanstalk hands back the resources it created",
           "correct": true,
-          "rationale": "Platform as a service."
+          "rationale": "That visibility is the practical difference between the two."
         },
         {
           "id": "d",
-          "text": "CloudTrail Lake - an immutable audit and security data lake supporting SQL queries on user and API activity",
+          "text": "Batch provisions compute to drain a job queue and releases it afterwards",
           "correct": true,
-          "rationale": "Queryable audit history."
+          "rationale": "That lifecycle is what makes it suitable for periodic heavy work."
         },
         {
           "id": "e",
-          "text": "QuickSight - a managed service for labelling machine learning training data",
+          "text": "EC2 is fully managed, because AWS patches the guest operating system",
           "correct": false,
-          "rationale": "QuickSight is serverless AI-powered business intelligence. Data labelling is SageMaker Ground Truth."
+          "rationale": "AWS patches the hardware and hypervisor. The guest operating system is the customer’s, which makes EC2 self-managed."
         }
       ],
-      "explanation": "Four distinct jobs: Firehose moves and transforms streaming data into stores; AppSync serves GraphQL with real-time subscriptions; Elastic Beanstalk is the PaaS route to deploying a web app; CloudTrail Lake makes audit activity SQL-queryable and immutable. QuickSight is business intelligence - the reporting layer, not the labelling one.",
+      "explanation": "Compute options form a ladder of how much AWS operates: EC2 self-managed, Beanstalk and EKS managed with resources still visible, and Lambda, Fargate and App Runner fully managed with nothing exposed. A scenario stressing no operational overhead is reaching for the top of that ladder.",
       "citations": [
         {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "Misc (Media Processing maybe???)"
+          "heading": "Compute"
+        }
+      ]
+    },
+    {
+      "id": "storage-selection-signals",
+      "type": "multi",
+      "prompt": "Which storage choices match their requirement? (Select all that apply)",
+      "tags": [
+        "storage"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Many instances across Availability Zones writing the same files: EFS",
+          "correct": true,
+          "rationale": "EFS is regional and mounted concurrently, which is what concurrent writers need."
         },
         {
+          "id": "b",
+          "text": "A boot volume or a database disk for one instance: EBS",
+          "correct": true,
+          "rationale": "EBS is a block device formatted by the operating system, attached to one instance."
+        },
+        {
+          "id": "c",
+          "text": "Serving and archiving large numbers of files addressed by key: S3",
+          "correct": true,
+          "rationale": "Object storage with no file system is what S3 provides, reachable over HTTPS from anywhere."
+        },
+        {
+          "id": "d",
+          "text": "A Windows file share integrated with Active Directory: FSx for Windows File Server",
+          "correct": true,
+          "rationale": "FSx exists for workloads that need a specific file system or protocol."
+        },
+        {
+          "id": "e",
+          "text": "Durable storage attached to a Lambda function: EBS",
+          "correct": false,
+          "rationale": "EBS cannot be used with Lambda. EFS is the mountable option for a function."
+        }
+      ],
+      "explanation": "Storage questions are decided by the access pattern rather than by capacity: one writer and a disk is block, many writers and a path is file, and keys fetched over HTTP is object. The single exclusion worth memorising is that Lambda cannot use EBS.",
+      "citations": [
+        {
           "file": "notes/aws/all_aws_services.md",
-          "heading": "AI/ML"
+          "heading": "Storage"
+        }
+      ]
+    },
+    {
+      "id": "rds-vs-aurora-facts",
+      "type": "multi",
+      "prompt": "Which statements about RDS and Aurora are correct? (Select all that apply)",
+      "tags": [
+        "databases"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Multi-AZ provides a synchronous standby that serves no traffic and fails over automatically",
+          "correct": true,
+          "rationale": "It buys availability, not read capacity."
+        },
+        {
+          "id": "b",
+          "text": "A read replica is asynchronous and exists to serve read queries",
+          "correct": true,
+          "rationale": "It buys scale, and promoting one is a deliberate act that can lose recent writes."
+        },
+        {
+          "id": "c",
+          "text": "Aurora keeps six copies of data across three Availability Zones",
+          "correct": true,
+          "rationale": "That replication is built into Aurora’s storage layer rather than configured."
+        },
+        {
+          "id": "d",
+          "text": "Aurora Global Database can promote a secondary Region for disaster recovery",
+          "correct": true,
+          "rationale": "Secondaries serve reads and can be promoted, typically lagging under a second."
+        },
+        {
+          "id": "e",
+          "text": "RDS removes the need to choose an instance class or engine version",
+          "correct": false,
+          "rationale": "Those choices remain yours, which is what makes RDS managed rather than fully managed."
+        }
+      ],
+      "explanation": "Availability and scale are separate purchases in RDS, and conflating them is the most reliably tested confusion in the service. Aurora changes the storage layer underneath but keeps the same distinction between a standby and a replica.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Relational"
         }
       ]
     }

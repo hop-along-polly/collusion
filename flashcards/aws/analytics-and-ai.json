@@ -1,0 +1,1270 @@
+{
+  "id": "analytics-and-ai",
+  "title": "AWS Analytics and AI Services",
+  "cards": [
+    {
+      "id": "athena-serverless-queries",
+      "type": "single",
+      "prompt": "A team needs occasional SQL queries over data already sitting in S3, with nothing to provision. Which service?",
+      "tags": [
+        "analytics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Athena",
+          "correct": true,
+          "rationale": "Athena is serverless, queries S3 directly, and bills per terabyte scanned."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Redshift",
+          "correct": false,
+          "rationale": "Redshift is a warehouse with a cluster to size and run, which is more than occasional queries justify."
+        },
+        {
+          "id": "c",
+          "text": "Amazon EMR",
+          "correct": false,
+          "rationale": "EMR runs Hadoop and Spark clusters, which is a heavier tool with more operational surface."
+        },
+        {
+          "id": "d",
+          "text": "Amazon RDS",
+          "correct": false,
+          "rationale": "RDS is a transactional relational database and cannot query objects in S3."
+        }
+      ],
+      "explanation": "The deciding factors are how often the queries run and whether anything should be left running between them. Occasional and ad hoc favours Athena's per-scan pricing; constant heavy analytical querying favours a warehouse, where the cost of a cluster is repaid by speed.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "redshift-spectrum-vs-athena",
+      "type": "single",
+      "prompt": "What distinguishes Redshift Spectrum from Amazon Athena?",
+      "tags": [
+        "analytics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Spectrum is a feature of a Redshift cluster and so needs one running, while Athena is standalone and serverless",
+          "correct": true,
+          "rationale": "Both query S3, and the difference is where the query engine lives."
+        },
+        {
+          "id": "b",
+          "text": "Spectrum queries S3 and Athena queries only data loaded into a cluster",
+          "correct": false,
+          "rationale": "It is the reverse of Athena's model. Athena queries S3 directly and has no cluster at all."
+        },
+        {
+          "id": "c",
+          "text": "Athena cannot use the Glue Data Catalog",
+          "correct": false,
+          "rationale": "Athena relies on the Glue Data Catalog for table definitions."
+        },
+        {
+          "id": "d",
+          "text": "Spectrum is billed per terabyte scanned and Athena is billed per cluster hour",
+          "correct": false,
+          "rationale": "The pricing models are swapped. Athena is per terabyte scanned; the Redshift cluster is the ongoing cost in Spectrum's case."
+        }
+      ],
+      "explanation": "Spectrum earns its place when a query needs to join data in S3 to tables already in the warehouse, because the engine is right there. With no warehouse in the picture, Athena is the simpler and cheaper answer.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "glue-data-catalog",
+      "type": "single",
+      "prompt": "What is the AWS Glue Data Catalog?",
+      "tags": [
+        "analytics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A central metadata store of table definitions that Athena, Redshift Spectrum and EMR all read",
+          "correct": true,
+          "rationale": "It is the shared schema layer over data in storage, which is what lets several engines query the same tables."
+        },
+        {
+          "id": "b",
+          "text": "A managed cluster that runs extract, transform and load jobs",
+          "correct": false,
+          "rationale": "Glue runs jobs serverlessly, but the Data Catalog specifically holds metadata rather than compute."
+        },
+        {
+          "id": "c",
+          "text": "A copy of the data optimized for querying",
+          "correct": false,
+          "rationale": "No data is copied. The catalog describes data that stays where it is."
+        },
+        {
+          "id": "d",
+          "text": "A catalogue of third-party datasets available for subscription",
+          "correct": false,
+          "rationale": "That is AWS Data Exchange."
+        }
+      ],
+      "explanation": "The catalog is what turns a pile of files in S3 into tables, and because it is shared, several query engines see the same definitions. A Glue crawler is the piece that populates it by inferring schema from the data.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "glue-crawler-role",
+      "type": "boolean",
+      "prompt": "A Glue crawler infers the schema of data in a store and writes it into the Glue Data Catalog.",
+      "tags": [
+        "analytics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "The crawler is the discovery step: it looks at the files, works out columns and types, and registers a table. That is what makes a bucket queryable without anybody writing a schema by hand, and it is why crawlers are usually scheduled to run as new data lands.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "emr-open-source-frameworks",
+      "type": "single",
+      "prompt": "A data team wants to run its existing Apache Spark jobs with control over cluster tuning. Which service?",
+      "tags": [
+        "analytics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon EMR",
+          "correct": true,
+          "rationale": "EMR provides managed Hadoop and Spark clusters, including the configuration knobs those frameworks expose."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Athena",
+          "correct": false,
+          "rationale": "Athena runs SQL and exposes no cluster to tune, so existing Spark code has nowhere to run."
+        },
+        {
+          "id": "c",
+          "text": "AWS Glue",
+          "correct": false,
+          "rationale": "Glue runs Spark serverlessly, which suits new jobs but deliberately hides the tuning the scenario asks for."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Redshift",
+          "correct": false,
+          "rationale": "Redshift is a SQL warehouse rather than a Spark runtime."
+        }
+      ],
+      "explanation": "Glue and EMR both run Spark, and the choice is about how much control is wanted. Glue is serverless and opinionated; EMR hands over the cluster. Existing jobs with tuned configuration point at EMR, and new pipelines usually point at Glue.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "lake-formation-permissions",
+      "type": "single",
+      "prompt": "A data lake on S3 needs table, column and row-level permissions for different analyst groups. Which service?",
+      "tags": [
+        "analytics",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Lake Formation",
+          "correct": true,
+          "rationale": "Lake Formation adds fine-grained permissions over the Glue Data Catalog for a lake built on S3."
+        },
+        {
+          "id": "b",
+          "text": "S3 bucket policies alone",
+          "correct": false,
+          "rationale": "A bucket policy works at the object and prefix level and cannot express a column or row restriction."
+        },
+        {
+          "id": "c",
+          "text": "IAM permissions boundaries",
+          "correct": false,
+          "rationale": "A boundary caps what permissions can be granted. It does not understand tables or columns."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Macie",
+          "correct": false,
+          "rationale": "Macie finds and classifies sensitive data. It does not enforce who may query which column."
+        }
+      ],
+      "explanation": "Object storage permissions stop at the file, which is a real gap once analysts share a lake. Lake Formation is the layer that makes access control match how people actually query, by table and column rather than by prefix.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "kinesis-streams",
+      "type": "single",
+      "prompt": "What distinguishes Kinesis Video Streams from Kinesis Data Streams?",
+      "tags": [
+        "analytics",
+        "streaming"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Video Streams carries live video and other time-encoded media, while Data Streams carries records such as text, logs and telemetry",
+          "correct": true,
+          "rationale": "They are the same streaming idea applied to different payloads."
+        },
+        {
+          "id": "b",
+          "text": "Video Streams is serverless and Data Streams is not",
+          "correct": false,
+          "rationale": "Neither distinction is about serverlessness. Firehose is the fully serverless delivery member of the family."
+        },
+        {
+          "id": "c",
+          "text": "Data Streams cannot retain records for replay",
+          "correct": false,
+          "rationale": "Retention for replay by multiple independent consumers is one of Data Streams' defining features."
+        },
+        {
+          "id": "d",
+          "text": "Video Streams delivers directly into Redshift",
+          "correct": false,
+          "rationale": "Delivery into analytics destinations is Firehose's job."
+        }
+      ],
+      "explanation": "Kinesis is a platform rather than a service, and naming the family when a question wants a member is a reliable way to get it wrong. The four members split by payload and purpose: records, video, delivery, and in-flight analysis.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "firehose-vs-data-streams",
+      "type": "single",
+      "prompt": "Streaming data must land in S3 with no consumer code to write and no shards to manage. Which service?",
+      "tags": [
+        "analytics",
+        "streaming"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Data Firehose",
+          "correct": true,
+          "rationale": "Firehose captures, optionally transforms, and delivers a stream into destinations such as S3, Redshift and OpenSearch without a consumer."
+        },
+        {
+          "id": "b",
+          "text": "Kinesis Data Streams",
+          "correct": false,
+          "rationale": "Data Streams retains records for consumers you write, which is more capability and more work than the scenario wants."
+        },
+        {
+          "id": "c",
+          "text": "Amazon MSK",
+          "correct": false,
+          "rationale": "MSK is managed Kafka, chosen for compatibility with existing Kafka applications."
+        },
+        {
+          "id": "d",
+          "text": "Amazon SQS",
+          "correct": false,
+          "rationale": "A queue holds messages for a consumer. Nothing delivers them onward on its own."
+        }
+      ],
+      "explanation": "The distinction between the two Kinesis ingestion paths is custom processing against plain delivery. If the scenario needs replay, ordering per shard or several independent consumers, it is Data Streams. If the goal is simply to land the data somewhere, it is Firehose.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "msk-kafka-compatibility",
+      "type": "single",
+      "prompt": "An existing application uses Apache Kafka producers and consumers and must keep working after moving to AWS. Which service?",
+      "tags": [
+        "analytics",
+        "streaming"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon MSK",
+          "correct": true,
+          "rationale": "MSK is managed Apache Kafka, so existing clients and tooling continue to work unchanged."
+        },
+        {
+          "id": "b",
+          "text": "Kinesis Data Streams",
+          "correct": false,
+          "rationale": "Kinesis is a different API, so producers and consumers would have to be rewritten."
+        },
+        {
+          "id": "c",
+          "text": "Amazon SNS with multiple subscribers",
+          "correct": false,
+          "rationale": "SNS is push-based pub/sub without the retention and partition semantics Kafka clients expect."
+        },
+        {
+          "id": "d",
+          "text": "Amazon EventBridge",
+          "correct": false,
+          "rationale": "EventBridge routes events by rule and offers no Kafka protocol."
+        }
+      ],
+      "explanation": "This is the same compatibility pattern as EKS against ECS, DocumentDB against DynamoDB, and Keyspaces against a native option. When a scenario names an existing open-source technology, the managed version of that technology is almost always the intended answer.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "vector-storage-options",
+      "type": "multi",
+      "prompt": "Which AWS options can store and query vector embeddings for retrieval augmented generation? (Select all that apply)",
+      "tags": [
+        "analytics",
+        "ai",
+        "databases"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon OpenSearch Service, including a serverless vector collection",
+          "correct": true,
+          "rationale": "OpenSearch supports vector search alongside its text search and log analytics roles."
+        },
+        {
+          "id": "b",
+          "text": "Amazon RDS for PostgreSQL with `pgvector` enabled",
+          "correct": true,
+          "rationale": "The pgvector extension adds vector storage and similarity search to PostgreSQL."
+        },
+        {
+          "id": "c",
+          "text": "S3 Vectors",
+          "correct": true,
+          "rationale": "S3 Vectors stores and queries embeddings natively in S3, without a separate vector database."
+        },
+        {
+          "id": "d",
+          "text": "Amazon ElastiCache for Memcached",
+          "correct": false,
+          "rationale": "Memcached is a simple key-value cache with no vector index or similarity search."
+        },
+        {
+          "id": "e",
+          "text": "Amazon Timestream",
+          "correct": false,
+          "rationale": "Timestream is purpose-built for time series data, not for similarity search over embeddings."
+        }
+      ],
+      "explanation": "Retrieval augmented generation needs a store that can answer *what is most similar to this vector*, and AWS offers that in several places rather than in one dedicated product. The practical choice usually follows what the team already runs, which is why a question tends to list several correct answers.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "quicksight-bi",
+      "type": "single",
+      "prompt": "Which service provides business intelligence dashboards with per-session pricing and natural-language questions over your data?",
+      "tags": [
+        "analytics"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon QuickSight",
+          "correct": true,
+          "rationale": "QuickSight is the serverless BI service, including natural-language question answering."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Athena",
+          "correct": false,
+          "rationale": "Athena runs SQL and returns results. Dashboards and visualisation sit on top of it."
+        },
+        {
+          "id": "c",
+          "text": "Amazon OpenSearch Dashboards",
+          "correct": false,
+          "rationale": "Those visualise data in an OpenSearch cluster, typically logs, rather than acting as general BI over your data sources."
+        },
+        {
+          "id": "d",
+          "text": "AWS Glue DataBrew",
+          "correct": false,
+          "rationale": "DataBrew is visual data preparation, which happens before reporting."
+        }
+      ],
+      "explanation": "Per-session pricing is the detail worth remembering, because it makes QuickSight the cheap answer for dashboards that many people view occasionally. A question emphasising infrequent viewers across a large organisation is pointing at exactly that.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "analytics-and-serverless-misc",
+      "type": "multi",
+      "prompt": "Which service-to-purpose pairings are correct? (Select all that apply)",
+      "tags": [
+        "analytics",
+        "serverless"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS AppSync: a serverless GraphQL API with real-time subscriptions",
+          "correct": true,
+          "rationale": "AppSync resolves one GraphQL query across several data sources."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Data Firehose: capturing and loading streaming data into data lakes and analytics services",
+          "correct": true,
+          "rationale": "Delivery into a destination with no consumer code is Firehose's purpose."
+        },
+        {
+          "id": "c",
+          "text": "AWS Data Exchange: subscribing to third-party datasets through AWS Marketplace",
+          "correct": true,
+          "rationale": "Data Exchange handles delivery, entitlement and billing for data products."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Redshift: a petabyte-scale data warehouse for SQL over large datasets",
+          "correct": true,
+          "rationale": "Columnar storage tuned for aggregation across very many rows is what a warehouse provides."
+        },
+        {
+          "id": "e",
+          "text": "AWS Glue: hosting a GraphQL API for mobile clients",
+          "correct": false,
+          "rationale": "Glue prepares data for analytics. Hosting an API is AppSync or API Gateway."
+        }
+      ],
+      "explanation": "The analytics and integration services are easiest to keep apart by asking what each one moves and where it leaves the data: Firehose delivers, Glue transforms, Redshift and Athena query, Data Exchange acquires, and AppSync serves it to clients.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "ai-service-selection",
+      "type": "multi",
+      "prompt": "Which AI/ML service-to-task pairings are correct? (Select all that apply)",
+      "tags": [
+        "ai"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Kendra: natural-language search across dispersed, unstructured repositories",
+          "correct": true,
+          "rationale": "Kendra answers questions with passages from enterprise content."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Personalize: real-time recommendations built from your own interaction data",
+          "correct": true,
+          "rationale": "Personalize applies the technology behind Amazon's own recommendations to your data."
+        },
+        {
+          "id": "c",
+          "text": "Amazon Translate: neural machine translation between languages",
+          "correct": true,
+          "rationale": "Translate is the dedicated translation service."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Textract: extracting text, forms and tables from scanned documents",
+          "correct": true,
+          "rationale": "Textract preserves document structure rather than returning a flat string."
+        },
+        {
+          "id": "e",
+          "text": "Amazon Comprehend: converting recorded speech into written text",
+          "correct": false,
+          "rationale": "Speech to text is Transcribe. Comprehend works on text that already exists."
+        }
+      ],
+      "explanation": "The applied AI services each solve one problem through an API, and questions test whether you can match the task to the service without reaching for a custom model. The pairs most often swapped are Transcribe against Comprehend, and Textract against Rekognition.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Applied AI services"
+        }
+      ]
+    },
+    {
+      "id": "kendra-vs-opensearch",
+      "type": "single",
+      "prompt": "Employees should ask questions in plain English and get answers drawn from documents spread across several internal systems. Which service?",
+      "tags": [
+        "ai",
+        "search"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Kendra",
+          "correct": true,
+          "rationale": "Kendra is built for natural-language enterprise search across dispersed, unstructured repositories."
+        },
+        {
+          "id": "b",
+          "text": "Amazon OpenSearch Service",
+          "correct": false,
+          "rationale": "OpenSearch is a powerful search engine, but it is a cluster to build on rather than a ready-made natural-language question answering service."
+        },
+        {
+          "id": "c",
+          "text": "Amazon Athena",
+          "correct": false,
+          "rationale": "Athena runs SQL over structured data in S3."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Comprehend",
+          "correct": false,
+          "rationale": "Comprehend extracts entities, sentiment and topics from text. It does not serve a search experience."
+        }
+      ],
+      "explanation": "Both can power search, and the discriminator is how much is prebuilt. Kendra arrives with connectors, ranking and question answering; OpenSearch arrives as an engine you design a relevance strategy for. A scenario stressing plain-English questions and minimal build points at Kendra.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Applied AI services"
+        }
+      ]
+    },
+    {
+      "id": "personalize-vs-forecast",
+      "type": "single",
+      "prompt": "A retailer wants to predict demand for each product over the next quarter from years of sales history. Which service?",
+      "tags": [
+        "ai"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Forecast",
+          "correct": true,
+          "rationale": "Forecast produces time-series predictions from historical data without machine learning expertise."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Personalize",
+          "correct": false,
+          "rationale": "Personalize recommends items to individual users. It does not predict aggregate demand over time."
+        },
+        {
+          "id": "c",
+          "text": "Amazon Comprehend",
+          "correct": false,
+          "rationale": "Comprehend analyses text."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Fraud Detector",
+          "correct": false,
+          "rationale": "Fraud Detector scores activity for likely fraud from historical outcomes."
+        }
+      ],
+      "explanation": "Both Forecast and Personalize learn from a company's own history, which is why they are easy to confuse. The test is what the output is about: a quantity over future time is forecasting, while an item ranked for a particular person is recommendation.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Applied AI services"
+        }
+      ]
+    },
+    {
+      "id": "rekognition-features",
+      "type": "multi",
+      "prompt": "Which are features of Amazon Rekognition? (Select all that apply)",
+      "tags": [
+        "ai"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Segment Detection, which finds shot and scene changes in video",
+          "correct": true,
+          "rationale": "Segment detection is part of Rekognition's video analysis."
+        },
+        {
+          "id": "b",
+          "text": "Custom Labels, which trains recognition of objects specific to a business",
+          "correct": true,
+          "rationale": "Custom Labels extends the service to concepts it does not know out of the box, from a small labelled set."
+        },
+        {
+          "id": "c",
+          "text": "Content moderation of images and video",
+          "correct": true,
+          "rationale": "Moderation is one of the standard capabilities, alongside objects, scenes, faces and text."
+        },
+        {
+          "id": "d",
+          "text": "Extracting form fields and tables from scanned documents",
+          "correct": false,
+          "rationale": "That is Textract. Rekognition can detect text in an image but does not preserve document structure."
+        },
+        {
+          "id": "e",
+          "text": "Converting text into lifelike speech",
+          "correct": false,
+          "rationale": "That is Polly."
+        }
+      ],
+      "explanation": "Rekognition covers images and video, and the boundary worth holding is against Textract: detecting that text exists in a photograph is vision, while pulling the values out of a form in document order is document analysis.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Applied AI services"
+        }
+      ]
+    },
+    {
+      "id": "amazon-q-variants",
+      "type": "single",
+      "prompt": "What distinguishes Amazon Q Developer from Amazon Q Business?",
+      "tags": [
+        "ai"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Q Developer assists with code, debugging and AWS questions, while Q Business answers questions from company data",
+          "correct": true,
+          "rationale": "Same assistant idea pointed at two different corpora and audiences."
+        },
+        {
+          "id": "b",
+          "text": "Q Developer is a foundation model and Q Business is a fine-tuning service",
+          "correct": false,
+          "rationale": "Neither is a model or a training service. Both are assistants built on top of models."
+        },
+        {
+          "id": "c",
+          "text": "Q Business runs only on-premises",
+          "correct": false,
+          "rationale": "Both are AWS-hosted services."
+        },
+        {
+          "id": "d",
+          "text": "Q Developer replaces SageMaker for model training",
+          "correct": false,
+          "rationale": "Training and deploying models remains SageMaker AI's role."
+        }
+      ],
+      "explanation": "The pattern repeats across AWS's generative AI offerings: the same underlying capability is packaged for a specific job. Bedrock is the API for building with models, SageMaker AI is for making them, and the Q products are finished assistants for developers and for business users.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Applied AI services"
+        }
+      ]
+    },
+    {
+      "id": "bedrock-knowledge-bases-managed-rag",
+      "type": "single",
+      "prompt": "An application must answer from a company's own documents, and the team does not want to build ingestion, chunking and retrieval themselves. Which option?",
+      "tags": [
+        "ai",
+        "rag"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Bedrock Knowledge Bases",
+          "correct": true,
+          "rationale": "Knowledge Bases is managed retrieval augmented generation: ingestion, chunking, embedding and retrieval are handled."
+        },
+        {
+          "id": "b",
+          "text": "Bedrock Agents",
+          "correct": false,
+          "rationale": "Agents plan multi-step tasks and call APIs. Retrieval over documents is the Knowledge Bases piece."
+        },
+        {
+          "id": "c",
+          "text": "SageMaker Ground Truth",
+          "correct": false,
+          "rationale": "Ground Truth is managed data labelling for building training sets."
+        },
+        {
+          "id": "d",
+          "text": "Bedrock Guardrails",
+          "correct": false,
+          "rationale": "Guardrails filter prompts and responses. They add no knowledge."
+        }
+      ],
+      "explanation": "Bedrock's features divide by what they add to a model call: Knowledge Bases add facts, Agents add actions, and Guardrails add constraints. A scenario about answering from private documents is always the first of the three.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Foundation models and custom models"
+        }
+      ]
+    },
+    {
+      "id": "sagemaker-platform-not-service",
+      "type": "boolean",
+      "prompt": "SageMaker AI is a single service rather than a family of related capabilities.",
+      "tags": [
+        "ai"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "SageMaker AI is a platform covering the whole machine learning lifecycle, with distinct components for labelling, preparation, training, tuning, deployment and monitoring. Questions usually want the specific component, so answering \"SageMaker\" to a question about detecting bias or watching for drift is not precise enough.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Foundation models and custom models"
+        }
+      ]
+    },
+    {
+      "id": "jumpstart-infrastructure-cost",
+      "type": "single",
+      "prompt": "Which statement about SageMaker JumpStart is correct?",
+      "tags": [
+        "ai",
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It deploys pre-trained models onto infrastructure you own and pay for by the hour",
+          "correct": true,
+          "rationale": "That hourly infrastructure is the pricing difference from Bedrock's serverless per-token model."
+        },
+        {
+          "id": "b",
+          "text": "It is serverless and billed per token",
+          "correct": false,
+          "rationale": "Per-token serverless access to foundation models is Bedrock."
+        },
+        {
+          "id": "c",
+          "text": "It only offers models trained by Amazon",
+          "correct": false,
+          "rationale": "JumpStart includes a broad catalogue of models and solution templates."
+        },
+        {
+          "id": "d",
+          "text": "It is a data labelling workforce service",
+          "correct": false,
+          "rationale": "That is SageMaker Ground Truth."
+        }
+      ],
+      "explanation": "Both JumpStart and Bedrock offer pre-trained foundation models, and the exam-relevant difference is who owns the running infrastructure. Idle capacity costs money under JumpStart and nothing under Bedrock, which is what makes intermittent workloads a Bedrock answer.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Foundation models and custom models"
+        }
+      ]
+    },
+    {
+      "id": "agentcore-runtime-hosting",
+      "type": "single",
+      "prompt": "What does Bedrock AgentCore Runtime provide?",
+      "tags": [
+        "ai"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A managed runtime for hosting agents, including agents acquired through AWS Marketplace",
+          "correct": true,
+          "rationale": "It is the hosting layer for agents rather than a model or a framework."
+        },
+        {
+          "id": "b",
+          "text": "A vector database for embeddings",
+          "correct": false,
+          "rationale": "Vector storage is offered by OpenSearch, PostgreSQL with pgvector and S3 Vectors."
+        },
+        {
+          "id": "c",
+          "text": "A fine-tuning service for foundation models",
+          "correct": false,
+          "rationale": "Customisation of a model is a Bedrock or SageMaker training activity."
+        },
+        {
+          "id": "d",
+          "text": "A guardrail that filters agent output",
+          "correct": false,
+          "rationale": "Filtering prompts and responses is Bedrock Guardrails."
+        }
+      ],
+      "explanation": "Agents need somewhere to run, and AgentCore Runtime is that place. It matters commercially as well as technically, because it is where an agent bought as a Marketplace listing is deployed, which ties the AI stack to the listing types a seller can publish.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Foundation models and custom models"
+        }
+      ]
+    },
+    {
+      "id": "mediaconvert-vs-transcoder",
+      "type": "single",
+      "prompt": "A new project needs file-based video transcoding into formats for different devices. Which service should it use?",
+      "tags": [
+        "media"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Elemental MediaConvert",
+          "correct": true,
+          "rationale": "MediaConvert is the current file-based transcoding service and the replacement for Elastic Transcoder."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Elastic Transcoder",
+          "correct": false,
+          "rationale": "Elastic Transcoder is the original service and is legacy. New work should not start there."
+        },
+        {
+          "id": "c",
+          "text": "AWS Elemental MediaLive",
+          "correct": false,
+          "rationale": "MediaLive encodes live streams rather than stored files."
+        },
+        {
+          "id": "d",
+          "text": "Kinesis Video Streams",
+          "correct": false,
+          "rationale": "That ingests live video from devices. It does not transcode files into delivery formats."
+        }
+      ],
+      "explanation": "The media services divide first by whether the content is a stored file or a live feed. Files go to MediaConvert, live goes to MediaLive and MediaPackage, and device ingestion goes to Kinesis Video Streams.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Media"
+        }
+      ]
+    },
+    {
+      "id": "workspaces-vs-appstream",
+      "type": "single",
+      "prompt": "Users need a single internal application delivered to their browsers, not a full desktop. Which service?",
+      "tags": [
+        "euc"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon AppStream 2.0",
+          "correct": true,
+          "rationale": "AppStream streams one application rather than a whole desktop."
+        },
+        {
+          "id": "b",
+          "text": "Amazon WorkSpaces",
+          "correct": false,
+          "rationale": "WorkSpaces delivers a managed virtual desktop, which is more than the scenario asks for."
+        },
+        {
+          "id": "c",
+          "text": "AWS Client VPN",
+          "correct": false,
+          "rationale": "A VPN provides network access to an application that is still installed and run locally."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Connect",
+          "correct": false,
+          "rationale": "Connect is contact centre as a service."
+        }
+      ],
+      "explanation": "The pair differ only in scope of delivery: a desktop or an application. A scenario about remote workers needing a full managed computer is WorkSpaces, and one about giving occasional users access to a single heavy application is AppStream.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "End User Computing and Business Applications"
+        }
+      ]
+    },
+    {
+      "id": "connect-features",
+      "type": "multi",
+      "prompt": "Which are features of Amazon Connect? (Select all that apply)",
+      "tags": [
+        "euc",
+        "ai"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Contact Lens, which analyses customer and agent interactions for sentiment and compliance",
+          "correct": true,
+          "rationale": "Contact Lens works live or after the call."
+        },
+        {
+          "id": "b",
+          "text": "Wisdom, which surfaces relevant knowledge to an agent during a call",
+          "correct": true,
+          "rationale": "It is the real-time agent assistance feature."
+        },
+        {
+          "id": "c",
+          "text": "Q in Connect, which gives agents generative recommendations and next steps",
+          "correct": true,
+          "rationale": "It is the generative AI assistance layer for agents."
+        },
+        {
+          "id": "d",
+          "text": "Telephony, routing and reporting for a contact centre",
+          "correct": true,
+          "rationale": "Those are the core of the service, with the AI features layered on top."
+        },
+        {
+          "id": "e",
+          "text": "Managed virtual desktops for contact centre staff",
+          "correct": false,
+          "rationale": "Virtual desktops are WorkSpaces. Connect provides the contact centre itself."
+        }
+      ],
+      "explanation": "Connect is a contact centre with AI features rather than an AI service, which is the distinction worth keeping. The three AI features sort by timing and audience: Contact Lens analyses the interaction, Wisdom retrieves knowledge, and Q in Connect generates suggested responses.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "End User Computing and Business Applications"
+        }
+      ]
+    },
+    {
+      "id": "ses-transactional-email",
+      "type": "single",
+      "prompt": "An application must send high volumes of transactional email such as receipts and password resets. Which service?",
+      "tags": [
+        "euc"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Simple Email Service",
+          "correct": true,
+          "rationale": "SES handles high-volume inbound and outbound email with deliverability and reputation tracking."
+        },
+        {
+          "id": "b",
+          "text": "Amazon SNS",
+          "correct": false,
+          "rationale": "SNS can send email notifications but is a pub/sub service without deliverability management or templating for bulk mail."
+        },
+        {
+          "id": "c",
+          "text": "AWS End User Messaging",
+          "correct": false,
+          "rationale": "It handles targeted multi-channel campaigns. Transactional mail at volume is SES's job."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Connect",
+          "correct": false,
+          "rationale": "Connect is for voice and chat contact centres."
+        }
+      ],
+      "explanation": "Transactional and campaign messaging are different products for a reason: one is triggered by an event and must arrive, the other is planned, segmented and measured. SES covers the first, End User Messaging the second, and SNS is for notifying systems rather than people at scale.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "End User Computing and Business Applications"
+        }
+      ]
+    },
+    {
+      "id": "iot-core-device-shadow",
+      "type": "single",
+      "prompt": "What does a device shadow in AWS IoT Core hold?",
+      "tags": [
+        "iot"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The last known state of a device, so applications can read it while the device is offline",
+          "correct": true,
+          "rationale": "The shadow decouples applications from device connectivity."
+        },
+        {
+          "id": "b",
+          "text": "A backup copy of the device's firmware",
+          "correct": false,
+          "rationale": "Firmware distribution is a different concern, handled by jobs and update mechanisms."
+        },
+        {
+          "id": "c",
+          "text": "The encryption certificate the device uses",
+          "correct": false,
+          "rationale": "Per-device identity and certificates are managed separately from the shadow."
+        },
+        {
+          "id": "d",
+          "text": "A queue of commands waiting to be delivered",
+          "correct": false,
+          "rationale": "Message routing is the rules engine's job, and the shadow stores state rather than a command queue."
+        }
+      ],
+      "explanation": "Intermittent connectivity is the defining problem of IoT, and the shadow is how it is managed: applications read and write the desired and reported state, and the device reconciles when it next connects. Greengrass answers the same problem from the other end, by running logic on the device while it is disconnected.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "IoT and Edge"
+        }
+      ]
+    },
+    {
+      "id": "greengrass-offline-operation",
+      "type": "single",
+      "prompt": "Equipment in a remote facility must keep running inference and routing messages while its internet link is down. Which service?",
+      "tags": [
+        "iot",
+        "edge"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS IoT Greengrass",
+          "correct": true,
+          "rationale": "Greengrass runs functions, machine learning inference and message routing on the device itself."
+        },
+        {
+          "id": "b",
+          "text": "AWS IoT Core",
+          "correct": false,
+          "rationale": "IoT Core is the cloud-side broker and rules engine, so it needs connectivity to be useful."
+        },
+        {
+          "id": "c",
+          "text": "AWS Lambda",
+          "correct": false,
+          "rationale": "Lambda runs in a Region. Greengrass is what brings that execution model to the device."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Kinesis Data Streams",
+          "correct": false,
+          "rationale": "Kinesis ingests streams in the cloud and cannot operate without a link to it."
+        }
+      ],
+      "explanation": "Any requirement to keep working while disconnected moves the answer onto the device or onto local hardware. Greengrass covers software on a device, and Snowball Edge and Outposts cover the same need where real compute capacity is required on site.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "IoT and Edge"
+        }
+      ]
+    },
+    {
+      "id": "streaming-service-match",
+      "type": "multi",
+      "prompt": "Which streaming and analytics pairings are correct? (Select all that apply)",
+      "tags": [
+        "analytics",
+        "streaming"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Kinesis Data Streams: retained records that several consumers read independently",
+          "correct": true,
+          "rationale": "Retention and replay are what distinguish it from plain delivery."
+        },
+        {
+          "id": "b",
+          "text": "Managed Service for Apache Flink: aggregating and windowing a stream in flight",
+          "correct": true,
+          "rationale": "It analyses data while it moves rather than after it lands."
+        },
+        {
+          "id": "c",
+          "text": "Amazon Data Firehose: landing a stream in S3 or Redshift with no consumer code",
+          "correct": true,
+          "rationale": "Firehose is the delivery member of the family."
+        },
+        {
+          "id": "d",
+          "text": "Amazon MSK: keeping existing Apache Kafka clients working unchanged",
+          "correct": true,
+          "rationale": "Compatibility is the reason to choose MSK over Kinesis."
+        },
+        {
+          "id": "e",
+          "text": "Kinesis Video Streams: querying structured data in S3 with SQL",
+          "correct": false,
+          "rationale": "That is Athena. Video Streams ingests live video and time-encoded media."
+        }
+      ],
+      "explanation": "The streaming services split by what happens to the data: retained for consumers, analysed in flight, delivered onward, or ingested as media. Naming the Kinesis family rather than the member is the mistake these questions are built to catch.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Analytics"
+        }
+      ]
+    },
+    {
+      "id": "managed-ai-first",
+      "type": "multi",
+      "prompt": "Which statements about choosing between the applied AI services and building a model are correct? (Select all that apply)",
+      "tags": [
+        "ai"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "When a pre-trained service already solves the task, using it beats training a model",
+          "correct": true,
+          "rationale": "The applied services exist to remove model building from common problems entirely."
+        },
+        {
+          "id": "b",
+          "text": "Rekognition Custom Labels can recognise business-specific objects from a small labelled set",
+          "correct": true,
+          "rationale": "It extends a pre-trained service rather than starting from nothing."
+        },
+        {
+          "id": "c",
+          "text": "Bedrock suits using an existing foundation model, while SageMaker AI suits building your own",
+          "correct": true,
+          "rationale": "That is the central division between the two."
+        },
+        {
+          "id": "d",
+          "text": "Augmented AI routes low-confidence predictions to human reviewers",
+          "correct": true,
+          "rationale": "It is how a human-in-the-loop requirement is satisfied without building a review system."
+        },
+        {
+          "id": "e",
+          "text": "Training a custom model is the expected answer whenever accuracy matters",
+          "correct": false,
+          "rationale": "Accuracy alone does not justify the cost and expertise. A pre-trained service is often more accurate than a first attempt at a custom model."
+        }
+      ],
+      "explanation": "The expected reasoning runs from least to most effort: an applied AI service if one fits, then a foundation model through Bedrock, then customisation, and only then a model built in SageMaker AI. An answer that jumps straight to training is usually the distractor.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Applied AI services"
+        }
+      ]
+    },
+    {
+      "id": "end-user-service-match",
+      "type": "multi",
+      "prompt": "Which pairings of requirement and service are correct? (Select all that apply)",
+      "tags": [
+        "euc",
+        "media"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Managed virtual desktops for remote staff: WorkSpaces",
+          "correct": true,
+          "rationale": "A full desktop delivered to any client device."
+        },
+        {
+          "id": "b",
+          "text": "Streaming a single application to a browser: AppStream 2.0",
+          "correct": true,
+          "rationale": "Application streaming rather than a whole desktop."
+        },
+        {
+          "id": "c",
+          "text": "Transcoding stored video files for multiple devices: Elemental MediaConvert",
+          "correct": true,
+          "rationale": "File-based transcoding, and the replacement for Elastic Transcoder."
+        },
+        {
+          "id": "d",
+          "text": "Live video encoding and packaging for broadcast streaming: MediaLive and MediaPackage",
+          "correct": true,
+          "rationale": "Live is a separate pipeline from file-based work."
+        },
+        {
+          "id": "e",
+          "text": "High-volume transactional email: Amazon Connect",
+          "correct": false,
+          "rationale": "Connect is a contact centre for voice and chat. Transactional email is SES."
+        }
+      ],
+      "explanation": "These services are easy to separate once you ask what is being delivered and to whom: a desktop, an application, a video file, a live stream, or a message. The one trap is Connect, which handles conversations rather than messages.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "End User Computing and Business Applications"
+        }
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "$comment": "Registry of every domain, card set and course. Adding a set = drop its cards into flashcards/<domain>/<set-id>.json, add an entry to `sets`, and list it in the `setIds` of every course that quizzes it. `npm run validate:data` checks that all of these stay in sync.",
   "domains": [
-    {
+{
       "id": "aws",
       "title": "AWS",
       "tagline": "AWS Core Services, AI/ML Services and Marketplace listings.",
@@ -102,14 +102,49 @@
       "id": "services",
       "domainId": "aws",
       "path": "aws/services",
-      "title": "AWS Services",
-      "subtitle": "Service selection cheatsheet",
-      "description": "Picking the right service: the security suite, networking and firewalls, storage and database selection, scaling policies, the managed AI services, and cost and resilience patterns.",
+      "title": "AWS Core Services",
+      "subtitle": "Compute, containers, storage, databases",
+      "description": "The services most scenarios are built from: EC2 and Auto Scaling, Lambda and the serverless runtimes, ECS and EKS, the messaging and integration services, the three storage families, and relational against purpose-built databases.",
       "sources": [
-        "notes/aws/all_aws_services.md",
-        "notes/aws/notes.md"
+        "notes/aws/all_aws_services.md"
       ],
-      "cardCount": 38
+      "cardCount": 47
+    },
+    {
+      "id": "networking",
+      "domainId": "aws",
+      "path": "aws/networking",
+      "title": "AWS Networking",
+      "subtitle": "VPC, connectivity, load balancing, edge",
+      "description": "What makes a subnet public, which control can deny traffic and which cannot, the private connectivity options and what each one costs, choosing a load balancer by layer, Route 53 routing policies, and the edge services.",
+      "sources": [
+        "notes/aws/all_aws_services.md"
+      ],
+      "cardCount": 28
+    },
+    {
+      "id": "security-and-governance",
+      "domainId": "aws",
+      "path": "aws/security-and-governance",
+      "title": "AWS Security and Governance",
+      "subtitle": "Identity, security, governance, cost",
+      "description": "Telling CloudTrail, CloudWatch and Config apart, IAM roles and policy types, the security suite from GuardDuty to Macie, multi-account governance, the cost management tools and pricing models, migration services, and the disaster recovery strategies.",
+      "sources": [
+        "notes/aws/all_aws_services.md"
+      ],
+      "cardCount": 44
+    },
+    {
+      "id": "analytics-and-ai",
+      "domainId": "aws",
+      "path": "aws/analytics-and-ai",
+      "title": "AWS Analytics and AI Services",
+      "subtitle": "Analytics, AI services, media, IoT",
+      "description": "Athena against Redshift, the Glue catalog, the four members of the Kinesis family, where vector embeddings can be stored, the applied AI services and what each one is for, and the end user computing, media and IoT services.",
+      "sources": [
+        "notes/aws/all_aws_services.md"
+      ],
+      "cardCount": 30
     },
     {
       "id": "mcp",
@@ -245,6 +280,21 @@
       ]
     },
     {
+      "id": "clf-c02",
+      "domainId": "aws",
+      "path": "aws/clf-c02",
+      "title": "AWS Certified Cloud Practitioner",
+      "subtitle": "CLF-C02",
+      "description": "The foundational AWS certification: knowing the terminology and what each service is for. Covers the core compute, storage and database services, networking, the security and governance suite, billing and pricing models, and the analytics and AI services.",
+      "kind": "certification",
+      "setIds": [
+        "services",
+        "networking",
+        "security-and-governance",
+        "analytics-and-ai"
+      ]
+    },
+    {
       "id": "aif-c01",
       "domainId": "aws",
       "path": "aws/aif-c01",
@@ -255,7 +305,8 @@
       "setIds": [
         "ai-practitioner-foundations",
         "ai-practitioner-aws",
-        "services"
+        "services",
+        "analytics-and-ai"
       ]
     },
     {
