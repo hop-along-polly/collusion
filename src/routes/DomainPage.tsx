@@ -69,14 +69,8 @@ export function DomainPage() {
             title={`No ${domain.title} content yet`}
             description={
               <>
-                Cards must be grounded in the Markdown notes committed to this repository, and
-                there are no {domain.title} notes here yet. Add a note under{' '}
-                <code className="font-mono text-content">notes/{domain.id}/</code>, a course
-                study guide under{' '}
-                <code className="font-mono text-content">courses/{domain.id}/</code>, and
-                register them in{' '}
-                <code className="font-mono text-content">catalog.json</code> — no application
-                code changes required.
+                There are no {domain.title} courses or topics available yet. Everything else in
+                the library is ready to study in the meantime.
               </>
             }
             action={

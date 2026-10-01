@@ -6,7 +6,7 @@ multi-agent orchestration.
 
 ## Topics covered
 
-Read these notes in order. Each links to its flashcard set for self-testing.
+Work through these topics in order. Each links to its flashcard set for self-testing.
 
 | # | Topic | Notes | Flashcards |
 |---|-------|-------|------------|
@@ -21,38 +21,41 @@ Read these notes in order. Each links to its flashcard set for self-testing.
 
 ---
 
-## Attempt 1 remediation
+## Where this guide goes deeper
 
-> Built from Derek Drummond's score report (Attempt 1: **690 / 720 — Fail**, July 30 2026).
-> Focus: the two clusters that cost the exam — **multi-agent orchestration** and **structured JSON output**.
-> Every link below was verified against live Anthropic documentation.
+The eight topics above cover the whole exam. Two of them reward design judgment rather
+than recall, and the lessons below treat those two in depth: **multi-agent orchestration**
+and **structured JSON output**.
 
-### Where the exam was lost
+What makes them harder is that each question asks how several moving parts fit together —
+how work is divided between a coordinator and its workers, how state survives an
+interruption, how a schema leaves room for "unknown" instead of forcing a guess. Knowing
+the definition of a term is rarely enough to pick the right answer.
 
-Missed by **30 points**. Near-perfect on tool config, MCP, session resumption, and Claude Code fundamentals. All misses fall into two buckets.
+### Multi-agent orchestration and subagents
 
-### Bucket A — Multi-agent orchestration & subagents
-| Objective | Score |
-|---|---|
-| Evaluate orchestration patterns (coordinator-worker / parallel / sequential) | **0%** |
-| Diagnose misconfigured subagent spawning (tool perms, AgentDefinition, wiring) | **0%** |
-| Design state persistence for resumable multi-agent pipelines | **0%** |
-| `context: fork` for isolated Skill/slash-command execution | **0%** |
-| Structure iterative refinement workflows | **0%** |
-| Construct subagent prompts with all findings/metadata (no round-trips) | **33%** |
-| Goal-oriented vs. procedural delegation | **50%** |
+The objectives in this cluster:
 
-### Bucket B — Structured JSON output & extraction
-| Objective | Score |
-|---|---|
-| Synthesis that preserves source-level uncertainty | **0%** |
-| Extraction schemas: optional/nullable/enum | **33%** |
-| Human-review routing by confidence score | **33%** |
-| `tool_choice` + JSON schema to force structured output | **50%** |
+- Evaluate orchestration patterns: coordinator-worker, parallel, sequential
+- Diagnose misconfigured subagent spawning — tool permissions, `AgentDefinition`, wiring
+- Design state persistence for resumable multi-agent pipelines
+- Use `context: fork` for isolated Skill and slash-command execution
+- Structure iterative refinement workflows
+- Write subagent prompts that carry every finding and all metadata, so no round-trip is needed
+- Choose between goal-oriented and procedural delegation
+
+### Structured JSON output and extraction
+
+The objectives in this cluster:
+
+- Synthesize sources without discarding their uncertainty
+- Design extraction schemas using optional, nullable and enum fields
+- Route work to human review by confidence score
+- Combine `tool_choice` with a JSON schema to force structured output
 
 ---
 
-## LESSON 1 — Multi-agent orchestration patterns (was 0%)
+## LESSON 1 — Multi-agent orchestration patterns
 
 The hard line Anthropic draws:
 
@@ -78,7 +81,7 @@ The five patterns from *Building Effective Agents*:
 
 ---
 
-## LESSON 2 — Diagnosing broken subagent spawning (was 0%)
+## LESSON 2 — Diagnosing broken subagent spawning
 
 A subagent fails to work for three diagnosable reasons — the triage list:
 
@@ -93,14 +96,14 @@ Subagents are Markdown files with YAML frontmatter (`name`, `description`, `tool
 
 ---
 
-## LESSON 3 — Delegation strategy & self-contained subagent prompts (was 50% & 33%)
+## LESSON 3 — Delegation strategy & self-contained subagent prompts
 
-**Goal-oriented vs. procedural delegation (50%).**
+**Goal-oriented vs. procedural delegation.**
 - Procedural = "do step 1, then 2, then 3."
 - Goal-oriented = "achieve this outcome; here's what success looks like."
 - **Goal-oriented enables adaptive behavior** — the subagent adjusts to what it finds — while the coordinator keeps visibility via the returned result. Pick goal-oriented when the path can't be predicted; procedural only when steps are truly fixed and must not vary.
 
-**Self-contained subagent prompts (33%).**
+**Self-contained subagent prompts.**
 Each subagent runs in an **isolated context window** — it does NOT see the coordinator's conversation, files already read, or other subagents' work. So the delegation prompt must include **everything the subagent needs**: all relevant findings, structured data, and source metadata. If it must return to the coordinator for missing context, the wiring is wrong. Detailed task descriptions (objective, output format, boundaries) are the single biggest lever on subagent quality.
 
 📖 [Multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)
@@ -108,9 +111,9 @@ Each subagent runs in an **isolated context window** — it does NOT see the coo
 
 ---
 
-## LESSON 4 — State persistence & resumable pipelines (was 0%)
+## LESSON 4 — State persistence & resumable pipelines
 
-Note the split: session *resumption* scored 100%, but multi-agent *pipeline* persistence scored 0%.
+Keep two things apart here. Resuming a single interrupted session is handled for you; persisting state across a multi-agent pipeline is something you have to design.
 
 To resume after interruption **without repeating completed work or losing findings**, persist **intermediate state to durable storage** as each stage completes — not just in the context window:
 
@@ -125,7 +128,7 @@ Same "external memory" idea as context engineering, applied to a multi-step pipe
 
 ---
 
-## LESSON 5 — `context: fork` (was 0%)
+## LESSON 5 — `context: fork`
 
 Default: a Skill or slash command runs **in your current session**, sharing context. Add **`context: fork`** to the frontmatter and it runs in an **isolated subagent** — a fresh context window that does NOT see conversation history, preventing cross-contamination of session state.
 
@@ -138,7 +141,7 @@ Exam details:
 
 ---
 
-## LESSON 6 — Structured JSON output & `tool_choice` (was 50%)
+## LESSON 6 — Structured JSON output & `tool_choice`
 
 Three ways to get structured output, ascending strictness:
 
@@ -148,7 +151,7 @@ Three ways to get structured output, ascending strictness:
 
 **The two levers the exam hammers:**
 
-- **`tool_choice`** forces a tool to be called. `{"type": "any"}` guarantees *some* tool is used; `{"type": "tool", "name": "..."}` forces a *specific* one. Use when a conversational (non-tool) reply would break downstream parsing. Default `{"type": "auto"}` does NOT guarantee invocation — the 50% trap.
+- **`tool_choice`** forces a tool to be called. `{"type": "any"}` guarantees *some* tool is used; `{"type": "tool", "name": "..."}` forces a *specific* one. Use when a conversational (non-tool) reply would break downstream parsing. Default `{"type": "auto"}` does NOT guarantee invocation, which is the trap.
 - **`strict: true` + structured outputs** — set `strict: true` on the tool definition (or use `output_format: {type: "json_schema"}` for JSON responses) with beta header `structured-outputs-2025-11-13`. Guarantees type-safe params (`passengers: 2`, never `"two"`). Combine `tool_choice: {"type":"any"}` **with** strict tool use to guarantee both *that* a tool is called and that its inputs match schema.
 
 📖 [Structured outputs](https://docs.claude.com/en/docs/build-with-claude/structured-outputs) — newest, most exam-relevant
@@ -157,7 +160,7 @@ Three ways to get structured output, ascending strictness:
 
 ---
 
-## LESSON 7 — Extraction schemas: optional / nullable / enum (was 33%)
+## LESSON 7 — Extraction schemas: optional / nullable / enum
 
 A naive schema *forces the model to fabricate* values for absent fields. Make "I don't know" representable:
 
@@ -165,25 +168,25 @@ A naive schema *forces the model to fabricate* values for absent fields. Make "I
 - **Nullable values** — allow `null` (e.g. `"type": ["string", "null"]`) so the model can say "missing" instead of hallucinating.
 - **Enums** — constrain a field to a fixed value set so the model can't drift into free-text variants; include an explicit `"unknown"`/`"other"` member for ambiguous cases.
 
-Pair with **format-normalization instructions** and **few-shot examples** to cut hallucination and improve consistency across varied document formats. (You scored 100% on the few-shot/normalization objective — connect it to schema design.)
+Pair the schema with **format-normalization instructions** and **few-shot examples** to cut hallucination and hold consistency across varied document formats. Schema design and few-shot design work together: the schema says what may be absent, the examples show what a filled-in answer looks like.
 
 📖 [Structured outputs](https://docs.claude.com/en/docs/build-with-claude/structured-outputs)
 📖 [Tool use overview](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview)
 
 ---
 
-## LESSON 8 — Synthesis with preserved uncertainty & confidence-based review routing (was 0% & 33%)
+## LESSON 8 — Synthesis with preserved uncertainty & confidence-based review routing
 
-**Preserve source-level uncertainty (0%).** A synthesis agent must NOT collapse conflicting sources into one confident statement. Correct behavior: distinguish **well-established findings** from **contested claims**, surface disagreement, carry confidence/uncertainty through to output. Flattening conflict is a silent reliability failure.
+**Preserve source-level uncertainty.** A synthesis agent must NOT collapse conflicting sources into one confident statement. Correct behavior: distinguish **well-established findings** from **contested claims**, surface disagreement, carry confidence/uncertainty through to output. Flattening conflict is a silent reliability failure.
 
-**Route human review by confidence, not randomly (33%).** Don't randomly sample extractions for QA. Route on **confidence scores, document characteristics, and field-level ambiguity** — send uncertain/ambiguous/low-confidence extractions to humans, auto-accept high-confidence ones. This requires your schema (Lesson 7) to emit per-field confidence — which is why these objectives cluster.
+**Route human review by confidence, not randomly.** Don't randomly sample extractions for QA. Route on **confidence scores, document characteristics, and field-level ambiguity** — send uncertain/ambiguous/low-confidence extractions to humans, auto-accept high-confidence ones. This requires your schema (Lesson 7) to emit per-field confidence — which is why these objectives cluster.
 
 📖 [Multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)
 📖 [Reduce hallucinations](https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations)
 
 ---
 
-## LESSON 9 — Iterative refinement workflows (was 0%)
+## LESSON 9 — Iterative refinement workflows
 
 The **evaluator-optimizer** pattern applied to refinement. Give the model:
 
@@ -197,7 +200,7 @@ The exam contrasts *specific, batched, example-driven* feedback against vague gl
 
 ---
 
-## LESSON 10 — Codebase exploration tools (was 50–60%, minor)
+## LESSON 10 — Codebase exploration tools
 
 - **Glob** — find files by *name/path pattern* (`**/*.ts`).
 - **Grep** — find files/lines by *content* (regex).
@@ -213,7 +216,7 @@ Strategy: Glob/Grep to *locate*, Read to *understand*, build understanding *incr
 
 ## Prioritized study plan
 
-Read these **three** first — ~80% of what was missed:
+Read these **three** first — between them they cover most of the material above:
 
 1. **[Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)** → Lessons 1, 9
 2. **[How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)** → Lessons 1, 3, 8
@@ -225,6 +228,3 @@ Then the Claude Code / SDK mechanics:
 - [Skills / `context: fork`](https://docs.claude.com/en/docs/claude-code/skills)
 - [Effective context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) (Lesson 4)
 
----
-
-*All links verified against live Anthropic documentation. Sourced from docs.claude.com, docs.anthropic.com, and anthropic.com/engineering.*

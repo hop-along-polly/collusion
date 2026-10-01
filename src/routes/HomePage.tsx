@@ -49,7 +49,7 @@ function DomainCard({ domain }: { domain: DomainMeta }) {
 
       {planned ? (
         <p className="font-body text-sm text-content-muted">
-          Cards stay grounded in committed notes, and this repository has none for {domain.title} yet.
+          {domain.title} course material is still being written.
         </p>
       ) : (
         <ButtonLink to={`/${domain.id}`} variant="outline" className="self-start">
@@ -73,12 +73,12 @@ export function HomePage() {
           Software by master craftsmen
         </p>
         <h1 className="mt-3 font-heading text-5xl leading-none sm:text-6xl">
-          Study what you actually wrote down.
+          Know the material before exam day.
         </h1>
         <p className="mt-5 font-body text-lg text-content-muted">
-          Every question here is generated from the Markdown notes committed to this repository, and
-          every explanation links back to the file and heading it came from. No invented facts, no
-          trivia that is not in your notes.
+          Pick the certification you are studying for and work through its cards. Every explanation
+          links to the section that covers it, so a wrong answer tells you exactly what to read
+          next.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-8">

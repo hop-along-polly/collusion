@@ -56,9 +56,10 @@ describe('a domain with no card sets', () => {
     )
 
     expect(await screen.findByRole('heading', { name: /no azure content yet/i })).toBeTruthy()
-    // Tells the reader exactly where the missing content would go.
-    expect(screen.getByText('notes/azure/')).toBeTruthy()
-    expect(screen.getByText('courses/azure/')).toBeTruthy()
+    // Addressed to a learner, so it says what is missing without naming repository paths
+    // or asking them to edit a catalog file.
+    expect(screen.getByText(/no azure courses or topics available yet/i)).toBeTruthy()
+    expect(screen.queryByText(/catalog\.json/)).toBeNull()
     // Two real destinations, never just a "go back".
     expect(screen.getByRole('link', { name: /back to domains/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /study something else/i })).toBeTruthy()

@@ -120,13 +120,12 @@ export function Layout() {
       <footer className="border-t border-line bg-surface">
         <div className="mx-auto max-w-7xl px-4 py-6 font-body text-sm text-content-muted sm:px-6 lg:px-8">
           <p>
-            Every card is generated from the Markdown study notes in this repository and cites the
-            file it came from.{' '}
+            Every card cites the section of the course material it came from.{' '}
             <a
               href="https://github.com/hop-along-polly/collusion"
               className="inline-flex items-center gap-1 text-brand underline-offset-2 hover:underline"
             >
-              View the notes
+              View on GitHub
               <Icon name="external" size={14} />
             </a>
           </p>

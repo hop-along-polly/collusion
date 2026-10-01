@@ -1,11 +1,11 @@
 {
-  "$comment": "Registry of every domain and card set. Adding a set = drop cards.json into data/<domain>/<set>/ and add an entry to `sets`. `npm run validate:data` checks that the two stay in sync.",
+  "$comment": "Registry of every domain, card set and course. Adding a set = drop its cards into flashcards/<domain>/<set-id>.json, add an entry to `sets`, and list it in the `setIds` of every course that quizzes it. `npm run validate:data` checks that all of these stay in sync.",
   "domains": [
     {
       "id": "anthropic",
       "title": "Anthropic",
       "tagline": "Building with Claude — the API, tools, RAG and agent skills.",
-      "description": "Cards drawn from the Anthropic Academy notes: the Claude API end to end, the Model Context Protocol, the Agents SDK, multi-agent pipelines, Claude in GitHub, and the AI Fluency framework.",
+      "description": "The Claude API end to end, the Model Context Protocol, the Agents SDK, multi-agent pipelines, Claude in GitHub, and the AI Fluency framework.",
       "status": "available",
       "icon": "sparkles",
       "order": 1
@@ -14,7 +14,7 @@
       "id": "devops",
       "title": "DevOps",
       "tagline": "CI/CD and configuration management fundamentals.",
-      "description": "Cards drawn from the GitHub CI/CD and Ansible notes: teams and code ownership, GitHub Actions workflows and runners, and Ansible inventories, playbooks, variables and roles.",
+      "description": "Teams and code ownership, GitHub Actions workflows and runners, and Ansible inventories, playbooks, variables and roles.",
       "status": "available",
       "icon": "workflow",
       "order": 2
@@ -23,7 +23,7 @@
       "id": "aws",
       "title": "AWS",
       "tagline": "Marketplace listing types, offers, and the AWS service catalogue.",
-      "description": "Cards drawn from the AWS Marketplace and AWS Certs notes: listing types and how entitlement differs from metering, private offers and renewals, per-listing fulfillment and pricing, the Marketplace API surface, and a working knowledge of the AWS service catalogue.",
+      "description": "Marketplace listing types and how entitlement differs from metering, private offers and renewals, per-listing fulfillment and pricing, the Marketplace API surface, and a working knowledge of the AWS service catalogue.",
       "status": "available",
       "icon": "cloud",
       "order": 3

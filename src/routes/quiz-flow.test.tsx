@@ -46,7 +46,7 @@ describe('landing page', () => {
   it('lists every domain in the catalog with a route into it', async () => {
     renderAt('/')
 
-    expect(await screen.findByRole('heading', { name: /study what you actually wrote down/i })).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: /know the material before exam day/i })).toBeTruthy()
     for (const domain of ['Anthropic', 'DevOps', 'AWS']) {
       expect(screen.getByRole('heading', { name: domain, level: 3 })).toBeTruthy()
       expect(screen.getByRole('link', { name: new RegExp(`browse ${domain}`, 'i') })).toBeTruthy()
