@@ -4,14 +4,14 @@ Which APIs a Seller integrates with is determined by the Listing Type and the Pr
 
 | Service | SaaS | AI Agents & Tools <sup>1</sup> | AMI | Container | ML | Data | Professional Services |
 | ------- | :--: | :----------------------------: | :-: | :-------: | :-: | :--: | :-------------------: |
-| Metering Service | Yes | Yes | Yes | Yes | — | — | — |
-| Entitlement Service | Yes | Yes | — | — | — | — | — |
-| Deployment Service | Quick Launch | Quick Launch | — | — | — | — | — |
-| AWS License Manager | — | — | Contracts | Contracts | — | — | — |
+| Metering Service | Yes | Yes | Yes | Yes | - | - | - |
+| Entitlement Service | Yes | Yes | - | - | - | - | - |
+| Deployment Service | Quick Launch | Quick Launch | - | - | - | - | - |
+| AWS License Manager | - | - | Contracts | Contracts | - | - | - |
 | Catalog API | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
-| AWS Data Exchange API | — | — | — | — | — | Yes | — |
+| AWS Data Exchange API | - | - | - | - | - | Yes | - |
 
-<sup>1</sup> `AI Agents & Tools` inherits from whichever Listing Type it resolves to — SaaS for API deployment, Container for Container deployment. It appears separately here only because `MeterUsage` additionally supports Amazon Bedrock AgentCore Runtime deployments.
+<sup>1</sup> `AI Agents & Tools` inherits from whichever Listing Type it resolves to - SaaS for API deployment, Container for Container deployment. It appears separately here only because `MeterUsage` additionally supports Amazon Bedrock AgentCore Runtime deployments.
 
 > [!NOTE]
 > **Professional Services has no API surface at all.** Nothing is metered and no entitlement is checked programmatically, which is consistent with a Listing Type where delivery is a human process.
@@ -27,7 +27,7 @@ The Metering Service handles both *"who is this Buyer"* and *"what did they cons
 | `MeterUsage` | Emits metering records from software running in the **Buyer's** account. | AMI, Container, AgentCore Runtime |
 | `RegisterUsage` | Verifies entitlement at container startup and starts hourly metering. | Container (paid per task or per pod) |
 
-The split between `BatchMeterUsage` and `MeterUsage` is about **who owns the compute**. `BatchMeterUsage` is called by the Seller's own service using the Seller's credentials. `MeterUsage` is called by software sitting in the Buyer's account, so it must be signed with the Buyer's credentials — and AWS is specific about which ones:
+The split between `BatchMeterUsage` and `MeterUsage` is about **who owns the compute**. `BatchMeterUsage` is called by the Seller's own service using the Seller's credentials. `MeterUsage` is called by software sitting in the Buyer's account, so it must be signed with the Buyer's credentials - and AWS is specific about which ones:
 
 | Runtime | Required credential |
 | ------- | ------------------- |
@@ -37,7 +37,7 @@ The split between `BatchMeterUsage` and `MeterUsage` is about **who owns the com
 | Amazon Bedrock AgentCore Runtime | AgentCore Runtime execution role. Long-term access keys are not supported. |
 
 > [!IMPORTANT]
-> **`MeterUsage` accepts one record per hour per dimension** — per EC2 instance for AMI Products, per ECS task or EKS pod for Container Products — and recorded values can't be modified afterward. Reporting early in an hour blocks any further reporting until the next hour begins. Records submitted more than **six hours** after the event are rejected outright.
+> **`MeterUsage` accepts one record per hour per dimension** - per EC2 instance for AMI Products, per ECS task or EKS pod for Container Products - and recorded values can't be modified afterward. Reporting early in an hour blocks any further reporting until the next hour begins. Records submitted more than **six hours** after the event are rejected outright.
 >
 > AgentCore Runtime is the exception: it accepts multiple records per hour for the same dimension, provided each carries a unique `ClientToken` idempotency token.
 
@@ -51,14 +51,14 @@ The split between `BatchMeterUsage` and `MeterUsage` is about **who owns the com
 
 ### AWS Marketplace Entitlement Service
 
-`GetEntitlements` returns what a Buyer has purchased. It is **read-only** — there is no drawdown, no decrement, and no enforcement. AWS records the entitlement; the Seller's application is responsible for tracking consumption against it and for refusing service once it is exhausted.
+`GetEntitlements` returns what a Buyer has purchased. It is **read-only** - there is no drawdown, no decrement, and no enforcement. AWS records the entitlement; the Seller's application is responsible for tracking consumption against it and for refusing service once it is exhausted.
 
 | Operation | Purpose | Listing Types |
 | --------- | ------- | ------------- |
 | `GetEntitlements` | Retrieves the dimensions and quantities a Buyer is entitled to. | SaaS with Contract or Contract + Usage |
 
 > [!IMPORTANT]
-> Entitlements are not created for every SaaS listing. Usage-based (pay-as-you-go) Products *"do not use entitlement SNS topics or the GetEntitlements API"* — for those, `BatchMeterUsage` is the whole integration.
+> Entitlements are not created for every SaaS listing. Usage-based (pay-as-you-go) Products *"do not use entitlement SNS topics or the GetEntitlements API"* - for those, `BatchMeterUsage` is the whole integration.
 
 For a tiered contract, `GetEntitlements` returns only the tier's dimension name. If `Standard` means 100 encrypts and 1000 decrypts, that mapping exists solely in the Seller's application. See [Pricing Dimensions (SaaS)](./saas.md#pricing-dimensions).
 
@@ -66,7 +66,7 @@ For a tiered contract, `GetEntitlements` returns only the tier's dimension name.
 
 | Operation | Purpose | Listing Types |
 | --------- | ------- | ------------- |
-| `PutDeploymentParameter` | Places a secret — an API key, OAuth credentials, an external ID, or dynamic endpoint parameters — into the Buyer's AWS Secrets Manager. | SaaS and Agents API, Quick Launch only |
+| `PutDeploymentParameter` | Places a secret - an API key, OAuth credentials, an external ID, or dynamic endpoint parameters - into the Buyer's AWS Secrets Manager. | SaaS and Agents API, Quick Launch only |
 
 This is the only API a Seller calls to *give* something to a Buyer rather than to read or report. It serves both meanings of Quick Launch: delivering CloudFormation deployment parameters for Classic SaaS, and delivering API credentials and endpoint parameters for Agents API.
 
@@ -78,11 +78,11 @@ The Catalog API is the programmatic equivalent of the AWS Marketplace Management
 
 | Operation | Purpose |
 | --------- | ------- |
-| `StartChangeSet` | Submits a change — new product, updated pricing, new delivery option, visibility change. Every console change request is a change set underneath. |
+| `StartChangeSet` | Submits a change - new product, updated pricing, new delivery option, visibility change. Every console change request is a change set underneath. |
 | `DescribeChangeSet` / `ListChangeSets` | Reads the status of submitted changes, including validation errors. |
 | `DescribeEntity` / `ListEntities` | Reads products, offers, and their current configuration. |
 
-Change types are named per operation — `AddDeliveryOptions`, `UpdateDeliveryOptions`, `UpdateDeliveryOptionsVisibility`, `CreateExpressPrivateOfferConfiguration` — and IAM policies can be scoped to individual change types with the `catalog:ChangeType` condition key.
+Change types are named per operation - `AddDeliveryOptions`, `UpdateDeliveryOptions`, `UpdateDeliveryOptionsVisibility`, `CreateExpressPrivateOfferConfiguration` - and IAM policies can be scoped to individual change types with the `catalog:ChangeType` condition key.
 
 ### AWS License Manager
 

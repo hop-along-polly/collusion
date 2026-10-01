@@ -4,7 +4,7 @@
     {
       "id": "anthropic",
       "title": "Anthropic",
-      "tagline": "Building with Claude — the API, tools, RAG and agent skills.",
+      "tagline": "Building with Claude - the API, tools, RAG and agent skills.",
       "description": "The Claude API end to end, the Model Context Protocol, the Agents SDK, multi-agent pipelines, Claude in GitHub, and the AI Fluency framework.",
       "status": "available",
       "icon": "sparkles",
@@ -62,7 +62,7 @@
       "path": "devops/github-cicd",
       "title": "GitHub CI/CD",
       "subtitle": "Teams, CODEOWNERS and Actions",
-      "description": "Team hierarchy and notifications, CODEOWNERS precedence and syntax limits, and the Actions model — workflows, jobs, runners, reusable workflows and composite actions.",
+      "description": "Team hierarchy and notifications, CODEOWNERS precedence and syntax limits, and the Actions model - workflows, jobs, runners, reusable workflows and composite actions.",
       "sources": [
         "notes/devops/github_cd-cd.md"
       ],
@@ -84,9 +84,9 @@
       "id": "marketplace",
       "domainId": "aws",
       "path": "aws/marketplace",
-      "title": "AWS Marketplace — Listing Types",
+      "title": "AWS Marketplace - Listing Types",
       "subtitle": "Fulfillment, pricing and APIs",
-      "description": "Per-listing fulfillment and pricing for SaaS, AI Agents & Tools, Server (AMI and Container), ML and Data — plus the Marketplace API surface: metering, entitlements, License Manager, deployment and the Catalog API.",
+      "description": "Per-listing fulfillment and pricing for SaaS, AI Agents & Tools, Server (AMI and Container), ML and Data - plus the Marketplace API surface: metering, entitlements, License Manager, deployment and the Catalog API.",
       "sources": [
         "notes/aws/saas.md",
         "notes/aws/agents_and_tools.md",
@@ -140,7 +140,7 @@
       "domainId": "anthropic",
       "path": "anthropic/multi-agent",
       "title": "Multi-Agent Pipelines",
-      "subtitle": "Claude Architect — Foundations",
+      "subtitle": "Claude Architect - Foundations",
       "description": "Agents versus workflows, the multi-agent design patterns, prompt engineering as the primary lever, evaluating non-deterministic systems, and reliability practices.",
       "sources": [
         "notes/anthropic/multi_agent_pipelines.md"
@@ -165,7 +165,7 @@
       "path": "anthropic/ai-fluency",
       "title": "AI Fluency",
       "subtitle": "Anthropic Academy",
-      "description": "The three ways of collaborating with AI, the four fluency competencies, responsible AI principles and diligence practices, and the generative AI fundamentals — pillars, scaling laws, fine-tuning, capabilities and limitations.",
+      "description": "The three ways of collaborating with AI, the four fluency competencies, responsible AI principles and diligence practices, and the generative AI fundamentals - pillars, scaling laws, fine-tuning, capabilities and limitations.",
       "sources": [
         "notes/anthropic/ai_fluency.md"
       ],
@@ -187,7 +187,7 @@
       "id": "marketplace-commercials",
       "domainId": "aws",
       "path": "aws/marketplace-commercials",
-      "title": "AWS Marketplace — Commercials",
+      "title": "AWS Marketplace - Commercials",
       "subtitle": "Offers, renewals and Professional Services",
       "description": "The commercial model shared by every listing: entitlement versus metering, listing types and visibility, private and express offers, renewals and amendments, and the Professional Services listing type end to end.",
       "sources": [
@@ -203,7 +203,7 @@
       "id": "ai-practitioner-foundations",
       "domainId": "aws",
       "path": "aws/ai-practitioner-foundations",
-      "title": "AI Practitioner — Concepts & Metrics",
+      "title": "AI Practitioner - Concepts & Metrics",
       "subtitle": "AIF-C01",
       "description": "Core terminology, foundation versus frontier models, data types, the three learning paradigms and RLHF, and the evaluation metrics for classification, regression and generative models.",
       "sources": [
@@ -215,7 +215,7 @@
       "id": "ai-practitioner-aws",
       "domainId": "aws",
       "path": "aws/ai-practitioner-aws",
-      "title": "AI Practitioner — AWS Services",
+      "title": "AI Practitioner - AWS Services",
       "subtitle": "AIF-C01",
       "description": "Amazon's foundation models, the pre-trained AI services, Bedrock end to end, SageMaker AI across the ML lifecycle, choosing between them, and responsible AI.",
       "sources": [
@@ -229,7 +229,7 @@
       "id": "ccar-f",
       "domainId": "anthropic",
       "path": "anthropic/ccar-f",
-      "title": "Claude Certified Architect — Foundations",
+      "title": "Claude Certified Architect - Foundations",
       "subtitle": "CCAR-F",
       "description": "Anthropic's foundational certification: the Claude API, tool use and structured output, the Model Context Protocol, agent design, and multi-agent orchestration.",
       "kind": "certification",

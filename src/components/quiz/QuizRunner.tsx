@@ -19,7 +19,7 @@ import { pluralize } from '@/utils/format'
  * Runs one quiz session over a `Deck`.
  *
  * A deck is always a course, so every result is recorded under that course's key. Studying
- * the same card for a different certification is a separate record — readiness for one
+ * the same card for a different certification is a separate record - readiness for one
  * exam says nothing about readiness for another.
  */
 
@@ -51,7 +51,7 @@ export function QuizRunner({ deck, mode, onRestart, footer }: QuizRunnerProps) {
           deck.cards.map((card) => card.id),
         ),
       )
-      // Review is already a filtered subset, so it is never capped — the whole point is
+      // Review is already a filtered subset, so it is never capped - the whole point is
       // to see everything still outstanding.
       return deck.cards.filter((card) => eligible.has(card.id))
     }
@@ -147,10 +147,10 @@ export function QuizRunner({ deck, mode, onRestart, footer }: QuizRunnerProps) {
     <div className="mx-auto max-w-3xl space-y-6">
       {/*
         The visible page title would duplicate the back-link and the mode badge, but a
-        page still needs an h1 to anchor its outline — the graded verdict below is an h2.
+        page still needs an h1 to anchor its outline - the graded verdict below is an h2.
       */}
       <h1 className="sr-only">
-        {deck.title} — {mode === 'review' ? 'review' : 'practice'} session
+        {deck.title} - {mode === 'review' ? 'review' : 'practice'} session
       </h1>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -256,7 +256,7 @@ function ResultsPanel({ deck, mode, total, stats, missed, marked, onRestart, foo
         <div className="flex flex-wrap gap-8">
           <Stat
             label="Accuracy"
-            value={stats.answered === 0 ? '—' : `${stats.accuracy}%`}
+            value={stats.answered === 0 ? '-' : `${stats.accuracy}%`}
             tone={stats.answered === 0 ? 'default' : strong ? 'success' : 'error'}
           />
           <Stat label="Correct" value={stats.correct} tone="success" />

@@ -31,7 +31,7 @@ export class CardSetInvalidError extends Error {
   }
 }
 
-/** Resolved sets are memoised — re-entering a set is instant after the first visit. */
+/** Resolved sets are memoised - re-entering a set is instant after the first visit. */
 const cache = new Map<string, CardSet>()
 
 export async function loadCardSet(meta: CardSetMeta): Promise<CardSet> {

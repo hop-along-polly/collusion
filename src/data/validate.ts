@@ -28,7 +28,7 @@ const COURSE_KINDS = new Set(['certification', 'track'])
 
 /**
  * Options that let a learner shortcut the question rather than reason about it.
- * Flagged, not rejected — a source note could genuinely support one.
+ * Flagged, not rejected - a source note could genuinely support one.
  */
 const LAZY_OPTION_PATTERN = /^(all|none) of the above$/i
 
@@ -41,8 +41,8 @@ const LAZY_OPTION_PATTERN = /^(all|none) of the above$/i
  * panel already says where an answer came from, so the prose never needs to.
  *
  * Deliberately narrow. Plenty of neighbouring words are legitimate subject
- * vocabulary — a RAG *document*, a `DocumentBlock`, Parallelization *sectioning*,
- * "thoroughly *document* your tools" — so only document-reference phrasings match.
+ * vocabulary - a RAG *document*, a `DocumentBlock`, Parallelization *sectioning*,
+ * "thoroughly *document* your tools" - so only document-reference phrasings match.
  */
 const META_REFERENCE_PATTERNS: [RegExp, string][] = [
   [/\bthe notes?\b/i, 'refers to the source note instead of stating the fact'],
@@ -189,7 +189,7 @@ function validateCitations(input: unknown, at: string, issues: Issue[]): void {
   if (!Array.isArray(input) || input.length === 0) {
     issues.push({
       path: at,
-      message: 'at least one citation is required — cards must be traceable to the notes',
+      message: 'at least one citation is required - cards must be traceable to the notes',
       severity: 'error',
     })
     return
@@ -249,7 +249,7 @@ function validateOptions(input: unknown, type: unknown, at: string, issues: Issu
     } else if (LAZY_OPTION_PATTERN.test(raw.text.trim())) {
       issues.push({
         path: `${path}.text`,
-        message: '"all/none of the above" weakens the question — prefer a concrete distractor',
+        message: '"all/none of the above" weakens the question - prefer a concrete distractor',
         severity: 'warning',
       })
     }
@@ -313,7 +313,7 @@ function validateOptions(input: unknown, type: unknown, at: string, issues: Issu
     if (correctCount === input.length) {
       issues.push({
         path: at,
-        message: 'every option is correct — add at least one distractor',
+        message: 'every option is correct - add at least one distractor',
         severity: 'error',
       })
     }

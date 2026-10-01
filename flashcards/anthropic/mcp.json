@@ -35,7 +35,7 @@
           "rationale": "Auth is something an MCP client handles, not the purpose of the protocol."
         }
       ],
-      "explanation": "MCP is a communication layer that lets a Model reach context and tools without custom integration code. Anyone can write an MCP server, but in practice service providers — GitHub, Dropbox and the like — publish an official one, which is why the guidance is to look for an official server before writing your own.",
+      "explanation": "MCP is a communication layer that lets a Model reach context and tools without custom integration code. Anyone can write an MCP server, but in practice service providers - GitHub, Dropbox and the like - publish an official one, which is why the guidance is to look for an official server before writing your own.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -46,7 +46,7 @@
     {
       "id": "mcp-primitives",
       "type": "multi",
-      "prompt": "Which are MCP primitives — the core objects an MCP server provides? (Select all that apply)",
+      "prompt": "Which are MCP primitives - the core objects an MCP server provides? (Select all that apply)",
       "tags": [
         "primitives"
       ],
@@ -73,7 +73,7 @@
           "id": "d",
           "text": "`hooks`",
           "correct": false,
-          "rationale": "Hooks are an Agents SDK construct — callbacks in the ReAct loop — not an MCP primitive."
+          "rationale": "Hooks are an Agents SDK construct - callbacks in the ReAct loop - not an MCP primitive."
         },
         {
           "id": "e",
@@ -88,7 +88,7 @@
           "rationale": "Subagents belong to the Agents SDK."
         }
       ],
-      "explanation": "There are exactly three primitives — `tools`, `resources` and `prompts` — and each is used by a different part of an agentic app. That is the organising idea behind the control model: tools are *model controlled*, resources are *app controlled*, and prompts are *user controlled*.",
+      "explanation": "There are exactly three primitives - `tools`, `resources` and `prompts` - and each is used by a different part of an agentic app. That is the organising idea behind the control model: tools are *model controlled*, resources are *app controlled*, and prompts are *user controlled*.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -129,7 +129,7 @@
           "rationale": "The label is about who triggers the primitive, not about visibility."
         }
       ],
-      "explanation": "The three primitives are labelled by *who decides when they are used*. `tools` are model controlled because the Model chooses when to call one. `resources` are app controlled because the agent decides when to fetch data. `prompts` are user controlled because the user invokes them — they surface as slash commands. Note that prompts are genuinely templates: the text may be static but they accept parameters such as `resource` references that tailor them to a specific use case.",
+      "explanation": "The three primitives are labelled by *who decides when they are used*. `tools` are model controlled because the Model chooses when to call one. `resources` are app controlled because the agent decides when to fetch data. `prompts` are user controlled because the user invokes them - they surface as slash commands. Note that prompts are genuinely templates: the text may be static but they accept parameters such as `resource` references that tailor them to a specific use case.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -147,13 +147,13 @@
       "options": [
         {
           "id": "a",
-          "text": "`templated` — the URI contains one or more parameters",
+          "text": "`templated` - the URI contains one or more parameters",
           "correct": true,
           "rationale": "Parameterised URIs, like REST GET endpoints, are templated resources."
         },
         {
           "id": "b",
-          "text": "`direct` — the URI is a fixed address for a specific record",
+          "text": "`direct` - the URI is a fixed address for a specific record",
           "correct": false,
           "rationale": "A direct resource has a static URI with no parameters, such as an S3 object URL."
         },
@@ -167,10 +167,10 @@
           "id": "d",
           "text": "A `prompt`, because templates are prompts",
           "correct": false,
-          "rationale": "Both resources and prompts can be templated — the word does not decide the primitive."
+          "rationale": "Both resources and prompts can be templated - the word does not decide the primitive."
         }
       ],
-      "explanation": "Resources come in two types. A `direct` resource has a static URI with no parameters — think an S3 object URL. A `templated` resource has parameters in the URI, exactly like a REST GET endpoint. The REST analogy keeps resources separate from tools: a resource is anything a GET endpoint would return, while a tool takes an action.",
+      "explanation": "Resources come in two types. A `direct` resource has a static URI with no parameters - think an S3 object URL. A `templated` resource has parameters in the URI, exactly like a REST GET endpoint. The REST analogy keeps resources separate from tools: a resource is anything a GET endpoint would return, while a tool takes an action.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -214,10 +214,10 @@
           "id": "e",
           "text": "`stdio` is preferred for remote servers because it avoids HTTP overhead",
           "correct": false,
-          "rationale": "It cannot be used remotely at all — there is no stdin/stdout between separate machines."
+          "rationale": "It cannot be used remotely at all - there is no stdin/stdout between separate machines."
         }
       ],
-      "explanation": "Client-to-server communication can use several protocols, and two are common. `stdio` works only when both sides are on the same system, passing messages over stdin/stdout. `Streamable HTTP` has the client POST to a single endpoint, with the server replying in standard JSON or streaming via Server-Sent Events — which makes it the preferred transport for remote, multi-client servers.",
+      "explanation": "Client-to-server communication can use several protocols, and two are common. `stdio` works only when both sides are on the same system, passing messages over stdin/stdout. `Streamable HTTP` has the client POST to a single endpoint, with the server replying in standard JSON or streaming via Server-Sent Events - which makes it the preferred transport for remote, multi-client servers.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -235,31 +235,31 @@
       "options": [
         {
           "id": "a",
-          "text": "`InitializeRequest` — the initial handshake between client and server",
+          "text": "`InitializeRequest` - the initial handshake between client and server",
           "correct": true,
           "rationale": "Establishes the connection before anything else."
         },
         {
           "id": "b",
-          "text": "`ListToolsRequest` — returns a `ListToolsResult` containing the schemas for all the server's tools",
+          "text": "`ListToolsRequest` - returns a `ListToolsResult` containing the schemas for all the server's tools",
           "correct": true,
           "rationale": "Discovery of what the server can do."
         },
         {
           "id": "c",
-          "text": "`CallToolRequest` — calls a specific tool with inputs and returns a `CallToolResult`",
+          "text": "`CallToolRequest` - calls a specific tool with inputs and returns a `CallToolResult`",
           "correct": true,
           "rationale": "The execution counterpart to ListTools."
         },
         {
           "id": "d",
-          "text": "`ReadResourceRequest` — reads the actual content of a specific resource",
+          "text": "`ReadResourceRequest` - reads the actual content of a specific resource",
           "correct": true,
           "rationale": "As opposed to `ListResourcesRequest`, which only enumerates what is available."
         },
         {
           "id": "e",
-          "text": "`ListPromptsRequest` — executes a prompt template with parameters",
+          "text": "`ListPromptsRequest` - executes a prompt template with parameters",
           "correct": false,
           "rationale": "It *lists* the available templates. Listing and reading/calling are always separate requests in MCP."
         }
@@ -291,7 +291,7 @@
           "correct": true
         }
       ],
-      "explanation": "Only the first half is true. MCP Inspector ships with the official MCP SDK and is used to verify that the server's `tools`, `resources` and `prompts` behave as expected — but it is a debugging and development tool and explicitly does *not* replace unit or integration tests.",
+      "explanation": "Only the first half is true. MCP Inspector ships with the official MCP SDK and is used to verify that the server's `tools`, `resources` and `prompts` behave as expected - but it is a debugging and development tool and explicitly does *not* replace unit or integration tests.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -309,7 +309,7 @@
       "options": [
         {
           "id": "a",
-          "text": "A session — the actual connection to the server, used for all communication with it",
+          "text": "A session - the actual connection to the server, used for all communication with it",
           "correct": true,
           "rationale": "The official SDK provides a `session` interface, and best practice is to wrap it in an MCPClient class to make session management easier."
         },
@@ -323,7 +323,7 @@
           "id": "c",
           "text": "A local copy of the server's tool schemas, bundled at build time",
           "correct": false,
-          "rationale": "Schemas are discovered at runtime with `ListToolsRequest` — that is the point of the protocol."
+          "rationale": "Schemas are discovered at runtime with `ListToolsRequest` - that is the point of the protocol."
         },
         {
           "id": "d",
@@ -332,7 +332,7 @@
           "rationale": "Inspector is a development and debugging tool, not part of the runtime path."
         }
       ],
-      "explanation": "To talk to an MCP server the client creates a **session** — the official SDK's `session` interface is the actual connection and carries all communication. The client's job is mostly to provide an interface over the SDK request types, and the recommended pattern is an `MCPClient` class wrapping the session so lifecycle management lives in one place.",
+      "explanation": "To talk to an MCP server the client creates a **session** - the official SDK's `session` interface is the actual connection and carries all communication. The client's job is mostly to provide an interface over the SDK request types, and the recommended pattern is an `MCPClient` class wrapping the session so lifecycle management lives in one place.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -350,13 +350,13 @@
       "options": [
         {
           "id": "a",
-          "text": "The server — it wraps the outside service and provides tools, resources and prompts for working with it",
+          "text": "The server - it wraps the outside service and provides tools, resources and prompts for working with it",
           "correct": true,
           "rationale": "Written by a third party, usually the service provider themselves."
         },
         {
           "id": "b",
-          "text": "The client — it adapts the outside service into primitives the Model can use",
+          "text": "The client - it adapts the outside service into primitives the Model can use",
           "correct": false,
           "rationale": "The client is the app, agent or script that *consumes* the primitives."
         },
@@ -368,12 +368,12 @@
         },
         {
           "id": "d",
-          "text": "Neither — the Model calls the outside service directly once MCP grants it access",
+          "text": "Neither - the Model calls the outside service directly once MCP grants it access",
           "correct": false,
           "rationale": "The Model never reaches the outside service directly; the server is the wrapper."
         }
       ],
-      "explanation": "The server is a service written by a third party that wraps an outside service and exposes `tools`, `resources` and `prompts` for working with it. The client is the app, agent or script that consumes those primitives — usually via a library or API. Because anyone can write a server, the practical advice is to look for the provider's official one first.",
+      "explanation": "The server is a service written by a third party that wraps an outside service and exposes `tools`, `resources` and `prompts` for working with it. The client is the app, agent or script that consumes those primitives - usually via a library or API. Because anyone can write a server, the practical advice is to look for the provider's official one first.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -424,7 +424,7 @@
         },
         {
           "id": "b",
-          "text": "Only the service provider — the protocol requires first-party publication",
+          "text": "Only the service provider - the protocol requires first-party publication",
           "correct": false,
           "rationale": "Anyone can create an MCP server."
         },
@@ -459,7 +459,7 @@
       "options": [
         {
           "id": "a",
-          "text": "An app, agent or script — usually a library or API — that accesses the server's primitives",
+          "text": "An app, agent or script - usually a library or API - that accesses the server's primitives",
           "correct": true,
           "rationale": "The consuming side, in whatever shape suits the host application."
         },
@@ -596,7 +596,7 @@
           "id": "b",
           "text": "Only with Server-Sent Events, since the transport is named for streaming",
           "correct": false,
-          "rationale": "Standard JSON is also supported — streaming is optional."
+          "rationale": "Standard JSON is also supported - streaming is optional."
         },
         {
           "id": "c",
@@ -611,7 +611,7 @@
           "rationale": "The client POSTs to a single endpoint; the server replies on that connection."
         }
       ],
-      "explanation": "The client sends HTTP POST requests to a single endpoint, and the server responds either with standard JSON or by dynamically streaming via Server-Sent Events. Having both options in one transport is what makes it suitable as the general-purpose remote choice — short answers come back as plain JSON, long ones stream.",
+      "explanation": "The client sends HTTP POST requests to a single endpoint, and the server responds either with standard JSON or by dynamically streaming via Server-Sent Events. Having both options in one transport is what makes it suitable as the general-purpose remote choice - short answers come back as plain JSON, long ones stream.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -652,7 +652,7 @@
           "rationale": "The server defines them; the Model decides when to call."
         }
       ],
-      "explanation": "The three primitives are labelled by who decides when they are used. `tools` are model controlled because the Model chooses when to call one — the same relationship it has with any tool function. `resources` are app controlled because the agent decides when to fetch data, and `prompts` are user controlled because the user invokes them.",
+      "explanation": "The three primitives are labelled by who decides when they are used. `tools` are model controlled because the Model chooses when to call one - the same relationship it has with any tool function. `resources` are app controlled because the agent decides when to fetch data, and `prompts` are user controlled because the user invokes them.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -693,7 +693,7 @@
           "rationale": "MCP communication is client-initiated."
         }
       ],
-      "explanation": "`resources` define what *data* the server can provide — think anything a GET endpoint would return. They are app controlled because the agent or app primarily decides when to fetch them, unlike tools where the Model decides. The GET analogy is also the cleanest way to tell a resource from a tool: if it changes something, it is a tool.",
+      "explanation": "`resources` define what *data* the server can provide - think anything a GET endpoint would return. They are app controlled because the agent or app primarily decides when to fetch them, unlike tools where the Model decides. The GET analogy is also the cleanest way to tell a resource from a tool: if it changes something, it is a tool.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -775,7 +775,7 @@
           "rationale": "Unrelated."
         }
       ],
-      "explanation": "A prompt's text may be static, but prompts accept specific information — `resource` references, for instance — that tailors them to a particular use case. That is what makes them templates rather than canned strings, and it is why they surface as slash commands: the command name is fixed, the arguments are not.",
+      "explanation": "A prompt's text may be static, but prompts accept specific information - `resource` references, for instance - that tailors them to a particular use case. That is what makes them templates rather than canned strings, and it is why they surface as slash commands: the command name is fixed, the arguments are not.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -819,7 +819,7 @@
           "id": "e",
           "text": "`InitializeRequest` returns the server's tool schemas as part of the handshake",
           "correct": false,
-          "rationale": "The handshake is separate from discovery — that is `ListToolsRequest`."
+          "rationale": "The handshake is separate from discovery - that is `ListToolsRequest`."
         }
       ],
       "explanation": "The request set follows a strict list-then-act shape. `ListToolsRequest` → `ListToolsResult` (schemas), `CallToolRequest` → `CallToolResult` (execution output), `ListResourcesRequest` (what exists) then `ReadResourceRequest` (the content). Anything named `List*` only enumerates, and the handshake `InitializeRequest` does neither.",
@@ -863,7 +863,7 @@
           "rationale": "Inspector is a debugging tool, not part of the runtime path."
         }
       ],
-      "explanation": "The official SDK provides a `session` interface — the actual connection, used for all communication with the server — and the recommended pattern is to wrap it in an `MCPClient` class so lifecycle management lives in one place. The client's remaining job is mostly to expose the SDK request types to the rest of the application.",
+      "explanation": "The official SDK provides a `session` interface - the actual connection, used for all communication with the server - and the recommended pattern is to wrap it in an `MCPClient` class so lifecycle management lives in one place. The client's remaining job is mostly to expose the SDK request types to the rest of the application.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",
@@ -904,7 +904,7 @@
           "rationale": "Not described."
         }
       ],
-      "explanation": "`prompts` are pre-defined prompt templates the client can invoke — essentially the slash commands available in Claude Code. That is exactly why they are classified as *user controlled* — the user decides when to run `/<prompt-name>`.",
+      "explanation": "`prompts` are pre-defined prompt templates the client can invoke - essentially the slash commands available in Claude Code. That is exactly why they are classified as *user controlled* - the user decides when to run `/<prompt-name>`.",
       "citations": [
         {
           "file": "notes/anthropic/intro_to_mcp.md",

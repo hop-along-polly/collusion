@@ -1,4 +1,4 @@
-# Collusion — course material & Scribe Cards
+# Collusion - course material & Scribe Cards
 
 Hand-written Markdown course material for technical certifications, written by practitioners
 who have sat these exams and passed them, plus **Scribe Cards**: a static flashcard app built
@@ -8,7 +8,7 @@ from that material.
 belongs to reads the same today as it will in ten years, and that is the level these notes are
 pitched at. The bet is that fundamentals are also the better exam strategy: a memorised answer only
 helps with a question you have already seen, whereas understanding why a technique exists and when
-it applies means an unfamiliar question is still answerable — reason from the fundamentals and they
+it applies means an unfamiliar question is still answerable - reason from the fundamentals and they
 lead to exactly one correct answer.
 
 This is why cards are never written from a question bank or an exam recollection. They come from the
@@ -17,16 +17,16 @@ notes, which cover the subject rather than the test.
 The Markdown is the source of truth. Every question, explanation and distractor comes from a
 committed `.md` file and cites the specific file and heading behind it, and a build-time gate
 fails the build if a citation stops resolving. That is the invariant the whole project is
-organised around — and the reason a card can always be checked against its source rather than
+organised around - and the reason a card can always be checked against its source rather than
 taken on trust.
 
 | | |
 |---|---|
-| **Notes** | [`notes/`](notes) — one Markdown file per topic, as `notes/<company>/<topic>.md` |
-| **Courses** | [`courses/`](courses) — one study guide per certification, as `courses/<company>/<course-id>.md` |
-| **Cards** | [`flashcards/`](flashcards) — 520 across 15 sets in 3 domains, see [Card sets](#card-sets) |
+| **Notes** | [`notes/`](notes) - one Markdown file per topic, as `notes/<company>/<topic>.md` |
+| **Courses** | [`courses/`](courses) - one study guide per certification, as `courses/<company>/<course-id>.md` |
+| **Cards** | [`flashcards/`](flashcards) - 520 across 15 sets in 3 domains, see [Card sets](#card-sets) |
 | **App** | Vite + React + TypeScript + React Router, Tailwind CSS |
-| **Hosting** | GitHub Pages, fully static — no backend, no database, no accounts |
+| **Hosting** | GitHub Pages, fully static - no backend, no database, no accounts |
 | **Style** | [CodeScribes Brand Style Guide](https://github.com/hop-along-polly/codescribes-styleguide/blob/main/BRAND_STYLE_GUIDE.md) |
 
 ---
@@ -47,7 +47,7 @@ on several sets. That mapping lives in [`catalog.json`](catalog.json) and is nev
 from paths.
 
 **Flashcards are only ever launched from a course**, because results are recorded against the
-certification being prepared for — see [Progress and privacy](#progress-and-privacy).
+certification being prepared for - see [Progress and privacy](#progress-and-privacy).
 
 ---
 
@@ -79,7 +79,7 @@ shipping broken.
 
 ## Card sets
 
-Each set targets **30-60 cards** — enough to study a topic properly in one place, small enough
+Each set targets **30-60 cards** - enough to study a topic properly in one place, small enough
 to finish. A set is split when one note turns out to be two study units, which is why the AI
 Practitioner material is two sets rather than one oversized one.
 
@@ -93,15 +93,15 @@ Practitioner material is two sets rather than one oversized one.
 | Anthropic | Claude 101 | 31 | `claude_101.md` |
 | Anthropic | Agent Skills | 27 † | `agent_skills.md` |
 | Anthropic | Model Context Protocol | 22 † | `intro_to_mcp.md` |
-| AWS | AI Practitioner — AWS Services | 42 | `ai_practitioner.md` |
-| AWS | AWS Marketplace — Listing Types | 40 | `saas.md`, `agents_and_tools.md`, `server_ami.md`, `server_container.md`, `machine_learning.md`, `data_product.md`, `marketplace_apis.md` |
+| AWS | AI Practitioner - AWS Services | 42 | `ai_practitioner.md` |
+| AWS | AWS Marketplace - Listing Types | 40 | `saas.md`, `agents_and_tools.md`, `server_ami.md`, `server_container.md`, `machine_learning.md`, `data_product.md`, `marketplace_apis.md` |
 | AWS | AWS Services | 38 | `all_aws_services.md`, `notes.md` |
-| AWS | AI Practitioner — Concepts & Metrics | 34 | `ai_practitioner.md` |
-| AWS | AWS Marketplace — Commercials | 32 | `overview.md`, `private_offers.md`, `renewals.md`, `professional_services.md`, `saas.md` |
+| AWS | AI Practitioner - Concepts & Metrics | 34 | `ai_practitioner.md` |
+| AWS | AWS Marketplace - Commercials | 32 | `overview.md`, `private_offers.md`, `renewals.md`, `professional_services.md`, `saas.md` |
 | DevOps | Ansible Fundamentals | 37 | `Ansible.md` |
 | DevOps | GitHub CI/CD | 32 | `github_cd-cd.md` |
 
-**520 cards, 592 citations** — 291 select-one, 176 select-all-that-apply, 53 true/false.
+**520 cards, 592 citations** - 291 select-one, 176 select-all-that-apply, 53 true/false.
 
 Those 15 sets are grouped into **5 courses**: two certifications (CCAR-F, AIF-C01) and three
 study tracks with no exam behind them (AWS Marketplace, Ansible, GitHub Actions).
@@ -117,7 +117,7 @@ Grading is all-or-nothing on multi-answer cards, which is how the real exams sco
 
 Every citation is checked against the Markdown at build time, so a card can never drift from
 the section it claims to cite. When the Claude API notes were rewritten, the gate caught 18
-citations pointing at headings that no longer existed — and three cards whose *content* the
+citations pointing at headings that no longer existed - and three cards whose *content* the
 rewrite had invalidated.
 
 ---
@@ -131,7 +131,7 @@ Two skills automate the whole procedure and are the recommended path:
 
 | Skill | Use it to |
 |---|---|
-| [`generate-flashcards`](.claude/skills/generate-flashcards/SKILL.md) | Rebuild one note's set from scratch. Destructive — regenerates ids, which resets progress for that set. |
+| [`generate-flashcards`](.claude/skills/generate-flashcards/SKILL.md) | Rebuild one note's set from scratch. Destructive - regenerates ids, which resets progress for that set. |
 | [`add-flashcards`](.claude/skills/add-flashcards/SKILL.md) | Cover newly added material without touching existing cards. Doing nothing is a valid outcome, so it is safe to run in CI. |
 
 ### Add cards to an existing set
@@ -141,7 +141,7 @@ Two skills automate the whole procedure and are the recommended path:
 
 ```jsonc
 {
-  "id": "prompt-caching-rules",        // unique across the DOMAIN, not just the set — see below
+  "id": "prompt-caching-rules",        // unique across the DOMAIN, not just the set - see below
   "type": "multi",                     // "single" | "multi" | "boolean"
   "prompt": "Which statements about prompt caching are correct? (Select all that apply)",
   "tags": ["caching"],
@@ -166,7 +166,7 @@ Two skills automate the whole procedure and are the recommended path:
 and the gate fails the build on a duplicate. Progress is stored per course under the bare card
 id, and a course draws only on sets from its own domain, so two sets naming a card identically
 would make one card's history indistinguishable from the other's. Ids deliberately carry **no
-set prefix** — a prefix would orphan a card's history the moment its set were renamed or split.
+set prefix** - a prefix would orphan a card's history the moment its set were renamed or split.
 Check before writing one:
 
 ```bash
@@ -176,10 +176,10 @@ grep -ho '"id": "[^"]*"' flashcards/<domain>/*.json | sort
 A name already taken usually means the same fact is carded elsewhere in the domain, which is
 worth looking at before renaming around it.
 
-**Citations:** use `heading` when the label is a real Markdown `#` heading — the citation then
+**Citations:** use `heading` when the label is a real Markdown `#` heading - the citation then
 deep-links to GitHub's anchor. Use `section` when it is a labelled region that is *not* a
 heading (`Ansible.md` numbers its sections as list items; `github_cd-cd.md` marks some with bold
-text) — the citation names the region and links to the file, never to an anchor that does not
+text) - the citation names the region and links to the file, never to an anchor that does not
 exist. The validator enforces this both ways, so a dead anchor cannot ship.
 
 ### Add a new set
@@ -195,8 +195,8 @@ A set no course lists is invisible in the app, so the last step is not optional.
 
 ### Add a new course
 
-Write the study guide at `courses/<company>/<course-id>.md` — the topics in reading order, each
-linking the notes to read and the sets that test them — then add an entry to `courses` in
+Write the study guide at `courses/<company>/<course-id>.md` - the topics in reading order, each
+linking the notes to read and the sets that test them - then add an entry to `courses` in
 `catalog.json`:
 
 ```jsonc
@@ -260,12 +260,12 @@ The base path defaults to `/collusion/` in production builds and `/` in developm
 
 ## Progress and privacy
 
-Progress — cards answered, per-card correct/incorrect counts, and anything marked for review —
+Progress - cards answered, per-card correct/incorrect counts, and anything marked for review -
 lives in `localStorage` under `scribe-cards.progress.v2`. Nothing leaves the browser, there is
 no analytics, and no account is required.
 
 **Progress is keyed by course, not by card set.** A card set can be listed by more than one course
-in the same domain, so the same card can be tested by two certifications — and how ready you are
+in the same domain, so the same card can be tested by two certifications - and how ready you are
 for one exam says nothing about the other. Keying by course keeps those as independent records:
 
 ```jsonc
@@ -280,7 +280,7 @@ for one exam says nothing about the other. Keying by course keeps those as indep
 }
 ```
 
-The course path is the outer key and the card id sits inside it, bare — no set id appears in
+The course path is the outer key and the card id sits inside it, bare - no set id appears in
 storage at all, so renaming or splitting a set, or moving a card between sets, does not orphan
 its history. Each course can be reset individually from its course page.
 
@@ -294,7 +294,7 @@ requires a rewrite:
 - **Progress is already a server-shaped document.** A `ProgressSnapshot`
   (`src/types/progress.ts`) is one JSON document per owner with `schemaVersion`, an `ownerId`
   (`"local"` until accounts exist), an `updatedAt` merge stamp, and monotonic per-card counters.
-  It can be `PUT` to an API as-is, and two snapshots merge field-wise — counters add, `marked`
+  It can be `PUT` to an API as-is, and two snapshots merge field-wise - counters add, `marked`
   ORs, `lastSeenAt` takes the max.
 - **Storage is one swappable adapter.** Every mutation is a pure function over a snapshot; only
   `loadProgress` / `saveProgress` touch `localStorage`. Adding a server means implementing that
@@ -321,7 +321,7 @@ catalog.json                                      registry: domains, sets, cours
 src/
   data/        catalog, lazy content + card loaders, runtime validation
   engine/      pure quiz reducer + grading (no React)
-  quiz/        deck assembly — a course's sets become one session
+  quiz/        deck assembly - a course's sets become one session
   storage/     progress: pure updates + localStorage adapter
   hooks/       progress context, note loading, theme
   components/  ui/ primitives (style guide) + quiz/ feature components + Markdown rendering

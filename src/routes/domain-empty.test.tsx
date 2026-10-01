@@ -9,7 +9,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
  * This lives in its own file because it mocks the catalog module, and Vitest module
  * mocks are file-scoped. Mocking is the right call here rather than leaning on a real
  * domain: every domain in `data/catalog.json` now has content, so a test asserting on
- * a real empty one would break the moment cards were added — which is exactly what
+ * a real empty one would break the moment cards were added - which is exactly what
  * happened when AWS notes landed. The code path is real and worth covering; which
  * domain happens to be empty today is not.
  */

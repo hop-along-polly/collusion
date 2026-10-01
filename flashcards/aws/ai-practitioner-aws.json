@@ -1,6 +1,6 @@
 {
   "id": "ai-practitioner-aws",
-  "title": "AI Practitioner — AWS Services",
+  "title": "AI Practitioner - AWS Services",
   "cards": [
     {
       "id": "embedding-vs-generation",
@@ -425,7 +425,7 @@
           "rationale": "Bedrock is already serverless; this is a SageMaker deployment option."
         }
       ],
-      "explanation": "On-Demand charges per token with nothing reserved, which suits development and variable traffic. Provisioned Throughput reserves capacity for a committed period whether used or not, buying predictable performance — and it is required to serve a model you have customized through fine-tuning.",
+      "explanation": "On-Demand charges per token with nothing reserved, which suits development and variable traffic. Provisioned Throughput reserves capacity for a committed period whether used or not, buying predictable performance - and it is required to serve a model you have customized through fine-tuning.",
       "citations": [
         {
           "file": "notes/aws/ai_practitioner.md",
@@ -455,7 +455,7 @@
           "rationale": "Retrieved passages are added to the prompt, which is why RAG is cheap, immediate and easy to reverse."
         }
       ],
-      "explanation": "RAG finds relevant material and places it in the prompt before the model answers. Because no weights change, updating what the model knows is a matter of updating the documents — which is why it beats fine-tuning whenever the source material moves.",
+      "explanation": "RAG finds relevant material and places it in the prompt before the model answers. Because no weights change, updating what the model knows is a matter of updating the documents - which is why it beats fine-tuning whenever the source material moves.",
       "citations": [
         {
           "file": "notes/aws/ai_practitioner.md",
@@ -498,7 +498,7 @@
           "rationale": "Training from scratch needs vastly more data and would produce a weaker model than any pre-trained option."
         }
       ],
-      "explanation": "When the scenario is about giving a model access to facts it does not have — especially facts that change — RAG is the answer. Fine-tuning is for changing the model's behavior, such as its tone, output format, or grasp of specialist vocabulary.",
+      "explanation": "When the scenario is about giving a model access to facts it does not have - especially facts that change - RAG is the answer. Fine-tuning is for changing the model's behavior, such as its tone, output format, or grasp of specialist vocabulary.",
       "citations": [
         {
           "file": "notes/aws/ai_practitioner.md",
@@ -540,7 +540,7 @@
           "rationale": "Retrieval adds a lookup step; latency is addressed by model choice and provisioned capacity."
         }
       ],
-      "explanation": "RAG tackles three problems at once — private knowledge, stale knowledge and hallucination — because all three come from the model lacking the right information at answer time. It does nothing for latency.",
+      "explanation": "RAG tackles three problems at once - private knowledge, stale knowledge and hallucination - because all three come from the model lacking the right information at answer time. It does nothing for latency.",
       "citations": [
         {
           "file": "notes/aws/ai_practitioner.md",
@@ -872,7 +872,7 @@
           "rationale": "Serverless suits occasional traffic and can add a cold start after a quiet period."
         }
       ],
-      "explanation": "The deciding factors are how quickly the answer is needed and how steady the traffic is. \"While the customer waits\" means Real-Time, which runs — and bills — around the clock.",
+      "explanation": "The deciding factors are how quickly the answer is needed and how steady the traffic is. \"While the customer waits\" means Real-Time, which runs - and bills - around the clock.",
       "citations": [
         {
           "file": "notes/aws/ai_practitioner.md",
@@ -891,25 +891,25 @@
       "options": [
         {
           "id": "a",
-          "text": "Scoring every customer in the database overnight — Batch Transform",
+          "text": "Scoring every customer in the database overnight - Batch Transform",
           "correct": true,
           "rationale": "A whole stored dataset processed at once, with no endpoint left running."
         },
         {
           "id": "b",
-          "text": "An internal tool used a few times a day — Serverless inference",
+          "text": "An internal tool used a few times a day - Serverless inference",
           "correct": true,
           "rationale": "No compute sits idle between requests, at the cost of an occasional cold start."
         },
         {
           "id": "c",
-          "text": "Analyzing long video files that take minutes per request — Asynchronous inference",
+          "text": "Analyzing long video files that take minutes per request - Asynchronous inference",
           "correct": true,
           "rationale": "Requests are queued and results delivered when ready, handling payloads too large for a real-time endpoint."
         },
         {
           "id": "d",
-          "text": "A recommendation shown as a page loads — Batch Transform",
+          "text": "A recommendation shown as a page loads - Batch Transform",
           "correct": false,
           "rationale": "Something is waiting on that answer, so this needs a real-time endpoint."
         }
@@ -999,7 +999,7 @@
           "rationale": "Data Wrangler performs the rebalancing; Clarify reports the problem."
         }
       ],
-      "explanation": "Clarify answers the two questions auditors ask: is the model treating a group unfairly, and why did it produce this particular result? Detecting a problem and fixing it are separate tools — Clarify detects bias, Data Wrangler rebalances the data.",
+      "explanation": "Clarify answers the two questions auditors ask: is the model treating a group unfairly, and why did it produce this particular result? Detecting a problem and fixing it are separate tools - Clarify detects bias, Data Wrangler rebalances the data.",
       "citations": [
         {
           "file": "notes/aws/ai_practitioner.md",
@@ -1244,7 +1244,7 @@
           "rationale": "That concerns staying accurate under unexpected input."
         }
       ],
-      "explanation": "The two are easily confused and are tested against each other. Transparency answers how the system was built — data, architecture, known limitations, disclosed up front. Explainability answers why a specific output happened, and SageMaker Clarify's feature importance scores are the tooling for it.",
+      "explanation": "The two are easily confused and are tested against each other. Transparency answers how the system was built - data, architecture, known limitations, disclosed up front. Explainability answers why a specific output happened, and SageMaker Clarify's feature importance scores are the tooling for it.",
       "citations": [
         {
           "file": "notes/aws/ai_practitioner.md",
@@ -1557,25 +1557,25 @@
       "options": [
         {
           "id": "a",
-          "text": "Experiments — records every training run with its inputs and scores so runs can be compared",
+          "text": "Experiments - records every training run with its inputs and scores so runs can be compared",
           "correct": true,
           "rationale": "This is what gives reproducibility across many attempts."
         },
         {
           "id": "b",
-          "text": "Automatic Model Tuning — runs multiple training jobs to search for the best hyperparameter values",
+          "text": "Automatic Model Tuning - runs multiple training jobs to search for the best hyperparameter values",
           "correct": true,
           "rationale": "It uses earlier results to choose smarter values for later runs."
         },
         {
           "id": "c",
-          "text": "Processing — runs data preparation and evaluation code on AWS compute rather than your machine",
+          "text": "Processing - runs data preparation and evaluation code on AWS compute rather than your machine",
           "correct": true,
           "rationale": "SageMaker starts the machines, runs the script and shuts them down."
         },
         {
           "id": "d",
-          "text": "Studio — automatically selects the best algorithm for a tabular dataset",
+          "text": "Studio - automatically selects the best algorithm for a tabular dataset",
           "correct": false,
           "rationale": "Studio is the web interface the other features are used from; automated algorithm selection is Autopilot."
         }
@@ -1645,25 +1645,25 @@
       "options": [
         {
           "id": "a",
-          "text": "Model Cards — intended use, risk rating, training details and caveats",
+          "text": "Model Cards - intended use, risk rating, training details and caveats",
           "correct": true,
           "rationale": "The documentation record that travels with a model."
         },
         {
           "id": "b",
-          "text": "Model Dashboard — every model in the account and how each behaves in production",
+          "text": "Model Dashboard - every model in the account and how each behaves in production",
           "correct": true,
           "rationale": "One screen showing what is deployed and which models have raised alerts."
         },
         {
           "id": "c",
-          "text": "Model Registry — which versions exist and which are approved",
+          "text": "Model Registry - which versions exist and which are approved",
           "correct": true,
           "rationale": "The catalog of versions and their approval status."
         },
         {
           "id": "d",
-          "text": "Automatic Model Tuning — the hyperparameter search that produced the model",
+          "text": "Automatic Model Tuning - the hyperparameter search that produced the model",
           "correct": false,
           "rationale": "Tuning improves a model; it is not a governance record."
         }
@@ -1714,7 +1714,7 @@
           "rationale": "JumpStart is a catalog of pre-trained models and solutions."
         }
       ],
-      "explanation": "Pipelines runs every stage in order without manual intervention, delivering the MLOps benefits of productivity, reliability, repeatability, auditability and consistent quality — including continuous training as new data arrives.",
+      "explanation": "Pipelines runs every stage in order without manual intervention, delivering the MLOps benefits of productivity, reliability, repeatability, auditability and consistent quality - including continuous training as new data arrives.",
       "citations": [
         {
           "file": "notes/aws/ai_practitioner.md",

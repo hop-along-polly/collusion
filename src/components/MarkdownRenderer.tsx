@@ -18,7 +18,7 @@ import type { AlertTone } from './ui/Surface'
  *  - **Inline HTML**, via `rehype-raw`. Markdown has no way to put a list inside a table
  *    cell, so the notes use `<ul><li>` there. The content is committed to this repository
  *    rather than user-supplied, so raw HTML carries no injection risk here.
- *  - **GitHub alerts** (`> [!NOTE]`), which no plugin handles — see `blockquote` below.
+ *  - **GitHub alerts** (`> [!NOTE]`), which no plugin handles - see `blockquote` below.
  */
 
 const ALERT_TONE: Record<string, AlertTone> = {

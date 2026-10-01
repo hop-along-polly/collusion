@@ -55,7 +55,7 @@ A Seller picks **one** Pricing Model per Container Product, and the price set ap
 | `Monthly` | A fixed monthly price for unlimited use of the Product during the following month, charged immediately on subscription and repeating until cancelled. A Buyer who cancels mid-month is refunded the unused portion. | A self-hosted CI/CD runner at $99/month, with no cap on how many builds the Buyer runs. | No | `RegisterUsage` |
 | `Hourly pricing` | A price per Amazon ECS task or Amazon EKS pod per hour. Five pods at $6/hour bill $30/hour. | A log analytics platform that charges only for its controller pod, because the Product is useless without one. | **Yes** | `RegisterUsage` |
 | `Usage-based pricing` | A per-unit price against dimensions the Seller defines, calculated from the metering records the Seller reports. | A vulnerability scanner billing per node scanned, rather than per pod it happens to run in. | **Yes** | `MeterUsage` |
-| `Contract-based pricing` | An upfront fee entitling them to a specified quantity of use over an agreed length of time. | A 12-month license for 50 nodes of an API gateway, paid upfront at the start of the term. | N/A — the upfront fee *is* the commitment | AWS License Manager |
+| `Contract-based pricing` | An upfront fee entitling them to a specified quantity of use over an agreed length of time. | A 12-month license for 50 nodes of an API gateway, paid upfront at the start of the term. | N/A - the upfront fee *is* the commitment | AWS License Manager |
 
 > [!NOTE]
 > **Two Pricing Models are unavailable for AI agents and tools hosted on Amazon Bedrock AgentCore Runtime.** *"If the container image uses AgentCore, the **Hourly** and **Usage with long-term contract** pricing models are not supported."* The Management Portal blocks both and requires a different Pricing Model to continue. See [Marketplace - AI Agents & Tools](./agents_and_tools.md).
@@ -67,7 +67,7 @@ For `Hourly pricing`, billing is **per-second with a one-minute minimum**. A con
 
 ### Long-term contracts
 
-A **long-term contract** lets a Buyer commit upfront, at a reduced rate, to a Product that is otherwise billed by consumption just like AWS's reserved EC2 instances. It is available only on the two metered Pricing Models — `Hourly pricing` and `Usage-based pricing`.
+A **long-term contract** lets a Buyer commit upfront, at a reduced rate, to a Product that is otherwise billed by consumption just like AWS's reserved EC2 instances. It is available only on the two metered Pricing Models - `Hourly pricing` and `Usage-based pricing`.
 
 It is not a Pricing Model a Seller selects. AWS documents it as a seventh row in their pricing table, *"Hourly pricing or custom metering pricing with long-term contract"*, but it does not appear as its own choice in the Management Portal because it is **layered on top of** a Product that already has metered pricing. The Seller sets the metered price first, then adds a contract price against it.
 
@@ -87,12 +87,12 @@ The Buyer is billed upfront, either as a single payment or on a schedule of futu
 No delivery method makes a Container Product portable to an arbitrary OCI-compatible runtime. **The Pricing Model decides this, not the delivery method.**
 
  - **`Free` and `BYOL` products run on any Docker-compatible runtime.** Neither calls AWS Marketplace at runtime, so there is nothing to fail.
- - **Metered products do not.** `MeterUsage` and `RegisterUsage` return `PlatformNotSupportedException` anywhere other than Amazon ECS, Amazon EKS, and AWS Fargate — including on a Seller's own workstation, which is why local development of a metered container surfaces the exception. The calls depend on Buyer credentials that these services inject at runtime, and a Seller must never bake credentials into the image to work around it.
+ - **Metered products do not.** `MeterUsage` and `RegisterUsage` return `PlatformNotSupportedException` anywhere other than Amazon ECS, Amazon EKS, and AWS Fargate - including on a Seller's own workstation, which is why local development of a metered container surfaces the exception. The calls depend on Buyer credentials that these services inject at runtime, and a Seller must never bake credentials into the image to work around it.
 
 This has a consequence worth noting: the `Helm chart` delivery method lets a Buyer install onto a self-managed cluster on EKS Anywhere, Amazon EC2, or on-premises, but a **metered** Product installed there cannot meter. Those targets are viable for `Free` and `BYOL` Products.
 
 > [!NOTE]
-> `Contract-based pricing` may be the exception, because AWS License Manager licenses are not bound to a node — *"Any software running on any container on any node can checkout the license as long as it has the assigned AWS credentials."* AWS does not state outright that this extends to non-AWS runtimes, so confirm it with AWS Marketplace Seller Operations before designing around it.
+> `Contract-based pricing` may be the exception, because AWS License Manager licenses are not bound to a node - *"Any software running on any container on any node can checkout the license as long as it has the assigned AWS credentials."* AWS does not state outright that this extends to non-AWS runtimes, so confirm it with AWS Marketplace Seller Operations before designing around it.
 
 ## Pricing Dimensions
 

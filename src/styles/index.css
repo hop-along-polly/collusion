@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /*
- * Design tokens — CodeScribes Brand Style Guide.
+ * Design tokens - CodeScribes Brand Style Guide.
  * Light values from §2 (palette) and §9 (elevation tiers); `.dark` overrides from
  * §9 "Dark Mode CSS Custom Properties (Complete)".
  *
@@ -35,7 +35,7 @@
     --line: 228 228 231;
     --line-strong: 212 212 216;
 
-    /* Brand teal — hover darkens in light mode */
+    /* Brand teal - hover darkens in light mode */
     --brand: 27 137 150;
     --brand-hover: 19 106 116;
     --brand-active: 15 90 98;
@@ -84,7 +84,7 @@
     --line: 39 39 42;
     --line-strong: 63 63 70;
 
-    /* §9: in dark mode teal *lightens* on hover — the cursor moves toward light */
+    /* §9: in dark mode teal *lightens* on hover - the cursor moves toward light */
     --brand: 43 176 191;
     --brand-hover: 60 200 214;
     --brand-active: 27 137 150;

@@ -1,6 +1,6 @@
 # Marketplace - Professional Services
 
-A Professional Services listing is how a Seller sells people's time and expertise rather than software. The deliverable is human work — an assessment, a migration, a training course, an ongoing managed service — and the reason to sell it through AWS Marketplace is that the fee lands on the Buyer's existing AWS bill instead of arriving as a separate invoice.
+A Professional Services listing is how a Seller sells people's time and expertise rather than software. The deliverable is human work - an assessment, a migration, a training course, an ongoing managed service - and the reason to sell it through AWS Marketplace is that the fee lands on the Buyer's existing AWS bill instead of arriving as a separate invoice.
 
 This is the only listing type where nothing is delivered by a machine. There is no artifact to download, no endpoint to call, and no account to log into. AWS Marketplace handles discovery, contracting, and billing; the Seller does the work.
 
@@ -15,7 +15,7 @@ Two rules constrain what can be listed. The service must relate to an AWS servic
 > [!IMPORTANT]
 > **Extra listing requirements when the service touches the Buyer's AWS Account.** Some engagements need resources to exist in the Buyer's account, such as an IAM role or a deployed agent. Two requirements then apply, and both are satisfied on the listing rather than on the offer.
 >
-> **1. Document what gets deployed.** The Seller must provide a description of every provisioned AWS service, the IAM policy statements involved, and how an IAM role or user is deployed and used in the Buyer's account. AWS doesn't name a field for this, but it has to be reachable from the listing, because AWS Marketplace reviews the Product against these requirements at submission — before any private offer exists. The `Additional resources` field, which accepts up to three named links to hosted documents, is the natural home. Deal-specific detail can go in the statement of work attached to an offer, but that cannot substitute for the listing-level requirement.
+> **1. Document what gets deployed.** The Seller must provide a description of every provisioned AWS service, the IAM policy statements involved, and how an IAM role or user is deployed and used in the Buyer's account. AWS doesn't name a field for this, but it has to be reachable from the listing, because AWS Marketplace reviews the Product against these requirements at submission - before any private offer exists. The `Additional resources` field, which accepts up to three named links to hosted documents, is the natural home. Deal-specific detail can go in the statement of work attached to an offer, but that cannot substitute for the listing-level requirement.
 >
 > **2. Disclaim the infrastructure costs.** This requirement names its field explicitly: include a notification *"in the product description"* explaining that any additional AWS infrastructure costs the Buyer incurs are separate from the AWS Marketplace transaction and are the Buyer's responsibility. It belongs in the listing rather than the private offer, since the Buyer needs it before deciding to engage and the offer is only seen after negotiation.
 
@@ -42,14 +42,14 @@ What replaces all of that is a conversation. The listing is a brochure rather th
 >
 > What the guideline is steering Sellers away from is the alternative: asking the Buyer to create an IAM user and send long-lived access keys. Temporary credentials through an assumed role satisfy the requirement.
 >
-> **Hosting the CloudFormation template.** AWS Marketplace will not host a template for a Professional Services listing. If the Seller wants to spare the Buyer from building the role by hand, the Seller hosts the template themselves — typically a public Amazon S3 URL, or a launch-stack link in their own documentation — and points at it from the listing's `Additional resources`. The same applies to agents, where the requirement is only to *"provide instructions to the customer that describe how to deploy the agent in their AWS account."*
+> **Hosting the CloudFormation template.** AWS Marketplace will not host a template for a Professional Services listing. If the Seller wants to spare the Buyer from building the role by hand, the Seller hosts the template themselves - typically a public Amazon S3 URL, or a launch-stack link in their own documentation - and points at it from the listing's `Additional resources`. The same applies to agents, where the requirement is only to *"provide instructions to the customer that describe how to deploy the agent in their AWS account."*
 
 ## Pricing Models (Professional Services)
 
 A Professional Services listing carries no prices at all. The listing publishes the services/packages a Seller offers and nothing more. The Pricing Configuration is handled when the Seller extends a [Private Offers](./private_offers.md).
 
 > [!IMPORTANT]
-> The engagement must be billed entirely through the dimensions listed on AWS Marketplace. A Seller is never permitted to collect the Buyer's payment information — credit card or bank account details — through a Professional Services listing, and side-invoicing part of the work defeats the purpose of listing it at all.
+> The engagement must be billed entirely through the dimensions listed on AWS Marketplace. A Seller is never permitted to collect the Buyer's payment information - credit card or bank account details - through a Professional Services listing, and side-invoicing part of the work defeats the purpose of listing it at all.
 
 ## Pricing Dimensions (Professional Services)
 

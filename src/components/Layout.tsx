@@ -34,7 +34,7 @@ function Brand() {
   )
 }
 
-/** Shared header link styling — active state is the brand fill. */
+/** Shared header link styling - active state is the brand fill. */
 function navLinkClass({ isActive }: { isActive: boolean }): string {
   return cn(
     'flex min-h-[44px] shrink-0 items-center rounded-lg px-3 font-body text-sm transition-colors',

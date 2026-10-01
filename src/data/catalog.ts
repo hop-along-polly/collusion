@@ -1,7 +1,7 @@
 /**
  * The catalog is the only eagerly-loaded data. It is small (a few hundred bytes per
  * set) and lets every index screen render without touching a card file. Card bodies
- * are fetched lazily and code-split per set — see `loader.ts`.
+ * are fetched lazily and code-split per set - see `loader.ts`.
  */
 
 import catalogJson from '../../catalog.json'
@@ -44,7 +44,7 @@ export function findCourse(domainId: string, courseId: string): CourseMeta | und
 /**
  * The sets a course quizzes, in the order its study guide lists them. `setIds` is
  * validated against the catalog at build time, so a miss here would mean the gate was
- * bypassed — hence filtering rather than throwing.
+ * bypassed - hence filtering rather than throwing.
  */
 export function courseSets(course: CourseMeta): CardSetMeta[] {
   return course.setIds

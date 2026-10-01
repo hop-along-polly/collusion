@@ -31,7 +31,7 @@ Purely additive.
   `explanation`, or `citations`. Learner progress is persisted by card id, so editing or
   reordering existing cards corrupts it. New cards are appended to the end of the `cards` array.
 - **Only the card file and `catalog.json` change**, and in the catalog only `cardCount` and
-  `sources` — unless a new set has to be created for a split, which is called out below.
+  `sources` - unless a new set has to be created for a split, which is called out below.
 - If no set covers the note yet, stop. Report that there is nothing to add to and that
   `generate-flashcards` should be run first. Do not create a set here.
 
@@ -116,18 +116,20 @@ preference:
 
 ### 5. Author the new cards
 
-Follow the authoring rules in `.claude/skills/generate-flashcards/SKILL.md` — it is the single
+Follow the authoring rules in `.claude/skills/generate-flashcards/SKILL.md` - it is the single
 source of truth for card quality and they are not repeated here. In particular:
 
 - The **Flashcard Guidelines** section: grounding, no "according to the notes" phrasing, never
   all/none of the above.
 - The **Question types** table: `single`, `multi` and `boolean` are the only supported types.
 - The **Citations** rules: `heading` for real Markdown headings, `section` otherwise, never both.
+- The **Additional prohibitions** section, including the ban on em and en dashes - a hyphen, a
+  comma or a full stop instead, in every field.
 
 Two constraints specific to adding:
 
 - **New card ids must not collide with any existing id in the domain**, not just in the set
-  being extended — progress is stored per course under the bare card id, so a duplicate
+  being extended - progress is stored per course under the bare card id, so a duplicate
   anywhere in `flashcards/<domain>/` is a build error. One command covers it:
   ```bash
   grep -ho '"id": "[^"]*"' flashcards/<domain>/*.json | sort
@@ -140,8 +142,8 @@ Two constraints specific to adding:
 
 ### 6. Update `catalog.json`
 
-- `cardCount` — set to the new total for each set touched.
-- `sources` — add any note file the new cards cite that is not already listed.
+- `cardCount` - set to the new total for each set touched.
+- `sources` - add any note file the new cards cite that is not already listed.
 
 Leave `title`, `subtitle`, `description` and `id` alone unless the new material genuinely makes
 the description wrong, in which case say so in the report.
@@ -159,7 +161,7 @@ npm run validate:data
 npm test
 ```
 
-A `validate:data` failure is a real defect. Fix the card or the citation — never loosen a
+A `validate:data` failure is a real defect. Fix the card or the citation - never loosen a
 citation to silence the gate.
 
 ### 8. Report

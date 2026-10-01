@@ -5,7 +5,7 @@ import { defineConfig } from 'vitest/config'
 /**
  * Kept separate from `vite.config.ts` on purpose: Vitest ships its own pinned copy of
  * Vite, and merging the two configs makes the plugin types collide. None of the app's
- * build config — base path, chunking — matters here.
+ * build config - base path, chunking - matters here.
  *
  * Two environments: `node` for the pure layers (`*.test.ts`) and `jsdom` for the
  * component integration tests (`*.test.tsx`), selected per file by the

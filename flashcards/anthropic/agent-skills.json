@@ -12,25 +12,25 @@
       "options": [
         {
           "id": "a",
-          "text": "`CLAUDE.md` — context, standards and constraints that always apply to the repo",
+          "text": "`CLAUDE.md` - context, standards and constraints that always apply to the repo",
           "correct": true,
           "rationale": "\"Always applies\" is exactly the dividing line: repo-wide context belongs here rather than in a task-specific construct."
         },
         {
           "id": "b",
-          "text": "A Skill — it can be invoked at the start of every session",
+          "text": "A Skill - it can be invoked at the start of every session",
           "correct": false,
           "rationale": "Skills are for task-specific expertise. Reserving them for tasks is what keeps them from bloating into a second CLAUDE.md."
         },
         {
           "id": "c",
-          "text": "A Hook — it can inject the standards before each tool call",
+          "text": "A Hook - it can inject the standards before each tool call",
           "correct": false,
           "rationale": "Hooks are event-driven guardrails and validation, not a home for always-on context."
         },
         {
           "id": "d",
-          "text": "A Subagent — standards can live in its system prompt",
+          "text": "A Subagent - standards can live in its system prompt",
           "correct": false,
           "rationale": "Subagents exist to isolate a task in a separate context with different tools, not to distribute repo-wide standards."
         }
@@ -53,30 +53,30 @@
       "options": [
         {
           "id": "a",
-          "text": "A Hook — event-driven actions taken before or after events like tool calls",
+          "text": "A Hook - event-driven actions taken before or after events like tool calls",
           "correct": true,
           "rationale": "\"On save\" and \"on push\" are events, which is precisely a hook's trigger model."
         },
         {
           "id": "b",
-          "text": "A Skill — it can describe the validation steps in Markdown",
+          "text": "A Skill - it can describe the validation steps in Markdown",
           "correct": false,
           "rationale": "A skill supplies expertise when a task is being performed; it does not fire on an event."
         },
         {
           "id": "c",
-          "text": "`CLAUDE.md` — a written rule that validation must always run",
+          "text": "`CLAUDE.md` - a written rule that validation must always run",
           "correct": false,
           "rationale": "`CLAUDE.md` is context, not an execution mechanism. A rule stated there is guidance, not enforcement."
         },
         {
           "id": "d",
-          "text": "A Subagent — it can be spawned to validate in an isolated context",
+          "text": "A Subagent - it can be spawned to validate in an isolated context",
           "correct": false,
           "rationale": "Subagents isolate work but still need something to invoke them; they are not event triggers."
         }
       ],
-      "explanation": "Hooks are defined as event-driven actions Claude will take — for instance before or after tool calls. When the requirement is \"whenever X happens, do Y\", that is a hook. The distinction matters because a rule written in `CLAUDE.md` is context the model may weigh, while a hook is machinery that actually runs.",
+      "explanation": "Hooks are defined as event-driven actions Claude will take - for instance before or after tool calls. When the requirement is \"whenever X happens, do Y\", that is a hook. The distinction matters because a rule written in `CLAUDE.md` is context the model may weigh, while a hook is machinery that actually runs.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -91,7 +91,7 @@
     {
       "id": "skill-scope-precedence",
       "type": "single",
-      "prompt": "Two skills share the same name — one Personal, one Project, one Enterprise. Which one wins?",
+      "prompt": "Two skills share the same name - one Personal, one Project, one Enterprise. Which one wins?",
       "tags": [
         "scopes",
         "precedence"
@@ -111,7 +111,7 @@
         },
         {
           "id": "c",
-          "text": "Project — the repo is the most specific scope, so it is the most authoritative",
+          "text": "Project - the repo is the most specific scope, so it is the most authoritative",
           "correct": false,
           "rationale": "The tempting \"most specific wins\" intuition is wrong here. Project is the *lowest* priority of the three."
         },
@@ -122,7 +122,7 @@
           "rationale": "Precedence is a fixed order, not load order."
         }
       ],
-      "explanation": "The precedence order from highest to lowest is Enterprise > Personal > Project. Enterprise skills come from managed settings configured by org admins, which is why they sit on top — the point is that an organization can enforce standards that a repo or an individual cannot silently override.",
+      "explanation": "The precedence order from highest to lowest is Enterprise > Personal > Project. Enterprise skills come from managed settings configured by org admins, which is why they sit on top - the point is that an organization can enforce standards that a repo or an individual cannot silently override.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -167,7 +167,7 @@
           "id": "e",
           "text": "They override Enterprise skills of the same name",
           "correct": false,
-          "rationale": "There is no override relationship in either direction — namespacing means \"the same name\" never actually happens."
+          "rationale": "There is no override relationship in either direction - namespacing means \"the same name\" never actually happens."
         },
         {
           "id": "f",
@@ -176,7 +176,7 @@
           "rationale": "That is the Project scope. Plugin skills live in `<pluginRoot>/skills/`."
         }
       ],
-      "explanation": "Plugin skills are the exception to the precedence chain. Because they are namespaced as `plugin-name:skill-name`, a plugin skill can never share a name with an Enterprise, Personal or Project skill, so there is nothing for a precedence rule to resolve. They are stored under `<pluginRoot>/skills/` and are available in any session where the plugin is enabled — which makes them the right vehicle for general community skills.",
+      "explanation": "Plugin skills are the exception to the precedence chain. Because they are namespaced as `plugin-name:skill-name`, a plugin skill can never share a name with an Enterprise, Personal or Project skill, so there is nothing for a precedence rule to resolve. They are stored under `<pluginRoot>/skills/` and are available in any session where the plugin is enabled - which makes them the right vehicle for general community skills.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -260,7 +260,7 @@
           "correct": true
         }
       ],
-      "explanation": "Subagents do not inherently get skills from the parent process. For a custom subagent you have to list the skills explicitly in the `skills` metadata field of its `agent.md` file. This follows from what a subagent is for — a separate execution context, isolated from the main one, with access to different tools.",
+      "explanation": "Subagents do not inherently get skills from the parent process. For a custom subagent you have to list the skills explicitly in the `skills` metadata field of its `agent.md` file. This follows from what a subagent is for - a separate execution context, isolated from the main one, with access to different tools.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -288,7 +288,7 @@
         },
         {
           "id": "b",
-          "text": "Use progressive disclosure — essential instructions in the skill file, with links to further Markdown for detail",
+          "text": "Use progressive disclosure - essential instructions in the skill file, with links to further Markdown for detail",
           "correct": true,
           "rationale": "This is how a skill stays under budget without losing reference depth."
         },
@@ -308,10 +308,10 @@
           "id": "e",
           "text": "Duplicate the repo's coding standards into every skill so each one is self-contained",
           "correct": false,
-          "rationale": "Standards belong in `CLAUDE.md`, which already always applies — duplicating them adds drift for no benefit."
+          "rationale": "Standards belong in `CLAUDE.md`, which already always applies - duplicating them adds drift for no benefit."
         }
       ],
-      "explanation": "The three recommendations reinforce each other: a size budget (under 500 lines), a technique for staying inside it (progressive disclosure — essentials up front, links out to detail), and a rule about what belongs in a skill at all (task-specific expertise, not repo-wide standards).",
+      "explanation": "The three recommendations reinforce each other: a size budget (under 500 lines), a technique for staying inside it (progressive disclosure - essentials up front, links out to detail), and a rule about what belongs in a skill at all (task-specific expertise, not repo-wide standards).",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -329,7 +329,7 @@
       "options": [
         {
           "id": "a",
-          "text": "Make the skill's name and description overlap with the words users actually prompt with — matching is semantic",
+          "text": "Make the skill's name and description overlap with the words users actually prompt with - matching is semantic",
           "correct": true,
           "rationale": "\"Release\" and \"Kraken\" have to appear somewhere in the name or description for the match to land."
         },
@@ -343,7 +343,7 @@
           "id": "c",
           "text": "Invoke the skill explicitly every time, since skills do not trigger automatically",
           "correct": false,
-          "rationale": "Skills do trigger from semantic matching — the problem here is the wording, not the mechanism."
+          "rationale": "Skills do trigger from semantic matching - the problem here is the wording, not the mechanism."
         },
         {
           "id": "d",
@@ -352,7 +352,7 @@
           "rationale": "The filename must be exactly `SKILL.md`, and filename has nothing to do with trigger matching."
         }
       ],
-      "explanation": "Claude uses semantic matching to pick a skill for a prompt, so the name and description have to overlap with how users phrase their requests. For example, prompting \"Release the Kraken\" will not trigger an App Deploy skill unless \"Release\" and/or \"Kraken\" appear in its description. Note this is a different failure from a skill that does not *load* — that one is a spelling or directory problem.",
+      "explanation": "Claude uses semantic matching to pick a skill for a prompt, so the name and description have to overlap with how users phrase their requests. For example, prompting \"Release the Kraken\" will not trigger an App Deploy skill unless \"Release\" and/or \"Kraken\" appear in its description. Note this is a different failure from a skill that does not *load* - that one is a spelling or directory problem.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -399,7 +399,7 @@
           "rationale": "That resolves name conflicts, which is a third and separate failure category."
         }
       ],
-      "explanation": "Skill failures fall into four categories — does not trigger, does not load, conflicts with other skills, and fails at runtime — and each has its own fix. Runtime failures are environmental: missing third-party packages, or scripts in `.claude/scripts/` that were never made executable. Matching the symptom to the right category is most of the diagnosis.",
+      "explanation": "Skill failures fall into four categories - does not trigger, does not load, conflicts with other skills, and fails at runtime - and each has its own fix. Runtime failures are environmental: missing third-party packages, or scripts in `.claude/scripts/` that were never made executable. Matching the symptom to the right category is most of the diagnosis.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -440,7 +440,7 @@
           "rationale": "That describes a model grader in an evaluation pipeline."
         }
       ],
-      "explanation": "A Subagent is a separate execution context used to complete tasks in isolation from the main context. That isolation is why subagents are the answer when you want a task handled with different tools, and also why they do not inherit the parent's skills — a fresh context means a fresh everything unless you say otherwise.",
+      "explanation": "A Subagent is a separate execution context used to complete tasks in isolation from the main context. That isolation is why subagents are the answer when you want a task handled with different tools, and also why they do not inherit the parent's skills - a fresh context means a fresh everything unless you say otherwise.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -481,7 +481,7 @@
           "rationale": "That is an MCP `prompt`."
         }
       ],
-      "explanation": "A Hook is an event-driven action Claude takes — before or after a tool call, for example. The word *event* is what distinguishes it from the other three constructs: `CLAUDE.md` always applies, a Skill applies to a task, a Subagent isolates a task, and a Hook fires when something happens.",
+      "explanation": "A Hook is an event-driven action Claude takes - before or after a tool call, for example. The word *event* is what distinguishes it from the other three constructs: `CLAUDE.md` always applies, a Skill applies to a task, a Subagent isolates a task, and a Hook fires when something happens.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -522,7 +522,7 @@
           "rationale": "A plugin can *carry* skills, but a skill is not a plugin."
         }
       ],
-      "explanation": "A Skill is Markdown providing task-specific expertise and instructions for a common task — committing, reviewing code, and so on. Holding onto \"task-specific\" is what keeps the four constructs straight, because it is the exact contrast with `CLAUDE.md`, which carries what always applies regardless of task.",
+      "explanation": "A Skill is Markdown providing task-specific expertise and instructions for a common task - committing, reviewing code, and so on. Holding onto \"task-specific\" is what keeps the four constructs straight, because it is the exact contrast with `CLAUDE.md`, which carries what always applies regardless of task.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -540,30 +540,30 @@
       "options": [
         {
           "id": "a",
-          "text": "A Skill — task-specific context and instructions that improve the execution of a common task",
+          "text": "A Skill - task-specific context and instructions that improve the execution of a common task",
           "correct": true,
           "rationale": "A recurring, well-defined task is exactly a skill's remit."
         },
         {
           "id": "b",
-          "text": "`CLAUDE.md` — so the process is always in context",
+          "text": "`CLAUDE.md` - so the process is always in context",
           "correct": false,
           "rationale": "It would apply to every task, not just release notes, and bloats the always-loaded context."
         },
         {
           "id": "c",
-          "text": "A Hook — so it fires when a release is cut",
+          "text": "A Hook - so it fires when a release is cut",
           "correct": false,
           "rationale": "Hooks provide event-specific guardrails or validation rather than task expertise."
         },
         {
           "id": "d",
-          "text": "A Subagent — so release notes are written in isolation",
+          "text": "A Subagent - so release notes are written in isolation",
           "correct": false,
           "rationale": "Isolation is not the problem; consistency of approach is."
         }
       ],
-      "explanation": "Skills are for task-specific context and instructions that improve how a common task is executed. The temptation is to put everything in `CLAUDE.md` because it always applies — but that is also its cost, since every prompt pays for it. Reserving `CLAUDE.md` for project-wide standards and constraints is one of the explicit best practices.",
+      "explanation": "Skills are for task-specific context and instructions that improve how a common task is executed. The temptation is to put everything in `CLAUDE.md` because it always applies - but that is also its cost, since every prompt pays for it. Reserving `CLAUDE.md` for project-wide standards and constraints is one of the explicit best practices.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -585,25 +585,25 @@
       "options": [
         {
           "id": "a",
-          "text": "A Subagent — to isolate the task in a separate context with access to different tools",
+          "text": "A Subagent - to isolate the task in a separate context with access to different tools",
           "correct": true,
           "rationale": "Both halves of the reason: isolation and a different tool set."
         },
         {
           "id": "b",
-          "text": "A Skill — to describe which tools should be used",
+          "text": "A Skill - to describe which tools should be used",
           "correct": false,
           "rationale": "A skill can advise but cannot restrict the tools available."
         },
         {
           "id": "c",
-          "text": "A Hook — to block the tools that should not be used",
+          "text": "A Hook - to block the tools that should not be used",
           "correct": false,
           "rationale": "Hooks can validate and guard, but the construct for a different tool set is a subagent."
         },
         {
           "id": "d",
-          "text": "`CLAUDE.md` — to document which tools are appropriate",
+          "text": "`CLAUDE.md` - to document which tools are appropriate",
           "correct": false,
           "rationale": "Documentation is not enforcement."
         }
@@ -687,7 +687,7 @@
           "id": "d",
           "text": "Storing the detail in `CLAUDE.md` instead",
           "correct": false,
-          "rationale": "`CLAUDE.md` is for what always applies — moving task detail there makes it always-loaded."
+          "rationale": "`CLAUDE.md` is for what always applies - moving task detail there makes it always-loaded."
         }
       ],
       "explanation": "Progressive disclosure keeps the essential instructions in the skill file and links out to additional Markdown for detail. It is the same instinct behind keeping `CLAUDE.md` concise: anything loaded unconditionally costs context on every prompt, so depth should be reachable rather than resident.",
@@ -708,31 +708,31 @@
       "options": [
         {
           "id": "a",
-          "text": "Project — repo-specific conventions and workflows, committed to version control",
+          "text": "Project - repo-specific conventions and workflows, committed to version control",
           "correct": true,
           "rationale": "Shared with anyone working in that repo."
         },
         {
           "id": "b",
-          "text": "Personal — your own cross-project utilities, available on all your projects on this machine",
+          "text": "Personal - your own cross-project utilities, available on all your projects on this machine",
           "correct": true,
           "rationale": "Machine-scoped rather than repo-scoped."
         },
         {
           "id": "c",
-          "text": "Plugin — general community skills distributed via a plugin repo",
+          "text": "Plugin - general community skills distributed via a plugin repo",
           "correct": true,
           "rationale": "Available in any session where the plugin is enabled."
         },
         {
           "id": "d",
-          "text": "Enterprise — enforcing standards across the organization",
+          "text": "Enterprise - enforcing standards across the organization",
           "correct": true,
           "rationale": "Configured by org admins in managed settings."
         },
         {
           "id": "e",
-          "text": "Project — skills you want available on every machine you personally use",
+          "text": "Project - skills you want available on every machine you personally use",
           "correct": false,
           "rationale": "That is Personal. Project skills travel with the repo, not with you."
         }
@@ -778,7 +778,7 @@
           "rationale": "That is Personal scope."
         }
       ],
-      "explanation": "A plugin skill is available in any session where the plugin is enabled — which makes availability a per-session toggle rather than a function of where you are or who you are. Combined with its `plugin-name:skill-name` namespacing, that is why plugin skills sit entirely outside the Enterprise > Personal > Project precedence chain.",
+      "explanation": "A plugin skill is available in any session where the plugin is enabled - which makes availability a per-session toggle rather than a function of where you are or who you are. Combined with its `plugin-name:skill-name` namespacing, that is why plugin skills sit entirely outside the Enterprise > Personal > Project precedence chain.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -796,7 +796,7 @@
       "options": [
         {
           "id": "a",
-          "text": "Managed settings — `managed-settings.json`, configured by org admins",
+          "text": "Managed settings - `managed-settings.json`, configured by org admins",
           "correct": true,
           "rationale": "Which is why they cannot be overridden locally."
         },
@@ -819,7 +819,7 @@
           "rationale": "That is Plugin scope, which sits outside the precedence chain."
         }
       ],
-      "explanation": "Enterprise skills live in managed settings (`managed-settings.json`) and are configured by org admins, applying to all users in the organization. That origin is what justifies their position at the top of the precedence chain — Enterprise > Personal > Project — because the whole point is that an individual or a repo cannot quietly override an org standard.",
+      "explanation": "Enterprise skills live in managed settings (`managed-settings.json`) and are configured by org admins, applying to all users in the organization. That origin is what justifies their position at the top of the precedence chain - Enterprise > Personal > Project - because the whole point is that an individual or a repo cannot quietly override an org standard.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -862,7 +862,7 @@
           "id": "d",
           "text": "Plugins may only define skills with names no other scope uses",
           "correct": false,
-          "rationale": "No such restriction — the namespace handles it."
+          "rationale": "No such restriction - the namespace handles it."
         }
       ],
       "explanation": "Plugin skills are namespaced as `plugin-name:skill-name`, so they cannot share a name with a skill from another scope. That is why they have no precedence relationship with Enterprise, Personal or Project at all: precedence exists to resolve same-name conflicts, and namespacing means those conflicts never arise.",
@@ -889,7 +889,7 @@
         },
         {
           "id": "b",
-          "text": "Nothing — subagents inherit whatever the parent process has",
+          "text": "Nothing - subagents inherit whatever the parent process has",
           "correct": false,
           "rationale": "They do not inherit skills from the parent."
         },
@@ -906,7 +906,7 @@
           "rationale": "`CLAUDE.md` carries standards, not skill wiring."
         }
       ],
-      "explanation": "Subagents do not inherently get skills from the parent process, so for a custom subagent you list them in the `skills` metadata field of its `agent.md`. It follows from what a subagent is — a separate execution context isolated from the main one — and it is the same reason a subagent starts without the parent's conversation history.",
+      "explanation": "Subagents do not inherently get skills from the parent process, so for a custom subagent you list them in the `skills` metadata field of its `agent.md`. It follows from what a subagent is - a separate execution context isolated from the main one - and it is the same reason a subagent starts without the parent's conversation history.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -1004,7 +1004,7 @@
           "rationale": "That fixes a skill that does not *trigger*. This one is not loading at all."
         }
       ],
-      "explanation": "A skill missing from `/skill` is a loading problem, not a matching one: check that the file is exactly `SKILL.md`, that it sits in a named directory, and that the directory is under `.claude/`. Then run `claude --debug` and look for loading errors — grepping for the skill name saves sifting through the whole log.",
+      "explanation": "A skill missing from `/skill` is a loading problem, not a matching one: check that the file is exactly `SKILL.md`, that it sits in a named directory, and that the directory is under `.claude/`. Then run `claude --debug` and look for loading errors - grepping for the skill name saves sifting through the whole log.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -1046,7 +1046,7 @@
           "rationale": "That is a runtime failure fix."
         }
       ],
-      "explanation": "For a name conflict the guidance is twofold: ensure the description differentiates your skill from the others, and consult the order of precedence — Enterprise > Personal > Project. If a higher-precedence scope holds a skill of the same name, no amount of description work will surface yours.",
+      "explanation": "For a name conflict the guidance is twofold: ensure the description differentiates your skill from the others, and consult the order of precedence - Enterprise > Personal > Project. If a higher-precedence scope holds a skill of the same name, no amount of description work will surface yours.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -1091,7 +1091,7 @@
           "rationale": "Language is not the issue."
         }
       ],
-      "explanation": "Runtime failures are environmental, and the two checks are: third-party packages are either pre-installed or installed by the skill itself, and scripts in `.claude/scripts/` have execute permission via `chmod +x`. Neither has anything to do with whether the skill triggered or loaded — which is why categorising the failure first saves time.",
+      "explanation": "Runtime failures are environmental, and the two checks are: third-party packages are either pre-installed or installed by the skill itself, and scripts in `.claude/scripts/` have execute permission via `chmod +x`. Neither has anything to do with whether the skill triggered or loaded - which is why categorising the failure first saves time.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",
@@ -1156,10 +1156,10 @@
           "id": "d",
           "text": "The MCP SDK documentation",
           "correct": false,
-          "rationale": "Unrelated — MCP `prompts` are a different construct."
+          "rationale": "Unrelated - MCP `prompts` are a different construct."
         }
       ],
-      "explanation": "Claude Code's skills frontmatter reference is the canonical list of metadata fields a skill can declare. Worth knowing because two of those fields — name and description — are the ones semantic matching runs against, so \"which fields exist\" and \"why won't my skill trigger\" are closely related questions.",
+      "explanation": "Claude Code's skills frontmatter reference is the canonical list of metadata fields a skill can declare. Worth knowing because two of those fields - name and description - are the ones semantic matching runs against, so \"which fields exist\" and \"why won't my skill trigger\" are closely related questions.",
       "citations": [
         {
           "file": "notes/anthropic/agent_skills.md",

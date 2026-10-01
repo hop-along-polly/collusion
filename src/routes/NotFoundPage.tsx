@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/Icon'
 
 /**
  * Rendered both for unmatched routes and for a valid-looking URL whose domain or set
- * is not in the catalog — a stale bookmark after a set is renamed, for instance. Every
+ * is not in the catalog - a stale bookmark after a set is renamed, for instance. Every
  * path out is a real destination, never just a "go back".
  */
 export function NotFoundPage() {

@@ -82,7 +82,7 @@ describe('a course quiz', () => {
 
     await waitFor(() => {
       const keys = Object.keys(storedSnapshot().courses)
-      // One bucket, named for the course being studied for — never for a card set.
+      // One bucket, named for the course being studied for - never for a card set.
       expect(keys).toEqual([AIF.path])
       expect(courseSets(AIF).map((set) => set.path)).not.toContain(keys[0])
     })

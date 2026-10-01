@@ -12,7 +12,7 @@ import { STORAGE_KEY } from '@/storage/progress'
 /**
  * Integration coverage for the screens a learner actually touches. These tests drive the
  * real card data from `/flashcards`, so they also prove the loader, the catalog and the
- * routing all line up — and they assert on accessible roles and names rather than on class
+ * routing all line up - and they assert on accessible roles and names rather than on class
  * names, so they double as a check that the a11y semantics are present.
  *
  * Sessions are always launched from a course: a card set is an authoring unit with no page
@@ -63,7 +63,7 @@ describe('a domain page', () => {
     const courses = listCourses('devops')
     expect(courses.length).toBeGreaterThan(0)
     for (const course of courses) {
-      // `getAllBy` because a course and a note can share a name — the Ansible course and
+      // `getAllBy` because a course and a note can share a name - the Ansible course and
       // Ansible.md both render an h3 reading "Ansible".
       expect(screen.getAllByRole('heading', { name: course.title, level: 3 }).length).toBeGreaterThan(0)
     }

@@ -139,7 +139,7 @@ export function isReviewable(card: CardProgress): boolean {
 
 /**
  * Card ids eligible for review, in the order the set defines them. Cards missing from
- * progress (never attempted) are excluded — review is for revisiting, not discovering.
+ * progress (never attempted) are excluded - review is for revisiting, not discovering.
  */
 export function reviewableCardIds(
   snapshot: ProgressSnapshot,
@@ -190,7 +190,7 @@ export function summarize(
 }
 
 /**
- * Totals across every set. Derived from the snapshot alone — no card lists — so the
+ * Totals across every set. Derived from the snapshot alone - no card lists - so the
  * landing page can show progress without downloading a single card file.
  */
 export function overallSummary(snapshot: ProgressSnapshot): {
@@ -231,7 +231,7 @@ export function overallSummary(snapshot: ProgressSnapshot): {
 
 /**
  * Anything unreadable or from a future schema version is discarded rather than
- * migrated — progress is regenerable, and a half-understood document is worse than a
+ * migrated - progress is regenerable, and a half-understood document is worse than a
  * clean slate. A real migration goes here when schemaVersion 2 ships.
  */
 function parseSnapshot(raw: string | null): ProgressSnapshot | null {
@@ -261,7 +261,7 @@ export function loadProgress(): ProgressSnapshot {
   try {
     return parseSnapshot(window.localStorage.getItem(STORAGE_KEY)) ?? emptySnapshot()
   } catch {
-    // Private browsing or a blocked storage partition — run in-memory for the session.
+    // Private browsing or a blocked storage partition - run in-memory for the session.
     return emptySnapshot()
   }
 }

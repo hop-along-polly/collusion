@@ -1,6 +1,6 @@
 {
   "id": "ai-practitioner-foundations",
-  "title": "AI Practitioner — Concepts & Metrics",
+  "title": "AI Practitioner - Concepts & Metrics",
   "cards": [
     {
       "id": "inferencing-batch-vs-realtime",
@@ -57,7 +57,7 @@
           "id": "a",
           "text": "Hyperparameters are chosen by a person before training; weights are learned from the data during training",
           "correct": true,
-          "rationale": "This is the defining split — one is an input to training, the other is its output."
+          "rationale": "This is the defining split - one is an input to training, the other is its output."
         },
         {
           "id": "b",
@@ -189,7 +189,7 @@
           "id": "a",
           "text": "True",
           "correct": true,
-          "rationale": "Nothing about the model changes — the world moves and the model is left describing a situation that no longer exists."
+          "rationale": "Nothing about the model changes - the world moves and the model is left describing a situation that no longer exists."
         },
         {
           "id": "b",
@@ -234,7 +234,7 @@
         },
         {
           "id": "d",
-          "text": "They are unrelated categories — a model is one or the other",
+          "text": "They are unrelated categories - a model is one or the other",
           "correct": false,
           "rationale": "Frontier models are a subset of foundation models, not an alternative to them."
         }
@@ -271,7 +271,7 @@
           "id": "c",
           "text": "Stock prices recorded at successive points in time",
           "correct": true,
-          "rationale": "Time series data is structured — values measured at ordered points in time."
+          "rationale": "Time series data is structured - values measured at ordered points in time."
         },
         {
           "id": "d",
@@ -556,7 +556,7 @@
           "id": "a",
           "text": "False Negative",
           "correct": true,
-          "rationale": "Predicted negative, actually positive — the real case the model missed."
+          "rationale": "Predicted negative, actually positive - the real case the model missed."
         },
         {
           "id": "b",
@@ -844,7 +844,7 @@
           "id": "b",
           "text": "It converts the score into the units of the prediction target",
           "correct": false,
-          "rationale": "Squaring does the opposite — it squares the units, which is why RMSE exists."
+          "rationale": "Squaring does the opposite - it squares the units, which is why RMSE exists."
         },
         {
           "id": "c",
@@ -901,7 +901,7 @@
           "rationale": "F1 is a classification metric and has no meaning for a numeric prediction."
         }
       ],
-      "explanation": "Squaring the errors also squares the units. RMSE takes the square root to return the score to the original units, which is the only reason it exists — it ranks models in exactly the same order MSE does.",
+      "explanation": "Squaring the errors also squares the units. RMSE takes the square root to return the score to the original units, which is the only reason it exists - it ranks models in exactly the same order MSE does.",
       "citations": [
         {
           "file": "notes/aws/ai_practitioner.md",
@@ -985,7 +985,7 @@
           "rationale": "Overfitting usually shows as an R² close to 1 on training data, not a low value."
         }
       ],
-      "explanation": "R² measures how much of the target's variation the model explains, from 0 to 1. A low value says the chosen inputs barely account for what drives the outcome — a verdict an error score alone would not reveal, because it tells you predictions are off without saying the inputs are the problem.",
+      "explanation": "R² measures how much of the target's variation the model explains, from 0 to 1. A low value says the chosen inputs barely account for what drives the outcome - a verdict an error score alone would not reveal, because it tells you predictions are off without saying the inputs are the problem.",
       "citations": [
         {
           "file": "notes/aws/ai_practitioner.md",
@@ -1183,7 +1183,7 @@
           "rationale": "Length penalties belong to BLEU."
         }
       ],
-      "explanation": "ROUGE-N counts exact matching runs of words, capturing key ideas and fluent phrasing. ROUGE-L looks for the longest common subsequence — words shared in the same order, allowing gaps — so it rewards telling the story in the reference's sequence.",
+      "explanation": "ROUGE-N counts exact matching runs of words, capturing key ideas and fluent phrasing. ROUGE-L looks for the longest common subsequence - words shared in the same order, allowing gaps - so it rewards telling the story in the reference's sequence.",
       "citations": [
         {
           "file": "notes/aws/ai_practitioner.md",
@@ -1305,7 +1305,7 @@
           "id": "d",
           "text": "\"much would\"",
           "correct": false,
-          "rationale": "These two words are not adjacent — \"wood\" sits between them."
+          "rationale": "These two words are not adjacent - \"wood\" sits between them."
         },
         {
           "id": "e",
@@ -1367,7 +1367,7 @@
     {
       "id": "endpoint-is-rest",
       "type": "boolean",
-      "prompt": "A deployed model endpoint is called like an ordinary REST API — an HTTP request carries the input data and the response carries the prediction.",
+      "prompt": "A deployed model endpoint is called like an ordinary REST API - an HTTP request carries the input data and the response carries the prediction.",
       "tags": [
         "terminology",
         "deployment"

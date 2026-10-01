@@ -80,12 +80,12 @@ You can think of Pricing Dimensions as the line items on an itemized receipt. Fo
 | Bandwidth (GBps, MBps) | <ul><li>Contract</li><li>Usage</li><li>Contract + Usage</li></ul> | Throughput provisioned or consumed. A CDN, VPN concentrator, or streaming service priced on the size of the pipe rather than what flows through it. | **Home internet service.** The Buyer pays for a 500 Mbps line whether they download anything or not, the price is the size of the pipe, not what flows through it. | The only category measured as a *rate*. The Buyer reads the price as a speed, so use it when they buy capacity per second rather than a total. |
 | Data (MB, GB, TB) | <ul><li>Contract</li><li>Usage</li><li>Contract + Usage</li></ul> | Volume ingested, stored, scanned, or transferred. Log ingestion, backup storage, document processing, data enrichment. | **A municipal water bill.** The same pipe, except now the meter counts the gallons that actually flowed. Nothing is owed for capacity left unused. | Measures a *volume* rather than a rate. Use it when the Buyer's question is "how much data", not "how fast". |
 | Hosts (hours) | <ul><li>Contract</li><li>Usage</li><li>Contract + Usage</li></ul> | Per-machine coverage. Endpoint agents, vulnerability scanners, backup agents, and monitoring Products that attach to a server. | **Vehicle insurance.** Priced per car on the policy, for as long as it stays on the policy, no matter how far any of them is driven. | Billed as quantity × hours. Arithmetically identical to `Users`, the only difference is that the listing page says "hosts". |
-| Requests | <ul><li>Contract</li><li>Usage</li><li>Contract + Usage</li></ul> | Per-call pricing. APIs, MCP servers, inference endpoints, webhook processors, anything where one invocation is one unit of value. | **A toll road.** One crossing, one charge. There is no monthly fee and no clock — only the number of times the barrier lifts. | A plain count with no time component. Choose it over `Units` when the Buyer already thinks of consumption as "per call". |
+| Requests | <ul><li>Contract</li><li>Usage</li><li>Contract + Usage</li></ul> | Per-call pricing. APIs, MCP servers, inference endpoints, webhook processors, anything where one invocation is one unit of value. | **A toll road.** One crossing, one charge. There is no monthly fee and no clock - only the number of times the barrier lifts. | A plain count with no time component. Choose it over `Units` when the Buyer already thinks of consumption as "per call". |
 | Units | <ul><li>Contract</li><li>Usage</li><li>Contract + Usage</li></ul> | Anything the other five don't describe. Documents processed, credits, tokens, transactions, jobs run, devices enrolled. | **Arcade tokens.** The token itself doesn't say what it buys; the arcade decides what each machine costs. AWS likewise bills a count of `Units` without knowing what a Unit is. | The documented fallback category: *"If none of the predefined categories fit your needs, you can choose the more generic **Units** category."* |
 | Users (hours) | <ul><li>Contract</li><li>Usage</li><li>Contract + Usage</li></ul> | Per-seat licensing. Named users, administrators, analysts, or an Agent acting on one person's behalf. | **A gym membership.** Priced per member per month, whether or not that member ever shows up. | Billed as quantity × hours. Arithmetically identical to `Hosts`. |
 
 > [!IMPORTANT]
-> **`Hosts`, `Requests`, `Units`, and `Users` are labels, not mechanisms.** Every category bills the same way — `quantity × price per unit` — and AWS never validates or interprets which one was chosen. The documentation states its only function plainly: *"The pricing category appears to customers on the AWS Marketplace website."* So the Seller should pick whichever word makes the listing page clearest to the Buyer.
+> **`Hosts`, `Requests`, `Units`, and `Users` are labels, not mechanisms.** Every category bills the same way - `quantity × price per unit` - and AWS never validates or interprets which one was chosen. The documentation states its only function plainly: *"The pricing category appears to customers on the AWS Marketplace website."* So the Seller should pick whichever word makes the listing page clearest to the Buyer.
 >
 > Two real distinctions survive the label, and both matter when setting up a listing:
 >  - **`Hosts` and `Users` are time-denominated (hours); `Requests` and `Units` are not.** This changes how the Buyer reads the rate ($5 per user per hour versus $5 per request), not how AWS calculates the bill.
@@ -98,7 +98,7 @@ Every [Private Offer](./private_offers.md) is negotiated by hand. *Express priva
 
 This capability exists **only for SaaS Listing with a Contract or Contract + Usage Pricing Model**. It is not available for Usage-based SaaS Products, and not for any other listing type. The Seller must also have completed onboarding for the **Request Private Offer** button before it can be configured.
 
-The mechanism is a **rate card** — a set of predefined discounts and qualification criteria the Seller configures once, which the system then applies per Buyer. The workflow has three phases.
+The mechanism is a **rate card** - a set of predefined discounts and qualification criteria the Seller configures once, which the system then applies per Buyer. The workflow has three phases.
 
  1. **Rate card setup.** The Seller defines base pricing, dimension descriptions (each a minimum of 250 characters, since Buyers read them while self-selecting), contract duration limits, EULA requirements, and offer expiration timeframes.
  2. **Buyer request.** The Buyer chooses **Get Express Private Offer** on the listing. An AI agent then qualifies them against the Seller's criteria, asking questions where the Seller has configured profile-based qualification.
@@ -112,7 +112,7 @@ Three rate card types are available.
 | `TCV-based` | Total Contract Value of the deal | Graduated tiers on the overall monetary value. Only the highest qualified tier applies. |
 | `Buyer profile based` | Self-reported Buyer attributes | The Seller describes their qualification strategy in natural language and the system turns it into a Buyer questionnaire. Up to five qualifiers, usable both to grant extra discount and to exclude Buyers entirely. AWS does not verify the Buyer's answers. |
 
-Dimension-based and TCV-based rate cards **cannot be combined with each other**, since they represent conflicting pricing approaches. Either one may be combined with buyer-profile based qualification. When two discounts apply, they compound **multiplicatively** rather than additively — a 10% TCV discount plus a 5% profile discount yields 14.5% off, not 15%.
+Dimension-based and TCV-based rate cards **cannot be combined with each other**, since they represent conflicting pricing approaches. Either one may be combined with buyer-profile based qualification. When two discounts apply, they compound **multiplicatively** rather than additively - a 10% TCV discount plus a 5% profile discount yields 14.5% off, not 15%.
 
 Two global guardrails sit above every rate card: a **maximum TCV** that determines overall eligibility, and a **maximum discount** that caps whatever any combination of rate cards can produce. A Seller who wants automated offers without any discounting can set the maximum discount to 0%.
 
@@ -128,14 +128,14 @@ Two global guardrails sit above every rate card: a **maximum TCV** that determin
 
 ### Amendments and Renewals
 
-Upgrading, renewing, and amending are the same mechanism under three names. In each case a new offer is created that **replaces an active agreement**, and the distinction is only what the Seller changed — new entitlements, a discount, a revised payment schedule, a different EULA, or simply a later end date.
+Upgrading, renewing, and amending are the same mechanism under three names. In each case a new offer is created that **replaces an active agreement**, and the distinction is only what the Seller changed - new entitlements, a discount, a revised payment schedule, a different EULA, or simply a later end date.
 
 The vocabulary matters here. An **offer** is a set of terms for the use of a Product and may be public or private. An **agreement** is an offer a Buyer has accepted. Amendments always target agreements, never offers.
 
 > [!IMPORTANT]
-> **Amendments are limited to SaaS Contract and SaaS Contract with Consumption Products.** This is why the topic lives in this file rather than under [Private Offers](./private_offers.md). Usage-based SaaS, AMI, container, server contract, and Professional Services Products all appear on the **Agreements** tab but cannot be amended — for those listing types, changing terms means issuing an entirely new offer.
+> **Amendments are limited to SaaS Contract and SaaS Contract with Consumption Products.** This is why the topic lives in this file rather than under [Private Offers](./private_offers.md). Usage-based SaaS, AMI, container, server contract, and Professional Services Products all appear on the **Agreements** tab but cannot be amended - for those listing types, changing terms means issuing an entirely new offer.
 >
-> One narrow exception sits outside this mechanism entirely. A Buyer on an AMI `Hourly with Annual` plan can change their own agreement — switching instance types or adding quantity — without the Seller creating an offer at all. See [Annual agreement amendments (AMI)](./server_ami.md#annual-agreement-amendments-ami).
+> One narrow exception sits outside this mechanism entirely. A Buyer on an AMI `Hourly with Annual` plan can change their own agreement - switching instance types or adding quantity - without the Seller creating an offer at all. See [Annual agreement amendments (AMI)](./server_ami.md#annual-agreement-amendments-ami).
 
 A Seller can change service dates, product dimensions, offer currency, payment schedule, usage dimensions, renewal status, the EULA, and the offer expiration date. The seller of record cannot be changed from the original agreement.
 

@@ -35,7 +35,7 @@ A skill's **scope** determines where it's stored, who can use it, and how it's s
 
 The order of precendence for Skills with the same name from highest priority to lowest is `Enterprise` > `Personal` > `Project`.
 
-**NOTE: `Plugin` skills sit *outside* this chain — they're namespaced as `plugin-name:skill-name`, so they can't collide with the other scopes and don't have a precedence relationship with them..**
+**NOTE: `Plugin` skills sit *outside* this chain - they're namespaced as `plugin-name:skill-name`, so they can't collide with the other scopes and don't have a precedence relationship with them..**
 
 **NOTE: Subagents don't inherently get skills from the parent process. List skills explicitly for custom subagents in the `skills` metadata field of the agent.md. file**
 

@@ -77,7 +77,7 @@ export function HomePage() {
         </h1>
         <p className="mt-5 font-body text-lg text-content-muted">
           Course material hand-written by practitioners who have sat these exams and passed them,
-          pitched at the fundamentals rather than the question bank — so what you learn holds up
+          pitched at the fundamentals rather than the question bank - so what you learn holds up
           long after the exam.
         </p>
 
@@ -128,13 +128,13 @@ export function HomePage() {
         </h2>
         <p className="mt-4 font-body text-content-muted">
           Exam questions change. Fundamentals do not. What k-means clustering is, and the kind of
-          problem it belongs to, reads the same today as it will in ten years — so that is what
+          problem it belongs to, reads the same today as it will in ten years - so that is what
           these notes cover, and it is why they stay worth reading once the exam is behind you.
         </p>
         <p className="mt-3 font-body text-content-muted">
           That is the study strategy, not a limit on scope. A memorised answer only helps with a
           question you have already seen. Understanding why a technique exists and when it applies
-          means an unfamiliar question is still answerable — reason from the fundamentals and they
+          means an unfamiliar question is still answerable - reason from the fundamentals and they
           lead to exactly one correct answer.
         </p>
         <p className="mt-3 font-body text-content-muted">
@@ -142,7 +142,7 @@ export function HomePage() {
           taking an answer on trust.
         </p>
         <p className="mt-6 font-body text-sm text-content-subtle">
-          Progress is stored in this browser only — there is no account and nothing leaves your
+          Progress is stored in this browser only - there is no account and nothing leaves your
           machine.{' '}
           <Link to="/courses" className="text-brand underline-offset-2 hover:underline">
             Pick a course

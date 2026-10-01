@@ -16,7 +16,7 @@ function parseMode(value: string | null): QuizMode {
 /**
  * How many cards one practice session draws from a course.
  *
- * A course is the union of its sets, which for CCAR-F is well over two hundred cards —
+ * A course is the union of its sets, which for CCAR-F is well over two hundred cards -
  * several sittings, not one. Capping keeps a session finishable while the shuffle means
  * repeated sessions still cover the whole course over time. Review mode ignores the cap,
  * because seeing everything still outstanding is the entire point of it.

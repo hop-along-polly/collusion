@@ -86,7 +86,7 @@ tool_res = tool_func(**model_res.content[0].input)
 
 # A ToolResult block then needs to be added to the message history to tie the ToolResult to the ToolUseBlock.
 # Tool results are sent with role 'user' because only the user/client can execute tools and report results
-# back to the model — the model itself cannot run code.
+# back to the model - the model itself cannot run code.
 messages.append({
   'role': 'user',
   'content': [

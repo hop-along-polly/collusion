@@ -1,6 +1,6 @@
 import type { Citation } from '@/types/cards'
 
-/** The repository these notes live in — citations link back to it. */
+/** The repository these notes live in - citations link back to it. */
 const REPO_BLOB_URL = 'https://github.com/hop-along-polly/collusion/blob/master'
 
 /** GitHub's heading-anchor slug. Mirrored in `scripts/validate-data.ts`. */
@@ -40,7 +40,7 @@ const RELATIVE_UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
   ['minute', 60 * 1000],
 ]
 
-/** "3 days ago" — used for the last-session stamp on set cards. */
+/** "3 days ago" - used for the last-session stamp on set cards. */
 export function relativeTime(timestamp: number, now = Date.now()): string {
   const elapsed = timestamp - now
   const formatter = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' })

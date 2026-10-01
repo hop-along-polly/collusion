@@ -10,9 +10,9 @@ export type QuizMode =
   | 'review'
 
 /**
- * `answering` — awaiting a selection + Submit.
- * `revealed`  — graded; feedback, explanation and citations are on screen.
- * `finished`  — past the last card; the results screen is showing.
+ * `answering` - awaiting a selection + Submit.
+ * `revealed`  - graded; feedback, explanation and citations are on screen.
+ * `finished`  - past the last card; the results screen is showing.
  */
 export type QuizPhase = 'answering' | 'revealed' | 'finished'
 
@@ -31,7 +31,7 @@ export interface GradedAnswer {
 
 /**
  * The whole quiz session. Produced only by the reducer in `src/engine/quiz.ts`,
- * which is pure and framework-agnostic — swapping the quiz UI means replacing the
+ * which is pure and framework-agnostic - swapping the quiz UI means replacing the
  * components, not this state.
  */
 export interface QuizState {
@@ -48,7 +48,7 @@ export interface QuizState {
   answers: Record<string, GradedAnswer>
   /** Cards flagged during this session. Mirrored into persisted progress. */
   marked: string[]
-  /** When the session started (epoch millis) — used for session stats. */
+  /** When the session started (epoch millis) - used for session stats. */
   startedAt: number
 }
 

@@ -88,7 +88,7 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          # No `prompt:` — this is what selects interactive mode
+          # No `prompt:` - this is what selects interactive mode
 ```
 
 > [!WARNING]

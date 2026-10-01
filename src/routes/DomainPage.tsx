@@ -15,7 +15,7 @@ import { NotFoundPage } from './NotFoundPage'
  * Everything one company covers: its courses and its notes.
  *
  * Card sets are deliberately absent. A set is an authoring unit rather than a place to
- * study — flashcards are launched from a course so results are recorded against the
+ * study - flashcards are launched from a course so results are recorded against the
  * certification being prepared for.
  */
 

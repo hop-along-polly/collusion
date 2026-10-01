@@ -285,7 +285,7 @@ To improve the user experience text can be streamed back as the Model thinks and
 Response Streaming can be enabled by setting the `stream` keyword argument to True when creating a message.
 
 **Anthropic Stream Events**
-▎ These events are emitted by the Claude API as the response is generated and arrive in order over the open stream. They are inbound only: your code consumes them to render or accumulate the response. They are never request objects — you don't construct one or append one to messages. To send the assistant's turn back on a later request, append the assembled Message (stream.get_final_message() / stream.finalMessage()), not the events.
+▎ These events are emitted by the Claude API as the response is generated and arrive in order over the open stream. They are inbound only: your code consumes them to render or accumulate the response. They are never request objects - you don't construct one or append one to messages. To send the assistant's turn back on a later request, append the assembled Message (stream.get_final_message() / stream.finalMessage()), not the events.
 
 
 | Wire name | SDK name | Description |

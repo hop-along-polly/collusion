@@ -9,7 +9,7 @@
  */
 
 /**
- * 2 — progress moved from being keyed by card set to being keyed by course.
+ * 2 - progress moved from being keyed by card set to being keyed by course.
  *
  * A card can be tested by more than one certification, and how ready you are for one
  * exam says nothing about the other, so the same card answered under two courses is two
@@ -55,7 +55,7 @@ export interface ProgressSnapshot {
   schemaVersion: typeof PROGRESS_SCHEMA_VERSION
   /** `LOCAL_OWNER` today; a real user id once accounts exist. */
   ownerId: string
-  /** Epoch millis — the merge key for future server sync. */
+  /** Epoch millis - the merge key for future server sync. */
   updatedAt: number
   /** Keyed by fully-qualified course id (`<domainId>/<courseId>`). */
   courses: Record<string, CourseProgress>

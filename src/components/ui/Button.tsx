@@ -7,7 +7,7 @@ import { cn } from '@/utils/cn'
 
 /**
  * Button variants from the style guide §9 table. Light mode darkens on hover; dark
- * mode lightens — both are handled by the `--brand-hover` token flipping, so no
+ * mode lightens - both are handled by the `--brand-hover` token flipping, so no
  * `dark:` classes are needed here.
  */
 export type ButtonVariant = 'primary' | 'outline' | 'ghost' | 'destructive'
@@ -54,7 +54,7 @@ interface ButtonLinkProps extends LinkProps {
   size?: ButtonSize
 }
 
-/** A router link that looks like a button — used for navigation, never for actions. */
+/** A router link that looks like a button - used for navigation, never for actions. */
 export function ButtonLink({ variant = 'primary', size = 'md', className, ...props }: ButtonLinkProps) {
   return <Link className={classesFor(variant, size, className)} {...props} />
 }

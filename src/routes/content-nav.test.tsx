@@ -8,7 +8,7 @@ import { App } from '@/App'
 import { ProgressProvider } from '@/hooks/useProgress'
 
 /**
- * Navigation across the three entities — courses, notes and card sets — against the real
+ * Navigation across the three entities - courses, notes and card sets - against the real
  * catalog and the real Markdown files. Nothing is mocked: the point is that a study guide
  * on disk renders and its links land somewhere real.
  */
@@ -48,8 +48,8 @@ describe('courses', () => {
       expect(screen.getByRole('heading', { name: /Topics covered/ })).toBeTruthy()
     })
 
-    // Both generated sets are reachable. Each is linked twice by design — once from the
-    // guide's topic table and once from the flashcards panel — so assert presence, not
+    // Both generated sets are reachable. Each is linked twice by design - once from the
+    // guide's topic table and once from the flashcards panel - so assert presence, not
     // uniqueness.
     expect(screen.getAllByRole('link', { name: /Concepts & Metrics/ }).length).toBeGreaterThan(0)
     expect(screen.getAllByRole('link', { name: /AWS Services/ }).length).toBeGreaterThan(0)

@@ -11,7 +11,7 @@ import { App } from '@/App'
  *
  * That overlay sizes itself against its nearest *positioned* ancestor. If the card is not
  * positioned, every overlay on the page sizes to the page instead, they stack, and the last
- * card in the DOM order captures every click — so clicking any course opened the last one.
+ * card in the DOM order captures every click - so clicking any course opened the last one.
  *
  * jsdom has no layout engine, so a click cannot reproduce that. What can be checked is the
  * invariant the layout depends on: each overlay must be scoped to its own card. An overlay

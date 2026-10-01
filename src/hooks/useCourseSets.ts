@@ -10,7 +10,7 @@ import type { AsyncState } from './useCardSet'
  * Loads every card set a course quizzes.
  *
  * Each set is its own lazy chunk, so they are fetched in parallel and the session waits
- * for all of them — a course quiz that started before its last set arrived would be
+ * for all of them - a course quiz that started before its last set arrived would be
  * missing cards without saying so.
  */
 export function useCourseSets(course: CourseMeta | undefined): AsyncState<CourseDeckEntry[]> {

@@ -20,7 +20,7 @@ const COURSE_SESSION_SIZE = 40
 /**
  * A card set is an authoring unit, not a destination: sets exist so a long note can be
  * split and so cards can be regenerated one topic at a time. Listing them tells a learner
- * what the course covers without implying they can be studied separately — flashcards are
+ * what the course covers without implying they can be studied separately - flashcards are
  * only launched from the course, so results land against the certification.
  */
 function SetList({ sets }: { sets: CardSetMeta[] }) {

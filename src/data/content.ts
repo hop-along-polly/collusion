@@ -1,5 +1,5 @@
 /**
- * Markdown content loading — the notes and the course study guides.
+ * Markdown content loading - the notes and the course study guides.
  *
  * Cards are data (`flashcards/`), but notes and study guides are prose, so they are
  * loaded as raw Markdown and rendered by `components/Markdown`.
@@ -24,7 +24,7 @@ const courseFiles = import.meta.glob<string>('/courses/*/*.md', {
   import: 'default',
 })
 
-/** A note identified from its path alone — no file read required. */
+/** A note identified from its path alone - no file read required. */
 export interface NoteRef {
   /** Basename without extension, e.g. `ai_practitioner`. Unique within a domain. */
   id: string

@@ -45,7 +45,7 @@ const config: Config = {
         // `channel()` wraps a token stored as space-separated RGB components so
         // opacity modifiers (`border-ok/40`) compile. A bare `var(--x)` holding a hex
         // cannot be split into channels and Tailwind emits nothing for the modified
-        // utility — silently, which is exactly the kind of bug that ships.
+        // utility - silently, which is exactly the kind of bug that ships.
         //
         // The `fill` tokens stay bare because in dark mode they are transparent tints
         // whose alpha belongs to the token; they are only used at full opacity.
@@ -77,7 +77,7 @@ const config: Config = {
           foreground: channel('--accent-foreground'),
         },
         // `*.text` variants are darkened in light mode so body copy on a semantic
-        // fill clears WCAG AA 4.5:1 — the guide's indicator hexes are tuned for
+        // fill clears WCAG AA 4.5:1 - the guide's indicator hexes are tuned for
         // icons/borders (3:1) and fall short as small text on their own fills.
         ok: { DEFAULT: channel('--ok'), fill: 'var(--ok-fill)', text: channel('--ok-text') },
         bad: { DEFAULT: channel('--bad'), fill: 'var(--bad-fill)', text: channel('--bad-text') },

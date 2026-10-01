@@ -59,7 +59,7 @@ export function slugify(heading: string): string {
 /**
  * Markdown headings, ignoring `#` lines inside fenced code blocks.
  *
- * Only ever called for `.md` files. In a source file — `ai_react_loop.py`, say — every
+ * Only ever called for `.md` files. In a source file - `ai_react_loop.py`, say - every
  * `#` comment looks like a heading, so treating a non-Markdown file as Markdown would
  * invent anchors that GitHub never generates.
  */
@@ -108,7 +108,7 @@ function readNote(file: string): { headings: Set<string>; text: string } | null 
 
   const text = readFileSync(notePath, 'utf8')
   // Non-Markdown notes (the example `.py` scripts) have no headings and therefore no
-  // anchors — every citation into one has to be a `section`.
+  // anchors - every citation into one has to be a `section`.
   const headings = file.toLowerCase().endsWith('.md') ? extractHeadings(text) : []
   const parsed = { headings: new Set(headings), text }
   noteCache.set(file, parsed)
@@ -126,7 +126,7 @@ function checkCitation(citation: Citation, at: string): void {
     if (!citation.file.toLowerCase().endsWith('.md')) {
       error(
         `${at}.heading`,
-        `${citation.file} is not Markdown, so it has no anchors — use "section" instead of "heading".`,
+        `${citation.file} is not Markdown, so it has no anchors - use "section" instead of "heading".`,
       )
     } else if (!note.headings.has(citation.heading)) {
       const label = note.headings.has(citation.heading.trim()) ? ' (check whitespace)' : ''
@@ -142,7 +142,7 @@ function checkCitation(citation: Citation, at: string): void {
     if (note.headings.has(citation.section)) {
       error(
         `${at}.section`,
-        `"${citation.section}" IS a Markdown heading in ${citation.file} — use "heading" so the citation deep-links.`,
+        `"${citation.section}" IS a Markdown heading in ${citation.file} - use "heading" so the citation deep-links.`,
       )
     } else if (!note.text.includes(citation.section)) {
       error(`${at}.section`, `"${citation.section}" does not appear anywhere in ${citation.file}`)
@@ -207,7 +207,7 @@ let totalCards = 0
 /**
  * Card ids must be unique within a domain, because progress is stored per course and a
  * course only draws sets from its own domain. Two sets in one domain naming a card
- * identically would make one card's history indistinguishable from the other's — and
+ * identically would make one card's history indistinguishable from the other's - and
  * usually means the same fact is carded twice.
  */
 const idsByDomain = new Map<string, Map<string, string>>()
@@ -296,7 +296,7 @@ if (hasErrors(issues)) {
 
 const planned = catalog.domains.filter((domain) => domain.status === 'planned').map((d) => d.id)
 console.log(
-  `✓ data ok — ${catalog.courses.length} course(s), ${catalog.sets.length} card set(s), ` +
+  `✓ data ok - ${catalog.courses.length} course(s), ${catalog.sets.length} card set(s), ` +
     `${totalCards} cards, ${catalog.domains.length} domain(s)` +
     `${planned.length ? ` (planned: ${planned.join(', ')})` : ''}`,
 )

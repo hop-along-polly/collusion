@@ -1,5 +1,5 @@
 /**
- * Grading. Pure functions over a card and a selection — no React, no storage.
+ * Grading. Pure functions over a card and a selection - no React, no storage.
  */
 
 import type { Card } from '@/types/cards'
@@ -11,7 +11,7 @@ export function correctOptionIds(card: Card): string[] {
 
 /**
  * A card is correct only when the selection matches the key exactly: every correct
- * option chosen and no incorrect one. Partial credit is deliberately not awarded —
+ * option chosen and no incorrect one. Partial credit is deliberately not awarded -
  * "select all that apply" questions on real exams are all-or-nothing, and treating
  * them that way keeps the accuracy figure honest.
  */
@@ -61,7 +61,7 @@ export type OptionVerdict =
   | 'missed'
   /** Incorrect and chosen. */
   | 'false-positive'
-  /** Incorrect and not chosen — the quiet majority. */
+  /** Incorrect and not chosen - the quiet majority. */
   | 'neutral'
 
 export function verdictFor(card: Card, optionId: string, selection: Selection): OptionVerdict {
