@@ -3,9 +3,15 @@ name: Deploy to GitHub Pages
 # Builds and publishes the flashcard app. The data gate (`npm run validate:data`) runs
 # as part of `npm run build`, so a card that cites a heading which no longer exists in
 # the notes fails the deploy rather than shipping a broken citation.
+#
+# The same build runs on every pull request, where it only checks. Until it did, nothing
+# ran before a merge: a branch could only be found broken by the deploy it had already
+# broken, which is exactly how a failing test reached master.
 
 on:
   push:
+    branches: [master]
+  pull_request:
     branches: [master]
   workflow_dispatch:
 
@@ -14,10 +20,12 @@ permissions:
   pages: write
   id-token: write
 
-# Let an in-flight deploy finish rather than cancelling it mid-publish.
+# One deploy at a time, and let an in-flight one finish rather than cancelling it
+# mid-publish. Pull requests get a group per branch instead, so a new push supersedes the
+# run it made obsolete rather than queueing behind it.
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
@@ -45,12 +53,15 @@ jobs:
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
 
+      # Nothing to publish from a pull request, but the build above still has to pass.
       - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
         with:
           path: dist
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

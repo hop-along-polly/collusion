@@ -65,9 +65,18 @@ describe('a domain page', () => {
       expect(screen.getAllByRole('heading', { name: course.title, level: 3 }).length).toBeGreaterThan(0)
     }
 
-    // A card set has no page, so nothing on this screen should link to one.
-    for (const set of courseSets(ANSIBLE)) {
-      expect(screen.queryByRole('link', { name: set.title })).toBeNull()
+    // Note titles are read from the file, so they arrive after the first paint. Wait for
+    // one before asserting on what the page links to, or the assertion below can pass
+    // simply because the note card has not rendered its title yet.
+    expect(await screen.findByRole('link', { name: 'Ansible Fundamentals' })).toBeTruthy()
+
+    // A card set has no page, so nothing on this screen should link to one. Checked by
+    // href, not by accessible name: the `ansible` set and `Ansible.md` are both titled
+    // "Ansible Fundamentals", so a name-based assertion here was really asserting that
+    // the note title had not loaded yet.
+    const setPaths = courseSets(ANSIBLE).map((set) => `/${set.path}`)
+    for (const link of screen.getAllByRole('link')) {
+      expect(setPaths).not.toContain(link.getAttribute('href'))
     }
   })
 })
