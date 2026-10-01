@@ -22,7 +22,12 @@ export function Card({ tone = 'surface', interactive = false, className, ...prop
   return (
     <div
       className={cn(
-        'rounded-lg border p-6 shadow-sm transition-shadow duration-150',
+        // `relative` is load-bearing, not cosmetic. Clickable cards stretch their link over
+        // the whole card with an `absolute inset-0` overlay, and an overlay resolves against
+        // its nearest *positioned* ancestor. Without `relative` here, every card's overlay
+        // sizes itself to the page instead, they stack on top of one another, and the last
+        // card in the DOM silently swallows every click on the grid.
+        'relative rounded-lg border p-6 shadow-sm transition-shadow duration-150',
         tone === 'surface' ? 'border-line bg-surface' : 'border-accent-border bg-accent',
         // Dark mode gets no shadow lift (§9) — the border brightens instead.
         interactive && 'hover:shadow-md dark:hover:border-line-strong dark:hover:shadow-sm',
