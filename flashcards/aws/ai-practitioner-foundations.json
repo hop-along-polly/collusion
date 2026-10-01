@@ -1,0 +1,1398 @@
+{
+  "id": "ai-practitioner-foundations",
+  "title": "AI Practitioner - Concepts & Metrics",
+  "cards": [
+    {
+      "id": "inferencing-batch-vs-realtime",
+      "type": "single",
+      "prompt": "A retailer scores every customer in its database overnight for likelihood to churn. Nobody waits on an individual result. Which form of inferencing is this?",
+      "tags": [
+        "terminology",
+        "inferencing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Batch inferencing",
+          "correct": true,
+          "rationale": "Large volumes of data analyzed together, with accuracy favored over speed."
+        },
+        {
+          "id": "b",
+          "text": "Real-time inferencing",
+          "correct": false,
+          "rationale": "Real-time serves one request at a time while something waits on the answer, such as a chatbot reply."
+        },
+        {
+          "id": "c",
+          "text": "Continued pre-training",
+          "correct": false,
+          "rationale": "That is a training technique that changes a model's weights, not a way of producing predictions."
+        },
+        {
+          "id": "d",
+          "text": "Provisioned throughput",
+          "correct": false,
+          "rationale": "That is a Bedrock pricing model for reserving capacity, not a category of inference."
+        }
+      ],
+      "explanation": "Inferencing splits by whether anything is waiting on the result. Batch analyzes large amounts of data at once and is slower but usually more accurate, because the algorithm has time to work over the full dataset. Real-time returns answers quickly for interactive use at some cost to accuracy.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "hyperparameter-vs-weights",
+      "type": "single",
+      "prompt": "What distinguishes a hyperparameter from a model's weights?",
+      "tags": [
+        "terminology",
+        "training"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Hyperparameters are chosen by a person before training; weights are learned from the data during training",
+          "correct": true,
+          "rationale": "This is the defining split - one is an input to training, the other is its output."
+        },
+        {
+          "id": "b",
+          "text": "Hyperparameters are learned during training; weights are set by a person beforehand",
+          "correct": false,
+          "rationale": "This reverses the two. Weights are precisely what training produces."
+        },
+        {
+          "id": "c",
+          "text": "Hyperparameters apply only to deep learning; weights apply to every algorithm",
+          "correct": false,
+          "rationale": "Hyperparameters exist for non-neural algorithms too, such as max depth for a decision tree or K for K-Means."
+        },
+        {
+          "id": "d",
+          "text": "Hyperparameters describe the training data; weights describe the model architecture",
+          "correct": false,
+          "rationale": "Neither describes data or architecture. Both are numeric settings, differing in who sets them and when."
+        }
+      ],
+      "explanation": "A hyperparameter controls how training runs and is fixed before training starts. Weights are the numbers the model actually learns from the data. That is why hyperparameter tuning means running training repeatedly with different settings and comparing the resulting models.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "hyperparameter-examples",
+      "type": "multi",
+      "prompt": "Which of the following are hyperparameters? (Select all that apply)",
+      "tags": [
+        "terminology",
+        "training"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Learning rate",
+          "correct": true,
+          "rationale": "It sets how large an adjustment the model makes each time it corrects itself."
+        },
+        {
+          "id": "b",
+          "text": "Number of epochs",
+          "correct": true,
+          "rationale": "It sets how many times the model works through the entire training dataset."
+        },
+        {
+          "id": "c",
+          "text": "K in K-Means Clustering",
+          "correct": true,
+          "rationale": "The number of clusters is chosen before training, making it a hyperparameter."
+        },
+        {
+          "id": "d",
+          "text": "The numeric values the model adjusts as it learns from examples",
+          "correct": false,
+          "rationale": "Those are weights, produced by training rather than set before it."
+        },
+        {
+          "id": "e",
+          "text": "Batch size",
+          "correct": true,
+          "rationale": "It sets how many training examples are seen before one adjustment is made."
+        }
+      ],
+      "explanation": "Every hyperparameter is a dial set before training begins. Learning rate, epochs, batch size, network size, tree depth and K all qualify. The values the model derives from the data as it trains are weights, not hyperparameters.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "overfitting-signature",
+      "type": "single",
+      "prompt": "A model scores 99% on the data it was trained with and 62% on data it has never seen. What has happened?",
+      "tags": [
+        "terminology",
+        "model-fit"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Overfitting",
+          "correct": true,
+          "rationale": "Excellent on seen data and poor on new data is the signature of memorization rather than generalization."
+        },
+        {
+          "id": "b",
+          "text": "Underfitting",
+          "correct": false,
+          "rationale": "An underfit model predicts poorly even on its training data, because it is too simple to capture the relationship."
+        },
+        {
+          "id": "c",
+          "text": "Drift",
+          "correct": false,
+          "rationale": "Drift happens after deployment, when the live world stops resembling the training data."
+        },
+        {
+          "id": "d",
+          "text": "Imbalanced classes",
+          "correct": false,
+          "rationale": "Imbalance would inflate accuracy on both training and unseen data, not create a gap between them."
+        }
+      ],
+      "explanation": "Overfitting means the model has memorized its training examples instead of learning a general pattern, so its score collapses the moment it meets anything new. The gap between training and unseen performance is what reveals it.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "drift-definition",
+      "type": "boolean",
+      "prompt": "Model drift occurs when the real world changes after deployment, so live data stops resembling the training data and predictions get worse.",
+      "tags": [
+        "terminology",
+        "monitoring"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "rationale": "Nothing about the model changes - the world moves and the model is left describing a situation that no longer exists."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "rationale": "This is exactly what drift means, and it is why deployed models need ongoing monitoring."
+        }
+      ],
+      "explanation": "Drift degrades accuracy without any code changing. A model trained on one era's shopping habits gets steadily worse as those habits shift, which is why production models are monitored rather than deployed and forgotten.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "frontier-vs-foundation",
+      "type": "single",
+      "prompt": "How do foundation models and frontier models relate to each other?",
+      "tags": [
+        "foundation-models"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Every frontier model is a foundation model, but most foundation models are not frontier models",
+          "correct": true,
+          "rationale": "Frontier describes a ranking within the foundation-model category, like squares within rectangles."
+        },
+        {
+          "id": "b",
+          "text": "Every foundation model is a frontier model, but most frontier models are not foundation models",
+          "correct": false,
+          "rationale": "This inverts the relationship. The broad category is foundation models."
+        },
+        {
+          "id": "c",
+          "text": "They are two names for the same thing",
+          "correct": false,
+          "rationale": "One is a category and the other is a position within it, so they are not interchangeable."
+        },
+        {
+          "id": "d",
+          "text": "They are unrelated categories - a model is one or the other",
+          "correct": false,
+          "rationale": "Frontier models are a subset of foundation models, not an alternative to them."
+        }
+      ],
+      "explanation": "A foundation model is any large model pre-trained on broad data and adaptable to many tasks; size and capability are not part of the definition. A frontier model is a foundation model that also sits at the leading edge of current capability. Frontier status also expires as newer generations arrive, without the model itself changing.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Foundation vs. Frontier Models"
+        }
+      ]
+    },
+    {
+      "id": "structured-vs-unstructured",
+      "type": "multi",
+      "prompt": "Which of the following count as structured data? (Select all that apply)",
+      "tags": [
+        "data-types"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Rows in a relational database table",
+          "correct": true,
+          "rationale": "Database records are the classic tabular example of a pre-defined format."
+        },
+        {
+          "id": "b",
+          "text": "A CSV file of monthly sales figures",
+          "correct": true,
+          "rationale": "CSV is tabular data, a sub-type of structured data."
+        },
+        {
+          "id": "c",
+          "text": "Stock prices recorded at successive points in time",
+          "correct": true,
+          "rationale": "Time series data is structured - values measured at ordered points in time."
+        },
+        {
+          "id": "d",
+          "text": "A folder of applicant resumes",
+          "correct": false,
+          "rationale": "Resumes lack a predefined structure, which makes them unstructured."
+        },
+        {
+          "id": "e",
+          "text": "Security camera footage",
+          "correct": false,
+          "rationale": "Video has no predefined format for a model to read directly, so it is unstructured."
+        }
+      ],
+      "explanation": "Structured data is organized in a pre-defined manner, and splits into tabular data (CSV files, database records) and time series data (values measured at successive points in time). Resumes, images and video have no such predefined format and are unstructured.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Types of Data"
+        }
+      ]
+    },
+    {
+      "id": "labeled-data-definition",
+      "type": "boolean",
+      "prompt": "Labeled data is data accompanied by the desired output or classification for each example.",
+      "tags": [
+        "data-types"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "rationale": "The label is the target value the algorithm is trying to learn to predict."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "rationale": "This is the definition of labeled data, and it is what supervised learning requires."
+        }
+      ],
+      "explanation": "Labels are the target values included alongside training examples. Their presence or absence is what separates supervised learning from unsupervised learning.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Types of Data"
+        }
+      ]
+    },
+    {
+      "id": "paradigm-for-segmentation",
+      "type": "single",
+      "prompt": "A marketing team wants to group customers into segments, but has no existing categories and no idea what the groups should be. Which learning paradigm fits?",
+      "tags": [
+        "ml-paradigms",
+        "unsupervised"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Unsupervised learning",
+          "correct": true,
+          "rationale": "With no target values supplied, the goal is discovering structure that was not specified in advance."
+        },
+        {
+          "id": "b",
+          "text": "Supervised learning",
+          "correct": false,
+          "rationale": "Supervised learning needs a labeled target for every example, which is exactly what is missing here."
+        },
+        {
+          "id": "c",
+          "text": "Reinforcement learning",
+          "correct": false,
+          "rationale": "Reinforcement learning suits an agent taking actions and receiving rewards, not sorting a static dataset."
+        },
+        {
+          "id": "d",
+          "text": "Continued pre-training",
+          "correct": false,
+          "rationale": "That adapts a foundation model to a domain's vocabulary; it is not a way to segment customers."
+        }
+      ],
+      "explanation": "Unsupervised learning works on unlabeled data to discover inherent patterns, structures and relationships. Customer segmentation is the standard clustering example, because the groups emerge from the data rather than being defined up front.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Machine Learning Algorithms"
+        }
+      ]
+    },
+    {
+      "id": "unsupervised-algorithms",
+      "type": "multi",
+      "prompt": "Which algorithms belong to unsupervised learning? (Select all that apply)",
+      "tags": [
+        "ml-paradigms",
+        "algorithms"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "K-Means Clustering",
+          "correct": true,
+          "rationale": "It groups unlabeled data into clusters discovered from the data itself."
+        },
+        {
+          "id": "b",
+          "text": "Principal Component Analysis (PCA)",
+          "correct": true,
+          "rationale": "PCA reduces the number of features without any target variable, making it unsupervised."
+        },
+        {
+          "id": "c",
+          "text": "Linear Regression",
+          "correct": false,
+          "rationale": "Regression learns to predict a labeled numeric target, which makes it supervised."
+        },
+        {
+          "id": "d",
+          "text": "Hierarchical Clustering",
+          "correct": true,
+          "rationale": "Another clustering method that works from unlabeled data."
+        },
+        {
+          "id": "e",
+          "text": "Support Vector Machines (SVM)",
+          "correct": false,
+          "rationale": "SVM is a supervised classifier trained against labeled examples."
+        }
+      ],
+      "explanation": "Unsupervised algorithms operate without target values: clustering methods such as K-Means and Hierarchical Clustering, dimensionality reduction such as PCA, and association rules. Linear Regression and SVM both require labels and are supervised.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Machine Learning Algorithms"
+        }
+      ]
+    },
+    {
+      "id": "reinforcement-learning-feedback",
+      "type": "single",
+      "prompt": "What form does feedback take in reinforcement learning?",
+      "tags": [
+        "ml-paradigms",
+        "reinforcement"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Rewards and penalties earned by acting in an environment",
+          "correct": true,
+          "rationale": "The agent gets a performance score rather than being told the right answer, and improves by trial and error."
+        },
+        {
+          "id": "b",
+          "text": "A labeled target value for every training example",
+          "correct": false,
+          "rationale": "That describes supervised learning."
+        },
+        {
+          "id": "c",
+          "text": "Cluster assignments discovered from the data",
+          "correct": false,
+          "rationale": "That describes the output of unsupervised clustering."
+        },
+        {
+          "id": "d",
+          "text": "A reference text written by a human for comparison",
+          "correct": false,
+          "rationale": "That is how generative output is scored with metrics such as ROUGE and BLEU."
+        }
+      ],
+      "explanation": "A reinforcement learning agent is never shown the correct action. It acts, receives a reward or penalty, and adjusts toward the highest cumulative reward. This is why it suits robotics, game playing and real-time decision making.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Machine Learning Algorithms"
+        }
+      ]
+    },
+    {
+      "id": "rlhf-purpose",
+      "type": "single",
+      "prompt": "An organization wants a foundation model's responses to better match human preferences and values. Which technique addresses this directly?",
+      "tags": [
+        "rlhf",
+        "alignment"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Reinforcement Learning from Human Feedback (RLHF)",
+          "correct": true,
+          "rationale": "Human rankings train a reward model, which then supplies the signal that tunes the foundation model."
+        },
+        {
+          "id": "b",
+          "text": "Retrieval Augmented Generation (RAG)",
+          "correct": false,
+          "rationale": "RAG supplies facts at question time; it does not change how the model behaves or what it values."
+        },
+        {
+          "id": "c",
+          "text": "Principal Component Analysis",
+          "correct": false,
+          "rationale": "PCA reduces feature count in a dataset and has nothing to do with aligning model behavior."
+        },
+        {
+          "id": "d",
+          "text": "Batch transform",
+          "correct": false,
+          "rationale": "That is a SageMaker deployment option for scoring stored datasets."
+        }
+      ],
+      "explanation": "RLHF puts a person in the reward loop. Reviewers rank or rate responses, those preferences train a reward model, and the reward model supplies the signal that tunes the foundation model. It is how a raw pretrained model is aligned to be helpful, honest and harmless.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Machine Learning Algorithms"
+        }
+      ]
+    },
+    {
+      "id": "rlhf-ground-truth",
+      "type": "single",
+      "prompt": "Which AWS service collects the human-labeled preference data that RLHF depends on?",
+      "tags": [
+        "rlhf",
+        "sagemaker"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "SageMaker Ground Truth",
+          "correct": true,
+          "rationale": "It manages the workflow of having people label data, including rating which of two responses is better."
+        },
+        {
+          "id": "b",
+          "text": "SageMaker Model Monitor",
+          "correct": false,
+          "rationale": "Model Monitor watches deployed models for quality degradation; it does not gather labels."
+        },
+        {
+          "id": "c",
+          "text": "SageMaker Clarify",
+          "correct": false,
+          "rationale": "Clarify detects bias and explains predictions rather than collecting human judgments."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Comprehend",
+          "correct": false,
+          "rationale": "Comprehend is a pre-trained service that extracts meaning from text; it produces no training labels for your model."
+        }
+      ],
+      "explanation": "Ground Truth is the labeling service, and rating which of two model responses is better is a labeling task like any other. The workforce can be your own employees, a vendor, or Amazon Mechanical Turk.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Machine Learning Algorithms"
+        },
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Ground Truth"
+        }
+      ]
+    },
+    {
+      "id": "confusion-matrix-false-negative",
+      "type": "single",
+      "prompt": "A model reviewing cookie recipes predicts `no peanuts`, but the recipe does contain peanuts. Which quadrant of the confusion matrix is this?",
+      "tags": [
+        "classification-metrics",
+        "confusion-matrix"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "False Negative",
+          "correct": true,
+          "rationale": "Predicted negative, actually positive - the real case the model missed."
+        },
+        {
+          "id": "b",
+          "text": "False Positive",
+          "correct": false,
+          "rationale": "That would be predicting peanuts in a recipe that is actually safe."
+        },
+        {
+          "id": "c",
+          "text": "True Negative",
+          "correct": false,
+          "rationale": "That would be correctly predicting no peanuts in a recipe that genuinely has none."
+        },
+        {
+          "id": "d",
+          "text": "True Positive",
+          "correct": false,
+          "rationale": "That would be correctly flagging a recipe that does contain peanuts."
+        }
+      ],
+      "explanation": "A False Negative is a prediction of negative when the truth was positive. It is the quadrant that matters most when missing a real case causes harm, which is why recall is the metric for allergen screening.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Classification Metrics"
+        }
+      ]
+    },
+    {
+      "id": "accuracy-imbalance-trap",
+      "type": "single",
+      "prompt": "Only 1 transaction in 100 is fraudulent. A model labels every transaction as legitimate and reports 99% accuracy. What does this demonstrate?",
+      "tags": [
+        "classification-metrics",
+        "accuracy"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Accuracy is misleading when one answer is rare",
+          "correct": true,
+          "rationale": "The model catches zero fraud yet scores highly, because the common answer dominates the calculation."
+        },
+        {
+          "id": "b",
+          "text": "The model has overfit the training data",
+          "correct": false,
+          "rationale": "Overfitting shows as a gap between training and unseen performance, not as a high score from a constant prediction."
+        },
+        {
+          "id": "c",
+          "text": "The model needs a lower classification threshold",
+          "correct": false,
+          "rationale": "Adjusting the threshold might help, but the point here is that the chosen metric hides total failure."
+        },
+        {
+          "id": "d",
+          "text": "Accuracy should be replaced with a regression metric",
+          "correct": false,
+          "rationale": "This is still a classification problem; the fix is a classification metric that survives imbalance."
+        }
+      ],
+      "explanation": "Accuracy counts every correct prediction equally, so when one answer is rare a model that never predicts it still scores well. F1 is the standard single-number replacement in that situation, with precision and recall used to inspect each kind of mistake separately.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Classification Metrics"
+        }
+      ]
+    },
+    {
+      "id": "precision-scenario",
+      "type": "single",
+      "prompt": "A fraud detector automatically freezes credit cards. Each false alarm strands a legitimate customer at the checkout. Which metric should be optimized?",
+      "tags": [
+        "classification-metrics",
+        "precision"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Precision",
+          "correct": true,
+          "rationale": "The damage comes from acting on a wrong positive, so the model must be right when it says yes."
+        },
+        {
+          "id": "b",
+          "text": "Recall",
+          "correct": false,
+          "rationale": "Recall tolerates extra false alarms to catch more real cases, which is the opposite of what this scenario needs."
+        },
+        {
+          "id": "c",
+          "text": "Mean Absolute Error",
+          "correct": false,
+          "rationale": "MAE is a regression metric and does not apply to a yes/no decision."
+        },
+        {
+          "id": "d",
+          "text": "R Squared",
+          "correct": false,
+          "rationale": "R² measures explained variance for regression models, not classification quality."
+        }
+      ],
+      "explanation": "Precision asks what share of the cases flagged as positive really were positive, so it is driven entirely by false alarms. When acting on a wrong positive causes real harm, precision is the metric to protect.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Classification Metrics"
+        }
+      ]
+    },
+    {
+      "id": "recall-scenario",
+      "type": "single",
+      "prompt": "A medical screening model must not miss a tumor, and clinicians accept that some healthy scans will be flagged for review. Which metric matters most?",
+      "tags": [
+        "classification-metrics",
+        "recall"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Recall",
+          "correct": true,
+          "rationale": "Missing a real case is the expensive mistake, and recall measures exactly the positives that slipped past."
+        },
+        {
+          "id": "b",
+          "text": "Precision",
+          "correct": false,
+          "rationale": "Precision minimizes false alarms, which this scenario explicitly accepts as a cost worth paying."
+        },
+        {
+          "id": "c",
+          "text": "Accuracy",
+          "correct": false,
+          "rationale": "Accuracy treats both mistakes as equal, and would be inflated by the many healthy scans."
+        },
+        {
+          "id": "d",
+          "text": "Root Mean Squared Error",
+          "correct": false,
+          "rationale": "RMSE scores numeric predictions, not classification decisions."
+        }
+      ],
+      "explanation": "Recall asks what share of the genuinely positive cases the model caught, so it is driven entirely by false negatives. Wherever a missed case is worse than a false alarm, recall is the target.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Classification Metrics"
+        }
+      ]
+    },
+    {
+      "id": "f1-purpose",
+      "type": "single",
+      "prompt": "Why does the F1 score use a harmonic mean rather than a plain average of precision and recall?",
+      "tags": [
+        "classification-metrics",
+        "f1"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It pulls the result toward whichever value is worse, so a model cannot succeed on one and fail the other",
+          "correct": true,
+          "rationale": "Precision 1.0 with recall 0.0 averages to 0.5 but produces an F1 of 0."
+        },
+        {
+          "id": "b",
+          "text": "It guarantees the score is always higher than either input",
+          "correct": false,
+          "rationale": "The harmonic mean never exceeds the lower of the two values."
+        },
+        {
+          "id": "c",
+          "text": "It converts the score into the same units as the prediction target",
+          "correct": false,
+          "rationale": "That describes the reason RMSE takes the square root of MSE."
+        },
+        {
+          "id": "d",
+          "text": "It removes the need to choose a classification threshold",
+          "correct": false,
+          "rationale": "Threshold independence is the property of AUC-ROC, not F1."
+        }
+      ],
+      "explanation": "A plain average lets a strong score on one measure hide a collapse in the other. The harmonic mean is dragged down toward the weaker value, so a good F1 requires both precision and recall to be reasonable.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Classification Metrics"
+        }
+      ]
+    },
+    {
+      "id": "auc-roc-threshold",
+      "type": "single",
+      "prompt": "Three candidate models are being compared before anyone decides the risk score at which a loan application is declined. Which metric suits this comparison?",
+      "tags": [
+        "classification-metrics",
+        "auc-roc"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AUC-ROC",
+          "correct": true,
+          "rationale": "It sweeps every possible threshold, so models can be ranked before a cutoff is chosen."
+        },
+        {
+          "id": "b",
+          "text": "Accuracy at the default threshold",
+          "correct": false,
+          "rationale": "That measures one arbitrary cutoff rather than how well the model separates the two answers overall."
+        },
+        {
+          "id": "c",
+          "text": "Mean Squared Error",
+          "correct": false,
+          "rationale": "MSE scores numeric predictions from a regression model."
+        },
+        {
+          "id": "d",
+          "text": "Perplexity",
+          "correct": false,
+          "rationale": "Perplexity gauges a language model's fluency and does not apply to a classifier."
+        }
+      ],
+      "explanation": "A classifier outputs a score, and a threshold decides where yes begins. AUC-ROC records the trade-off between true positives and false positives at every possible threshold and reduces it to one number. 1.0 is perfect separation and 0.5 is no better than a coin flip.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Classification Metrics"
+        }
+      ]
+    },
+    {
+      "id": "auc-roc-0-5",
+      "type": "boolean",
+      "prompt": "An AUC-ROC score of 0.5 indicates a model that separates the two classes no better than random guessing.",
+      "tags": [
+        "classification-metrics",
+        "auc-roc"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "rationale": "0.5 is the coin-flip baseline; 1.0 would be perfect separation."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "rationale": "0.5 is exactly the random-guessing baseline for this metric."
+        }
+      ],
+      "explanation": "AUC-ROC runs from 0.5 to 1.0 in practice. A model tracing the diagonal has no ability to tell the two answers apart, and the area beneath that diagonal is half the square.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Classification Metrics"
+        }
+      ]
+    },
+    {
+      "id": "mse-large-errors",
+      "type": "single",
+      "prompt": "Why does Mean Squared Error square each gap between prediction and true value?",
+      "tags": [
+        "regression-metrics",
+        "mse"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It makes every gap positive and makes large gaps count far more than small ones",
+          "correct": true,
+          "rationale": "Squaring stops over- and under-predictions cancelling, and a gap of 10 contributes 100 while a gap of 2 contributes 4."
+        },
+        {
+          "id": "b",
+          "text": "It converts the score into the units of the prediction target",
+          "correct": false,
+          "rationale": "Squaring does the opposite - it squares the units, which is why RMSE exists."
+        },
+        {
+          "id": "c",
+          "text": "It makes the metric insensitive to outliers",
+          "correct": false,
+          "rationale": "Squaring amplifies outliers. MAE is the option that resists them."
+        },
+        {
+          "id": "d",
+          "text": "It bounds the result between 0 and 1",
+          "correct": false,
+          "rationale": "MSE has no upper bound. R² is the metric that runs 0 to 1."
+        }
+      ],
+      "explanation": "Squaring serves two purposes at once: it removes the sign so predictions that were too high cannot cancel out ones that were too low, and it weights large misses disproportionately. That makes MSE the right choice when one large error does more damage than several small ones.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Regression Metrics"
+        }
+      ]
+    },
+    {
+      "id": "rmse-units",
+      "type": "single",
+      "prompt": "A delivery service promises orders within a 10-minute window and needs to judge whether its ETA model is good enough. Which metric can be compared directly against that promise?",
+      "tags": [
+        "regression-metrics",
+        "rmse"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "RMSE, because it is expressed in the same units as the prediction",
+          "correct": true,
+          "rationale": "An RMSE of 6 minutes can be held against a 10-minute window; MSE would report 36 minutes-squared."
+        },
+        {
+          "id": "b",
+          "text": "MSE, because it penalizes large errors most heavily",
+          "correct": false,
+          "rationale": "MSE ranks models identically to RMSE but reports squared units, which cannot be compared to a time window."
+        },
+        {
+          "id": "c",
+          "text": "R Squared, because it runs from 0 to 1",
+          "correct": false,
+          "rationale": "R² reports the share of variation explained, not an error size in minutes."
+        },
+        {
+          "id": "d",
+          "text": "F1, because it balances two competing measures",
+          "correct": false,
+          "rationale": "F1 is a classification metric and has no meaning for a numeric prediction."
+        }
+      ],
+      "explanation": "Squaring the errors also squares the units. RMSE takes the square root to return the score to the original units, which is the only reason it exists - it ranks models in exactly the same order MSE does.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Regression Metrics"
+        }
+      ]
+    },
+    {
+      "id": "mae-outliers",
+      "type": "single",
+      "prompt": "Daily ride-share demand is forecast, and a single New Year's Eve spike should not dominate the score. Which metric best fits?",
+      "tags": [
+        "regression-metrics",
+        "mae"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Mean Absolute Error",
+          "correct": true,
+          "rationale": "Each gap counts in direct proportion to its size, so one extreme day cannot swamp the rest."
+        },
+        {
+          "id": "b",
+          "text": "Mean Squared Error",
+          "correct": false,
+          "rationale": "Squaring makes the outlier's gap enormous, so the score would be driven almost entirely by that one night."
+        },
+        {
+          "id": "c",
+          "text": "Root Mean Squared Error",
+          "correct": false,
+          "rationale": "RMSE inherits MSE's squaring and therefore its sensitivity to outliers."
+        },
+        {
+          "id": "d",
+          "text": "AUC-ROC",
+          "correct": false,
+          "rationale": "AUC-ROC applies to classification models, not numeric forecasts."
+        }
+      ],
+      "explanation": "MAE averages the absolute gaps without squaring, so a gap of 10 counts five times a gap of 2 rather than twenty-five times. That proportional weighting is what makes it resistant to outliers.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Regression Metrics"
+        }
+      ]
+    },
+    {
+      "id": "r-squared-meaning",
+      "type": "single",
+      "prompt": "A house-price model reports an R² of 0.15. What does this indicate?",
+      "tags": [
+        "regression-metrics",
+        "r-squared"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The model's inputs explain only 15% of why prices differ, so it needs better inputs",
+          "correct": true,
+          "rationale": "R² is the share of variation in the target that the model accounts for."
+        },
+        {
+          "id": "b",
+          "text": "The model's predictions are off by 15% on average",
+          "correct": false,
+          "rationale": "Average error size is what MAE and RMSE report, not R²."
+        },
+        {
+          "id": "c",
+          "text": "15% of the predictions were correct",
+          "correct": false,
+          "rationale": "Counting correct predictions is a classification idea; regression predictions are rarely exactly right."
+        },
+        {
+          "id": "d",
+          "text": "The model has overfit the training data",
+          "correct": false,
+          "rationale": "Overfitting usually shows as an R² close to 1 on training data, not a low value."
+        }
+      ],
+      "explanation": "R² measures how much of the target's variation the model explains, from 0 to 1. A low value says the chosen inputs barely account for what drives the outcome - a verdict an error score alone would not reveal, because it tells you predictions are off without saying the inputs are the problem.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Regression Metrics"
+        }
+      ]
+    },
+    {
+      "id": "rouge-summarization",
+      "type": "single",
+      "prompt": "Which metric is designed for evaluating automatic summarization?",
+      "tags": [
+        "generative-metrics",
+        "rouge"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "ROUGE",
+          "correct": true,
+          "rationale": "It measures how much of the human reference made it into the output, which is what a summary must capture."
+        },
+        {
+          "id": "b",
+          "text": "BLEU",
+          "correct": false,
+          "rationale": "BLEU is precision-oriented and built primarily for machine translation."
+        },
+        {
+          "id": "c",
+          "text": "AUC-ROC",
+          "correct": false,
+          "rationale": "That scores classifiers across thresholds and has no role in generative evaluation."
+        },
+        {
+          "id": "d",
+          "text": "R Squared",
+          "correct": false,
+          "rationale": "R² applies to regression models predicting numbers."
+        }
+      ],
+      "explanation": "ROUGE counts the words and N-Grams shared between the model's output and a human-written reference, asking about coverage. A summary that omits half the reference's points scores poorly even if every word it did produce was accurate.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Generative AI Metrics"
+        }
+      ]
+    },
+    {
+      "id": "bleu-brevity-penalty",
+      "type": "single",
+      "prompt": "What problem does BLEU's brevity penalty solve?",
+      "tags": [
+        "generative-metrics",
+        "bleu"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A model could otherwise score well by producing only the few words it was most confident about",
+          "correct": true,
+          "rationale": "Without the penalty, precision-oriented scoring rewards very short, safe output."
+        },
+        {
+          "id": "b",
+          "text": "Translations that are too long would otherwise be rewarded",
+          "correct": false,
+          "rationale": "The penalty targets output much shorter than the reference, not longer."
+        },
+        {
+          "id": "c",
+          "text": "Synonyms would otherwise be scored as wrong",
+          "correct": false,
+          "rationale": "BLEU still penalizes synonyms; BERTScore is the metric that compares meaning."
+        },
+        {
+          "id": "d",
+          "text": "The score would otherwise exceed 1.0",
+          "correct": false,
+          "rationale": "The penalty exists to prevent gaming through brevity, not to bound the range."
+        }
+      ],
+      "explanation": "BLEU counts how much of the model's output appears in the reference, which rewards precision. Left unchecked, the safest strategy would be to emit two or three certain words, so the brevity penalty lowers the score when output is much shorter than the reference.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Generative AI Metrics"
+        }
+      ]
+    },
+    {
+      "id": "bertscore-paraphrase",
+      "type": "single",
+      "prompt": "A summarizer often rewords ideas using synonyms, and correct answers are being marked down. Which metric addresses this?",
+      "tags": [
+        "generative-metrics",
+        "bertscore"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "BERTScore",
+          "correct": true,
+          "rationale": "It compares meaning through embeddings and cosine similarity rather than requiring matching words."
+        },
+        {
+          "id": "b",
+          "text": "ROUGE-N",
+          "correct": false,
+          "rationale": "ROUGE-N counts matching N-Grams, so differently worded but correct output scores badly."
+        },
+        {
+          "id": "c",
+          "text": "BLEU",
+          "correct": false,
+          "rationale": "BLEU also counts word overlap and suffers the same problem with paraphrasing."
+        },
+        {
+          "id": "d",
+          "text": "Perplexity",
+          "correct": false,
+          "rationale": "Perplexity measures fluency against the model's own predictions and involves no reference text."
+        }
+      ],
+      "explanation": "The deciding question is whether a metric compares words or meaning. ROUGE and BLEU count matching words and mark down a correct answer that is phrased differently. BERTScore converts both texts into embeddings and compares direction with cosine similarity, so \"the film was outstanding\" scores well against \"the movie was excellent\".",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Generative AI Metrics"
+        }
+      ]
+    },
+    {
+      "id": "perplexity-no-reference",
+      "type": "boolean",
+      "prompt": "Perplexity requires a human-written reference text to score a model's output.",
+      "tags": [
+        "generative-metrics",
+        "perplexity"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false,
+          "rationale": "Perplexity compares the model against its own predictions, so no reference is involved."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true,
+          "rationale": "It measures how surprised the model is by text it reads, needing nothing but the model and the passage."
+        }
+      ],
+      "explanation": "At each word the model predicts what should come next, and perplexity measures how far off those predictions were. Low perplexity means the text was close to what the model expected, which is read as fluency. It is the one common generative metric that needs no reference.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Generative AI Metrics"
+        }
+      ]
+    },
+    {
+      "id": "rouge-l-order",
+      "type": "single",
+      "prompt": "What does ROUGE-L measure that ROUGE-N does not?",
+      "tags": [
+        "generative-metrics",
+        "rouge"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Whether the output presents information in the same order as the reference",
+          "correct": true,
+          "rationale": "It finds the longest run of words appearing in both texts in the same order, which stands in for coherence."
+        },
+        {
+          "id": "b",
+          "text": "Whether the output uses synonyms of the reference's words",
+          "correct": false,
+          "rationale": "Neither ROUGE variant credits synonyms; that is BERTScore's job."
+        },
+        {
+          "id": "c",
+          "text": "How confidently the model predicted each next word",
+          "correct": false,
+          "rationale": "That is perplexity."
+        },
+        {
+          "id": "d",
+          "text": "Whether the output is shorter than the reference",
+          "correct": false,
+          "rationale": "Length penalties belong to BLEU."
+        }
+      ],
+      "explanation": "ROUGE-N counts exact matching runs of words, capturing key ideas and fluent phrasing. ROUGE-L looks for the longest common subsequence - words shared in the same order, allowing gaps - so it rewards telling the story in the reference's sequence.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Generative AI Metrics"
+        }
+      ]
+    },
+    {
+      "id": "fm-evaluation-approaches",
+      "type": "multi",
+      "prompt": "Which approaches are used to evaluate a foundation model? (Select all that apply)",
+      "tags": [
+        "fm-evaluation"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Human evaluation by reviewers judging coherence, relevance and factuality",
+          "correct": true,
+          "rationale": "Considered the gold standard, though slow and expensive because people must do the reading."
+        },
+        {
+          "id": "b",
+          "text": "Benchmark datasets such as GLUE, SuperGLUE, SQuAD and WMT",
+          "correct": true,
+          "rationale": "Ready-made question sets let different models be compared on identical material."
+        },
+        {
+          "id": "c",
+          "text": "Automated metrics such as ROUGE, BLEU and BERTScore",
+          "correct": true,
+          "rationale": "Software scores output against reference answers with no person involved at scoring time."
+        },
+        {
+          "id": "d",
+          "text": "Confusion matrix analysis of true and false positives",
+          "correct": false,
+          "rationale": "That belongs to classification models, not open-ended generative output."
+        }
+      ],
+      "explanation": "The three approaches are usually combined: humans judge what a formula cannot, benchmark datasets make models comparable on identical questions, and automated metrics give a cheap score that can be re-run constantly.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Approaches to Evaluating a Foundation Model"
+        }
+      ]
+    },
+    {
+      "id": "judge-model-benchmark",
+      "type": "single",
+      "prompt": "In a benchmark evaluation, what role does a judge model play?",
+      "tags": [
+        "fm-evaluation",
+        "benchmarks"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It compares the tested model's answers against the reference answers experts wrote",
+          "correct": true,
+          "rationale": "The closer the match, the better the tested model scores."
+        },
+        {
+          "id": "b",
+          "text": "It writes the benchmark questions",
+          "correct": false,
+          "rationale": "Subject matter experts write the questions and the reference answers."
+        },
+        {
+          "id": "c",
+          "text": "It replaces the model being tested if it scores higher",
+          "correct": false,
+          "rationale": "A judge model only scores; it does not take over the workload."
+        },
+        {
+          "id": "d",
+          "text": "It generates additional training data for the tested model",
+          "correct": false,
+          "rationale": "That describes distillation, where a large model teaches a smaller one."
+        }
+      ],
+      "explanation": "A benchmark evaluation runs in three steps: experts write difficult questions plus the answers they consider correct, those questions go to the model being tested, and a separate judge model compares the two sets of answers.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Approaches to Evaluating a Foundation Model"
+        }
+      ]
+    },
+    {
+      "id": "n-gram-definition",
+      "type": "multi",
+      "prompt": "The phrase \"How much wood would a wood chuck chuck\" is broken into 2-Grams. Which of the following are among them? (Select all that apply)",
+      "tags": [
+        "terminology",
+        "n-gram"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "\"How much\"",
+          "correct": true,
+          "rationale": "The first two consecutive words form the opening 2-Gram."
+        },
+        {
+          "id": "b",
+          "text": "\"wood would\"",
+          "correct": true,
+          "rationale": "Consecutive words in the original order, so it qualifies."
+        },
+        {
+          "id": "c",
+          "text": "\"chuck chuck\"",
+          "correct": true,
+          "rationale": "The final pair of consecutive words."
+        },
+        {
+          "id": "d",
+          "text": "\"much would\"",
+          "correct": false,
+          "rationale": "These two words are not adjacent - \"wood\" sits between them."
+        },
+        {
+          "id": "e",
+          "text": "\"How much wood\"",
+          "correct": false,
+          "rationale": "Three consecutive words make a 3-Gram, not a 2-Gram."
+        }
+      ],
+      "explanation": "An N-Gram is a continuous sequence of N words taken from text or speech. The words must be adjacent and in their original order, so the number of N-Grams in a sentence depends on both its length and the chosen N.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "N-Gram Example"
+        }
+      ]
+    },
+    {
+      "id": "feature-engineering-definition",
+      "type": "single",
+      "prompt": "A dataset holds a start date and an end date. Combining them into a single \"duration\" column is an example of what?",
+      "tags": [
+        "terminology",
+        "features"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Feature engineering",
+          "correct": true,
+          "rationale": "Turning raw data into a more useful input is exactly what feature engineering means."
+        },
+        {
+          "id": "b",
+          "text": "Hyperparameter tuning",
+          "correct": false,
+          "rationale": "That searches for training settings such as learning rate, and touches no columns."
+        },
+        {
+          "id": "c",
+          "text": "Inferencing",
+          "correct": false,
+          "rationale": "Inferencing is producing a prediction from a trained model."
+        },
+        {
+          "id": "d",
+          "text": "Labeling",
+          "correct": false,
+          "rationale": "Labeling attaches the target value to an example, not a derived input."
+        }
+      ],
+      "explanation": "A feature is a single piece of input information the model uses. Feature engineering is the work of turning raw data into useful features, and better features usually improve a model more than a better algorithm does.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Terminology"
+        }
+      ]
+    },
+    {
+      "id": "endpoint-is-rest",
+      "type": "boolean",
+      "prompt": "A deployed model endpoint is called like an ordinary REST API - an HTTP request carries the input data and the response carries the prediction.",
+      "tags": [
+        "terminology",
+        "deployment"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true,
+          "rationale": "The only difference from any other endpoint is that a model sits behind the address rather than ordinary application code."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false,
+          "rationale": "An endpoint runs behind an HTTPS address and any client that can call a REST API can call it."
+        }
+      ],
+      "explanation": "This is why a deployed model integrates into an existing application so easily: nothing about the calling convention is special to machine learning.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Terminology"
+        }
+      ]
+    }
+  ]
+}

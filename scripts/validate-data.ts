@@ -23,7 +23,7 @@ import { formatIssues, hasErrors, validateCards, validateCatalog } from '../src/
 import type { Issue } from '../src/data/validate'
 
 const repoRoot = resolve(fileURLToPath(new URL('../', import.meta.url)))
-const dataRoot = join(repoRoot, 'data')
+const cardsRoot = join(repoRoot, 'flashcards')
 
 const issues: Issue[] = []
 
@@ -59,7 +59,7 @@ export function slugify(heading: string): string {
 /**
  * Markdown headings, ignoring `#` lines inside fenced code blocks.
  *
- * Only ever called for `.md` files. In a source file — `ai_react_loop.py`, say — every
+ * Only ever called for `.md` files. In a source file - `ai_react_loop.py`, say - every
  * `#` comment looks like a heading, so treating a non-Markdown file as Markdown would
  * invent anchors that GitHub never generates.
  */
@@ -81,16 +81,15 @@ function extractHeadings(markdown: string): string[] {
   return headings
 }
 
-/** Card set directories discovered on disk, as `<domain>/<set>` paths. */
+/** Card files discovered on disk, as `<domain>/<set>` paths (minus the `.json`). */
 function discoverCardSetPaths(): string[] {
   const found: string[] = []
-  for (const domain of readdirSync(dataRoot)) {
-    const domainPath = join(dataRoot, domain)
+  for (const domain of readdirSync(cardsRoot)) {
+    const domainPath = join(cardsRoot, domain)
     if (!statSync(domainPath).isDirectory()) continue
-    for (const set of readdirSync(domainPath)) {
-      const setPath = join(domainPath, set)
-      if (!statSync(setPath).isDirectory()) continue
-      if (exists(join(setPath, 'cards.json'))) found.push(`${domain}/${set}`)
+    for (const entry of readdirSync(domainPath)) {
+      if (!entry.endsWith('.json')) continue
+      found.push(`${domain}/${entry.slice(0, -'.json'.length)}`)
     }
   }
   return found.sort()
@@ -109,7 +108,7 @@ function readNote(file: string): { headings: Set<string>; text: string } | null 
 
   const text = readFileSync(notePath, 'utf8')
   // Non-Markdown notes (the example `.py` scripts) have no headings and therefore no
-  // anchors — every citation into one has to be a `section`.
+  // anchors - every citation into one has to be a `section`.
   const headings = file.toLowerCase().endsWith('.md') ? extractHeadings(text) : []
   const parsed = { headings: new Set(headings), text }
   noteCache.set(file, parsed)
@@ -127,7 +126,7 @@ function checkCitation(citation: Citation, at: string): void {
     if (!citation.file.toLowerCase().endsWith('.md')) {
       error(
         `${at}.heading`,
-        `${citation.file} is not Markdown, so it has no anchors — use "section" instead of "heading".`,
+        `${citation.file} is not Markdown, so it has no anchors - use "section" instead of "heading".`,
       )
     } else if (!note.headings.has(citation.heading)) {
       const label = note.headings.has(citation.heading.trim()) ? ' (check whitespace)' : ''
@@ -143,7 +142,7 @@ function checkCitation(citation: Citation, at: string): void {
     if (note.headings.has(citation.section)) {
       error(
         `${at}.section`,
-        `"${citation.section}" IS a Markdown heading in ${citation.file} — use "heading" so the citation deep-links.`,
+        `"${citation.section}" IS a Markdown heading in ${citation.file} - use "heading" so the citation deep-links.`,
       )
     } else if (!note.text.includes(citation.section)) {
       error(`${at}.section`, `"${citation.section}" does not appear anywhere in ${citation.file}`)
@@ -169,7 +168,7 @@ function checkCards(cards: Card[], meta: CardSetMeta): void {
 
 // --- 1. Catalog ------------------------------------------------------------
 
-const catalogPath = join(dataRoot, 'catalog.json')
+const catalogPath = join(repoRoot, 'catalog.json')
 if (!exists(catalogPath)) {
   console.error(`✗ missing ${relative(repoRoot, catalogPath)}`)
   process.exit(1)
@@ -179,7 +178,7 @@ const catalogResult = validateCatalog(readJson(catalogPath))
 issues.push(...catalogResult.issues)
 
 if (!catalogResult.value) {
-  console.error(`\n✗ data/catalog.json is invalid:\n${formatIssues(issues)}\n`)
+  console.error(`\n✗ catalog.json is invalid:\n${formatIssues(issues)}\n`)
   process.exit(1)
 }
 
@@ -192,12 +191,12 @@ const registered = new Set(catalog.sets.map((set) => set.path))
 
 for (const path of onDisk) {
   if (!registered.has(path)) {
-    error(`data/${path}/cards.json`, 'card file exists but is not registered in data/catalog.json')
+    error(`flashcards/${path}.json`, 'card file exists but is not registered in catalog.json')
   }
 }
 for (const path of registered) {
   if (!onDisk.has(path)) {
-    error(`catalog.sets[${path}]`, `registered in the catalog but data/${path}/cards.json is missing`)
+    error(`catalog.sets[${path}]`, `registered in the catalog but flashcards/${path}.json is missing`)
   }
 }
 
@@ -205,17 +204,25 @@ for (const path of registered) {
 
 let totalCards = 0
 
+/**
+ * Card ids must be unique within a domain, because progress is stored per course and a
+ * course only draws sets from its own domain. Two sets in one domain naming a card
+ * identically would make one card's history indistinguishable from the other's - and
+ * usually means the same fact is carded twice.
+ */
+const idsByDomain = new Map<string, Map<string, string>>()
+
 for (const meta of catalog.sets) {
-  const cardPath = join(dataRoot, meta.path, 'cards.json')
+  const cardPath = join(cardsRoot, `${meta.path}.json`)
   if (!exists(cardPath)) continue
 
   const file = readJson(cardPath) as { id?: string; cards?: unknown }
 
   if (file.id !== meta.id) {
-    error(`data/${meta.path}/cards.json.id`, `expected "${meta.id}" to match the catalog, got "${file.id}"`)
+    error(`flashcards/${meta.path}.json.id`, `expected "${meta.id}" to match the catalog, got "${file.id}"`)
   }
 
-  const result = validateCards(file.cards, `data/${meta.path}/cards.json.cards`)
+  const result = validateCards(file.cards, `flashcards/${meta.path}.json.cards`)
   issues.push(...result.issues)
   if (!result.value) continue
 
@@ -225,6 +232,22 @@ for (const meta of catalog.sets) {
       `says ${meta.cardCount} but the file holds ${result.value.length}`,
     )
   }
+
+  const claimed = idsByDomain.get(meta.domainId) ?? new Map<string, string>()
+  for (const card of result.value) {
+    const owner = claimed.get(card.id)
+    if (owner) {
+      error(
+        `flashcards/${meta.path}.json`,
+        `card id "${card.id}" is already used by ${owner}. Ids must be unique within the ` +
+          `"${meta.domainId}" domain, because progress is stored per course and a course ` +
+          `draws only on sets from one domain.`,
+      )
+    } else {
+      claimed.set(card.id, `flashcards/${meta.path}.json`)
+    }
+  }
+  idsByDomain.set(meta.domainId, claimed)
 
   checkCards(result.value, meta)
   totalCards += result.value.length
@@ -236,7 +259,28 @@ for (const meta of catalog.sets) {
   }
 }
 
-// --- 4. Report -------------------------------------------------------------
+// --- 4. Courses ------------------------------------------------------------
+// A course is a study guide plus the sets it quizzes. The guide has to exist on disk,
+// and every note it links has to resolve, or the course page renders dead links.
+
+for (const course of catalog.courses) {
+  const guidePath = join(repoRoot, 'courses', `${course.path}.md`)
+  if (!exists(guidePath)) {
+    error(`catalog.courses[${course.path}]`, `study guide courses/${course.path}.md is missing`)
+    continue
+  }
+
+  const guide = readFileSync(guidePath, 'utf8')
+  // Relative Markdown links out of courses/<domain>/ into the notes tree.
+  for (const [, target] of guide.matchAll(/\]\((\.\.\/\.\.\/notes\/[^)\s]+)\)/g)) {
+    const noteRelative = target.replace(/^(\.\.\/)+/, '')
+    if (!exists(join(repoRoot, noteRelative))) {
+      error(`courses/${course.path}.md`, `links to "${target}" but ${noteRelative} does not exist`)
+    }
+  }
+}
+
+// --- 5. Report -------------------------------------------------------------
 
 const errors = issues.filter((issue) => issue.severity === 'error')
 const warnings = issues.filter((issue) => issue.severity === 'warning')
@@ -252,6 +296,7 @@ if (hasErrors(issues)) {
 
 const planned = catalog.domains.filter((domain) => domain.status === 'planned').map((d) => d.id)
 console.log(
-  `✓ data ok — ${catalog.sets.length} card set(s), ${totalCards} cards, ` +
-    `${catalog.domains.length} domain(s)${planned.length ? ` (planned: ${planned.join(', ')})` : ''}`,
+  `✓ data ok - ${catalog.courses.length} course(s), ${catalog.sets.length} card set(s), ` +
+    `${totalCards} cards, ${catalog.domains.length} domain(s)` +
+    `${planned.length ? ` (planned: ${planned.join(', ')})` : ''}`,
 )

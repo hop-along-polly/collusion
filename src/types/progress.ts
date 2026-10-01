@@ -8,7 +8,16 @@
  * a migration or a rewrite of the reading code. See ARCHITECTURE.md → "Freemium path".
  */
 
-export const PROGRESS_SCHEMA_VERSION = 1
+/**
+ * 2 - progress moved from being keyed by card set to being keyed by course.
+ *
+ * A card can be tested by more than one certification, and how ready you are for one
+ * exam says nothing about the other, so the same card answered under two courses is two
+ * independent records. Version 1 documents are keyed by set and are discarded on read
+ * rather than migrated; the two models cannot be reconciled, because a v1 record does
+ * not say which course the answer was given for.
+ */
+export const PROGRESS_SCHEMA_VERSION = 2
 
 /** Owner id used before authentication exists. */
 export const LOCAL_OWNER = 'local'
@@ -28,10 +37,15 @@ export interface CardProgress {
   marked: boolean
 }
 
-export interface SetProgress {
-  /** Keyed by card id. Cards never answered are simply absent. */
+export interface CourseProgress {
+  /**
+   * Keyed by card id. Ids carry no set prefix: a course only draws sets from its own
+   * domain, and the build gate enforces that card ids are unique within a domain, so the
+   * id alone is unambiguous inside a course. Keeping it bare means a card's history
+   * survives its set being renamed, split, or the card moving between sets.
+   */
   cards: Record<string, CardProgress>
-  /** Epoch millis of the last session in this set, or null if never started. */
+  /** Epoch millis of the last session for this course, or null if never started. */
   lastSessionAt: number | null
   /** Sessions carried through to the results screen. */
   sessionsCompleted: number
@@ -41,14 +55,14 @@ export interface ProgressSnapshot {
   schemaVersion: typeof PROGRESS_SCHEMA_VERSION
   /** `LOCAL_OWNER` today; a real user id once accounts exist. */
   ownerId: string
-  /** Epoch millis — the merge key for future server sync. */
+  /** Epoch millis - the merge key for future server sync. */
   updatedAt: number
-  /** Keyed by fully-qualified set id (`<domainId>/<setId>`). */
-  sets: Record<string, SetProgress>
+  /** Keyed by fully-qualified course id (`<domainId>/<courseId>`). */
+  courses: Record<string, CourseProgress>
 }
 
-/** Aggregated view of one set's progress, for dashboards and set cards. */
-export interface SetProgressSummary {
+/** Aggregated view of one course's progress, for dashboards and course cards. */
+export interface CourseProgressSummary {
   /** Cards with at least one attempt. */
   attempted: number
   /** Cards whose most recent attempt was correct. */

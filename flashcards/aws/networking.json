@@ -1,0 +1,1187 @@
+{
+  "id": "networking",
+  "title": "AWS Networking",
+  "cards": [
+    {
+      "id": "public-subnet-definition",
+      "type": "single",
+      "prompt": "What makes a subnet public?",
+      "tags": [
+        "networking",
+        "vpc"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Its route table sends internet-bound traffic to an Internet Gateway",
+          "correct": true,
+          "rationale": "The route is the only thing that makes a subnet public. Nothing else about the subnet matters."
+        },
+        {
+          "id": "b",
+          "text": "Its instances have public IP addresses assigned",
+          "correct": false,
+          "rationale": "A public address with no route to an Internet Gateway is unreachable, which is a common misconfiguration."
+        },
+        {
+          "id": "c",
+          "text": "Its security groups allow inbound traffic from anywhere",
+          "correct": false,
+          "rationale": "Security groups filter traffic that arrives. They cannot create a path for it to arrive on."
+        },
+        {
+          "id": "d",
+          "text": "It was created with the public subnet option in the console",
+          "correct": false,
+          "rationale": "The console's option simply sets up the route and address assignment. There is no separate subnet type."
+        }
+      ],
+      "explanation": "Subnets are not public or private by nature, only by routing. That is why troubleshooting unreachable instances starts at the route table rather than the security group, and why a private subnet is simply one with no Internet Gateway route.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "VPC building blocks"
+        }
+      ]
+    },
+    {
+      "id": "route-table-cannot-deny",
+      "type": "boolean",
+      "prompt": "A route table can be used to deny traffic from a specific IP address.",
+      "tags": [
+        "networking",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "A route table decides *where* a packet is sent, matched by destination. It has no concept of allowing or denying, so it cannot block a source. Blocking a specific address is a Network ACL job, because ACLs are the only VPC control with deny rules.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "VPC building blocks"
+        }
+      ]
+    },
+    {
+      "id": "security-groups-vs-nacls",
+      "type": "multi",
+      "prompt": "Which statements correctly distinguish Security Groups from Network ACLs? (Select all that apply)",
+      "tags": [
+        "networking",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Security Groups are stateful, so return traffic is allowed automatically",
+          "correct": true,
+          "rationale": "Statefulness is why a security group needs no matching outbound rule for a reply."
+        },
+        {
+          "id": "b",
+          "text": "Network ACLs are stateless, so a reply needs its own rule",
+          "correct": true,
+          "rationale": "Nothing is remembered between directions, which is the usual cause of a half-working ACL."
+        },
+        {
+          "id": "c",
+          "text": "Security Groups support allow rules only, while Network ACLs support allow and deny",
+          "correct": true,
+          "rationale": "This is why only an ACL can block one specific address."
+        },
+        {
+          "id": "d",
+          "text": "Security Groups are evaluated at the instance, Network ACLs at the subnet boundary",
+          "correct": true,
+          "rationale": "The point of evaluation is what makes an ACL a blanket control and a security group a per-workload one."
+        },
+        {
+          "id": "e",
+          "text": "A default Network ACL denies all traffic until rules are added",
+          "correct": false,
+          "rationale": "The default Network ACL allows all inbound and outbound traffic. It is the default *security group* that starts by allowing nothing inbound."
+        }
+      ],
+      "explanation": "Four properties separate them: stateful against stateless, allow-only against allow and deny, instance against subnet, and permissive default against restrictive default. Those four decide every question about which control to reach for, and the deny capability is the one that forces an ACL answer.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "VPC building blocks"
+        }
+      ]
+    },
+    {
+      "id": "nacl-block-single-ip",
+      "type": "single",
+      "prompt": "A single external IP address is attacking an application and must be blocked at the VPC level. Which control?",
+      "tags": [
+        "networking",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A Network ACL deny rule",
+          "correct": true,
+          "rationale": "ACLs are the only VPC control with deny rules, so they are the only way to block one source."
+        },
+        {
+          "id": "b",
+          "text": "A security group rule denying that address",
+          "correct": false,
+          "rationale": "Security groups have no deny. You can only omit an address from an allow rule, which does nothing when the rule is broader."
+        },
+        {
+          "id": "c",
+          "text": "A route table entry discarding the address",
+          "correct": false,
+          "rationale": "Route tables match on destination and cannot filter by source."
+        },
+        {
+          "id": "d",
+          "text": "Removing the Internet Gateway",
+          "correct": false,
+          "rationale": "That blocks everyone, including legitimate traffic, so it is an outage rather than a mitigation."
+        }
+      ],
+      "explanation": "This is the practical consequence of security groups being allow-only. A blocklist of any kind has to be an ACL inside the VPC, or WAF and Shield further out at layer 7 and the network edge.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "VPC building blocks"
+        }
+      ]
+    },
+    {
+      "id": "vpc-flow-logs",
+      "type": "single",
+      "prompt": "What do VPC Flow Logs capture?",
+      "tags": [
+        "networking",
+        "monitoring"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Metadata about IP traffic, including addresses, ports, protocol and byte counts",
+          "correct": true,
+          "rationale": "Flow logs record the shape of the traffic and whether it was accepted or rejected."
+        },
+        {
+          "id": "b",
+          "text": "The full contents of every packet",
+          "correct": false,
+          "rationale": "No payload is recorded. Capturing content requires Traffic Mirroring instead."
+        },
+        {
+          "id": "c",
+          "text": "Every API call made against the VPC",
+          "correct": false,
+          "rationale": "That is CloudTrail, which records control plane activity rather than data plane traffic."
+        },
+        {
+          "id": "d",
+          "text": "DNS queries made by instances",
+          "correct": false,
+          "rationale": "DNS query logging is a Route 53 Resolver feature."
+        }
+      ],
+      "explanation": "The accept or reject field is what makes flow logs the first place to look when traffic is being dropped, because it shows whether a security group or ACL refused the packet. The absence of payload is equally important: a question about inspecting content is never answered with flow logs.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "VPC building blocks"
+        }
+      ]
+    },
+    {
+      "id": "gateway-direction",
+      "type": "single",
+      "prompt": "EC2 instances in a private subnet need outbound internet access but must not be reachable from the internet. Which component?",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "NAT Gateway",
+          "correct": true,
+          "rationale": "A NAT Gateway allows outbound connections while blocking any connection initiated from outside."
+        },
+        {
+          "id": "b",
+          "text": "Internet Gateway",
+          "correct": false,
+          "rationale": "An Internet Gateway permits traffic in both directions, which is what the scenario forbids."
+        },
+        {
+          "id": "c",
+          "text": "Transit Gateway",
+          "correct": false,
+          "rationale": "A Transit Gateway connects networks to each other. It is not an internet egress device."
+        },
+        {
+          "id": "d",
+          "text": "VPC Endpoint",
+          "correct": false,
+          "rationale": "An endpoint reaches specific AWS services privately. It gives no general internet access."
+        }
+      ],
+      "explanation": "The direction of the first packet is the whole question. A NAT Gateway is a one-way street for outbound traffic, which is how private instances fetch patches and call external APIs while staying unreachable. Worth remembering alongside this: a NAT Gateway lives in a single Availability Zone, so a resilient design puts one in each.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "VPC building blocks"
+        }
+      ]
+    },
+    {
+      "id": "nat-gateway-zonal",
+      "type": "single",
+      "prompt": "A NAT Gateway in one Availability Zone fails. What happens to private instances in the other zones that routed through it?",
+      "tags": [
+        "networking",
+        "resilience"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "They lose outbound internet access, because a NAT Gateway is zonal",
+          "correct": true,
+          "rationale": "A NAT Gateway lives in one zone, so routing every subnet through one makes that zone a single point of failure."
+        },
+        {
+          "id": "b",
+          "text": "Nothing, because NAT Gateways are regional and highly available across zones",
+          "correct": false,
+          "rationale": "AWS makes a NAT Gateway redundant *within* its zone, not across zones."
+        },
+        {
+          "id": "c",
+          "text": "Traffic automatically fails over to the Internet Gateway",
+          "correct": false,
+          "rationale": "Private subnets have no Internet Gateway route, and adding one would make them public."
+        },
+        {
+          "id": "d",
+          "text": "Nothing, because instances fall back to their own public IP addresses",
+          "correct": false,
+          "rationale": "Instances in a private subnet have no public addresses to fall back on."
+        }
+      ],
+      "explanation": "Scope is the point. Most VPC constructs are regional, but subnets, EBS volumes and NAT Gateways are zonal, and each one is a place where a design can quietly depend on a single zone. The standard pattern is one NAT Gateway per Availability Zone with each subnet routing to the one beside it.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "VPC building blocks"
+        }
+      ]
+    },
+    {
+      "id": "efa-use-case",
+      "type": "single",
+      "prompt": "What is an Elastic Fabric Adapter (EFA) for?",
+      "tags": [
+        "networking",
+        "performance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Very low latency communication between nodes, for high-performance computing and distributed training",
+          "correct": true,
+          "rationale": "EFA exists for tightly coupled workloads where nodes talk to each other constantly."
+        },
+        {
+          "id": "b",
+          "text": "Private connectivity from a VPC to AWS services",
+          "correct": false,
+          "rationale": "That is a VPC endpoint or PrivateLink."
+        },
+        {
+          "id": "c",
+          "text": "Attaching additional public IP addresses to an instance",
+          "correct": false,
+          "rationale": "Addresses are handled by Elastic IPs and network interfaces."
+        },
+        {
+          "id": "d",
+          "text": "Encrypting traffic between instances in a VPC",
+          "correct": false,
+          "rationale": "EFA is about latency and throughput, not encryption."
+        }
+      ],
+      "explanation": "EFA answers a narrow but recognisable need: node-to-node chatter at the scale of a simulation, a model being trained across many GPUs, or computational fluid dynamics. If a scenario mentions MPI, HPC or multi-node training, EFA belongs in the answer.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "VPC building blocks"
+        }
+      ]
+    },
+    {
+      "id": "peering-not-transitive",
+      "type": "boolean",
+      "prompt": "If VPC A is peered with VPC B, and VPC B is peered with VPC C, traffic can flow from A to C through B.",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "Peering is not transitive. Every pair that needs to communicate requires its own peering connection, which is why the number of connections grows with the square of the number of VPCs and why Transit Gateway exists as the hub-and-spoke alternative.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Private connectivity"
+        }
+      ]
+    },
+    {
+      "id": "peering-vs-transit",
+      "type": "single",
+      "prompt": "An organization has grown to dozens of VPCs connected by point-to-point peering and wants to simplify. What should it adopt?",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Transit Gateway",
+          "correct": true,
+          "rationale": "Transit Gateway is a central router that replaces a peering mesh with one hub, and it can also attach on-premises networks and VPNs."
+        },
+        {
+          "id": "b",
+          "text": "More VPC peering connections, one per pair",
+          "correct": false,
+          "rationale": "That is the problem being described, not the fix. The connection count grows quadratically."
+        },
+        {
+          "id": "c",
+          "text": "AWS PrivateLink for each VPC pair",
+          "correct": false,
+          "rationale": "PrivateLink exposes a specific service to consumers. It is not a general network-to-network connection."
+        },
+        {
+          "id": "d",
+          "text": "A Site-to-Site VPN between each VPC",
+          "correct": false,
+          "rationale": "That adds encryption overhead and even more connections to manage."
+        }
+      ],
+      "explanation": "Peering is simplest for a handful of VPCs and becomes unmanageable at scale precisely because it is not transitive. Transit Gateway trades a small per-attachment cost for a routing model that scales linearly and can include on-premises networks.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Private connectivity"
+        }
+      ]
+    },
+    {
+      "id": "vpc-gateway-endpoint",
+      "type": "multi",
+      "prompt": "Which AWS services does a VPC **Gateway** Endpoint route traffic to privately? (Select all that apply)",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon S3",
+          "correct": true,
+          "rationale": "S3 is one of the two services a gateway endpoint supports."
+        },
+        {
+          "id": "b",
+          "text": "Amazon DynamoDB",
+          "correct": true,
+          "rationale": "DynamoDB is the other, and together they are the whole list."
+        },
+        {
+          "id": "c",
+          "text": "AWS Secrets Manager",
+          "correct": false,
+          "rationale": "Reaching Secrets Manager privately requires an interface endpoint, which is built on PrivateLink."
+        },
+        {
+          "id": "d",
+          "text": "Amazon SQS",
+          "correct": false,
+          "rationale": "SQS also needs an interface endpoint."
+        }
+      ],
+      "explanation": "The gateway endpoint list is exactly two services, S3 and DynamoDB, and it works by adding a route to the subnet's route table at no charge. Everything else uses an interface endpoint, which places a network interface in your subnet and bills hourly plus data processed. The cost difference is why the distinction gets tested.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Private connectivity"
+        }
+      ]
+    },
+    {
+      "id": "interface-vs-gateway-endpoint",
+      "type": "single",
+      "prompt": "What distinguishes an interface VPC endpoint from a gateway endpoint?",
+      "tags": [
+        "networking",
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "An interface endpoint is a network interface with a private address in your subnet and is billed, while a gateway endpoint is a free route table entry for S3 and DynamoDB",
+          "correct": true,
+          "rationale": "One is an addressable device built on PrivateLink; the other is a route."
+        },
+        {
+          "id": "b",
+          "text": "An interface endpoint works only for services in the same account",
+          "correct": false,
+          "rationale": "Interface endpoints reach AWS services, partner services and services published by other accounts."
+        },
+        {
+          "id": "c",
+          "text": "A gateway endpoint encrypts traffic while an interface endpoint does not",
+          "correct": false,
+          "rationale": "Both reach the service over the AWS network, and encryption is a property of the protocol in use."
+        },
+        {
+          "id": "d",
+          "text": "Only a gateway endpoint avoids the public internet",
+          "correct": false,
+          "rationale": "Both avoid the public internet, which is the shared purpose of endpoints."
+        }
+      ],
+      "explanation": "Both solve the same problem, which is reaching an AWS service without an Internet Gateway or NAT. The practical differences are cost and mechanism, and in cost-optimisation scenarios a gateway endpoint for S3 is often the answer because it also removes NAT Gateway data processing charges.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Private connectivity"
+        }
+      ]
+    },
+    {
+      "id": "private-connectivity-options",
+      "type": "multi",
+      "prompt": "Which options provide private connectivity without traversing the public internet? (Select all that apply)",
+      "tags": [
+        "networking",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Direct Connect",
+          "correct": true,
+          "rationale": "A dedicated physical connection between an on-premises network and AWS."
+        },
+        {
+          "id": "b",
+          "text": "AWS PrivateLink",
+          "correct": true,
+          "rationale": "PrivateLink keeps traffic to a service on the AWS network."
+        },
+        {
+          "id": "c",
+          "text": "VPC endpoints",
+          "correct": true,
+          "rationale": "Endpoints reach supported services without an Internet Gateway or NAT device."
+        },
+        {
+          "id": "d",
+          "text": "VPC peering",
+          "correct": true,
+          "rationale": "Peered VPCs exchange traffic using private addresses over the AWS network."
+        },
+        {
+          "id": "e",
+          "text": "Site-to-Site VPN",
+          "correct": false,
+          "rationale": "A VPN is encrypted but it does travel over the public internet, which is exactly why it is quick to set up and why Direct Connect exists."
+        }
+      ],
+      "explanation": "Private and encrypted are not the same claim. A VPN protects traffic that still crosses the internet, while Direct Connect, PrivateLink, endpoints and peering keep it off the internet entirely. A scenario worried about consistent latency wants the second group; one worried only about confidentiality can accept a VPN.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Private connectivity"
+        }
+      ]
+    },
+    {
+      "id": "direct-connect-lead-time",
+      "type": "single",
+      "prompt": "An on-premises network needs a private connection to AWS by the end of the week. What is the realistic choice?",
+      "tags": [
+        "networking",
+        "hybrid"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Site-to-Site VPN now, with Direct Connect provisioned later if needed",
+          "correct": true,
+          "rationale": "A VPN can be configured immediately, while a Direct Connect circuit takes weeks or months to provision."
+        },
+        {
+          "id": "b",
+          "text": "Direct Connect, because it is the only private option",
+          "correct": false,
+          "rationale": "The lead time makes it impossible within a week, and a VPN also keeps traffic encrypted."
+        },
+        {
+          "id": "c",
+          "text": "VPC peering to the on-premises network",
+          "correct": false,
+          "rationale": "Peering connects two VPCs. It cannot attach a data centre."
+        },
+        {
+          "id": "d",
+          "text": "A Transit Gateway with no attachments",
+          "correct": false,
+          "rationale": "Transit Gateway is a router. Something still has to carry the traffic from the data centre to it."
+        }
+      ],
+      "explanation": "Timeline is a deliberate discriminator in hybrid questions. Direct Connect wins on consistent bandwidth and latency but is a physical circuit order; a VPN is software and immediate. The two are often deployed together, with the VPN becoming the backup path once the circuit arrives.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Private connectivity"
+        }
+      ]
+    },
+    {
+      "id": "privatelink-saas",
+      "type": "single",
+      "prompt": "A SaaS vendor wants customers to reach its service from their own VPCs without exposing it to the internet. Which service?",
+      "tags": [
+        "networking",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS PrivateLink",
+          "correct": true,
+          "rationale": "PrivateLink publishes a service that consumers reach through an endpoint in their own VPC, with no internet exposure on either side."
+        },
+        {
+          "id": "b",
+          "text": "VPC peering with each customer",
+          "correct": false,
+          "rationale": "Peering joins whole networks, which means overlapping address ranges and far more access than a single service needs."
+        },
+        {
+          "id": "c",
+          "text": "A public Network Load Balancer with a security group allowlist",
+          "correct": false,
+          "rationale": "That is still internet-facing, and maintaining an allowlist of customer addresses does not scale."
+        },
+        {
+          "id": "d",
+          "text": "Transit Gateway shared with customers",
+          "correct": false,
+          "rationale": "A shared router gives broad network reachability rather than exposing one service."
+        }
+      ],
+      "explanation": "PrivateLink's distinguishing property is that it exposes a service rather than a network, so the two sides never share routes or worry about overlapping address ranges. That is why it is the standard answer for vendor-to-customer and account-to-account service access.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Private connectivity"
+        }
+      ]
+    },
+    {
+      "id": "load-balancer-layers",
+      "type": "single",
+      "prompt": "Traffic must be routed to different backend applications based on the URL path. Which load balancer?",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Application Load Balancer",
+          "correct": true,
+          "rationale": "An ALB works at layer 7 and can route on host, path, header or query string."
+        },
+        {
+          "id": "b",
+          "text": "Network Load Balancer",
+          "correct": false,
+          "rationale": "An NLB works at layer 4 and cannot see a URL path at all."
+        },
+        {
+          "id": "c",
+          "text": "Gateway Load Balancer",
+          "correct": false,
+          "rationale": "A GWLB transparently sends traffic through network appliances such as firewalls."
+        },
+        {
+          "id": "d",
+          "text": "Route 53 weighted routing",
+          "correct": false,
+          "rationale": "DNS resolves names to addresses and has no visibility of the path a client later requests."
+        }
+      ],
+      "explanation": "The layer decides the answer. Anything about a URL, a hostname, a header or a cookie is layer 7 and therefore an ALB. Anything about raw TCP or UDP throughput, static IP addresses or a protocol the balancer cannot parse is layer 4 and therefore an NLB.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Load balancing and DNS"
+        }
+      ]
+    },
+    {
+      "id": "nlb-static-ip",
+      "type": "multi",
+      "prompt": "Which requirements point to a Network Load Balancer rather than an Application Load Balancer? (Select all that apply)",
+      "tags": [
+        "networking"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A static IP address per Availability Zone that clients can allowlist",
+          "correct": true,
+          "rationale": "NLBs provide static addresses, which an ALB does not."
+        },
+        {
+          "id": "b",
+          "text": "Balancing a UDP-based protocol",
+          "correct": true,
+          "rationale": "An ALB handles HTTP and HTTPS only, so UDP requires an NLB."
+        },
+        {
+          "id": "c",
+          "text": "Extremely high throughput with minimal added latency",
+          "correct": true,
+          "rationale": "Operating at layer 4 is what lets an NLB handle very high volumes with little overhead."
+        },
+        {
+          "id": "d",
+          "text": "Routing requests to different target groups based on the URL path",
+          "correct": false,
+          "rationale": "Path-based routing requires reading HTTP, which is an ALB capability."
+        },
+        {
+          "id": "e",
+          "text": "Terminating TLS and inspecting HTTP headers for authentication",
+          "correct": false,
+          "rationale": "Header inspection and built-in authentication are layer 7 features of an ALB."
+        }
+      ],
+      "explanation": "The two load balancers are not graded by quality but by the layer they work at, and each gains abilities the other cannot have. Static addresses and non-HTTP protocols are the clearest NLB signals; content-based routing and authentication are the clearest ALB ones.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Load balancing and DNS"
+        }
+      ]
+    },
+    {
+      "id": "gwlb-appliances",
+      "type": "single",
+      "prompt": "All traffic must pass through a fleet of third-party firewall appliances transparently. Which service?",
+      "tags": [
+        "networking",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Gateway Load Balancer",
+          "correct": true,
+          "rationale": "A GWLB exists to insert a fleet of inspection appliances into the path without the client or server noticing."
+        },
+        {
+          "id": "b",
+          "text": "Application Load Balancer",
+          "correct": false,
+          "rationale": "An ALB terminates connections and forwards to targets. It is not transparent and does not preserve the original packet."
+        },
+        {
+          "id": "c",
+          "text": "AWS Network Firewall",
+          "correct": false,
+          "rationale": "Network Firewall is AWS's own managed firewall. The scenario specifies third-party appliances."
+        },
+        {
+          "id": "d",
+          "text": "AWS WAF",
+          "correct": false,
+          "rationale": "WAF filters HTTP requests at layer 7 and is not a path for arbitrary traffic through appliances."
+        }
+      ],
+      "explanation": "Gateway Load Balancer is the one load balancer whose job is not distributing application traffic but scaling and failing over inspection devices. Where the appliance is AWS's own rather than a vendor's, Network Firewall covers the same need without a load balancer.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Load balancing and DNS"
+        }
+      ]
+    },
+    {
+      "id": "routing-policies",
+      "type": "multi",
+      "prompt": "Which of these are Route 53 routing policies? (Select all that apply)",
+      "tags": [
+        "networking",
+        "dns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Weighted",
+          "correct": true,
+          "rationale": "Weighted routing splits traffic between endpoints by assigned weights."
+        },
+        {
+          "id": "b",
+          "text": "Geoproximity",
+          "correct": true,
+          "rationale": "Geoproximity answers based on distance, with a bias that can shift traffic toward or away from a Region."
+        },
+        {
+          "id": "c",
+          "text": "Geolocation",
+          "correct": true,
+          "rationale": "Geolocation answers based on where the user is, which suits language and compliance rules."
+        },
+        {
+          "id": "d",
+          "text": "Multivalue answer",
+          "correct": true,
+          "rationale": "Multivalue returns several healthy records and lets the client pick one."
+        },
+        {
+          "id": "e",
+          "text": "Round robin cooldown",
+          "correct": false,
+          "rationale": "Not a Route 53 policy. Cooldown is an Auto Scaling concept."
+        }
+      ],
+      "explanation": "Route 53 decides which answer a DNS query receives, and each policy keys off a different input: a weight, measured latency, a health check, the user's location or address, or distance with a deliberate bias. Recognising which input the scenario supplies is enough to pick the policy.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Route 53 routing policies"
+        }
+      ]
+    },
+    {
+      "id": "weighted-canary-release",
+      "type": "single",
+      "prompt": "A team wants to send 5% of traffic to a new version of a service and the rest to the current one. Which Route 53 routing policy?",
+      "tags": [
+        "networking",
+        "dns",
+        "deployment"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Weighted",
+          "correct": true,
+          "rationale": "Assigning weights is how a canary or blue-green cutover is done at the DNS layer."
+        },
+        {
+          "id": "b",
+          "text": "Failover",
+          "correct": false,
+          "rationale": "Failover sends everything to a primary and only diverts when a health check fails."
+        },
+        {
+          "id": "c",
+          "text": "Latency",
+          "correct": false,
+          "rationale": "Latency routing picks the fastest Region for each client, which is unrelated to version rollout."
+        },
+        {
+          "id": "d",
+          "text": "Multivalue answer",
+          "correct": false,
+          "rationale": "Multivalue returns several records without controlling the proportion each receives."
+        }
+      ],
+      "explanation": "Weighted routing is the DNS answer to progressive delivery, and the weights can be shifted gradually to complete or abandon a release. A scenario naming a percentage of traffic is almost always weighted routing.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Route 53 routing policies"
+        }
+      ]
+    },
+    {
+      "id": "failover-vs-latency",
+      "type": "single",
+      "prompt": "What distinguishes Route 53 failover routing from latency routing?",
+      "tags": [
+        "networking",
+        "dns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Failover diverts traffic only when a health check fails, while latency routing continuously sends each client to the fastest Region",
+          "correct": true,
+          "rationale": "One reacts to health, the other optimises performance for every query."
+        },
+        {
+          "id": "b",
+          "text": "Failover works only within one Region, latency routing only across Regions",
+          "correct": false,
+          "rationale": "Failover is commonly used across Regions, which is how a disaster recovery site is activated."
+        },
+        {
+          "id": "c",
+          "text": "Latency routing requires a load balancer and failover does not",
+          "correct": false,
+          "rationale": "Neither policy requires a load balancer; both resolve names to whatever endpoints you register."
+        },
+        {
+          "id": "d",
+          "text": "Failover ignores health checks and relies on TTL expiry",
+          "correct": false,
+          "rationale": "Health checks are the mechanism failover depends on."
+        }
+      ],
+      "explanation": "Both can send traffic to more than one Region, so the question is what triggers the choice. Health is failover; speed is latency; the user's location is geolocation. A disaster recovery scenario is failover, and a global performance scenario is latency.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Route 53 routing policies"
+        }
+      ]
+    },
+    {
+      "id": "cloudfront-cert-region",
+      "type": "boolean",
+      "prompt": "A certificate used by CloudFront must be in the `us-east-1` Region.",
+      "tags": [
+        "networking",
+        "security",
+        "edge"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": false
+        }
+      ],
+      "explanation": "CloudFront is a global service, and its certificates are read from us-east-1 regardless of where the origin sits. This catches teams out because ACM is otherwise regional, so a certificate issued next to the application is invisible to the distribution in front of it.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Edge"
+        }
+      ]
+    },
+    {
+      "id": "cloudfront-vs-global-accelerator",
+      "type": "single",
+      "prompt": "A TCP-based game server needs players routed onto the AWS backbone as early as possible, with static IP addresses for clients. Which service?",
+      "tags": [
+        "networking",
+        "edge"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Global Accelerator",
+          "correct": true,
+          "rationale": "Global Accelerator provides two static anycast addresses and carries TCP and UDP traffic over the AWS backbone to regional endpoints."
+        },
+        {
+          "id": "b",
+          "text": "Amazon CloudFront",
+          "correct": false,
+          "rationale": "CloudFront is built for cacheable content over HTTP and HTTPS, not arbitrary TCP sessions."
+        },
+        {
+          "id": "c",
+          "text": "Route 53 latency routing",
+          "correct": false,
+          "rationale": "DNS can point a client at the nearest Region but does nothing to improve the network path once chosen."
+        },
+        {
+          "id": "d",
+          "text": "A Network Load Balancer in each Region",
+          "correct": false,
+          "rationale": "Load balancers distribute traffic inside a Region. They do not shorten the internet path to it."
+        }
+      ],
+      "explanation": "Both edge services shorten the distance traffic spends on the public internet, and the dividing line is what they carry. CloudFront caches content at layer 7; Global Accelerator accelerates whole TCP and UDP flows and gives fixed entry addresses. Games, VoIP and IoT protocols point at Global Accelerator.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Edge"
+        }
+      ]
+    },
+    {
+      "id": "cloudfront-oac-private-bucket",
+      "type": "single",
+      "prompt": "Content should be served through CloudFront while the S3 bucket behind it stays private. What makes that possible?",
+      "tags": [
+        "edge",
+        "security",
+        "storage"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Origin Access Control, which lets the distribution read the bucket",
+          "correct": true,
+          "rationale": "OAC gives CloudFront an identity the bucket policy can trust, so the bucket never has to be public."
+        },
+        {
+          "id": "b",
+          "text": "Making the bucket public but restricting it with a Network ACL",
+          "correct": false,
+          "rationale": "Network ACLs apply to VPC subnets, not to S3, and making the bucket public is what the scenario avoids."
+        },
+        {
+          "id": "c",
+          "text": "A signed URL on every object",
+          "correct": false,
+          "rationale": "Signed URLs control who may request content through CloudFront. They do not grant CloudFront access to a private origin."
+        },
+        {
+          "id": "d",
+          "text": "Enabling Transfer Acceleration on the bucket",
+          "correct": false,
+          "rationale": "Transfer Acceleration speeds long-distance uploads and is unrelated to access control."
+        }
+      ],
+      "explanation": "The pattern is worth recognising in any architecture question: put the distribution in front, give it an identity, and keep the origin private so the only path to the content is through the edge. Signed URLs and cookies then control *which clients* may use that path.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Edge"
+        }
+      ]
+    },
+    {
+      "id": "edge-functions-purpose",
+      "type": "multi",
+      "prompt": "Which tasks suit code running at a CloudFront edge location? (Select all that apply)",
+      "tags": [
+        "edge",
+        "compute"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Rewriting a request URL before it reaches the origin",
+          "correct": true,
+          "rationale": "Request manipulation at the edge avoids a round trip to the origin entirely."
+        },
+        {
+          "id": "b",
+          "text": "Checking an authentication token before serving cached content",
+          "correct": true,
+          "rationale": "Handling authorisation at the edge keeps unauthorised requests away from the application."
+        },
+        {
+          "id": "c",
+          "text": "Personalising a response header based on the viewer",
+          "correct": true,
+          "rationale": "Lightweight per-viewer changes are a standard edge function use."
+        },
+        {
+          "id": "d",
+          "text": "Running a 20 minute data transformation job",
+          "correct": false,
+          "rationale": "Edge functions are for very short request-time logic. Long jobs belong on Batch, Fargate or Step Functions."
+        },
+        {
+          "id": "e",
+          "text": "Hosting the primary relational database",
+          "correct": false,
+          "rationale": "Edge locations run request-time code, not stateful data stores."
+        }
+      ],
+      "explanation": "Edge compute is defined by being on the request path: useful for anything that can be decided in milliseconds from the request itself, and wrong for anything that needs time, state or bulk data. The benefit is removing a round trip to the Region, so the work has to be smaller than that round trip.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Edge"
+        }
+      ]
+    },
+    {
+      "id": "vpc-scope-facts",
+      "type": "multi",
+      "prompt": "Which statements about the scope of networking components are correct? (Select all that apply)",
+      "tags": [
+        "networking",
+        "vpc"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A VPC spans the Availability Zones of one Region",
+          "correct": true,
+          "rationale": "The VPC is regional, which is why subnets rather than VPCs are the per-zone unit."
+        },
+        {
+          "id": "b",
+          "text": "A subnet exists in exactly one Availability Zone",
+          "correct": true,
+          "rationale": "That is what makes a subnet the building block of a zone-aware design."
+        },
+        {
+          "id": "c",
+          "text": "Route 53 and CloudFront are global services",
+          "correct": true,
+          "rationale": "Neither has a Region picker, which is also why CloudFront certificates live in us-east-1."
+        },
+        {
+          "id": "d",
+          "text": "A Transit Gateway is regional and can be peered with one in another Region",
+          "correct": true,
+          "rationale": "Inter-Region peering between Transit Gateways is how a global network is assembled."
+        },
+        {
+          "id": "e",
+          "text": "An Internet Gateway must be created once per Availability Zone",
+          "correct": false,
+          "rationale": "An Internet Gateway attaches to the VPC as a whole and is not a per-zone resource."
+        }
+      ],
+      "explanation": "Scope questions are quietly about failure domains. Knowing which components are global, which are regional and which are zonal tells you where a single failure can take an application down, and the three zonal items worth memorising are subnets, EBS volumes and NAT Gateways.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Networking and Content Delivery"
+        }
+      ]
+    },
+    {
+      "id": "vpc-endpoint-benefits",
+      "type": "multi",
+      "prompt": "Which are reasons to use a VPC endpoint for S3 rather than routing through a NAT Gateway? (Select all that apply)",
+      "tags": [
+        "networking",
+        "cost",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Traffic to S3 never traverses the public internet",
+          "correct": true,
+          "rationale": "Keeping service traffic on the AWS network is the security argument for endpoints."
+        },
+        {
+          "id": "b",
+          "text": "A gateway endpoint for S3 carries no hourly or data processing charge",
+          "correct": true,
+          "rationale": "Gateway endpoints are free, which is the cost argument."
+        },
+        {
+          "id": "c",
+          "text": "NAT Gateway data processing charges are avoided for that traffic",
+          "correct": true,
+          "rationale": "Bulk traffic to S3 through a NAT Gateway is a classic avoidable cost."
+        },
+        {
+          "id": "d",
+          "text": "Private instances can reach S3 without any internet egress path",
+          "correct": true,
+          "rationale": "The endpoint is the whole path, so no Internet Gateway or NAT is needed for it."
+        },
+        {
+          "id": "e",
+          "text": "A gateway endpoint also provides general outbound internet access",
+          "correct": false,
+          "rationale": "An endpoint reaches specific AWS services only. General egress still needs a NAT Gateway."
+        }
+      ],
+      "explanation": "Endpoints are one of the few changes that improve security and cost at once, which is why they appear in both kinds of question. The limit is scope: they reach named AWS services, not the internet, and only S3 and DynamoDB use the free gateway form.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Private connectivity"
+        }
+      ]
+    },
+    {
+      "id": "dns-and-edge-selection",
+      "type": "multi",
+      "prompt": "Which pairings of requirement and service are correct? (Select all that apply)",
+      "tags": [
+        "networking",
+        "edge",
+        "dns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Cache static content close to users worldwide: CloudFront",
+          "correct": true,
+          "rationale": "Caching at edge locations is CloudFront’s purpose."
+        },
+        {
+          "id": "b",
+          "text": "Two static anycast IP addresses fronting TCP and UDP applications: Global Accelerator",
+          "correct": true,
+          "rationale": "Static entry addresses and backbone routing for non-HTTP traffic are its distinguishing features."
+        },
+        {
+          "id": "c",
+          "text": "Send each client to the Region with the lowest measured latency: Route 53 latency routing",
+          "correct": true,
+          "rationale": "Latency routing decides per query which Region answers."
+        },
+        {
+          "id": "d",
+          "text": "Shift 5% of traffic to a new version: Route 53 weighted routing",
+          "correct": true,
+          "rationale": "Weights are how a canary release is expressed in DNS."
+        },
+        {
+          "id": "e",
+          "text": "Route on URL path to different backends: Route 53 geolocation routing",
+          "correct": false,
+          "rationale": "DNS never sees the path. Path-based routing is an Application Load Balancer."
+        }
+      ],
+      "explanation": "DNS and the edge services act before a request reaches a Region, and each keys off a different input: cacheability, protocol, measured latency, weights, or location. Anything that depends on the content of an HTTP request is a load balancer decision instead.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Networking and Content Delivery"
+        }
+      ]
+    }
+  ]
+}

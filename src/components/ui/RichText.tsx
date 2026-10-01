@@ -5,8 +5,8 @@ import { cn } from '@/utils/cn'
 
 /**
  * A deliberately tiny Markdown subset for card copy: fenced code blocks, inline
- * `code`, **bold** and *italic*. Everything is built as React elements — no
- * `dangerouslySetInnerHTML` — so card JSON can never inject markup into the page.
+ * `code`, **bold** and *italic*. Everything is built as React elements - no
+ * `dangerouslySetInnerHTML` - so card JSON can never inject markup into the page.
  * Anything richer than this belongs in the notes, not on a flashcard.
  */
 
@@ -33,7 +33,7 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
 interface RichTextProps {
   children: string
   className?: string
-  /** Render as a single line (no paragraph spacing) — used inside option labels. */
+  /** Render as a single line (no paragraph spacing) - used inside option labels. */
   inline?: boolean
 }
 

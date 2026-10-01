@@ -6,7 +6,7 @@ import {
   getCardProgress,
   overallSummary,
   recordAnswer,
-  resetSet,
+  resetCourse,
   reviewableCardIds,
   setMarked,
   summarize,
@@ -33,7 +33,7 @@ describe('recordAnswer', () => {
   it('does not mutate the snapshot it was given', () => {
     const before = emptySnapshot(0)
     recordAnswer(before, SET, 'c1', true, 10)
-    expect(before.sets).toEqual({})
+    expect(before.courses).toEqual({})
   })
 })
 
@@ -107,16 +107,16 @@ describe('sessions and reset', () => {
     let snapshot = completeSession(emptySnapshot(0), SET, 50)
     snapshot = completeSession(snapshot, SET, 80)
 
-    expect(snapshot.sets[SET]).toMatchObject({ sessionsCompleted: 2, lastSessionAt: 80 })
+    expect(snapshot.courses[SET]).toMatchObject({ sessionsCompleted: 2, lastSessionAt: 80 })
   })
 
   it('clears one set without touching the others', () => {
     let snapshot = recordAnswer(emptySnapshot(0), SET, 'c1', true, 1)
     snapshot = recordAnswer(snapshot, 'devops/ansible', 'a1', true, 2)
 
-    const after = resetSet(snapshot, SET, 3)
-    expect(after.sets[SET]).toBeUndefined()
-    expect(after.sets['devops/ansible']).toBeDefined()
+    const after = resetCourse(snapshot, SET, 3)
+    expect(after.courses[SET]).toBeUndefined()
+    expect(after.courses['devops/ansible']).toBeDefined()
   })
 })
 
@@ -131,7 +131,7 @@ describe('overallSummary', () => {
       attempted: 3,
       correct: 2,
       reviewable: 1,
-      setsStarted: 2,
+      coursesStarted: 2,
       accuracy: 67,
     })
   })

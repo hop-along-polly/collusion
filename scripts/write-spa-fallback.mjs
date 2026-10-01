@@ -1,6 +1,6 @@
 /**
  * GitHub Pages has no server-side rewrite, so a deep link such as
- * `/collusion/anthropic/claude-api` 404s on a cold load — there is no file at that
+ * `/collusion/anthropic/claude-api` 404s on a cold load - there is no file at that
  * path. Pages does serve `404.html` for any unmatched path, and the built `index.html`
  * is a self-contained SPA shell whose asset URLs are absolute (they include the base
  * path), so copying it makes every route load correctly with the URL preserved.
@@ -14,7 +14,7 @@ const dist = join(process.cwd(), 'dist')
 const source = join(dist, 'index.html')
 
 if (!existsSync(source)) {
-  console.error('✗ dist/index.html not found — run the build first')
+  console.error('✗ dist/index.html not found - run the build first')
   process.exit(1)
 }
 

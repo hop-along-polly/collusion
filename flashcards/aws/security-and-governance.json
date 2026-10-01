@@ -1,0 +1,1866 @@
+{
+  "id": "security-and-governance",
+  "title": "AWS Security and Governance",
+  "cards": [
+    {
+      "id": "observability-services",
+      "type": "single",
+      "prompt": "An auditor needs a record of every API call and user activity across the AWS account. Which service?",
+      "tags": [
+        "observability",
+        "auditing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS CloudTrail",
+          "correct": true,
+          "rationale": "CloudTrail records API calls and user activity, which is exactly the audit trail being asked for."
+        },
+        {
+          "id": "b",
+          "text": "Amazon CloudWatch",
+          "correct": false,
+          "rationale": "CloudWatch collects metrics, logs and alarms about how resources are performing, not who called what."
+        },
+        {
+          "id": "c",
+          "text": "AWS X-Ray",
+          "correct": false,
+          "rationale": "X-Ray traces a request through an application to find slow or failing hops."
+        },
+        {
+          "id": "d",
+          "text": "AWS Config",
+          "correct": false,
+          "rationale": "Config records resource configuration over time. It shows what a resource looked like, not who issued every call."
+        }
+      ],
+      "explanation": "Three services answer three different questions, and exams exploit the overlap. CloudTrail is *who did what*. CloudWatch is *what is happening to my resources*. Config is *what does this resource look like now and what did it look like before*.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Observability and Auditing"
+        }
+      ]
+    },
+    {
+      "id": "cloudwatch-vs-cloudtrail",
+      "type": "single",
+      "prompt": "An application's response times have degraded and the team needs to find out when it started. Which service holds that?",
+      "tags": [
+        "observability"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon CloudWatch",
+          "correct": true,
+          "rationale": "Metrics over time, with alarms and dashboards, are what CloudWatch collects."
+        },
+        {
+          "id": "b",
+          "text": "AWS CloudTrail",
+          "correct": false,
+          "rationale": "CloudTrail would show a configuration change that might explain it, but not the response times themselves."
+        },
+        {
+          "id": "c",
+          "text": "AWS Artifact",
+          "correct": false,
+          "rationale": "Artifact is a portal for AWS compliance reports and agreements."
+        },
+        {
+          "id": "d",
+          "text": "AWS Trusted Advisor",
+          "correct": false,
+          "rationale": "Trusted Advisor runs best-practice checks rather than storing historical performance data."
+        }
+      ],
+      "explanation": "A realistic investigation uses both: CloudWatch to find when behaviour changed, then CloudTrail to find what was changed at that moment. Knowing which one holds timings and which holds actions is what makes that sequence obvious.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Observability and Auditing"
+        }
+      ]
+    },
+    {
+      "id": "cloudtrail-retention",
+      "type": "single",
+      "prompt": "How long is CloudTrail management event history available without any additional configuration?",
+      "tags": [
+        "auditing",
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "90 days",
+          "correct": true,
+          "rationale": "The last 90 days of management events are available for free; keeping them longer needs a trail."
+        },
+        {
+          "id": "b",
+          "text": "7 days",
+          "correct": false,
+          "rationale": "Shorter than the actual window. 7 days is a common retention default elsewhere, such as RDS backups."
+        },
+        {
+          "id": "c",
+          "text": "1 year",
+          "correct": false,
+          "rationale": "A year of history requires a trail delivering to S3, or CloudTrail Lake."
+        },
+        {
+          "id": "d",
+          "text": "Indefinitely",
+          "correct": false,
+          "rationale": "Nothing is retained indefinitely by default; long retention is always a deliberate configuration."
+        }
+      ],
+      "explanation": "The 90 day free window is enough for most incident response and nothing more, so any compliance requirement expressed in years implies creating a trail to S3 or using CloudTrail Lake. A scenario naming a retention period longer than three months is pointing at that extra step.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Observability and Auditing"
+        }
+      ]
+    },
+    {
+      "id": "cloudtrail-lake-queries",
+      "type": "single",
+      "prompt": "A security team wants to run SQL queries over years of API activity without building a pipeline. Which option?",
+      "tags": [
+        "auditing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "CloudTrail Lake",
+          "correct": true,
+          "rationale": "It is an immutable audit data lake with SQL queries built in, rather than JSON in S3 that something else has to parse."
+        },
+        {
+          "id": "b",
+          "text": "CloudWatch Logs Insights over the trail",
+          "correct": false,
+          "rationale": "Logs Insights queries log groups and is not designed as a multi-year immutable audit store."
+        },
+        {
+          "id": "c",
+          "text": "Amazon Macie",
+          "correct": false,
+          "rationale": "Macie classifies sensitive data in S3. It does not query API activity."
+        },
+        {
+          "id": "d",
+          "text": "AWS Config aggregators",
+          "correct": false,
+          "rationale": "Config aggregates configuration state across accounts and Regions, not the API call history."
+        }
+      ],
+      "explanation": "The phrase that gives it away is *without building a pipeline*. The traditional approach is a trail to S3 plus Athena, and CloudTrail Lake exists to remove that assembly work while adding immutability an auditor will ask for.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Observability and Auditing"
+        }
+      ]
+    },
+    {
+      "id": "xray-tracing",
+      "type": "single",
+      "prompt": "A request passes through an API, two Lambda functions and a database, and the team needs to know which hop is slow. Which service?",
+      "tags": [
+        "observability"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS X-Ray",
+          "correct": true,
+          "rationale": "X-Ray follows one request across services and attributes time to each segment."
+        },
+        {
+          "id": "b",
+          "text": "CloudWatch alarms",
+          "correct": false,
+          "rationale": "An alarm fires when a single metric crosses a threshold. It cannot attribute latency across components."
+        },
+        {
+          "id": "c",
+          "text": "VPC Flow Logs",
+          "correct": false,
+          "rationale": "Flow logs record network metadata and have no view of application work."
+        },
+        {
+          "id": "d",
+          "text": "AWS CloudTrail",
+          "correct": false,
+          "rationale": "CloudTrail records management API calls, not the internal path of an application request."
+        }
+      ],
+      "explanation": "Metrics tell you that something is slow, and tracing tells you where. Any scenario with several services in one request path and an unclear culprit is a tracing question.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Observability and Auditing"
+        }
+      ]
+    },
+    {
+      "id": "identity-services",
+      "type": "single",
+      "prompt": "An organization needs single sign-on across multiple AWS accounts. Which service?",
+      "tags": [
+        "identity"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "IAM Identity Center",
+          "correct": true,
+          "rationale": "Identity Center provides single sign-on across accounts and into business applications, with users from its own directory or an external provider."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Cognito",
+          "correct": false,
+          "rationale": "Cognito authenticates an application's own end users, not staff signing in to AWS accounts."
+        },
+        {
+          "id": "c",
+          "text": "AWS IAM users in each account",
+          "correct": false,
+          "rationale": "That is the problem single sign-on solves: one identity per person per account, each with its own credentials."
+        },
+        {
+          "id": "d",
+          "text": "AWS Organizations",
+          "correct": false,
+          "rationale": "Organizations groups accounts for billing and policy. It does not authenticate people."
+        }
+      ],
+      "explanation": "The dividing line to hold on to is who is signing in. Staff and engineers reaching AWS accounts are Identity Center; customers of the application you built are Cognito. Organizations is the account structure underneath both.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Identity and Access"
+        }
+      ]
+    },
+    {
+      "id": "resource-based-policy",
+      "type": "single",
+      "prompt": "What is an IAM resource-based policy, and what is it commonly used for?",
+      "tags": [
+        "identity",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A policy attached to a resource that names which principals may act on it, commonly used for cross-account access",
+          "correct": true,
+          "rationale": "The resource grants the permission itself, which is what makes it work for principals in other accounts."
+        },
+        {
+          "id": "b",
+          "text": "A policy attached to a user or role describing what it may do",
+          "correct": false,
+          "rationale": "That is an identity-based policy."
+        },
+        {
+          "id": "c",
+          "text": "A ceiling on what an identity's other policies can grant",
+          "correct": false,
+          "rationale": "That is a permissions boundary."
+        },
+        {
+          "id": "d",
+          "text": "An organization-wide restriction applied to every account",
+          "correct": false,
+          "rationale": "That is a Service Control Policy in AWS Organizations."
+        }
+      ],
+      "explanation": "Resource-based policies matter because some problems cannot be solved from the identity side at all: granting another account access, or allowing an anonymous or service principal. S3 bucket policies, KMS key policies and SQS queue policies are the common examples.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Identity and Access"
+        }
+      ]
+    },
+    {
+      "id": "iam-role-not-keys",
+      "type": "single",
+      "prompt": "An application on EC2 needs to read from S3. What is the correct way to grant it access?",
+      "tags": [
+        "identity",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Attach an IAM role to the instance",
+          "correct": true,
+          "rationale": "A role is assumed and supplies temporary credentials, so no long-lived key is created or stored."
+        },
+        {
+          "id": "b",
+          "text": "Create an IAM user and put its access keys in the application configuration",
+          "correct": false,
+          "rationale": "That creates a long-lived credential on disk, which is the thing roles exist to avoid."
+        },
+        {
+          "id": "c",
+          "text": "Make the bucket public so no credentials are needed",
+          "correct": false,
+          "rationale": "That exposes the data to everyone to avoid a problem roles already solve."
+        },
+        {
+          "id": "d",
+          "text": "Store the root user's keys in Secrets Manager",
+          "correct": false,
+          "rationale": "Root keys should not exist at all, and rotating a credential does not justify using the most privileged one."
+        }
+      ],
+      "explanation": "Any time the actor is a machine, a service or another account, the answer is a role. The reasoning is credential lifetime: roles hand out short-lived credentials that are rotated automatically, so there is nothing durable to leak.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Identity and Access"
+        }
+      ]
+    },
+    {
+      "id": "iam-global-scope",
+      "type": "boolean",
+      "prompt": "An IAM role created in one Region must be recreated in other Regions before it can be used there.",
+      "tags": [
+        "identity"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "IAM is a global service: identities and policies exist once per account and work in every Region. That is worth knowing both for design and for troubleshooting, because it rules IAM out as the explanation when something works in one Region and not another.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Identity and Access"
+        }
+      ]
+    },
+    {
+      "id": "scp-never-grants",
+      "type": "single",
+      "prompt": "A Service Control Policy allows a service, but a user in a member account still cannot use it. Why?",
+      "tags": [
+        "identity",
+        "governance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "An SCP never grants permission, it only sets a ceiling, so an IAM policy must still allow the action",
+          "correct": true,
+          "rationale": "SCPs define the maximum available permissions. Something inside the account still has to grant them."
+        },
+        {
+          "id": "b",
+          "text": "SCPs take up to 24 hours to apply",
+          "correct": false,
+          "rationale": "SCP changes are not subject to a day-long delay, and a delay would not be the design-level reason."
+        },
+        {
+          "id": "c",
+          "text": "SCPs apply only to the management account",
+          "correct": false,
+          "rationale": "It is nearer the opposite: the management account is not restricted by SCPs, while member accounts are."
+        },
+        {
+          "id": "d",
+          "text": "SCPs are overridden by identity-based policies",
+          "correct": false,
+          "rationale": "An SCP cannot be overridden from inside the account. It bounds what any policy there can achieve."
+        }
+      ],
+      "explanation": "Permissions in an organisation are an intersection, not a sum: the SCP sets the outer limit and the IAM policy grants within it, so an action needs both. This also explains why an SCP is the only reliable way to stop a member account's root user.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Identity and Access"
+        }
+      ]
+    },
+    {
+      "id": "cognito-pool-types",
+      "type": "single",
+      "prompt": "A mobile app's users must sign in, then upload directly to S3 using temporary AWS credentials. Which Cognito components?",
+      "tags": [
+        "identity"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A user pool to authenticate them, then an identity pool to exchange that for AWS credentials",
+          "correct": true,
+          "rationale": "User pools are the directory and sign-in; identity pools turn a verified identity into temporary AWS credentials."
+        },
+        {
+          "id": "b",
+          "text": "An identity pool alone, which also handles sign-up and sign-in",
+          "correct": false,
+          "rationale": "Sign-up, sign-in and MFA belong to a user pool. An identity pool only brokers credentials."
+        },
+        {
+          "id": "c",
+          "text": "A user pool alone, since its tokens are AWS credentials",
+          "correct": false,
+          "rationale": "A user pool issues tokens for your application, which are not credentials AWS services accept."
+        },
+        {
+          "id": "d",
+          "text": "IAM users created for each app user",
+          "correct": false,
+          "rationale": "IAM is not designed to hold application end users, and it would mean long-lived credentials per person."
+        }
+      ],
+      "explanation": "The two halves of Cognito do different jobs and the names invite confusion. Authentication is the user pool; authorisation to call AWS directly is the identity pool. Many applications need only the first, because the backend calls AWS on the user's behalf.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Identity and Access"
+        }
+      ]
+    },
+    {
+      "id": "ram-cross-account-sharing",
+      "type": "single",
+      "prompt": "Several accounts need to use the same subnet and Transit Gateway rather than duplicating them. Which service?",
+      "tags": [
+        "identity",
+        "networking",
+        "governance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Resource Access Manager",
+          "correct": true,
+          "rationale": "RAM shares specific resources with other accounts, which avoids duplicating shared infrastructure."
+        },
+        {
+          "id": "b",
+          "text": "AWS Organizations alone",
+          "correct": false,
+          "rationale": "Organizations provides the account structure and policy, but it does not share individual resources."
+        },
+        {
+          "id": "c",
+          "text": "VPC peering between every account",
+          "correct": false,
+          "rationale": "Peering connects separate networks rather than letting accounts use the same subnet."
+        },
+        {
+          "id": "d",
+          "text": "An IAM role in each account",
+          "correct": false,
+          "rationale": "A role grants API access to a resource. It does not place another account's workloads inside your subnet."
+        }
+      ],
+      "explanation": "RAM is the answer whenever a multi-account design wants one copy of expensive shared infrastructure, typically a central networking account owning subnets, Transit Gateways and resolver rules that workload accounts consume.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Identity and Access"
+        }
+      ]
+    },
+    {
+      "id": "macie-sensitive-data",
+      "type": "single",
+      "prompt": "Which AWS service is used to discover, classify and protect sensitive data stored in S3?",
+      "tags": [
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon CloudWatch",
+          "correct": false,
+          "rationale": "CloudWatch is monitoring and observability. It does not inspect object contents."
+        },
+        {
+          "id": "b",
+          "text": "Amazon GuardDuty",
+          "correct": false,
+          "rationale": "GuardDuty is threat detection from logs. Classifying what is inside your objects is a different job."
+        },
+        {
+          "id": "c",
+          "text": "Amazon Macie",
+          "correct": true,
+          "rationale": "Macie discovers and classifies sensitive data in S3 by inspecting the objects themselves."
+        },
+        {
+          "id": "d",
+          "text": "AWS KMS",
+          "correct": false,
+          "rationale": "KMS manages encryption keys. It protects data you have already decided is sensitive; it does not find it."
+        }
+      ],
+      "explanation": "Macie is the data classification service, and the way to keep the security suite straight is by what each one reads. Macie reads your data, GuardDuty reads logs, Inspector reads software and configuration, and Detective reads findings and links them together.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Security and Compliance"
+        }
+      ]
+    },
+    {
+      "id": "security-service-selection",
+      "type": "multi",
+      "prompt": "Which service-to-purpose pairings are correct? (Select all that apply)",
+      "tags": [
+        "security",
+        "governance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Inspector: finding software vulnerabilities and unintended network exposure",
+          "correct": true,
+          "rationale": "Inspector scans EC2 instances, container images and Lambda functions."
+        },
+        {
+          "id": "b",
+          "text": "Detective: working out the root cause of a security finding",
+          "correct": true,
+          "rationale": "Detective links CloudTrail, flow logs and GuardDuty findings into a behaviour graph."
+        },
+        {
+          "id": "c",
+          "text": "Security Hub: aggregating findings and scoring them against standards",
+          "correct": true,
+          "rationale": "Security Hub is the single place findings from the other services land."
+        },
+        {
+          "id": "d",
+          "text": "Control Tower: setting up and governing a multi-account environment",
+          "correct": true,
+          "rationale": "Control Tower builds the landing zone, the organisational units and the guardrails."
+        },
+        {
+          "id": "e",
+          "text": "GuardDuty: scanning instances for open ports and misconfiguration",
+          "correct": false,
+          "rationale": "GuardDuty detects threats from log analysis. Configuration and exposure are Inspector and Config."
+        }
+      ],
+      "explanation": "The security services divide by job rather than by severity: detect, scan, investigate, aggregate, govern. The most commonly confused pair is GuardDuty and Inspector, and the test is whether the scenario describes behaviour that looks malicious, or a weakness that could be exploited.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Security and Compliance"
+        }
+      ]
+    },
+    {
+      "id": "guardduty-not-misconfiguration",
+      "type": "boolean",
+      "prompt": "GuardDuty reports instances that have been left with an open administrative port.",
+      "tags": [
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "GuardDuty analyses logs for behaviour that suggests compromise, such as credentials used from an unusual place, cryptomining or malware. A port left open is a configuration weakness, which is what Inspector and Config report. Keeping the two apart is the usual point of a GuardDuty question.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Security and Compliance"
+        }
+      ]
+    },
+    {
+      "id": "waf-vs-shield",
+      "type": "single",
+      "prompt": "What does AWS WAF protect against that Shield does not?",
+      "tags": [
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Layer 7 request content attacks such as SQL injection and cross-site scripting",
+          "correct": true,
+          "rationale": "Inspecting the content of HTTP requests is the only way to catch an attack that is valid traffic by volume."
+        },
+        {
+          "id": "b",
+          "text": "Volumetric network floods",
+          "correct": false,
+          "rationale": "That is Shield's job, at the network and transport layers."
+        },
+        {
+          "id": "c",
+          "text": "Compromised credentials used from an unusual location",
+          "correct": false,
+          "rationale": "That is GuardDuty, which analyses logs rather than filtering requests."
+        },
+        {
+          "id": "d",
+          "text": "Unencrypted data at rest in S3",
+          "correct": false,
+          "rationale": "Encryption at rest is a bucket and KMS concern."
+        }
+      ],
+      "explanation": "The two are complementary and work at different layers. Shield handles attacks measured in volume and is on by default; WAF reads the request itself, which is what makes injection, scripting and bad bots detectable. A question naming a specific exploit is WAF, and one naming traffic volume is Shield.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Security and Compliance"
+        }
+      ]
+    },
+    {
+      "id": "shield-standard-included",
+      "type": "single",
+      "prompt": "Which statement about AWS Shield is correct?",
+      "tags": [
+        "security",
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Shield Standard is included for every account at no cost, and Shield Advanced adds response support and cost protection for a fee",
+          "correct": true,
+          "rationale": "Standard covers common network and transport layer attacks automatically; Advanced is the paid tier."
+        },
+        {
+          "id": "b",
+          "text": "Shield must be enabled per resource before any protection applies",
+          "correct": false,
+          "rationale": "Standard protection is always on and requires no action."
+        },
+        {
+          "id": "c",
+          "text": "Shield replaces the need for WAF",
+          "correct": false,
+          "rationale": "They work at different layers, and Shield Advanced in fact includes WAF for protected resources."
+        },
+        {
+          "id": "d",
+          "text": "Shield only protects EC2 instances",
+          "correct": false,
+          "rationale": "It protects edge and regional resources including CloudFront, Route 53 and load balancers."
+        }
+      ],
+      "explanation": "Shield is one of the few AWS protections that is on without being asked for, which makes \"enable DDoS protection\" a suspicious answer option. The paid tier is bought for the response team and the billing protection during an attack rather than for basic mitigation.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Security and Compliance"
+        }
+      ]
+    },
+    {
+      "id": "kms-vs-cloudhsm",
+      "type": "single",
+      "prompt": "A regulator requires single-tenant hardware security modules under the customer's exclusive control. Which service?",
+      "tags": [
+        "security",
+        "encryption"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS CloudHSM",
+          "correct": true,
+          "rationale": "CloudHSM gives dedicated single-tenant modules, and AWS cannot recover the keys inside them."
+        },
+        {
+          "id": "b",
+          "text": "AWS KMS with a customer managed key",
+          "correct": false,
+          "rationale": "A customer managed key is still held in a multi-tenant managed service, which the requirement rules out."
+        },
+        {
+          "id": "c",
+          "text": "AWS Secrets Manager",
+          "correct": false,
+          "rationale": "Secrets Manager stores and rotates secrets. It is not a key hardware product."
+        },
+        {
+          "id": "d",
+          "text": "AWS Certificate Manager",
+          "correct": false,
+          "rationale": "ACM issues and renews TLS certificates."
+        }
+      ],
+      "explanation": "KMS is the default for almost everything, because it is integrated with every service and needs no operating. CloudHSM is bought only when a rule demands exclusive, single-tenant control, and the trade is real: exclusive control means AWS cannot help if the keys are lost.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Security and Compliance"
+        }
+      ]
+    },
+    {
+      "id": "secrets-vs-parameter-store",
+      "type": "single",
+      "prompt": "Database credentials must be stored centrally and rotated automatically. Which service?",
+      "tags": [
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Secrets Manager",
+          "correct": true,
+          "rationale": "Automatic rotation, including native rotation for databases, is what distinguishes Secrets Manager."
+        },
+        {
+          "id": "b",
+          "text": "Systems Manager Parameter Store with a secure string",
+          "correct": false,
+          "rationale": "Parameter Store can hold the value encrypted and is free for standard parameters, but it does not rotate credentials for you."
+        },
+        {
+          "id": "c",
+          "text": "AWS KMS",
+          "correct": false,
+          "rationale": "KMS manages the keys used to encrypt a secret. It does not store or rotate the secret itself."
+        },
+        {
+          "id": "d",
+          "text": "An encrypted S3 object with a bucket policy",
+          "correct": false,
+          "rationale": "It could store the value, but rotation, versioning and per-service integration would all be hand-built."
+        }
+      ],
+      "explanation": "Both services store secrets, so the discriminator in a question is almost always rotation, with cost as the counterweight. Configuration and feature flags belong in Parameter Store because it is free; credentials that must change on a schedule belong in Secrets Manager because rotation is built in.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Security and Compliance"
+        }
+      ]
+    },
+    {
+      "id": "acm-certificate-renewal",
+      "type": "single",
+      "prompt": "What problem does AWS Certificate Manager remove?",
+      "tags": [
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Certificates expiring because a manual renewal was missed",
+          "correct": true,
+          "rationale": "ACM provisions and renews certificates for AWS services automatically, and at no charge."
+        },
+        {
+          "id": "b",
+          "text": "Encrypting data at rest in S3 and EBS",
+          "correct": false,
+          "rationale": "That is KMS and each service's encryption settings."
+        },
+        {
+          "id": "c",
+          "text": "Rotating database passwords",
+          "correct": false,
+          "rationale": "That is Secrets Manager."
+        },
+        {
+          "id": "d",
+          "text": "Detecting expired credentials in application code",
+          "correct": false,
+          "rationale": "ACM manages certificates for AWS endpoints rather than auditing application code."
+        }
+      ],
+      "explanation": "An expired certificate is a self-inflicted outage, and ACM exists to remove it as a failure mode. The one trap worth remembering is scope: ACM is regional, and CloudFront reads its certificate from us-east-1 no matter where the origin lives.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Security and Compliance"
+        }
+      ]
+    },
+    {
+      "id": "firewall-manager-org-wide",
+      "type": "single",
+      "prompt": "WAF rules must apply to every account in an organization, including accounts created next month. Which service?",
+      "tags": [
+        "security",
+        "governance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Firewall Manager",
+          "correct": true,
+          "rationale": "Firewall Manager applies WAF, Shield Advanced and Network Firewall policies across an organisation, including future accounts."
+        },
+        {
+          "id": "b",
+          "text": "AWS WAF configured in each account",
+          "correct": false,
+          "rationale": "That is the manual work the question is trying to avoid, and it misses accounts created later."
+        },
+        {
+          "id": "c",
+          "text": "AWS Security Hub",
+          "correct": false,
+          "rationale": "Security Hub aggregates and scores findings. It does not deploy protective rules."
+        },
+        {
+          "id": "d",
+          "text": "AWS Config rules",
+          "correct": false,
+          "rationale": "Config can detect that a rule is missing but cannot apply the WAF configuration itself."
+        }
+      ],
+      "explanation": "The phrase *including accounts created next month* is the giveaway for an Organizations-aware service. Firewall Manager is the security equivalent of Control Tower's guardrails: write the policy once centrally and have it follow the account structure.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Security and Compliance"
+        }
+      ]
+    },
+    {
+      "id": "governance-services",
+      "type": "single",
+      "prompt": "Which service automates the setup and governance of a secure multi-account environment?",
+      "tags": [
+        "governance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Control Tower",
+          "correct": true,
+          "rationale": "Control Tower builds the landing zone, the organisational units and the guardrails rather than leaving them to be assembled by hand."
+        },
+        {
+          "id": "b",
+          "text": "AWS Config",
+          "correct": false,
+          "rationale": "Config records and evaluates resource configuration. It is one of the tools Control Tower uses."
+        },
+        {
+          "id": "c",
+          "text": "AWS Systems Manager",
+          "correct": false,
+          "rationale": "Systems Manager operates instances and resources rather than building an account structure."
+        },
+        {
+          "id": "d",
+          "text": "AWS Service Catalog",
+          "correct": false,
+          "rationale": "Service Catalog publishes approved products for users to launch, which is governance of what runs rather than of the accounts."
+        }
+      ],
+      "explanation": "Control Tower sits on top of Organizations, Config and IAM Identity Center and prescribes a known-good arrangement of them. A scenario about standing up many accounts with consistent guardrails is Control Tower; one about auditing a single resource's configuration is Config.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Governance and Management"
+        }
+      ]
+    },
+    {
+      "id": "config-change-history",
+      "type": "single",
+      "prompt": "A resource is non-compliant and the team needs to know what it looked like last month and when it changed. Which service?",
+      "tags": [
+        "governance",
+        "auditing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Config",
+          "correct": true,
+          "rationale": "Config records configuration over time and evaluates it against rules, which answers both halves of the question."
+        },
+        {
+          "id": "b",
+          "text": "AWS CloudTrail",
+          "correct": false,
+          "rationale": "CloudTrail shows the API calls made. It does not present the resulting configuration state over time."
+        },
+        {
+          "id": "c",
+          "text": "Amazon CloudWatch",
+          "correct": false,
+          "rationale": "CloudWatch records performance and operational metrics, not configuration."
+        },
+        {
+          "id": "d",
+          "text": "AWS Trusted Advisor",
+          "correct": false,
+          "rationale": "Trusted Advisor runs point-in-time best practice checks with no history of a specific resource."
+        }
+      ],
+      "explanation": "Config and CloudTrail are complementary and often both needed: Config holds the state and the compliance verdict, CloudTrail holds the action and the actor. A question asking *what changed* is Config; one asking *who changed it* is CloudTrail.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Governance and Management"
+        }
+      ]
+    },
+    {
+      "id": "session-manager-no-bastion",
+      "type": "single",
+      "prompt": "Engineers need shell access to private instances without opening SSH or running a bastion host. Which option?",
+      "tags": [
+        "governance",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Systems Manager Session Manager",
+          "correct": true,
+          "rationale": "Session Manager gives a logged shell session with no inbound port and no bastion to maintain."
+        },
+        {
+          "id": "b",
+          "text": "A bastion host in a public subnet with a restrictive security group",
+          "correct": false,
+          "rationale": "That is the architecture the scenario is replacing, and it still means an open port and a host to patch."
+        },
+        {
+          "id": "c",
+          "text": "Client VPN with SSH keys distributed to engineers",
+          "correct": false,
+          "rationale": "It provides network reach but still relies on SSH and key distribution."
+        },
+        {
+          "id": "d",
+          "text": "EC2 Instance Connect over the public internet",
+          "correct": false,
+          "rationale": "That still needs a reachable instance, which private subnets by definition do not have."
+        }
+      ],
+      "explanation": "Session Manager removes three things at once: the inbound port, the bastion, and the key management. It also records the session, which is why it tends to be the compliant answer as well as the convenient one.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Governance and Management"
+        }
+      ]
+    },
+    {
+      "id": "cloudformation-stacksets",
+      "type": "single",
+      "prompt": "The same stack of resources must be deployed into twelve accounts across three Regions in one operation. Which feature?",
+      "tags": [
+        "governance",
+        "iac"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "CloudFormation StackSets",
+          "correct": true,
+          "rationale": "StackSets deploy one template across many accounts and Regions from a single operation."
+        },
+        {
+          "id": "b",
+          "text": "A nested stack",
+          "correct": false,
+          "rationale": "Nested stacks break a large template into reusable pieces within one deployment."
+        },
+        {
+          "id": "c",
+          "text": "A change set",
+          "correct": false,
+          "rationale": "A change set previews what an update would do before applying it."
+        },
+        {
+          "id": "d",
+          "text": "Service Catalog",
+          "correct": false,
+          "rationale": "Service Catalog lets users launch approved products themselves rather than pushing a stack out centrally."
+        }
+      ],
+      "explanation": "The signal is *many accounts or Regions at once*. Within one account and Region a plain stack is enough; across them, StackSets exist so the template is not copied and drifted twelve times.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Governance and Management"
+        }
+      ]
+    },
+    {
+      "id": "service-catalog-self-service",
+      "type": "single",
+      "prompt": "A platform team wants developers to launch only pre-approved infrastructure, within set constraints. Which service?",
+      "tags": [
+        "governance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Service Catalog",
+          "correct": true,
+          "rationale": "Service Catalog publishes approved products that users launch themselves, with constraints the platform team sets."
+        },
+        {
+          "id": "b",
+          "text": "AWS Config rules",
+          "correct": false,
+          "rationale": "Config detects non-compliance after the fact rather than constraining what can be created."
+        },
+        {
+          "id": "c",
+          "text": "IAM permissions boundaries",
+          "correct": false,
+          "rationale": "A boundary limits what permissions can be granted. It does not offer a menu of approved architectures."
+        },
+        {
+          "id": "d",
+          "text": "AWS Control Tower guardrails",
+          "correct": false,
+          "rationale": "Guardrails set organisation-wide rules rather than publishing launchable products."
+        }
+      ],
+      "explanation": "Service Catalog answers the self-service half of governance: developers move quickly without a ticket, and what they can create is bounded by templates someone has reviewed. It pairs with guardrails, which handle the organisation-wide prohibitions.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Governance and Management"
+        }
+      ]
+    },
+    {
+      "id": "compute-optimizer-rightsizing",
+      "type": "single",
+      "prompt": "Which service recommends instance types and sizes from observed utilization?",
+      "tags": [
+        "governance",
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Compute Optimizer",
+          "correct": true,
+          "rationale": "It analyses utilisation and recommends sizes, flagging both over-provisioning and bottlenecks."
+        },
+        {
+          "id": "b",
+          "text": "AWS Budgets",
+          "correct": false,
+          "rationale": "Budgets alerts on cost or usage thresholds. It does not analyse instance utilisation."
+        },
+        {
+          "id": "c",
+          "text": "AWS Trusted Advisor",
+          "correct": false,
+          "rationale": "Trusted Advisor includes some cost checks but is a broad best-practice checker rather than a rightsizing engine."
+        },
+        {
+          "id": "d",
+          "text": "Amazon CloudWatch alarms",
+          "correct": false,
+          "rationale": "An alarm fires on a threshold. Turning utilisation into a sizing recommendation is the extra step."
+        }
+      ],
+      "explanation": "Rightsizing is the cheapest cost saving available because it needs no commitment, and Compute Optimizer is the service that identifies it. Savings Plans and Reserved Instances come afterwards, since committing to the wrong size locks in the waste.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Governance and Management"
+        }
+      ]
+    },
+    {
+      "id": "savings-plans",
+      "type": "single",
+      "prompt": "What distinguishes a Compute Savings Plan from an EC2 Instance Savings Plan?",
+      "tags": [
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A Compute Savings Plan is flexible across instance family, size and Region and also covers Fargate and Lambda, while an EC2 Instance Savings Plan commits to a family in one Region for a deeper discount",
+          "correct": true,
+          "rationale": "The trade is flexibility against discount depth."
+        },
+        {
+          "id": "b",
+          "text": "A Compute Savings Plan is for one year and an EC2 Instance Savings Plan for three",
+          "correct": false,
+          "rationale": "Both are available for one or three year terms."
+        },
+        {
+          "id": "c",
+          "text": "Only the EC2 Instance Savings Plan covers containers",
+          "correct": false,
+          "rationale": "Fargate coverage comes with the Compute Savings Plan, not the EC2 one."
+        },
+        {
+          "id": "d",
+          "text": "A Compute Savings Plan reserves capacity in an Availability Zone",
+          "correct": false,
+          "rationale": "Savings Plans are a billing construct. Capacity reservation is a separate mechanism."
+        }
+      ],
+      "explanation": "Every commitment discount asks the same question: how much do you want to promise about your future shape. Promise only the spend per hour and you get flexibility. Promise the family and Region too and you get a bigger discount but you lose the freedom to change your mind.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Cost Management"
+        }
+      ]
+    },
+    {
+      "id": "spot-interruption-fit",
+      "type": "multi",
+      "prompt": "Which workloads are appropriate for Spot Instances? (Select all that apply)",
+      "tags": [
+        "cost",
+        "compute"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A batch rendering job whose tasks can be retried",
+          "correct": true,
+          "rationale": "Interruptible, retryable work is exactly what Spot is for."
+        },
+        {
+          "id": "b",
+          "text": "A stateless web tier behind a load balancer, mixed with on-demand capacity",
+          "correct": true,
+          "rationale": "A mixed fleet keeps a baseline on reliable capacity while Spot absorbs the rest."
+        },
+        {
+          "id": "c",
+          "text": "Data analysis that checkpoints progress as it runs",
+          "correct": true,
+          "rationale": "Checkpointing means a two minute interruption notice costs little work."
+        },
+        {
+          "id": "d",
+          "text": "A payment ledger database that must not lose a write",
+          "correct": false,
+          "rationale": "Reclaimable capacity under a stateful system of record risks exactly the loss the workload cannot tolerate."
+        },
+        {
+          "id": "e",
+          "text": "A nightly job with a hard contractual deadline and no retry window",
+          "correct": false,
+          "rationale": "Spot offers no guarantee the capacity is there, so a job that must finish on time needs on-demand or reserved capacity."
+        }
+      ],
+      "explanation": "Spot's up to 90% discount is paid for with a two minute reclaim notice, so the test is always whether an interruption is survivable. Fault tolerance and the ability to retry are what make the discount free rather than risky.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Cost Management"
+        }
+      ]
+    },
+    {
+      "id": "budgets-vs-cost-explorer",
+      "type": "single",
+      "prompt": "A team must be alerted before monthly spend passes a threshold rather than discovering it on the bill. Which service?",
+      "tags": [
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Budgets",
+          "correct": true,
+          "rationale": "Budgets sets thresholds on cost or usage that alert, or act, before the bill arrives."
+        },
+        {
+          "id": "b",
+          "text": "AWS Cost Explorer",
+          "correct": false,
+          "rationale": "Cost Explorer visualises and forecasts spend but is something you go and look at rather than something that warns you."
+        },
+        {
+          "id": "c",
+          "text": "The Cost and Usage Report",
+          "correct": false,
+          "rationale": "The CUR is the most granular billing data, delivered to S3 for analysis. It raises no alerts."
+        },
+        {
+          "id": "d",
+          "text": "AWS Pricing Calculator",
+          "correct": false,
+          "rationale": "The calculator models cost before anything is built."
+        }
+      ],
+      "explanation": "The four cost tools divide by tense. The Pricing Calculator is before, Budgets is during and alerts you, Cost Explorer is a look back with a forecast, and the Cost and Usage Report is the raw record for deep analysis.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Cost Management"
+        }
+      ]
+    },
+    {
+      "id": "dms-online-migration",
+      "type": "single",
+      "prompt": "A production database must move to AWS with minimal downtime, and the engine is changing from Oracle to PostgreSQL. Which combination?",
+      "tags": [
+        "migration",
+        "databases"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Schema Conversion Tool to convert the schema and procedural code, then DMS to move the data while the source stays online",
+          "correct": true,
+          "rationale": "DMS handles the data with the source running; SCT handles the part DMS does not, which is the schema and code conversion."
+        },
+        {
+          "id": "b",
+          "text": "DMS alone, which converts schema and procedural code automatically",
+          "correct": false,
+          "rationale": "DMS migrates data. Converting schema and stored procedures between engines is SCT's job."
+        },
+        {
+          "id": "c",
+          "text": "DataSync, which replicates database engines natively",
+          "correct": false,
+          "rationale": "DataSync transfers files between storage systems. It has no database awareness."
+        },
+        {
+          "id": "d",
+          "text": "Snowball Edge, since the data must be moved physically",
+          "correct": false,
+          "rationale": "A physical device addresses bandwidth limits, not engine conversion, and it does not keep the source online."
+        }
+      ],
+      "explanation": "A heterogeneous migration is always two problems: the shape of the data and the data itself. SCT addresses the first, DMS the second, and DMS's ongoing replication is what reduces the cutover to minutes rather than a maintenance weekend.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Migration and Transfer"
+        }
+      ]
+    },
+    {
+      "id": "datasync-vs-transfer-family",
+      "type": "single",
+      "prompt": "External partners must continue sending files over SFTP, with the data landing in S3. Which service?",
+      "tags": [
+        "migration",
+        "storage"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Transfer Family",
+          "correct": true,
+          "rationale": "Transfer Family provides SFTP, FTPS, FTP and AS2 endpoints in front of S3 or EFS, so partners keep their protocol."
+        },
+        {
+          "id": "b",
+          "text": "AWS DataSync",
+          "correct": false,
+          "rationale": "DataSync is for your own scheduled transfers between storage systems, not for third parties connecting inbound."
+        },
+        {
+          "id": "c",
+          "text": "AWS Storage Gateway",
+          "correct": false,
+          "rationale": "Storage Gateway presents cloud storage to your own on-premises systems rather than offering partners an endpoint."
+        },
+        {
+          "id": "d",
+          "text": "Amazon S3 Transfer Acceleration",
+          "correct": false,
+          "rationale": "It speeds long-distance uploads to S3 but speaks the S3 API, not SFTP."
+        }
+      ],
+      "explanation": "The question to ask is who initiates and over what protocol. Partners pushing over a legacy protocol is Transfer Family; your own bulk copies on a schedule are DataSync; existing on-premises applications needing a mounted share are Storage Gateway.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Migration and Transfer"
+        }
+      ]
+    },
+    {
+      "id": "snowball-edge-when",
+      "type": "single",
+      "prompt": "Eighty terabytes must move to AWS from a site whose internet link would take months to transfer it. What fits?",
+      "tags": [
+        "migration"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS Snowball Edge",
+          "correct": true,
+          "rationale": "A physical device sidesteps the network entirely, and it can also run local compute while disconnected."
+        },
+        {
+          "id": "b",
+          "text": "AWS DataSync over the existing link",
+          "correct": false,
+          "rationale": "DataSync accelerates a transfer but cannot overcome a link that is fundamentally too slow."
+        },
+        {
+          "id": "c",
+          "text": "S3 Transfer Acceleration",
+          "correct": false,
+          "rationale": "It improves long-distance throughput over the internet, which does not solve a months-long transfer."
+        },
+        {
+          "id": "d",
+          "text": "AWS Direct Connect",
+          "correct": false,
+          "rationale": "A circuit would help in the long run but takes weeks to months to provision, and is an ongoing cost for a one-off move."
+        }
+      ],
+      "explanation": "Bandwidth and time together decide this: if the calculated transfer time is unacceptable, the answer is physical. Snowcone covers smaller or more constrained sites, and both devices doubling as edge compute is why they appear in disconnected-operation scenarios too.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Migration and Transfer"
+        }
+      ]
+    },
+    {
+      "id": "codedeploy-strategies",
+      "type": "single",
+      "prompt": "A release must be able to roll back automatically if error rates rise after deployment. Which service provides that?",
+      "tags": [
+        "devtools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS CodeDeploy",
+          "correct": true,
+          "rationale": "CodeDeploy supports blue/green and canary strategies with automatic rollback."
+        },
+        {
+          "id": "b",
+          "text": "AWS CodeBuild",
+          "correct": false,
+          "rationale": "CodeBuild compiles, tests and packages. It does not place the result into production."
+        },
+        {
+          "id": "c",
+          "text": "AWS CodeArtifact",
+          "correct": false,
+          "rationale": "CodeArtifact is a package repository."
+        },
+        {
+          "id": "d",
+          "text": "AWS CloudShell",
+          "correct": false,
+          "rationale": "CloudShell is a browser-based shell for running commands."
+        }
+      ],
+      "explanation": "The developer tools divide cleanly by stage: CodePipeline orchestrates, CodeBuild builds, CodeDeploy releases, CodeArtifact stores dependencies. Any mention of canary, blue/green or rollback is the deploy stage.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Developer Tools"
+        }
+      ]
+    },
+    {
+      "id": "codepipeline-orchestration",
+      "type": "single",
+      "prompt": "Which service models a release as stages and transitions so a commit moves through build, test and deploy automatically?",
+      "tags": [
+        "devtools"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS CodePipeline",
+          "correct": true,
+          "rationale": "CodePipeline is the orchestrator that connects the other stages together."
+        },
+        {
+          "id": "b",
+          "text": "AWS Step Functions",
+          "correct": false,
+          "rationale": "Step Functions orchestrates application workflows. It is not a release pipeline product."
+        },
+        {
+          "id": "c",
+          "text": "AWS CodeBuild",
+          "correct": false,
+          "rationale": "CodeBuild performs one stage of the pipeline."
+        },
+        {
+          "id": "d",
+          "text": "AWS Amplify",
+          "correct": false,
+          "rationale": "Amplify hosts front ends and can build from a branch, but it is not the general-purpose pipeline service."
+        }
+      ],
+      "explanation": "Separating orchestration from the work is the same pattern as Step Functions and Lambda: one service knows the order and the state, others do the tasks. A question about connecting build and deploy together is CodePipeline.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Developer Tools"
+        }
+      ]
+    },
+    {
+      "id": "pilot-light-dr",
+      "type": "single",
+      "prompt": "Which disaster recovery strategy keeps a minimal set of core infrastructure components always running in a second Region?",
+      "tags": [
+        "resilience",
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Pilot Light",
+          "correct": true,
+          "rationale": "A minimal core runs continuously with data replicating, and the rest is launched on failover."
+        },
+        {
+          "id": "b",
+          "text": "Backup and Restore",
+          "correct": false,
+          "rationale": "Nothing runs in the second Region. The environment is rebuilt from backups when needed."
+        },
+        {
+          "id": "c",
+          "text": "Warm Standby",
+          "correct": false,
+          "rationale": "Warm Standby runs a scaled-down but fully functional copy, which is more than a minimal core."
+        },
+        {
+          "id": "d",
+          "text": "Multi-Site Active-Active",
+          "correct": false,
+          "rationale": "Active-active runs full capacity in both Regions, serving live traffic from each."
+        }
+      ],
+      "explanation": "The four strategies are a cost ladder against recovery time. Nothing running is cheapest and slowest; a minimal core is pilot light; a working scaled-down copy is warm standby; full capacity everywhere is the most expensive and nearly instant. The scenario's stated recovery time objective picks the rung.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Patterns, not services"
+        }
+      ]
+    },
+    {
+      "id": "dr-strategy-order",
+      "type": "multi",
+      "prompt": "Which statements about disaster recovery strategies are correct? (Select all that apply)",
+      "tags": [
+        "resilience",
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Backup and Restore has the longest recovery time and the lowest cost",
+          "correct": true,
+          "rationale": "Nothing is running in the recovery Region, so the environment has to be rebuilt."
+        },
+        {
+          "id": "b",
+          "text": "Warm Standby runs a scaled-down working copy that is scaled up on failover",
+          "correct": true,
+          "rationale": "It is functional at all times, which is what shortens recovery to minutes."
+        },
+        {
+          "id": "c",
+          "text": "Multi-Site Active-Active offers near-zero recovery time at the highest cost",
+          "correct": true,
+          "rationale": "Full capacity runs in more than one Region and serves traffic from each."
+        },
+        {
+          "id": "d",
+          "text": "The choice is a trade between cost and the recovery time and recovery point objectives",
+          "correct": true,
+          "rationale": "Those two objectives are what a scenario supplies in order to make the strategy decidable."
+        },
+        {
+          "id": "e",
+          "text": "Pilot Light serves production traffic from both Regions at once",
+          "correct": false,
+          "rationale": "Only a minimal core runs in the second Region, and it serves no traffic until failover."
+        }
+      ],
+      "explanation": "Recovery time objective is how long you may be down, and recovery point objective is how much data you may lose. Together they eliminate all but one rung of the ladder, which is why a well-written scenario always gives at least one of them.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Patterns, not services"
+        }
+      ]
+    },
+    {
+      "id": "shared-responsibility-boundary",
+      "type": "multi",
+      "prompt": "Under the AWS shared responsibility model, which items are the customer's responsibility? (Select all that apply)",
+      "tags": [
+        "security",
+        "patterns"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Patching the guest operating system on an EC2 instance",
+          "correct": true,
+          "rationale": "Anything above the hypervisor on EC2 belongs to the customer."
+        },
+        {
+          "id": "b",
+          "text": "Configuring IAM permissions correctly",
+          "correct": true,
+          "rationale": "Identity and access configuration is always the customer's, in every service."
+        },
+        {
+          "id": "c",
+          "text": "Classifying data and deciding how it is encrypted",
+          "correct": true,
+          "rationale": "AWS provides the encryption tools; what to protect and how is a customer decision."
+        },
+        {
+          "id": "d",
+          "text": "Physical security of the data centre",
+          "correct": false,
+          "rationale": "That is security *of* the cloud, which is AWS's responsibility."
+        },
+        {
+          "id": "e",
+          "text": "Patching the hypervisor beneath EC2 instances",
+          "correct": false,
+          "rationale": "The hypervisor and the hardware are AWS's side of the line."
+        }
+      ],
+      "explanation": "AWS secures the cloud, the customer secures what they put in it, and the dividing line moves with the service. On EC2 the customer patches the operating system; on Lambda there is no operating system to patch, so the customer's remaining share is the code, the permissions and the data.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Patterns, not services"
+        }
+      ]
+    },
+    {
+      "id": "well-architected-pillars",
+      "type": "multi",
+      "prompt": "Which of these are pillars of the AWS Well-Architected Framework? (Select all that apply)",
+      "tags": [
+        "patterns",
+        "governance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Operational excellence",
+          "correct": true,
+          "rationale": "One of the six pillars."
+        },
+        {
+          "id": "b",
+          "text": "Reliability",
+          "correct": true,
+          "rationale": "One of the six pillars."
+        },
+        {
+          "id": "c",
+          "text": "Performance efficiency",
+          "correct": true,
+          "rationale": "One of the six pillars."
+        },
+        {
+          "id": "d",
+          "text": "Sustainability",
+          "correct": true,
+          "rationale": "The sixth pillar, added after the original five."
+        },
+        {
+          "id": "e",
+          "text": "Elasticity",
+          "correct": false,
+          "rationale": "Elasticity is a cloud characteristic and a design principle, but it is not one of the pillars."
+        }
+      ],
+      "explanation": "The six are operational excellence, security, reliability, performance efficiency, cost optimisation and sustainability. Distractors in this kind of question are usually real cloud concepts that simply are not pillars, such as elasticity, agility or scalability.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Patterns, not services"
+        }
+      ]
+    },
+    {
+      "id": "iam-policy-types",
+      "type": "multi",
+      "prompt": "Which of these are real IAM or Organizations policy mechanisms? (Select all that apply)",
+      "tags": [
+        "identity"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Identity-based policy, attached to a user, group or role",
+          "correct": true,
+          "rationale": "The most common form, describing what an identity may do."
+        },
+        {
+          "id": "b",
+          "text": "Resource-based policy, attached to the resource itself",
+          "correct": true,
+          "rationale": "Used for cross-account access, because the resource grants the permission."
+        },
+        {
+          "id": "c",
+          "text": "Permissions boundary, capping what an identity’s policies can grant",
+          "correct": true,
+          "rationale": "It lets permission management be delegated without allowing escalation."
+        },
+        {
+          "id": "d",
+          "text": "Service Control Policy, setting a ceiling for every account in an organizational unit",
+          "correct": true,
+          "rationale": "An SCP restricts and never grants, including against a member account’s root user."
+        },
+        {
+          "id": "e",
+          "text": "Region-based policy, automatically applied to every resource in a Region",
+          "correct": false,
+          "rationale": "No such mechanism exists. Restricting usage by Region is done with a condition in one of the real policy types."
+        }
+      ],
+      "explanation": "Access in AWS is an intersection of everything that applies: the identity policy, any resource policy, the boundary and the SCP. An action succeeds only if nothing in that chain denies it, which is why troubleshooting means checking all four rather than just the user.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Identity and Access"
+        }
+      ]
+    },
+    {
+      "id": "auditing-service-match",
+      "type": "multi",
+      "prompt": "Which pairings of question and service are correct? (Select all that apply)",
+      "tags": [
+        "observability",
+        "governance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Who called this API and when: CloudTrail",
+          "correct": true,
+          "rationale": "CloudTrail is the record of actions and actors."
+        },
+        {
+          "id": "b",
+          "text": "What did this resource’s configuration look like last month: Config",
+          "correct": true,
+          "rationale": "Config records configuration over time and evaluates compliance."
+        },
+        {
+          "id": "c",
+          "text": "Which component of this request was slow: X-Ray",
+          "correct": true,
+          "rationale": "Tracing attributes latency across the services a request touches."
+        },
+        {
+          "id": "d",
+          "text": "Is this account following AWS best practice on cost and limits: Trusted Advisor",
+          "correct": true,
+          "rationale": "Trusted Advisor runs automated best-practice checks across several categories."
+        },
+        {
+          "id": "e",
+          "text": "How much CPU is this instance using: CloudTrail",
+          "correct": false,
+          "rationale": "Resource metrics are CloudWatch. CloudTrail records API activity."
+        }
+      ],
+      "explanation": "Five services look similar because they all produce records, and they divide by the question they answer: actions, configuration, request paths, metrics and best practice. Choosing between them starts with whether the scenario asks about a person, a resource, a request or a bill.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Observability and Auditing"
+        }
+      ]
+    },
+    {
+      "id": "encryption-service-roles",
+      "type": "multi",
+      "prompt": "Which statements about AWS encryption and secret services are correct? (Select all that apply)",
+      "tags": [
+        "security",
+        "encryption"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "KMS keys are regional, and a multi-Region key is a deliberate choice",
+          "correct": true,
+          "rationale": "Key scope matters when designing cross-Region replication or failover."
+        },
+        {
+          "id": "b",
+          "text": "Every use of a KMS key is recorded in CloudTrail",
+          "correct": true,
+          "rationale": "That auditability is a large part of why KMS is preferred over self-managed keys."
+        },
+        {
+          "id": "c",
+          "text": "Secrets Manager can rotate database credentials automatically",
+          "correct": true,
+          "rationale": "Native rotation for RDS and other databases is its distinguishing feature."
+        },
+        {
+          "id": "d",
+          "text": "Parameter Store is free for standard parameters and suits configuration",
+          "correct": true,
+          "rationale": "Cost is the usual reason to keep non-rotating configuration there."
+        },
+        {
+          "id": "e",
+          "text": "CloudHSM lets AWS recover your keys if they are lost",
+          "correct": false,
+          "rationale": "Exclusive single-tenant control is the point of CloudHSM, and the consequence is that AWS cannot recover the keys."
+        }
+      ],
+      "explanation": "These services divide into managing keys and managing secrets, with cost and control as the deciding factors. KMS is the default because it is integrated and audited; CloudHSM is for rules demanding exclusive control; and the choice between Secrets Manager and Parameter Store is rotation against price.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Security and Compliance"
+        }
+      ]
+    },
+    {
+      "id": "migration-service-match",
+      "type": "multi",
+      "prompt": "Which migration service matches which job? (Select all that apply)",
+      "tags": [
+        "migration"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Application Migration Service: lift-and-shift replication of servers into EC2",
+          "correct": true,
+          "rationale": "It replicates whole servers and cuts over with minimal downtime."
+        },
+        {
+          "id": "b",
+          "text": "Database Migration Service: moving a database while the source stays online",
+          "correct": true,
+          "rationale": "Ongoing replication is what shrinks the cutover window."
+        },
+        {
+          "id": "c",
+          "text": "Application Discovery Service: inventorying an on-premises estate and its dependencies",
+          "correct": true,
+          "rationale": "Planning from evidence rather than from assumption is its purpose."
+        },
+        {
+          "id": "d",
+          "text": "Snow Family: moving data physically when the network would take too long",
+          "correct": true,
+          "rationale": "The devices sidestep the link entirely, and can run local compute while disconnected."
+        },
+        {
+          "id": "e",
+          "text": "Schema Conversion Tool: transferring files between on-premises storage and S3",
+          "correct": false,
+          "rationale": "File transfer is DataSync. SCT converts schema and procedural code between database engines."
+        }
+      ],
+      "explanation": "A migration has distinct phases and each has its own service: discover, convert, move, then verify. Scenarios usually name the obstacle, whether that is downtime, a different database engine, or a slow link, and the obstacle picks the service.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Migration and Transfer"
+        }
+      ]
+    },
+    {
+      "id": "cost-optimisation-levers",
+      "type": "multi",
+      "prompt": "Which actions reduce AWS cost without requiring a usage commitment? (Select all that apply)",
+      "tags": [
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Rightsizing instances from observed utilization",
+          "correct": true,
+          "rationale": "Compute Optimizer identifies this, and it should come before any commitment."
+        },
+        {
+          "id": "b",
+          "text": "Using Spot Instances for interruptible work",
+          "correct": true,
+          "rationale": "Spot requires no commitment, only tolerance of a two minute reclaim notice."
+        },
+        {
+          "id": "c",
+          "text": "Adding an S3 gateway endpoint to avoid NAT Gateway data processing charges",
+          "correct": true,
+          "rationale": "A gateway endpoint is free and removes a per-gigabyte charge."
+        },
+        {
+          "id": "d",
+          "text": "Moving objects to a cheaper storage class with a lifecycle policy",
+          "correct": true,
+          "rationale": "Lifecycle rules reduce storage cost on an age schedule with no commitment."
+        },
+        {
+          "id": "e",
+          "text": "Purchasing a Compute Savings Plan",
+          "correct": false,
+          "rationale": "A Savings Plan is precisely a commitment, to a steady hourly spend for one or three years."
+        }
+      ],
+      "explanation": "Cost work has a natural order. Remove waste first, because committing to an oversized fleet locks the waste in. Only once usage is right-sized and steady does a Savings Plan or Reserved Instance become the correct next step.",
+      "citations": [
+        {
+          "file": "notes/aws/all_aws_services.md",
+          "heading": "Cost Management"
+        }
+      ]
+    }
+  ]
+}

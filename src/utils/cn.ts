@@ -1,5 +1,5 @@
 /**
- * Minimal class-name joiner. No `clsx` dependency — the app never needs conflict
+ * Minimal class-name joiner. No `clsx` dependency - the app never needs conflict
  * resolution, only "drop the falsy bits and join".
  */
 export type ClassValue = string | false | null | undefined

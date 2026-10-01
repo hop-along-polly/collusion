@@ -6,7 +6,7 @@
  * session" feature that only needs to persist the seed.
  */
 
-/** mulberry32 — small, fast, good enough for ordering questions. */
+/** mulberry32 - small, fast, good enough for ordering questions. */
 export function createRandom(seed: number): () => number {
   let state = seed >>> 0
   return () => {

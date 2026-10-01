@@ -50,7 +50,7 @@ interface EmptyStateProps {
   icon?: IconName
   title: string
   description: ReactNode
-  /** Every empty state offers a way forward — no dead ends. */
+  /** Every empty state offers a way forward - no dead ends. */
   action?: ReactNode
   /**
    * Heading level, so the document outline stays semantic (§8). Use `1` when the empty

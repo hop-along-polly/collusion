@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-import { catalog, listSets, totalCardCount } from '@/data/catalog'
+import { catalog, courseSets, listCourses, totalCardCount } from '@/data/catalog'
 import { useProgress } from '@/hooks/useProgress'
 import { overallSummary } from '@/storage/progress'
 import type { DomainMeta } from '@/types/cards'
@@ -11,8 +11,11 @@ import { Stat } from '@/components/ui/Feedback'
 import { ButtonLink } from '@/components/ui/Button'
 
 function DomainCard({ domain }: { domain: DomainMeta }) {
-  const sets = listSets(domain.id)
-  const cards = sets.reduce((total, set) => total + set.cardCount, 0)
+  const courses = listCourses(domain.id)
+  const cards = courses.reduce(
+    (total, course) => total + courseSets(course).reduce((sum, set) => sum + set.cardCount, 0),
+    0,
+  )
   const planned = domain.status === 'planned'
 
   return (
@@ -36,7 +39,7 @@ function DomainCard({ domain }: { domain: DomainMeta }) {
           <Badge tone="warning">Notes pending</Badge>
         ) : (
           <>
-            <Badge tone="brand">{pluralize(sets.length, 'set')}</Badge>
+            <Badge tone="brand">{pluralize(courses.length, 'course')}</Badge>
             <Badge>{pluralize(cards, 'card')}</Badge>
           </>
         )}
@@ -46,7 +49,7 @@ function DomainCard({ domain }: { domain: DomainMeta }) {
 
       {planned ? (
         <p className="font-body text-sm text-content-muted">
-          Cards stay grounded in committed notes, and this repository has none for {domain.title} yet.
+          {domain.title} course material is still being written.
         </p>
       ) : (
         <ButtonLink to={`/${domain.id}`} variant="outline" className="self-start">
@@ -61,27 +64,27 @@ function DomainCard({ domain }: { domain: DomainMeta }) {
 export function HomePage() {
   const { snapshot } = useProgress()
   const overall = overallSummary(snapshot)
-  const available = catalog.domains.filter((domain) => domain.status === 'available')
+  // A course is either exam-backed or a standalone track, so the two counts partition
+  // `catalog.courses` rather than overlapping.
+  const certifications = listCourses().filter((course) => course.kind === 'certification')
+  const tracks = listCourses().filter((course) => course.kind === 'track')
 
   return (
     <div className="space-y-12">
       <section className="max-w-3xl">
-        <p className="font-body text-xs uppercase tracking-widest text-brand">
-          Software by master craftsmen
-        </p>
         <h1 className="mt-3 font-heading text-5xl leading-none sm:text-6xl">
-          Study what you actually wrote down.
+          Know the material before exam day.
         </h1>
         <p className="mt-5 font-body text-lg text-content-muted">
-          Every question here is generated from the Markdown notes committed to this repository, and
-          every explanation links back to the file and heading it came from. No invented facts, no
-          trivia that is not in your notes.
+          Course material hand-written by practitioners who have sat these exams and passed them,
+          pitched at the fundamentals rather than the question bank, so what you learn holds up
+          long after the exam.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-8">
-          <Stat label="Cards" value={totalCardCount()} tone="brand" />
-          <Stat label="Card sets" value={catalog.sets.length} />
-          <Stat label="Domains" value={available.length} />
+          <Stat label="Courses" value={certifications.length} tone="brand" />
+          <Stat label="Tracks" value={tracks.length} />
+          <Stat label="Flashcards" value={totalCardCount()} />
           {overall.attempted > 0 ? (
             <>
               <Stat label="Answered" value={overall.attempted} />
@@ -97,14 +100,14 @@ export function HomePage() {
         {overall.reviewable > 0 ? (
           <p className="mt-6 font-body text-sm text-content-muted">
             You have {pluralize(overall.reviewable, 'card')} waiting in review across{' '}
-            {pluralize(overall.setsStarted, 'set')}.
+            {pluralize(overall.coursesStarted, 'course')}.
           </p>
         ) : null}
       </section>
 
       <section aria-labelledby="domains-heading">
         <h2 id="domains-heading" className="font-heading text-4xl">
-          Domains
+          Subject Domains
         </h2>
         <p className="mt-2 font-body text-content-muted">
           Pick a subject area, then a certification or topic set.
@@ -119,38 +122,31 @@ export function HomePage() {
         </ul>
       </section>
 
-      <section aria-labelledby="how-heading" className="max-w-3xl">
-        <h2 id="how-heading" className="font-heading text-4xl">
-          How a session works
+      <section aria-labelledby="why-heading" className="max-w-3xl">
+        <h2 id="why-heading" className="font-heading text-4xl">
+          Scribe Cards Ethos
         </h2>
-        <ol className="mt-4 space-y-3 font-body text-content-muted">
-          <li className="flex gap-3">
-            <span className="font-heading text-2xl leading-none text-brand">1</span>
-            <span>
-              Answer a question — select one, select all that apply, or true/false. Nothing is graded
-              until you submit.
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <span className="font-heading text-2xl leading-none text-brand">2</span>
-            <span>
-              Submit to see the verdict, an explanation of why each option is right or wrong, and a
-              link to the note it came from.
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <span className="font-heading text-2xl leading-none text-brand">3</span>
-            <span>
-              Anything you miss or star lands in <strong className="text-content">review mode</strong>,
-              so a second pass only covers what you have not nailed yet.
-            </span>
-          </li>
-        </ol>
-        <p className="mt-4 font-body text-sm text-content-subtle">
-          Progress is stored in this browser only — there is no account and nothing leaves your
+        <p className="mt-4 font-body text-content-muted">
+          Exam questions change. Fundamentals do not. What a "ReAct loop" is, and how it is used 
+          in an Agentic system, is the same today as it will be in ten years. These notes aim to
+          provide an evergreen understanding of the terminology, concepts and services covered by
+          the exams, so that you can reason from first principles rather than memorising answers.
+        </p>
+        <p className="mt-3 font-body text-content-muted">
+          That is the study strategy, not a limit on scope. A memorised answer only helps with a
+          question you have already seen. Understanding why a technique exists and when it applies
+          means an unfamiliar question is still answerable - reason from the fundamentals and they
+          lead to exactly one correct answer.
+        </p>
+        <p className="mt-3 font-body text-content-muted">
+          Every card cites the section it came from, so you can go back to the reasoning instead of
+          taking an answer on trust.
+        </p>
+        <p className="mt-6 font-body text-sm text-content-subtle">
+          Progress is stored in this browser only - there is no account and nothing leaves your
           machine.{' '}
-          <Link to="/anthropic" className="text-brand underline-offset-2 hover:underline">
-            Start with Anthropic
+          <Link to="/courses" className="text-brand underline-offset-2 hover:underline">
+            Pick a course
           </Link>
           .
         </p>

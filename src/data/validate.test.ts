@@ -147,32 +147,83 @@ describe('validateCatalog', () => {
     path: 'anthropic/claude-api',
     title: 'Claude API',
     description: 'z',
-    sources: ['notes.md'],
+    sources: ['notes/anthropic/building_with_claude_api.md'],
     cardCount: 3,
+  }
+  const course = {
+    id: 'ccar-f',
+    domainId: 'anthropic',
+    path: 'anthropic/ccar-f',
+    title: 'Claude Certified Architect',
+    description: 'c',
+    kind: 'certification',
+    setIds: ['claude-api'],
   }
 
   it('accepts a consistent catalog and sorts domains by order', () => {
     const result = validateCatalog({
       domains: [{ ...domain, id: 'devops', order: 2 }, domain],
       sets: [set],
+      courses: [course],
     })
 
     expect(hasErrors(result.issues)).toBe(false)
     expect(result.value?.domains.map((d) => d.id)).toEqual(['anthropic', 'devops'])
+    expect(result.value?.courses.map((c) => c.id)).toEqual(['ccar-f'])
   })
 
   it('rejects a set whose path does not match domain/id', () => {
-    const result = validateCatalog({ domains: [domain], sets: [{ ...set, path: 'elsewhere' }] })
+    const result = validateCatalog({ domains: [domain], sets: [{ ...set, path: 'elsewhere' }], courses: [course] })
     expect(result.issues.map((i) => i.message).join('\n')).toContain('so the data directory matches the route')
   })
 
   it('rejects a set pointing at an undeclared domain', () => {
-    const result = validateCatalog({ domains: [domain], sets: [{ ...set, domainId: 'aws', path: 'aws/claude-api' }] })
+    const result = validateCatalog({
+      domains: [domain],
+      sets: [{ ...set, domainId: 'aws', path: 'aws/claude-api' }],
+      courses: [course],
+    })
     expect(result.issues.map((i) => i.message).join('\n')).toContain('not a declared domain')
   })
 
   it('requires each set to name its source notes', () => {
-    const result = validateCatalog({ domains: [domain], sets: [{ ...set, sources: [] }] })
+    const result = validateCatalog({ domains: [domain], sets: [{ ...set, sources: [] }], courses: [course] })
     expect(result.issues.map((i) => i.message).join('\n')).toContain('list the note file')
+  })
+
+  it('rejects a course referencing a set that does not exist in its domain', () => {
+    const result = validateCatalog({
+      domains: [domain],
+      sets: [set],
+      courses: [{ ...course, setIds: ['claude-api', 'nonexistent'] }],
+    })
+    expect(result.issues.map((i) => i.message).join('\n')).toContain(
+      '"nonexistent" is not a card set in domain "anthropic"',
+    )
+  })
+
+  it('rejects a course whose path does not match domain/id', () => {
+    const result = validateCatalog({
+      domains: [domain],
+      sets: [set],
+      courses: [{ ...course, path: 'elsewhere' }],
+    })
+    expect(result.issues.map((i) => i.message).join('\n')).toContain(
+      'so the study guide file matches the route',
+    )
+  })
+
+  it('rejects a course with no sets, which would render a dead quiz button', () => {
+    const result = validateCatalog({ domains: [domain], sets: [set], courses: [{ ...course, setIds: [] }] })
+    expect(result.issues.map((i) => i.message).join('\n')).toContain('list the card set id')
+  })
+
+  it('rejects an unknown course kind', () => {
+    const result = validateCatalog({
+      domains: [domain],
+      sets: [set],
+      courses: [{ ...course, kind: 'workshop' }],
+    })
+    expect(result.issues.map((i) => i.message).join('\n')).toContain('certification, track')
   })
 })

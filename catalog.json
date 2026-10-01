@@ -1,0 +1,350 @@
+{
+  "$comment": "Registry of every domain, card set and course. Adding a set = drop its cards into flashcards/<domain>/<set-id>.json, add an entry to `sets`, and list it in the `setIds` of every course that quizzes it. `npm run validate:data` checks that all of these stay in sync.",
+  "domains": [
+{
+      "id": "aws",
+      "title": "AWS",
+      "tagline": "AWS Core Services, AI/ML Services and Marketplace listings.",
+      "description": "Marketplace listing types and how entitlement differs from metering, private offers and renewals, per-listing fulfillment and pricing, the Marketplace API surface, and a working knowledge of the AWS service catalogue.",
+      "status": "available",
+      "icon": "cloud",
+      "order": 1
+    },
+    {
+      "id": "anthropic",
+      "title": "Anthropic",
+      "tagline": "Building with the Claude API, SDK, tools, RAG and agent skills.",
+      "description": "The Claude API end to end, the Model Context Protocol, the Agents SDK, multi-agent pipelines, Claude in GitHub, and the AI Fluency framework.",
+      "status": "available",
+      "icon": "sparkles",
+      "order": 2
+    },
+    {
+      "id": "devops",
+      "title": "DevOps",
+      "tagline": "CI/CD and configuration management fundamentals.",
+      "description": "Teams and code ownership, GitHub Actions workflows and runners, and Ansible inventories, playbooks, variables and roles.",
+      "status": "available",
+      "icon": "workflow",
+      "order": 3
+    }
+  ],
+  "sets": [
+    {
+      "id": "claude-api",
+      "domainId": "anthropic",
+      "path": "anthropic/claude-api",
+      "title": "Building with the Claude API",
+      "subtitle": "Anthropic Academy",
+      "description": "Model selection and request handling, the SDK, streaming, prefill and stop sequences, tool use and tool choice, structured outputs, RAG end to end, extended thinking, prompt caching, and the workflow patterns.",
+      "sources": [
+        "notes/anthropic/building_with_claude_api.md",
+        "notes/anthropic/ToolUseExample.py",
+        "notes/anthropic/claude_on_google_cloud.md"
+      ],
+      "cardCount": 55
+    },
+    {
+      "id": "agent-skills",
+      "domainId": "anthropic",
+      "path": "anthropic/agent-skills",
+      "title": "Agent Skills",
+      "subtitle": "Anthropic Academy",
+      "description": "Choosing between CLAUDE.md, Skills, Hooks and Subagents; skill scopes and precedence; authoring practices; and the four categories of skill failure.",
+      "sources": [
+        "notes/anthropic/agent_skills.md"
+      ],
+      "cardCount": 27
+    },
+    {
+      "id": "github-cicd",
+      "domainId": "devops",
+      "path": "devops/github-cicd",
+      "title": "GitHub CI/CD",
+      "subtitle": "Teams, CODEOWNERS and Actions",
+      "description": "Team hierarchy and notifications, CODEOWNERS precedence and syntax limits, and the Actions model - workflows, jobs, runners, reusable workflows and composite actions.",
+      "sources": [
+        "notes/devops/github_cd-cd.md"
+      ],
+      "cardCount": 32
+    },
+    {
+      "id": "ansible",
+      "domainId": "devops",
+      "path": "devops/ansible",
+      "title": "Ansible Fundamentals",
+      "subtitle": "Inventory to roles",
+      "description": "The agentless model, inventory parameters and grouping, playbook terminology, idempotency, variables and conditionals, roles, and platform constraints.",
+      "sources": [
+        "notes/devops/Ansible.md"
+      ],
+      "cardCount": 37
+    },
+    {
+      "id": "marketplace",
+      "domainId": "aws",
+      "path": "aws/marketplace",
+      "title": "AWS Marketplace - Listing Types",
+      "subtitle": "Fulfillment, pricing and APIs",
+      "description": "Per-listing fulfillment and pricing for SaaS, AI Agents & Tools, Server (AMI and Container), ML and Data - plus the Marketplace API surface: metering, entitlements, License Manager, deployment and the Catalog API.",
+      "sources": [
+        "notes/aws/saas.md",
+        "notes/aws/agents_and_tools.md",
+        "notes/aws/server_ami.md",
+        "notes/aws/server_container.md",
+        "notes/aws/machine_learning.md",
+        "notes/aws/data_product.md",
+        "notes/aws/marketplace_apis.md"
+      ],
+      "cardCount": 40
+    },
+    {
+      "id": "services",
+      "domainId": "aws",
+      "path": "aws/services",
+      "title": "AWS Core Services",
+      "subtitle": "Compute, containers, storage, databases",
+      "description": "The services most scenarios are built from: EC2 and Auto Scaling, Lambda and the serverless runtimes, ECS and EKS, the messaging and integration services, the three storage families, and relational against purpose-built databases.",
+      "sources": [
+        "notes/aws/all_aws_services.md"
+      ],
+      "cardCount": 47
+    },
+    {
+      "id": "networking",
+      "domainId": "aws",
+      "path": "aws/networking",
+      "title": "AWS Networking",
+      "subtitle": "VPC, connectivity, load balancing, edge",
+      "description": "What makes a subnet public, which control can deny traffic and which cannot, the private connectivity options and what each one costs, choosing a load balancer by layer, Route 53 routing policies, and the edge services.",
+      "sources": [
+        "notes/aws/all_aws_services.md"
+      ],
+      "cardCount": 28
+    },
+    {
+      "id": "security-and-governance",
+      "domainId": "aws",
+      "path": "aws/security-and-governance",
+      "title": "AWS Security and Governance",
+      "subtitle": "Identity, security, governance, cost",
+      "description": "Telling CloudTrail, CloudWatch and Config apart, IAM roles and policy types, the security suite from GuardDuty to Macie, multi-account governance, the cost management tools and pricing models, migration services, and the disaster recovery strategies.",
+      "sources": [
+        "notes/aws/all_aws_services.md"
+      ],
+      "cardCount": 44
+    },
+    {
+      "id": "analytics-and-ai",
+      "domainId": "aws",
+      "path": "aws/analytics-and-ai",
+      "title": "AWS Analytics and AI Services",
+      "subtitle": "Analytics, AI services, media, IoT",
+      "description": "Athena against Redshift, the Glue catalog, the four members of the Kinesis family, where vector embeddings can be stored, the applied AI services and what each one is for, and the end user computing, media and IoT services.",
+      "sources": [
+        "notes/aws/all_aws_services.md"
+      ],
+      "cardCount": 30
+    },
+    {
+      "id": "mcp",
+      "domainId": "anthropic",
+      "path": "anthropic/mcp",
+      "title": "Model Context Protocol",
+      "subtitle": "Anthropic Academy",
+      "description": "The client-server model, the three primitives and who controls each, transport types, the SDK request types, and building a server or client.",
+      "sources": [
+        "notes/anthropic/intro_to_mcp.md"
+      ],
+      "cardCount": 22
+    },
+    {
+      "id": "agents-sdk",
+      "domainId": "anthropic",
+      "path": "anthropic/agents-sdk",
+      "title": "Agents SDK",
+      "subtitle": "Anthropic Academy",
+      "description": "The ReAct loop and its execution controls, built-in tools and parallelism, hook trigger points, and what a subagent does and does not inherit.",
+      "sources": [
+        "notes/anthropic/agents_sdk.md"
+      ],
+      "cardCount": 31
+    },
+    {
+      "id": "multi-agent",
+      "domainId": "anthropic",
+      "path": "anthropic/multi-agent",
+      "title": "Multi-Agent Pipelines",
+      "subtitle": "Claude Architect - Foundations",
+      "description": "Agents versus workflows, the multi-agent design patterns, prompt engineering as the primary lever, evaluating non-deterministic systems, and reliability practices.",
+      "sources": [
+        "notes/anthropic/multi_agent_pipelines.md"
+      ],
+      "cardCount": 31
+    },
+    {
+      "id": "code-review-cicd",
+      "domainId": "anthropic",
+      "path": "anthropic/code-review-cicd",
+      "title": "Code Review & CI/CD",
+      "subtitle": "Claude in GitHub",
+      "description": "The Claude GitHub App, interactive versus automation mode on claude-code-action, CLI flags and Skills, cost control, and customizing Code Review with CLAUDE.md and REVIEW.md.",
+      "sources": [
+        "notes/anthropic/code_review_cicd.md"
+      ],
+      "cardCount": 37
+    },
+    {
+      "id": "ai-fluency",
+      "domainId": "anthropic",
+      "path": "anthropic/ai-fluency",
+      "title": "AI Fluency",
+      "subtitle": "Anthropic Academy",
+      "description": "The three ways of collaborating with AI, the four fluency competencies, responsible AI principles and diligence practices, and the generative AI fundamentals - pillars, scaling laws, fine-tuning, capabilities and limitations.",
+      "sources": [
+        "notes/anthropic/ai_fluency.md"
+      ],
+      "cardCount": 31
+    },
+    {
+      "id": "claude-101",
+      "domainId": "anthropic",
+      "path": "anthropic/claude-101",
+      "title": "Claude 101",
+      "subtitle": "Anthropic Academy",
+      "description": "Prompting basics and the common-problem fixes, the desktop app's Chat, Cowork and Code modes, Projects, Artifacts and Skills, connectors, Enterprise Search and Research Mode.",
+      "sources": [
+        "notes/anthropic/claude_101.md"
+      ],
+      "cardCount": 31
+    },
+    {
+      "id": "marketplace-commercials",
+      "domainId": "aws",
+      "path": "aws/marketplace-commercials",
+      "title": "AWS Marketplace - Commercials",
+      "subtitle": "Offers, renewals and Professional Services",
+      "description": "The commercial model shared by every listing: entitlement versus metering, listing types and visibility, private and express offers, renewals and amendments, and the Professional Services listing type end to end.",
+      "sources": [
+        "notes/aws/overview.md",
+        "notes/aws/private_offers.md",
+        "notes/aws/renewals.md",
+        "notes/aws/professional_services.md",
+        "notes/aws/saas.md"
+      ],
+      "cardCount": 32
+    },
+    {
+      "id": "ai-practitioner-foundations",
+      "domainId": "aws",
+      "path": "aws/ai-practitioner-foundations",
+      "title": "AI Practitioner - Concepts & Metrics",
+      "subtitle": "AIF-C01",
+      "description": "Core terminology, foundation versus frontier models, data types, the three learning paradigms and RLHF, and the evaluation metrics for classification, regression and generative models.",
+      "sources": [
+        "notes/aws/ai_practitioner.md"
+      ],
+      "cardCount": 34
+    },
+    {
+      "id": "ai-practitioner-aws",
+      "domainId": "aws",
+      "path": "aws/ai-practitioner-aws",
+      "title": "AI Practitioner - AWS Services",
+      "subtitle": "AIF-C01",
+      "description": "Amazon's foundation models, the pre-trained AI services, Bedrock end to end, SageMaker AI across the ML lifecycle, choosing between them, and responsible AI.",
+      "sources": [
+        "notes/aws/ai_practitioner.md"
+      ],
+      "cardCount": 42
+    }
+  ],
+  "courses": [
+    {
+      "id": "ccar-f",
+      "domainId": "anthropic",
+      "path": "anthropic/ccar-f",
+      "title": "Claude Certified Architect - Foundations",
+      "subtitle": "CCAR-F",
+      "description": "Anthropic's foundational certification: the Claude API, tool use and structured output, the Model Context Protocol, agent design, and multi-agent orchestration.",
+      "kind": "certification",
+      "setIds": [
+        "claude-101",
+        "ai-fluency",
+        "claude-api",
+        "mcp",
+        "agents-sdk",
+        "multi-agent",
+        "agent-skills",
+        "code-review-cicd"
+      ]
+    },
+    {
+      "id": "clf-c02",
+      "domainId": "aws",
+      "path": "aws/clf-c02",
+      "title": "AWS Certified Cloud Practitioner",
+      "subtitle": "CLF-C02",
+      "description": "The foundational AWS certification: knowing the terminology and what each service is for. Covers the core compute, storage and database services, networking, the security and governance suite, billing and pricing models, and the analytics and AI services.",
+      "kind": "certification",
+      "setIds": [
+        "services",
+        "networking",
+        "security-and-governance",
+        "analytics-and-ai"
+      ]
+    },
+    {
+      "id": "aif-c01",
+      "domainId": "aws",
+      "path": "aws/aif-c01",
+      "title": "AWS Certified AI Practitioner",
+      "subtitle": "AIF-C01",
+      "description": "AWS's foundational AI and machine learning certification: core concepts, evaluation metrics, Amazon foundation models, the managed AI services, Bedrock, SageMaker AI, and responsible AI.",
+      "kind": "certification",
+      "setIds": [
+        "ai-practitioner-foundations",
+        "ai-practitioner-aws",
+        "services",
+        "analytics-and-ai"
+      ]
+    },
+    {
+      "id": "marketplace",
+      "domainId": "aws",
+      "path": "aws/marketplace",
+      "title": "AWS Marketplace",
+      "subtitle": "Seller track",
+      "description": "Selling software through AWS Marketplace: the commercial model shared by every listing, the per-listing fulfillment and pricing mechanics, and the Marketplace API surface.",
+      "kind": "track",
+      "setIds": [
+        "marketplace-commercials",
+        "marketplace"
+      ]
+    },
+    {
+      "id": "github-actions",
+      "domainId": "devops",
+      "path": "devops/github-actions",
+      "title": "GitHub Actions",
+      "subtitle": "CI/CD track",
+      "description": "Automating software delivery on GitHub: team hierarchy and CODEOWNERS precedence, workflows, jobs and runners, and the reusable pieces that stop every repository reinventing its pipeline.",
+      "kind": "track",
+      "setIds": [
+        "github-cicd"
+      ]
+    },
+    {
+      "id": "ansible",
+      "domainId": "devops",
+      "path": "devops/ansible",
+      "title": "Ansible",
+      "subtitle": "Configuration management track",
+      "description": "Configuration management with Ansible: the agentless model, inventory parameters and grouping, playbook terminology and idempotency, variables, conditionals and roles.",
+      "kind": "track",
+      "setIds": [
+        "ansible"
+      ]
+    }
+  ]
+}

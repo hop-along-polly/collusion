@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
  * Theme handling, following the style guide's class strategy (§9): an explicit user
  * choice is stored and wins over the OS preference. The initial class is applied by an
  * inline script in `index.html` before first paint, so this hook only has to stay in
- * sync with it — it must never be the thing that first applies the class, or dark mode
+ * sync with it - it must never be the thing that first applies the class, or dark mode
  * would flash white on load.
  */
 
@@ -25,7 +25,7 @@ export function useTheme() {
     try {
       window.localStorage.setItem(STORAGE_KEY, theme)
     } catch {
-      // Storage blocked — the toggle still works for this session.
+      // Storage blocked - the toggle still works for this session.
     }
   }, [theme])
 

@@ -2,7 +2,7 @@
  * The quiz engine.
  *
  * A pure reducer over `QuizState`. It knows nothing about React, routing, storage or
- * styling — which is the point: adding a mode (timed, spaced repetition) or replacing
+ * styling - which is the point: adding a mode (timed, spaced repetition) or replacing
  * the quiz UI means touching the components or adding an action here, not rewriting
  * the flow. The only outside knowledge it needs is the card list, which is bound once
  * by `createQuizReducer`.
@@ -72,7 +72,7 @@ export function createQuizReducer(cards: Card[]): QuizReducer {
   return function quizReducer(state: QuizState, action: QuizAction): QuizState {
     switch (action.type) {
       case 'toggle': {
-        // Selections are frozen once graded — the revealed card is a record, not a form.
+        // Selections are frozen once graded - the revealed card is a record, not a form.
         if (state.phase !== 'answering') return state
         const card = cardAt(state)
         if (!card) return state
@@ -154,7 +154,7 @@ export function selectView(state: QuizState, cards: Card[]): QuizView {
   }
 }
 
-/** Card ids answered incorrectly during this session — used to seed a follow-up review. */
+/** Card ids answered incorrectly during this session - used to seed a follow-up review. */
 export function missedCardIds(state: QuizState): string[] {
   return state.order.filter((id) => state.answers[id]?.isCorrect === false)
 }

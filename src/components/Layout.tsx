@@ -4,6 +4,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { listDomains } from '@/data/catalog'
 import { useTheme } from '@/hooks/useTheme'
 import { cn } from '@/utils/cn'
+import { REPO_URL } from '@/utils/github'
 import { Icon } from './ui/Icon'
 
 function ThemeToggle() {
@@ -31,6 +32,14 @@ function Brand() {
       </span>
       <span className="font-heading text-2xl leading-none text-content-strong">Scribe Cards</span>
     </Link>
+  )
+}
+
+/** Shared header link styling - active state is the brand fill. */
+function navLinkClass({ isActive }: { isActive: boolean }): string {
+  return cn(
+    'flex min-h-[44px] shrink-0 items-center rounded-lg px-3 font-body text-sm transition-colors',
+    isActive ? 'bg-brand-fill text-brand' : 'text-content-muted hover:bg-surface-2 hover:text-content',
   )
 }
 
@@ -71,22 +80,24 @@ export function Layout() {
           <Brand />
 
           <nav
-            aria-label="Domains"
+            aria-label="Main"
             className="order-3 -mx-1 flex w-full items-center gap-1 overflow-x-auto sm:order-2 sm:mx-0 sm:ml-auto sm:w-auto sm:overflow-visible"
           >
+            {/*
+              Courses and Notes lead, because they are how the content is meant to be
+              approached; the domains that follow are a shortcut to the card sets.
+            */}
+            <NavLink key="courses" to="/courses" className={navLinkClass}>
+              Courses
+            </NavLink>
+            <NavLink key="notes" to="/notes" className={navLinkClass}>
+              Notes
+            </NavLink>
+
+            <span className="mx-1 h-5 w-px shrink-0 bg-line" aria-hidden="true" />
+
             {domains.map((domain) => (
-              <NavLink
-                key={domain.id}
-                to={`/${domain.id}`}
-                className={({ isActive }) =>
-                  cn(
-                    'flex min-h-[44px] shrink-0 items-center rounded-lg px-3 font-body text-sm transition-colors',
-                    isActive
-                      ? 'bg-brand-fill text-brand'
-                      : 'text-content-muted hover:bg-surface-2 hover:text-content',
-                  )
-                }
-              >
+              <NavLink key={domain.id} to={`/${domain.id}`} className={navLinkClass}>
                 {domain.title}
               </NavLink>
             ))}
@@ -110,13 +121,12 @@ export function Layout() {
       <footer className="border-t border-line bg-surface">
         <div className="mx-auto max-w-7xl px-4 py-6 font-body text-sm text-content-muted sm:px-6 lg:px-8">
           <p>
-            Every card is generated from the Markdown study notes in this repository and cites the
-            file it came from.{' '}
+            Every card cites the section of the course material it came from.{' '}
             <a
-              href="https://github.com/hop-along-polly/collusion"
+              href={REPO_URL}
               className="inline-flex items-center gap-1 text-brand underline-offset-2 hover:underline"
             >
-              View the notes
+              View on GitHub
               <Icon name="external" size={14} />
             </a>
           </p>

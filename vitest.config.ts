@@ -5,15 +5,15 @@ import { defineConfig } from 'vitest/config'
 /**
  * Kept separate from `vite.config.ts` on purpose: Vitest ships its own pinned copy of
  * Vite, and merging the two configs makes the plugin types collide. None of the app's
- * build config — base path, chunking — matters here.
+ * build config - base path, chunking - matters here.
  *
  * Two environments: `node` for the pure layers (`*.test.ts`) and `jsdom` for the
- * component integration tests (`*.test.tsx`), selected per file by the
- * `environmentMatchGlobs` entry below.
+ * component integration tests (`*.test.tsx`). Vitest 4 removed `environmentMatchGlobs`,
+ * so the split is expressed as two projects instead. `extends: true` makes each one
+ * inherit the plugins, the `@` alias and the setup file from this config rather than
+ * repeating them.
  */
 export default defineConfig({
-  // @ts-expect-error - Vitest bundles its own Vite copy, so the plugin types differ
-  // nominally from the app's. The plugin itself is the same one the app builds with.
   plugins: [react()],
   resolve: {
     alias: {
@@ -21,11 +21,26 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['src/**/*.test.{ts,tsx}'],
-    environment: 'node',
-    environmentMatchGlobs: [['src/**/*.test.tsx', 'jsdom']],
     setupFiles: ['src/test/setup.ts'],
     globals: false,
     restoreMocks: true,
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'pure',
+          include: ['src/**/*.test.ts'],
+          environment: 'node',
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'components',
+          include: ['src/**/*.test.tsx'],
+          environment: 'jsdom',
+        },
+      },
+    ],
   },
 })

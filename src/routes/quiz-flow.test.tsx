@@ -5,30 +5,27 @@ import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { App } from '@/App'
+import { courseSets, findCourse, listCourses } from '@/data/catalog'
 import { ProgressProvider } from '@/hooks/useProgress'
 import { STORAGE_KEY } from '@/storage/progress'
-import { findSet, listSets } from '@/data/catalog'
 
 /**
- * Counts come from the catalog rather than being hard-coded. Card sets grow as notes
- * are added, and a literal here turns every content change into a test failure that
- * says nothing useful.
+ * Integration coverage for the screens a learner actually touches. These tests drive the
+ * real card data from `/flashcards`, so they also prove the loader, the catalog and the
+ * routing all line up - and they assert on accessible roles and names rather than on class
+ * names, so they double as a check that the a11y semantics are present.
+ *
+ * Sessions are always launched from a course: a card set is an authoring unit with no page
+ * of its own, because results are recorded against the certification being studied for.
  */
-const AGENT_SKILLS = findSet('anthropic', 'agent-skills')!
 
-/**
- * Integration coverage for the screens a learner actually touches. These tests drive
- * the real card data from `/data`, so they also prove the loader, the catalog and the
- * routing all line up — and they assert on accessible roles and names rather than on
- * class names, so they double as a check that the a11y semantics are present.
- */
+/** A small course, so a full session is cheap to drive. */
+const ANSIBLE = findCourse('devops', 'ansible')!
+const ANSIBLE_CARDS = courseSets(ANSIBLE).reduce((total, set) => total + set.cardCount, 0)
 
 function renderAt(path: string) {
   return render(
-    <MemoryRouter
-      initialEntries={[path]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter initialEntries={[path]}>
       <ProgressProvider>
         <App />
       </ProgressProvider>
@@ -46,7 +43,7 @@ describe('landing page', () => {
   it('lists every domain in the catalog with a route into it', async () => {
     renderAt('/')
 
-    expect(await screen.findByRole('heading', { name: /study what you actually wrote down/i })).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: /know the material before exam day/i })).toBeTruthy()
     for (const domain of ['Anthropic', 'DevOps', 'AWS']) {
       expect(screen.getByRole('heading', { name: domain, level: 3 })).toBeTruthy()
       expect(screen.getByRole('link', { name: new RegExp(`browse ${domain}`, 'i') })).toBeTruthy()
@@ -55,16 +52,22 @@ describe('landing page', () => {
 })
 
 describe('a domain page', () => {
-  it('lists the card sets belonging to that domain', async () => {
-    renderAt('/aws')
+  it('lists the courses in that domain, not its card sets', async () => {
+    renderAt('/devops')
 
-    expect(await screen.findByRole('heading', { name: 'AWS', level: 1 })).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: 'DevOps', level: 1 })).toBeTruthy()
 
-    // Every set the catalog places in this domain gets a heading and a link.
-    const sets = listSets('aws')
-    expect(sets.length).toBeGreaterThan(0)
-    for (const set of sets) {
-      expect(screen.getByRole('heading', { name: set.title, level: 2 })).toBeTruthy()
+    const courses = listCourses('devops')
+    expect(courses.length).toBeGreaterThan(0)
+    for (const course of courses) {
+      // `getAllBy` because a course and a note can share a name - the Ansible course and
+      // Ansible.md both render an h3 reading "Ansible".
+      expect(screen.getAllByRole('heading', { name: course.title, level: 3 }).length).toBeGreaterThan(0)
+    }
+
+    // A card set has no page, so nothing on this screen should link to one.
+    for (const set of courseSets(ANSIBLE)) {
+      expect(screen.queryByRole('link', { name: set.title })).toBeNull()
     }
   })
 })
@@ -77,21 +80,18 @@ describe('an unknown route', () => {
   })
 })
 
-describe('the set page', () => {
-  it('loads cards lazily and offers practice once they arrive', async () => {
-    renderAt('/anthropic/agent-skills')
+describe('a course page', () => {
+  it('offers a session once the catalog is read', async () => {
+    renderAt('/courses/devops/ansible')
 
-    expect(await screen.findByRole('link', { name: /start practice/i })).toBeTruthy()
-    // Review mode is hidden until there is something to review.
-    expect(screen.queryByRole('link', { name: /^review /i })).toBeNull()
-    expect(screen.getByRole('link', { name: /agent_skills\.md/ })).toBeTruthy()
+    expect(await screen.findByRole('link', { name: /start course quiz/i })).toBeTruthy()
   })
 })
 
 describe('the quiz flow', () => {
   it('grades on submit, reveals an explanation with citations, then advances', async () => {
     const user = userEvent.setup()
-    renderAt('/anthropic/agent-skills/quiz?mode=practice')
+    renderAt('/courses/devops/ansible/quiz?mode=practice')
 
     const group = await screen.findByRole('group')
     const options = within(group).getAllByRole(
@@ -113,7 +113,7 @@ describe('the quiz flow', () => {
     const verdict = await screen.findByRole('heading', { level: 2 })
     expect(/correct|not quite/i.test(verdict.textContent ?? '')).toBe(true)
     expect(screen.getByRole('heading', { name: /^sources?$/i })).toBeTruthy()
-    expect(screen.getAllByRole('link', { name: /agent_skills\.md/ }).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole('link', { name: /Ansible\.md/ }).length).toBeGreaterThan(0)
     expect(screen.queryByRole('button', { name: /submit answer/i })).toBeNull()
 
     // Options are frozen once graded.
@@ -121,13 +121,13 @@ describe('the quiz flow', () => {
 
     await user.click(screen.getByRole('button', { name: /next question|see results/i }))
     await waitFor(() => {
-      expect(screen.getByText(`2 / ${AGENT_SKILLS.cardCount}`)).toBeTruthy()
+      expect(screen.getByText(`2 / ${ANSIBLE_CARDS}`)).toBeTruthy()
     })
   })
 
-  it('persists progress, so review mode appears on the set page afterwards', async () => {
+  it('persists progress against the course, so review mode has something to show', async () => {
     const user = userEvent.setup()
-    renderAt('/anthropic/agent-skills/quiz?mode=practice')
+    renderAt('/courses/devops/ansible/quiz?mode=practice')
 
     const group = await screen.findByRole('group')
     const inputs = within(group).getAllByRole(
@@ -140,29 +140,35 @@ describe('the quiz flow', () => {
     await user.click(screen.getByRole('button', { name: /mark for review/i }))
 
     await waitFor(() => {
-      expect(window.localStorage.getItem(STORAGE_KEY)).toContain('"attempts":1')
+      const raw = window.localStorage.getItem(STORAGE_KEY) ?? ''
+      expect(raw).toContain('"attempts":1')
+      // Filed under the course, not under a card set.
+      expect(JSON.parse(raw).courses[ANSIBLE.path]).toBeTruthy()
     })
 
     cleanup()
-    renderAt('/anthropic/agent-skills')
+    renderAt('/courses/devops/ansible/quiz?mode=review')
 
-    expect(await screen.findByRole('link', { name: /review 1 card/i })).toBeTruthy()
+    // The starred card is the only thing in the review queue.
+    expect(await screen.findByRole('group')).toBeTruthy()
+    expect(screen.getByText('1 / 1')).toBeTruthy()
   })
 
   it('ends a session early and shows results with a route back', async () => {
     const user = userEvent.setup()
-    renderAt('/anthropic/agent-skills/quiz?mode=practice')
+    renderAt('/courses/devops/ansible/quiz?mode=practice')
 
     await screen.findByRole('group')
     await user.click(screen.getByRole('button', { name: /end session/i }))
 
     expect(await screen.findByRole('heading', { name: /session ended/i })).toBeTruthy()
     expect(screen.getByRole('button', { name: /run it again/i })).toBeTruthy()
-    expect(screen.getByRole('link', { name: /back to agent skills/i })).toBeTruthy()
+    // The results panel and the trailing note both offer the way back.
+    expect(screen.getAllByRole('link', { name: /back to ansible/i }).length).toBeGreaterThan(0)
   })
 
   it('explains the empty review queue rather than showing an empty quiz', async () => {
-    renderAt('/anthropic/agent-skills/quiz?mode=review')
+    renderAt('/courses/devops/ansible/quiz?mode=review')
 
     expect(await screen.findByRole('heading', { name: /nothing to review yet/i })).toBeTruthy()
     expect(screen.getByRole('link', { name: /practice all cards/i })).toBeTruthy()

@@ -17,7 +17,7 @@ interface FeedbackPanelProps {
  *
  * Focus moves here on reveal rather than staying on the Submit button, so a keyboard
  * or screen-reader user lands on the result instead of having to hunt for it. Because
- * focus moves, there is no `aria-live` region — that would announce the same content
+ * focus moves, there is no `aria-live` region - that would announce the same content
  * twice.
  */
 export function FeedbackPanel({ card, answer }: FeedbackPanelProps) {
@@ -40,7 +40,7 @@ export function FeedbackPanel({ card, answer }: FeedbackPanelProps) {
     >
       <h2 className={cn('flex items-center gap-2 font-heading text-2xl', answer.isCorrect ? 'text-ok-text' : 'text-bad-text')}>
         <Icon name={answer.isCorrect ? 'check' : 'x'} size={22} className="shrink-0" />
-        {answer.isCorrect ? 'Correct' : partial ? 'Not quite — you missed one' : 'Not quite'}
+        {answer.isCorrect ? 'Correct' : partial ? 'Not quite - you missed one' : 'Not quite'}
       </h2>
 
       {!answer.isCorrect ? (

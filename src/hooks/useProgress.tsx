@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 
-import type { ProgressSnapshot, SetProgressSummary } from '@/types/progress'
+import type { ProgressSnapshot, CourseProgressSummary } from '@/types/progress'
 import * as store from '@/storage/progress'
 
 /**
@@ -11,12 +11,12 @@ import * as store from '@/storage/progress'
  */
 interface ProgressContextValue {
   snapshot: ProgressSnapshot
-  recordAnswer: (setKey: string, cardId: string, isCorrect: boolean) => void
-  setMarked: (setKey: string, cardId: string, marked: boolean) => void
-  completeSession: (setKey: string) => void
-  resetSet: (setKey: string) => void
-  summarize: (setKey: string, cardIds: string[]) => SetProgressSummary
-  reviewableCardIds: (setKey: string, cardIds: string[]) => string[]
+  recordAnswer: (courseKey: string, cardId: string, isCorrect: boolean) => void
+  setMarked: (courseKey: string, cardId: string, marked: boolean) => void
+  completeSession: (courseKey: string) => void
+  resetCourse: (courseKey: string) => void
+  summarize: (courseKey: string, cardIds: string[]) => CourseProgressSummary
+  reviewableCardIds: (courseKey: string, cardIds: string[]) => string[]
 }
 
 const ProgressContext = createContext<ProgressContextValue | null>(null)
@@ -33,14 +33,14 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const value = useMemo<ProgressContextValue>(
     () => ({
       snapshot,
-      recordAnswer: (setKey, cardId, isCorrect) =>
-        setSnapshot((current) => store.recordAnswer(current, setKey, cardId, isCorrect)),
-      setMarked: (setKey, cardId, marked) =>
-        setSnapshot((current) => store.setMarked(current, setKey, cardId, marked)),
-      completeSession: (setKey) => setSnapshot((current) => store.completeSession(current, setKey)),
-      resetSet: (setKey) => setSnapshot((current) => store.resetSet(current, setKey)),
-      summarize: (setKey, cardIds) => store.summarize(snapshot, setKey, cardIds),
-      reviewableCardIds: (setKey, cardIds) => store.reviewableCardIds(snapshot, setKey, cardIds),
+      recordAnswer: (courseKey, cardId, isCorrect) =>
+        setSnapshot((current) => store.recordAnswer(current, courseKey, cardId, isCorrect)),
+      setMarked: (courseKey, cardId, marked) =>
+        setSnapshot((current) => store.setMarked(current, courseKey, cardId, marked)),
+      completeSession: (courseKey) => setSnapshot((current) => store.completeSession(current, courseKey)),
+      resetCourse: (courseKey) => setSnapshot((current) => store.resetCourse(current, courseKey)),
+      summarize: (courseKey, cardIds) => store.summarize(snapshot, courseKey, cardIds),
+      reviewableCardIds: (courseKey, cardIds) => store.reviewableCardIds(snapshot, courseKey, cardIds),
     }),
     [snapshot],
   )

@@ -1,0 +1,1768 @@
+{
+  "id": "ai-practitioner-aws",
+  "title": "AI Practitioner - AWS Services",
+  "cards": [
+    {
+      "id": "embedding-vs-generation",
+      "type": "single",
+      "prompt": "A company wants to search its own document library by meaning rather than keywords. Which kind of model does this require?",
+      "tags": [
+        "foundation-models",
+        "embeddings"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "An embeddings model such as Titan Text Embeddings",
+          "correct": true,
+          "rationale": "Searching by meaning means comparing numeric representations, which is what an embeddings model produces."
+        },
+        {
+          "id": "b",
+          "text": "A text generation model such as Nova Pro",
+          "correct": false,
+          "rationale": "Generation models produce new content for a person to read; they do not index a library for retrieval."
+        },
+        {
+          "id": "c",
+          "text": "An image generation model such as Nova Canvas",
+          "correct": false,
+          "rationale": "Canvas produces images and has no role in document search."
+        },
+        {
+          "id": "d",
+          "text": "A speech-to-speech model such as Nova Sonic",
+          "correct": false,
+          "rationale": "Sonic handles spoken conversation, not document retrieval."
+        }
+      ],
+      "explanation": "A generation model produces content for people; an embedding model produces numbers for computers to compare. Semantic search and RAG both rest on embeddings, so a scenario about searching your own documents points at an embeddings model.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "AWS Foundational Models"
+        }
+      ]
+    },
+    {
+      "id": "nova-multimodal-outputs",
+      "type": "multi",
+      "prompt": "Which statements about the Amazon Nova family are correct? (Select all that apply)",
+      "tags": [
+        "foundation-models",
+        "nova"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Nova Micro accepts text only and returns text",
+          "correct": true,
+          "rationale": "It is the smallest and fastest of the family, with no image or video support."
+        },
+        {
+          "id": "b",
+          "text": "Nova Lite, Pro and Premier accept text, image and video but respond in text",
+          "correct": true,
+          "rationale": "They are multimodal on input while their output remains text."
+        },
+        {
+          "id": "c",
+          "text": "Nova Canvas generates images and Nova Reel generates video",
+          "correct": true,
+          "rationale": "These two differ from the rest by what they produce rather than what they accept."
+        },
+        {
+          "id": "d",
+          "text": "Nova Sonic converts text into embeddings for semantic search",
+          "correct": false,
+          "rationale": "Sonic is a speech-to-speech model. Embeddings come from the Titan embeddings models."
+        },
+        {
+          "id": "e",
+          "text": "Nova Premier can act as a teacher model for distillation",
+          "correct": true,
+          "rationale": "Its answers can be used to train a smaller, cheaper model on a narrow task."
+        }
+      ],
+      "explanation": "Accepting several input types and producing several output types are different capabilities. The Lite, Pro and Premier tiers read text, images and video but always answer in text, while Canvas, Reel and Sonic are defined by producing images, video and speech respectively.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "AWS Foundational Models"
+        }
+      ]
+    },
+    {
+      "id": "nova-micro-choice",
+      "type": "single",
+      "prompt": "An application classifies a high volume of short incoming text messages and needs the lowest possible latency and cost. Which Nova model fits?",
+      "tags": [
+        "foundation-models",
+        "nova"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Nova Micro",
+          "correct": true,
+          "rationale": "It is the smallest and fastest of the family, built for high-volume simple text work."
+        },
+        {
+          "id": "b",
+          "text": "Nova Premier",
+          "correct": false,
+          "rationale": "Premier targets the hardest reasoning problems at correspondingly higher cost."
+        },
+        {
+          "id": "c",
+          "text": "Nova Reel",
+          "correct": false,
+          "rationale": "Reel generates video clips and cannot classify text."
+        },
+        {
+          "id": "d",
+          "text": "Titan Multimodal Embeddings",
+          "correct": false,
+          "rationale": "That produces embeddings for comparison rather than classifying and answering."
+        }
+      ],
+      "explanation": "The Nova tiers trade capability against latency and cost. Micro is text-in, text-out with the lowest latency and cost, which suits routing and classifying high volumes of simple requests.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "AWS Foundational Models"
+        }
+      ]
+    },
+    {
+      "id": "textract-vs-comprehend",
+      "type": "single",
+      "prompt": "A lender receives scanned loan applications as images and must pull the values out of the form fields. Which service does this?",
+      "tags": [
+        "ai-services",
+        "textract"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Textract",
+          "correct": true,
+          "rationale": "It extracts text and structure from scanned documents, preserving tables and form field pairs."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Comprehend",
+          "correct": false,
+          "rationale": "Comprehend reads meaning out of text that already exists; it cannot read a scanned image."
+        },
+        {
+          "id": "c",
+          "text": "Amazon Translate",
+          "correct": false,
+          "rationale": "Translate converts text between languages."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Personalize",
+          "correct": false,
+          "rationale": "Personalize produces recommendations and has no document-processing role."
+        }
+      ],
+      "explanation": "Textract turns a scanned document into structured data, keeping tables and form field pairs rather than returning a flat wall of text. Comprehend is the natural next step once text exists, but it cannot start from an image.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "AWS Fully-Managed Agentic Services"
+        }
+      ]
+    },
+    {
+      "id": "comprehend-capabilities",
+      "type": "multi",
+      "prompt": "Which capabilities does Amazon Comprehend provide? (Select all that apply)",
+      "tags": [
+        "ai-services",
+        "comprehend"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Sentiment analysis",
+          "correct": true,
+          "rationale": "It classifies text as positive, negative or neutral."
+        },
+        {
+          "id": "b",
+          "text": "Entity extraction such as names, places and dates",
+          "correct": true,
+          "rationale": "Pulling named entities out of text is one of its core functions."
+        },
+        {
+          "id": "c",
+          "text": "Detecting personally identifiable information",
+          "correct": true,
+          "rationale": "It can find sensitive data before text is stored."
+        },
+        {
+          "id": "d",
+          "text": "Converting written text into lifelike speech",
+          "correct": false,
+          "rationale": "That is Amazon Polly."
+        },
+        {
+          "id": "e",
+          "text": "Topic modeling across a set of documents",
+          "correct": true,
+          "rationale": "It can surface the themes running through a document collection."
+        }
+      ],
+      "explanation": "Comprehend is the natural language processing service: it reads text and pulls meaning out of it through sentiment, entities, key phrases, language detection, topic modeling and PII detection. Producing speech belongs to Polly.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "AWS Fully-Managed Agentic Services"
+        }
+      ]
+    },
+    {
+      "id": "polly-vs-transcribe",
+      "type": "single",
+      "prompt": "A call center wants written transcripts of recorded customer calls. Which service is required?",
+      "tags": [
+        "ai-services",
+        "transcribe"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Transcribe",
+          "correct": true,
+          "rationale": "It turns speech into text, with speaker identification and custom vocabulary."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Polly",
+          "correct": false,
+          "rationale": "Polly runs the other direction, turning text into speech."
+        },
+        {
+          "id": "c",
+          "text": "Amazon Lex",
+          "correct": false,
+          "rationale": "Lex builds conversational bots rather than transcribing existing recordings."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Kendra",
+          "correct": false,
+          "rationale": "Kendra searches a company's content; it does not process audio."
+        }
+      ],
+      "explanation": "Transcribe is speech to text and Polly is text to speech. The pairing is a reliable exam target, and Transcribe adds speaker identification, custom vocabulary and automatic redaction of sensitive information.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "AWS Fully-Managed Agentic Services"
+        }
+      ]
+    },
+    {
+      "id": "lex-chatbot",
+      "type": "single",
+      "prompt": "Which service builds a conversational chatbot that understands what a user is asking for and extracts the details from the request?",
+      "tags": [
+        "ai-services",
+        "lex"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Lex",
+          "correct": true,
+          "rationale": "Lex models intents and slots and manages the back-and-forth of a conversation, in text or voice."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Comprehend",
+          "correct": false,
+          "rationale": "Comprehend analyzes text but holds no conversation and manages no dialogue state."
+        },
+        {
+          "id": "c",
+          "text": "Amazon Polly",
+          "correct": false,
+          "rationale": "Polly only speaks text aloud."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Rekognition",
+          "correct": false,
+          "rationale": "Rekognition analyzes images and video."
+        }
+      ],
+      "explanation": "Lex is built on the technology behind Alexa. It identifies the user's intent, pulls the required details out as slots, and manages the conversation across turns, which is what separates it from a service that simply analyzes a block of text.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "AWS Fully-Managed Agentic Services"
+        }
+      ]
+    },
+    {
+      "id": "three-layer-stack",
+      "type": "single",
+      "prompt": "A scenario says a standard image-moderation capability is needed as fast as possible, with no machine learning experience on the team. Which layer of the AWS AI stack applies?",
+      "tags": [
+        "service-selection",
+        "ai-services"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A pre-trained AI Service such as Rekognition",
+          "correct": true,
+          "rationale": "\"No ML experience required\" and \"fastest to implement\" are the giveaway phrases for this layer."
+        },
+        {
+          "id": "b",
+          "text": "Bedrock with a fine-tuned foundation model",
+          "correct": false,
+          "rationale": "Bedrock suits generative work and would be more effort than calling a service that already moderates images."
+        },
+        {
+          "id": "c",
+          "text": "SageMaker AI with a custom-trained model",
+          "correct": false,
+          "rationale": "Building a model is the slowest path and is only justified when nothing existing fits."
+        },
+        {
+          "id": "d",
+          "text": "SageMaker JumpStart with a deployed open-source model",
+          "correct": false,
+          "rationale": "That still leaves infrastructure to manage for a problem AWS has already solved."
+        }
+      ],
+      "explanation": "The three layers are AI Services (pre-trained, ready to call), Bedrock (foundation models through an API) and SageMaker AI (build your own). Language about speed and no required expertise points at the top layer; language about training on your own data points down the stack.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "AWS Fully-Managed Agentic Services"
+        }
+      ]
+    },
+    {
+      "id": "bedrock-definition",
+      "type": "multi",
+      "prompt": "Which statements about Amazon Bedrock are correct? (Select all that apply)",
+      "tags": [
+        "bedrock"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It offers models from several providers through a single API",
+          "correct": true,
+          "rationale": "Swapping models becomes a change of model name rather than an application rewrite."
+        },
+        {
+          "id": "b",
+          "text": "It is serverless, with no infrastructure to manage",
+          "correct": true,
+          "rationale": "Nothing starts up or sits idle between requests."
+        },
+        {
+          "id": "c",
+          "text": "Prompts and responses stay inside your AWS account and are not used to train the underlying models",
+          "correct": true,
+          "rationale": "This is a large part of why organizations use it rather than a provider's public API."
+        },
+        {
+          "id": "d",
+          "text": "It is the right service for training a fraud classifier from your own transaction history",
+          "correct": false,
+          "rationale": "Traditional model building belongs to SageMaker AI."
+        }
+      ],
+      "explanation": "Bedrock is a fully managed, serverless way to consume foundation models that already exist. It solves provider lock-in by putting one API in front of many models, and keeps prompts inside your account. Building a model from your own data is SageMaker's job.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Bedrock"
+        }
+      ]
+    },
+    {
+      "id": "provisioned-vs-ondemand",
+      "type": "single",
+      "prompt": "A production workload sends a high, steady volume of Bedrock requests and needs guaranteed, predictable performance. Which pricing model applies?",
+      "tags": [
+        "bedrock",
+        "pricing"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Provisioned Throughput",
+          "correct": true,
+          "rationale": "Capacity is reserved for a committed period, which is what buys the performance guarantee."
+        },
+        {
+          "id": "b",
+          "text": "On-Demand",
+          "correct": false,
+          "rationale": "On-Demand shares capacity and suits variable or unpredictable traffic instead."
+        },
+        {
+          "id": "c",
+          "text": "Batch transform",
+          "correct": false,
+          "rationale": "That is a SageMaker deployment option, not a Bedrock pricing model."
+        },
+        {
+          "id": "d",
+          "text": "Serverless inference endpoints",
+          "correct": false,
+          "rationale": "Bedrock is already serverless; this is a SageMaker deployment option."
+        }
+      ],
+      "explanation": "On-Demand charges per token with nothing reserved, which suits development and variable traffic. Provisioned Throughput reserves capacity for a committed period whether used or not, buying predictable performance - and it is required to serve a model you have customized through fine-tuning.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Model Access and Inference"
+        }
+      ]
+    },
+    {
+      "id": "rag-does-not-change-weights",
+      "type": "boolean",
+      "prompt": "Retrieval Augmented Generation changes a foundation model's weights.",
+      "tags": [
+        "bedrock",
+        "rag"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false,
+          "rationale": "RAG only changes what goes into the prompt; the model itself is untouched."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true,
+          "rationale": "Retrieved passages are added to the prompt, which is why RAG is cheap, immediate and easy to reverse."
+        }
+      ],
+      "explanation": "RAG finds relevant material and places it in the prompt before the model answers. Because no weights change, updating what the model knows is a matter of updating the documents - which is why it beats fine-tuning whenever the source material moves.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Knowledge Bases (RAG)"
+        }
+      ]
+    },
+    {
+      "id": "rag-vs-fine-tuning",
+      "type": "single",
+      "prompt": "An assistant must answer questions about internal HR policies that are revised every month. Which approach fits best?",
+      "tags": [
+        "bedrock",
+        "rag",
+        "fine-tuning"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Bedrock Knowledge Bases using RAG over the policy documents",
+          "correct": true,
+          "rationale": "Retrieval reads current documents at question time, so a monthly revision means reindexing rather than retraining."
+        },
+        {
+          "id": "b",
+          "text": "Fine-tune a foundation model on the policy documents",
+          "correct": false,
+          "rationale": "Each revision would require a fresh training run, at far greater cost and delay."
+        },
+        {
+          "id": "c",
+          "text": "Continued pre-training on the company's document archive",
+          "correct": false,
+          "rationale": "That teaches a model a domain's vocabulary; it is the wrong tool for facts that must stay current."
+        },
+        {
+          "id": "d",
+          "text": "Train a model from scratch on the policy documents",
+          "correct": false,
+          "rationale": "Training from scratch needs vastly more data and would produce a weaker model than any pre-trained option."
+        }
+      ],
+      "explanation": "When the scenario is about giving a model access to facts it does not have - especially facts that change - RAG is the answer. Fine-tuning is for changing the model's behavior, such as its tone, output format, or grasp of specialist vocabulary.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Knowledge Bases (RAG)"
+        }
+      ]
+    },
+    {
+      "id": "rag-problems-solved",
+      "type": "multi",
+      "prompt": "Which problems does RAG address? (Select all that apply)",
+      "tags": [
+        "bedrock",
+        "rag"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The model knows nothing about a company's internal documents",
+          "correct": true,
+          "rationale": "Those documents were never in its training data, so they must be supplied at question time."
+        },
+        {
+          "id": "b",
+          "text": "The model's training data has a cutoff date, so it knows nothing recent",
+          "correct": true,
+          "rationale": "Retrieved material can be as current as the source."
+        },
+        {
+          "id": "c",
+          "text": "The model invents confident-sounding answers when it lacks information",
+          "correct": true,
+          "rationale": "Supplying the actual source material reduces hallucination."
+        },
+        {
+          "id": "d",
+          "text": "The model responds too slowly for interactive use",
+          "correct": false,
+          "rationale": "Retrieval adds a lookup step; latency is addressed by model choice and provisioned capacity."
+        }
+      ],
+      "explanation": "RAG tackles three problems at once - private knowledge, stale knowledge and hallucination - because all three come from the model lacking the right information at answer time. It does nothing for latency.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Knowledge Bases (RAG)"
+        }
+      ]
+    },
+    {
+      "id": "fine-tuning-vs-continued-pretraining",
+      "type": "single",
+      "prompt": "What distinguishes fine-tuning from continued pre-training in Bedrock?",
+      "tags": [
+        "bedrock",
+        "fine-tuning"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Fine-tuning uses labeled prompt-and-response pairs; continued pre-training uses unlabeled domain text",
+          "correct": true,
+          "rationale": "One teaches how to respond, the other absorbs a domain's vocabulary and patterns."
+        },
+        {
+          "id": "b",
+          "text": "Fine-tuning uses unlabeled text; continued pre-training uses labeled pairs",
+          "correct": false,
+          "rationale": "This reverses the two data requirements."
+        },
+        {
+          "id": "c",
+          "text": "Fine-tuning changes model weights; continued pre-training only changes the prompt",
+          "correct": false,
+          "rationale": "Both adjust weights. Changing only the prompt describes RAG."
+        },
+        {
+          "id": "d",
+          "text": "Fine-tuning is serverless; continued pre-training requires SageMaker",
+          "correct": false,
+          "rationale": "Bedrock supports both, and a customized model needs provisioned throughput to serve."
+        }
+      ],
+      "explanation": "Fine-tuning supplies examples of the responses you want, so the model learns a style or output structure. Continued pre-training supplies raw domain text with no example answers, so the model absorbs specialist vocabulary. Both produce a private copy of the model.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Fine-Tuning and Customization"
+        }
+      ]
+    },
+    {
+      "id": "model-distillation",
+      "type": "single",
+      "prompt": "What does model distillation achieve?",
+      "tags": [
+        "bedrock",
+        "distillation"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A large model generates training data that teaches a smaller, cheaper model to handle a specific task well",
+          "correct": true,
+          "rationale": "You approach the large model's quality on a narrow task at the small model's cost."
+        },
+        {
+          "id": "b",
+          "text": "It compresses a model's training data to reduce storage costs",
+          "correct": false,
+          "rationale": "Distillation transfers capability between models rather than shrinking datasets."
+        },
+        {
+          "id": "c",
+          "text": "It removes personally identifiable information from prompts",
+          "correct": false,
+          "rationale": "That is a Guardrails capability."
+        },
+        {
+          "id": "d",
+          "text": "It merges several foundation models into a single larger model",
+          "correct": false,
+          "rationale": "Distillation moves capability from a large model down to a small one, not the reverse."
+        }
+      ],
+      "explanation": "Distillation uses a highly capable teacher model to produce training data for a smaller student model. Nova Premier is described as suitable for exactly this role, which is how a narrow task gets near-frontier quality at a fraction of the running cost.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Fine-Tuning and Customization"
+        }
+      ]
+    },
+    {
+      "id": "bedrock-agents-purpose",
+      "type": "single",
+      "prompt": "A request to \"cancel my order and refund the payment\" requires looking up the order and calling two internal APIs in sequence. Which Bedrock capability handles this?",
+      "tags": [
+        "bedrock",
+        "agents"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Bedrock Agents with Action Groups",
+          "correct": true,
+          "rationale": "An agent plans the sequence and calls the APIs it has been given, feeding results back into its own reasoning."
+        },
+        {
+          "id": "b",
+          "text": "Bedrock Guardrails",
+          "correct": false,
+          "rationale": "Guardrails constrain what goes in and out of a model; they take no actions."
+        },
+        {
+          "id": "c",
+          "text": "Bedrock Knowledge Bases",
+          "correct": false,
+          "rationale": "Knowledge Bases retrieve information to answer with, but cannot change anything in another system."
+        },
+        {
+          "id": "d",
+          "text": "Provisioned Throughput",
+          "correct": false,
+          "rationale": "That reserves capacity and has nothing to do with taking actions."
+        }
+      ],
+      "explanation": "A foundation model only generates content. Asked to cancel an order it can produce a convincing sentence saying so while nothing happens. Agents close that gap: Action Groups describe the APIs the model may call, and the agent works out which steps are needed and in what order.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Bedrock Agents"
+        }
+      ]
+    },
+    {
+      "id": "guardrails-capabilities",
+      "type": "multi",
+      "prompt": "Which of the following can Bedrock Guardrails do? (Select all that apply)",
+      "tags": [
+        "bedrock",
+        "guardrails",
+        "responsible-ai"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Block topics you define as off-limits",
+          "correct": true,
+          "rationale": "A banking assistant can be stopped from giving investment advice, for example."
+        },
+        {
+          "id": "b",
+          "text": "Redact personally identifiable information in the user's input or the model's response",
+          "correct": true,
+          "rationale": "PII handling works in both directions."
+        },
+        {
+          "id": "c",
+          "text": "Filter harmful content across categories with adjustable strength",
+          "correct": true,
+          "rationale": "Hate, insults, violence and sexual content each have a configurable threshold."
+        },
+        {
+          "id": "d",
+          "text": "Reduce the cost per token of the underlying model",
+          "correct": false,
+          "rationale": "Guardrails are a safety control and do not change pricing."
+        },
+        {
+          "id": "e",
+          "text": "Check responses against source material to catch hallucinations",
+          "correct": true,
+          "rationale": "This is contextual grounding."
+        }
+      ],
+      "explanation": "Guardrails apply safety rules to what goes into a model and what comes out. Two properties matter: a guardrail is configured independently of the model so it survives switching models, and several guardrails with different settings can serve different applications.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Guardrails"
+        }
+      ]
+    },
+    {
+      "id": "guardrails-model-independent",
+      "type": "boolean",
+      "prompt": "A Bedrock guardrail has to be rebuilt when you switch the application to a different foundation model.",
+      "tags": [
+        "bedrock",
+        "guardrails"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false,
+          "rationale": "Guardrails are configured independently of the model, so the same one works across any model on Bedrock."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true,
+          "rationale": "Model independence is one of the two defining properties of guardrails."
+        }
+      ],
+      "explanation": "Because a guardrail is defined separately from the model, switching models does not mean rebuilding your safety rules. The same independence lets multiple guardrails with different settings be applied to different applications sharing one model.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Guardrails"
+        }
+      ]
+    },
+    {
+      "id": "jumpstart-vs-bedrock",
+      "type": "single",
+      "prompt": "Both SageMaker JumpStart and Bedrock offer pre-trained foundation models. What is the key difference?",
+      "tags": [
+        "service-selection",
+        "jumpstart",
+        "bedrock"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "JumpStart deploys onto instances you control and pay for hourly; Bedrock is serverless and charges per token",
+          "correct": true,
+          "rationale": "The infrastructure model is the real distinction, and it drives the exam's phrasing."
+        },
+        {
+          "id": "b",
+          "text": "JumpStart is serverless; Bedrock requires you to manage instances",
+          "correct": false,
+          "rationale": "This reverses the two."
+        },
+        {
+          "id": "c",
+          "text": "JumpStart offers only Amazon models; Bedrock offers only third-party models",
+          "correct": false,
+          "rationale": "Both catalogs include a mix of providers."
+        },
+        {
+          "id": "d",
+          "text": "JumpStart cannot be used to fine-tune a model",
+          "correct": false,
+          "rationale": "JumpStart models can be deployed or fine-tuned, with more control over training than Bedrock offers."
+        }
+      ],
+      "explanation": "The tiebreaker is how much control the scenario wants. \"No infrastructure to manage\", speed, or paying only for what you use points to Bedrock. Wanting deeper control, a specific open-source model, or access to the full training process points to JumpStart.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker JumpStart"
+        }
+      ]
+    },
+    {
+      "id": "bedrock-vs-sagemaker-choice",
+      "type": "single",
+      "prompt": "A logistics company needs to forecast demand for its own products from years of its own sales history. Which service is the right starting point?",
+      "tags": [
+        "service-selection",
+        "sagemaker"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "SageMaker AI",
+          "correct": true,
+          "rationale": "Demand forecasting from proprietary history is a traditional model built from your own data."
+        },
+        {
+          "id": "b",
+          "text": "Amazon Bedrock",
+          "correct": false,
+          "rationale": "Bedrock consumes generative foundation models; forecasting is not a generative task."
+        },
+        {
+          "id": "c",
+          "text": "Amazon Lex",
+          "correct": false,
+          "rationale": "Lex builds conversational chatbots."
+        },
+        {
+          "id": "d",
+          "text": "Amazon Textract",
+          "correct": false,
+          "rationale": "Textract extracts text from scanned documents."
+        }
+      ],
+      "explanation": "Bedrock is for generative work on models that already exist. SageMaker AI is for models that have to be built: fraud detection, demand forecasting, churn prediction. A scenario centered on a company's own historical data and a numeric prediction points at SageMaker.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Bedrock vs. SageMaker AI"
+        }
+      ]
+    },
+    {
+      "id": "sagemaker-deployment-realtime",
+      "type": "single",
+      "prompt": "A fraud check must return a decision while the customer waits at the payment screen. Which SageMaker deployment option fits?",
+      "tags": [
+        "sagemaker",
+        "deployment"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Real-Time endpoint",
+          "correct": true,
+          "rationale": "Dedicated compute behind a permanent endpoint gives millisecond responses continuously."
+        },
+        {
+          "id": "b",
+          "text": "Batch Transform",
+          "correct": false,
+          "rationale": "Batch scores a stored dataset with nobody waiting on an individual answer."
+        },
+        {
+          "id": "c",
+          "text": "Asynchronous inference",
+          "correct": false,
+          "rationale": "Asynchronous queues requests for large or slow payloads, which is too slow for a checkout."
+        },
+        {
+          "id": "d",
+          "text": "Serverless inference",
+          "correct": false,
+          "rationale": "Serverless suits occasional traffic and can add a cold start after a quiet period."
+        }
+      ],
+      "explanation": "The deciding factors are how quickly the answer is needed and how steady the traffic is. \"While the customer waits\" means Real-Time, which runs - and bills - around the clock.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "4. Deployment"
+        }
+      ]
+    },
+    {
+      "id": "sagemaker-deployment-match",
+      "type": "multi",
+      "prompt": "Which pairings of scenario and SageMaker deployment option are correct? (Select all that apply)",
+      "tags": [
+        "sagemaker",
+        "deployment"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Scoring every customer in the database overnight - Batch Transform",
+          "correct": true,
+          "rationale": "A whole stored dataset processed at once, with no endpoint left running."
+        },
+        {
+          "id": "b",
+          "text": "An internal tool used a few times a day - Serverless inference",
+          "correct": true,
+          "rationale": "No compute sits idle between requests, at the cost of an occasional cold start."
+        },
+        {
+          "id": "c",
+          "text": "Analyzing long video files that take minutes per request - Asynchronous inference",
+          "correct": true,
+          "rationale": "Requests are queued and results delivered when ready, handling payloads too large for a real-time endpoint."
+        },
+        {
+          "id": "d",
+          "text": "A recommendation shown as a page loads - Batch Transform",
+          "correct": false,
+          "rationale": "Something is waiting on that answer, so this needs a real-time endpoint."
+        }
+      ],
+      "explanation": "Four options, chosen by latency need and traffic shape: Real-Time for continuous low latency, Serverless for occasional or unpredictable traffic, Batch Transform for whole stored datasets, and Asynchronous for large or slow payloads that still need results reasonably soon.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "4. Deployment"
+        }
+      ]
+    },
+    {
+      "id": "feature-store-purpose",
+      "type": "single",
+      "prompt": "What expensive bug does SageMaker Feature Store prevent?",
+      "tags": [
+        "sagemaker",
+        "feature-store"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Features calculated one way during training and a different way during live predictions",
+          "correct": true,
+          "rationale": "Serving both from one definition stops training and production from diverging."
+        },
+        {
+          "id": "b",
+          "text": "Training jobs that never shut down and keep billing",
+          "correct": false,
+          "rationale": "Training compute stops on its own; a deployed endpoint is what keeps running."
+        },
+        {
+          "id": "c",
+          "text": "Models being deployed before they are approved",
+          "correct": false,
+          "rationale": "That is what Model Registry's approval status prevents."
+        },
+        {
+          "id": "d",
+          "text": "Training data that over-represents one group of people",
+          "correct": false,
+          "rationale": "Data balance is addressed by Data Wrangler and Clarify."
+        }
+      ],
+      "explanation": "A model must receive features computed identically at training time and prediction time. If the training pipeline and the live application each calculate a feature slightly differently, accuracy quietly collapses in production. Feature Store serves both from the same definition so they cannot drift apart.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Feature Store"
+        }
+      ]
+    },
+    {
+      "id": "clarify-two-jobs",
+      "type": "multi",
+      "prompt": "What does SageMaker Clarify provide? (Select all that apply)",
+      "tags": [
+        "sagemaker",
+        "clarify",
+        "responsible-ai"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Detection of bias in training data and in model predictions",
+          "correct": true,
+          "rationale": "It inspects both sides to find groups being treated systematically differently."
+        },
+        {
+          "id": "b",
+          "text": "Feature importance scores showing which inputs drove a prediction",
+          "correct": true,
+          "rationale": "This is the explainability half, turning an opaque answer into a justifiable one."
+        },
+        {
+          "id": "c",
+          "text": "Alerts when a deployed model's quality degrades over time",
+          "correct": false,
+          "rationale": "Continuous monitoring of live models is Model Monitor's role."
+        },
+        {
+          "id": "d",
+          "text": "Automatic balancing of an imbalanced dataset through oversampling",
+          "correct": false,
+          "rationale": "Data Wrangler performs the rebalancing; Clarify reports the problem."
+        }
+      ],
+      "explanation": "Clarify answers the two questions auditors ask: is the model treating a group unfairly, and why did it produce this particular result? Detecting a problem and fixing it are separate tools - Clarify detects bias, Data Wrangler rebalances the data.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Clarify"
+        }
+      ]
+    },
+    {
+      "id": "model-registry-approval",
+      "type": "single",
+      "prompt": "Which SageMaker feature stops an untested model version from reaching production?",
+      "tags": [
+        "sagemaker",
+        "governance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Model Registry, through its approval status",
+          "correct": true,
+          "rationale": "Deployment pipelines can be set to deploy only versions marked approved."
+        },
+        {
+          "id": "b",
+          "text": "Model Cards",
+          "correct": false,
+          "rationale": "Model Cards document intended use and limitations but gate nothing."
+        },
+        {
+          "id": "c",
+          "text": "Model Dashboard",
+          "correct": false,
+          "rationale": "The Dashboard shows what is deployed and how it behaves; it does not control deployment."
+        },
+        {
+          "id": "d",
+          "text": "Role Manager",
+          "correct": false,
+          "rationale": "Role Manager grants least-privilege permissions to people."
+        }
+      ],
+      "explanation": "Model Registry catalogs models and versions along with what produced them, and each version carries an approval status of pending, approved or rejected. Pipelines that deploy only approved versions turn that status into an enforced gate.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Model Registry"
+        }
+      ]
+    },
+    {
+      "id": "autopilot-vs-canvas",
+      "type": "single",
+      "prompt": "What distinguishes SageMaker Autopilot from SageMaker Canvas?",
+      "tags": [
+        "sagemaker",
+        "automation"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Autopilot generates the notebooks containing the code it used; Canvas hides the work entirely from non-coders",
+          "correct": true,
+          "rationale": "Both automate model building, but only Autopilot hands back inspectable code."
+        },
+        {
+          "id": "b",
+          "text": "Autopilot is no-code; Canvas produces notebooks for data scientists",
+          "correct": false,
+          "rationale": "This reverses the two audiences."
+        },
+        {
+          "id": "c",
+          "text": "Autopilot works on images; Canvas works on tabular data",
+          "correct": false,
+          "rationale": "Both are aimed at tabular datasets where you name the column to predict."
+        },
+        {
+          "id": "d",
+          "text": "Autopilot deploys models; Canvas can only train them",
+          "correct": false,
+          "rationale": "The difference is audience and transparency, not deployment capability."
+        }
+      ],
+      "explanation": "Both point at a tabular dataset, take the column to predict, and automate feature engineering, algorithm choice and tuning. Autopilot automates the work for people who could do it themselves and want the code; Canvas hides it from business analysts who could not.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Autopilot"
+        }
+      ]
+    },
+    {
+      "id": "role-manager-iam",
+      "type": "boolean",
+      "prompt": "SageMaker Role Manager replaces IAM with its own separate permission system.",
+      "tags": [
+        "sagemaker",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false,
+          "rationale": "It is a guided builder that generates ordinary IAM roles, which then live in the IAM console like any other."
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true,
+          "rationale": "Role Manager produces standard IAM roles; it only removes the difficulty of authoring the policies."
+        }
+      ],
+      "explanation": "Machine learning work spans SageMaker, S3, CloudWatch and KMS at once, so hand-writing a least-privilege policy is error-prone. Role Manager uses persona-based templates to generate a normal IAM role, editable and assignable through IAM exactly like any other.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Role Manager"
+        }
+      ]
+    },
+    {
+      "id": "training-job-vs-endpoint-cost",
+      "type": "single",
+      "prompt": "Which statement about SageMaker compute costs is correct?",
+      "tags": [
+        "sagemaker",
+        "cost"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Training compute stops on its own when the job finishes, while a deployed endpoint keeps running and billing until removed",
+          "correct": true,
+          "rationale": "This asymmetry is the usual source of surprise costs."
+        },
+        {
+          "id": "b",
+          "text": "Both training compute and endpoints stop automatically when idle",
+          "correct": false,
+          "rationale": "A real-time endpoint stays up by design so it can answer instantly."
+        },
+        {
+          "id": "c",
+          "text": "Both training compute and endpoints run until manually stopped",
+          "correct": false,
+          "rationale": "A training job shuts its compute down once the model is saved."
+        },
+        {
+          "id": "d",
+          "text": "Neither is billed by the hour; both are billed per prediction",
+          "correct": false,
+          "rationale": "SageMaker bills for compute time, which is what separates it from Bedrock's per-token model."
+        }
+      ],
+      "explanation": "A training job starts compute, trains, saves the model and shuts the compute down, so you pay only for the run. An endpoint is long-lived infrastructure that bills continuously, which is why removing unused endpoints is a standard cost control.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Training Jobs"
+        }
+      ]
+    },
+    {
+      "id": "responsible-ai-dimensions",
+      "type": "multi",
+      "prompt": "Which of the following are among AWS's core dimensions of Responsible AI? (Select all that apply)",
+      "tags": [
+        "responsible-ai"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Fairness",
+          "correct": true,
+          "rationale": "The system treats all groups equitably and does not discriminate."
+        },
+        {
+          "id": "b",
+          "text": "Controllability",
+          "correct": true,
+          "rationale": "The system's behavior can be directed and corrected to stay aligned with human intent."
+        },
+        {
+          "id": "c",
+          "text": "Veracity & Robustness",
+          "correct": true,
+          "rationale": "The system stays accurate and reliable when it meets unexpected input."
+        },
+        {
+          "id": "d",
+          "text": "Profitability",
+          "correct": false,
+          "rationale": "Commercial return is a benefit of responsible practice, not one of the dimensions."
+        },
+        {
+          "id": "e",
+          "text": "Governance",
+          "correct": true,
+          "rationale": "Defined processes exist to implement and enforce responsible practices."
+        }
+      ],
+      "explanation": "The eight dimensions are fairness, explainability, privacy and security, transparency, veracity and robustness, governance, safety, and controllability. Exam questions typically describe a situation and ask which dimension it concerns.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "The Eight Core Dimensions"
+        }
+      ]
+    },
+    {
+      "id": "transparency-vs-explainability",
+      "type": "single",
+      "prompt": "A customer denied a loan asks which factors drove that specific decision. Which Responsible AI dimension does this concern?",
+      "tags": [
+        "responsible-ai",
+        "explainability"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Explainability",
+          "correct": true,
+          "rationale": "It concerns why one particular output happened, which is the individual-decision question."
+        },
+        {
+          "id": "b",
+          "text": "Transparency",
+          "correct": false,
+          "rationale": "Transparency covers how the system was built and what its limits are, disclosed about the system as a whole."
+        },
+        {
+          "id": "c",
+          "text": "Controllability",
+          "correct": false,
+          "rationale": "Controllability is about steering behavior, not accounting for a past decision."
+        },
+        {
+          "id": "d",
+          "text": "Veracity & Robustness",
+          "correct": false,
+          "rationale": "That concerns staying accurate under unexpected input."
+        }
+      ],
+      "explanation": "The two are easily confused and are tested against each other. Transparency answers how the system was built - data, architecture, known limitations, disclosed up front. Explainability answers why a specific output happened, and SageMaker Clarify's feature importance scores are the tooling for it.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "The Eight Core Dimensions"
+        }
+      ]
+    },
+    {
+      "id": "bias-data-fixes",
+      "type": "multi",
+      "prompt": "A dataset contains three times as many middle-aged people as any other age group, and the model predicts poorly for the young and old. Which fixes apply? (Select all that apply)",
+      "tags": [
+        "responsible-ai",
+        "bias"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Oversample the under-represented groups, including synthetic examples via SMOTE",
+          "correct": true,
+          "rationale": "Generating more examples of the rare groups rebalances what the model sees."
+        },
+        {
+          "id": "b",
+          "text": "Undersample the over-represented group",
+          "correct": true,
+          "rationale": "Removing examples of the dominant group is the other way to balance a dataset."
+        },
+        {
+          "id": "c",
+          "text": "Audit the dataset regularly, because a balanced dataset can drift out of balance",
+          "correct": true,
+          "rationale": "New data arriving over time can reintroduce the imbalance."
+        },
+        {
+          "id": "d",
+          "text": "Increase the learning rate so the model adapts faster",
+          "correct": false,
+          "rationale": "A hyperparameter change does not address a dataset that under-represents a group."
+        }
+      ],
+      "explanation": "Bias of this kind enters through the data rather than through anyone's intent, so the fixes are applied to the data: balance it by undersampling, oversampling or SMOTE, preprocess it through cleaning and deliberate feature selection, and audit it regularly.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Bias and Fairness"
+        }
+      ]
+    },
+    {
+      "id": "a2i-human-review",
+      "type": "single",
+      "prompt": "A workflow must route low-confidence predictions to a person before they are acted on. Which AWS service does this?",
+      "tags": [
+        "responsible-ai",
+        "a2i"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Amazon Augmented AI (A2I)",
+          "correct": true,
+          "rationale": "It builds the workflow that sends uncertain results for human review."
+        },
+        {
+          "id": "b",
+          "text": "SageMaker Model Monitor",
+          "correct": false,
+          "rationale": "Model Monitor raises alerts about degrading quality; it does not route individual predictions to people."
+        },
+        {
+          "id": "c",
+          "text": "Bedrock Guardrails",
+          "correct": false,
+          "rationale": "Guardrails filter content automatically rather than involving a reviewer."
+        },
+        {
+          "id": "d",
+          "text": "SageMaker Model Cards",
+          "correct": false,
+          "rationale": "Model Cards are documentation records."
+        }
+      ],
+      "explanation": "A2I inserts a person into the loop for predictions the model is not confident about, which serves the safety and controllability dimensions. A scenario asking for human review of uncertain results is pointing at it.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "AWS Tools for Responsible AI"
+        }
+      ]
+    },
+    {
+      "id": "ai-service-cards",
+      "type": "single",
+      "prompt": "What are AWS AI Service Cards?",
+      "tags": [
+        "responsible-ai",
+        "transparency"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "AWS documentation for each AI Service covering intended use cases, limitations and responsible design choices",
+          "correct": true,
+          "rationale": "They serve the transparency dimension by disclosing what a service is for and where it falls short."
+        },
+        {
+          "id": "b",
+          "text": "Documentation a customer writes about a model they trained themselves",
+          "correct": false,
+          "rationale": "That is a SageMaker Model Card."
+        },
+        {
+          "id": "c",
+          "text": "A pricing breakdown for each AI service",
+          "correct": false,
+          "rationale": "They document responsible use rather than cost."
+        },
+        {
+          "id": "d",
+          "text": "A record of every prediction an AI service has made",
+          "correct": false,
+          "rationale": "They are static documentation, not an audit log."
+        }
+      ],
+      "explanation": "AI Service Cards are AWS's own transparency documentation for services AWS built, covering basic concepts, intended use cases and limitations, responsible design choices, and deployment best practices. Model Cards are the equivalent for a model you trained yourself.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "AWS Tools for Responsible AI"
+        }
+      ]
+    },
+    {
+      "id": "bedrock-playground-purpose",
+      "type": "single",
+      "prompt": "Before committing an application to a particular foundation model, a developer wants to try the same prompts against several models without writing code. Which Bedrock feature fits?",
+      "tags": [
+        "bedrock",
+        "playgrounds"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "The Playground",
+          "correct": true,
+          "rationale": "A console screen for sending a prompt to a chosen model and comparing answers, with no code involved."
+        },
+        {
+          "id": "b",
+          "text": "Knowledge Bases",
+          "correct": false,
+          "rationale": "Knowledge Bases assemble a retrieval pipeline over your documents."
+        },
+        {
+          "id": "c",
+          "text": "Provisioned Throughput",
+          "correct": false,
+          "rationale": "That reserves capacity for a production workload."
+        },
+        {
+          "id": "d",
+          "text": "Action Groups",
+          "correct": false,
+          "rationale": "Action Groups describe the APIs a Bedrock agent may call."
+        }
+      ],
+      "explanation": "The Playground exists for model selection. Trying real prompts against several models is far cheaper than discovering the wrong choice after the application is built.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Playgrounds"
+        }
+      ]
+    },
+    {
+      "id": "bedrock-model-evaluation",
+      "type": "multi",
+      "prompt": "Which statements about Bedrock model evaluation are correct? (Select all that apply)",
+      "tags": [
+        "bedrock",
+        "evaluation"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Automatic evaluation can score a model on accuracy, robustness and toxicity",
+          "correct": true,
+          "rationale": "These are the built-in measures it reports."
+        },
+        {
+          "id": "b",
+          "text": "It can use a built-in benchmark dataset or one of your own",
+          "correct": true,
+          "rationale": "Your own dataset is what makes the result specific to your task."
+        },
+        {
+          "id": "c",
+          "text": "Human evaluation can use your own employees or an AWS-managed team",
+          "correct": true,
+          "rationale": "Both workforce options are offered."
+        },
+        {
+          "id": "d",
+          "text": "It evaluates models you trained yourself from your own data",
+          "correct": false,
+          "rationale": "Evaluating a model you built is SageMaker’s role; Bedrock evaluates pre-built foundation models."
+        }
+      ],
+      "explanation": "Bedrock evaluates existing foundation models so you can choose between them, because the right model depends on your specific task rather than on published benchmark rankings.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Model Evaluation"
+        }
+      ]
+    },
+    {
+      "id": "bedrock-security-privacy",
+      "type": "multi",
+      "prompt": "Which statements about Bedrock security and privacy are correct? (Select all that apply)",
+      "tags": [
+        "bedrock",
+        "security"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Prompts and responses are not used to train the underlying models",
+          "correct": true,
+          "rationale": "Your data is not fed back into the provider’s model."
+        },
+        {
+          "id": "b",
+          "text": "Traffic can be kept off the public internet using AWS PrivateLink",
+          "correct": true,
+          "rationale": "PrivateLink keeps the connection inside AWS networking."
+        },
+        {
+          "id": "c",
+          "text": "Data can be encrypted using AWS KMS and access controlled with IAM",
+          "correct": true,
+          "rationale": "Bedrock uses the same encryption and access primitives as the rest of AWS."
+        },
+        {
+          "id": "d",
+          "text": "Prompts are shared with the model provider for quality monitoring",
+          "correct": false,
+          "rationale": "Prompts and responses stay within your AWS account and are not shared with providers."
+        }
+      ],
+      "explanation": "Keeping the whole exchange inside your AWS account is a large part of why organizations use Bedrock rather than calling a model provider’s public API directly.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Security and Privacy"
+        }
+      ]
+    },
+    {
+      "id": "data-wrangler-balancing",
+      "type": "single",
+      "prompt": "Which SageMaker feature provides a visual way to clean data and rebalance a dataset through undersampling, oversampling and SMOTE?",
+      "tags": [
+        "sagemaker",
+        "data-prep"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "SageMaker Data Wrangler",
+          "correct": true,
+          "rationale": "It prepares data visually and includes the balancing techniques."
+        },
+        {
+          "id": "b",
+          "text": "SageMaker Feature Store",
+          "correct": false,
+          "rationale": "Feature Store stores and shares finished features rather than transforming raw data."
+        },
+        {
+          "id": "c",
+          "text": "SageMaker Ground Truth",
+          "correct": false,
+          "rationale": "Ground Truth attaches labels to unlabeled data."
+        },
+        {
+          "id": "d",
+          "text": "SageMaker Model Monitor",
+          "correct": false,
+          "rationale": "Model Monitor watches models already running in production."
+        }
+      ],
+      "explanation": "Data Wrangler handles transformations through a menu rather than code: filling missing values, converting categories to numbers, and balancing a dataset so the model cannot succeed by always guessing the common answer.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Data Wrangler"
+        }
+      ]
+    },
+    {
+      "id": "experiments-vs-tuning",
+      "type": "multi",
+      "prompt": "Which pairings of SageMaker feature and purpose are correct? (Select all that apply)",
+      "tags": [
+        "sagemaker",
+        "training"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Experiments - records every training run with its inputs and scores so runs can be compared",
+          "correct": true,
+          "rationale": "This is what gives reproducibility across many attempts."
+        },
+        {
+          "id": "b",
+          "text": "Automatic Model Tuning - runs multiple training jobs to search for the best hyperparameter values",
+          "correct": true,
+          "rationale": "It uses earlier results to choose smarter values for later runs."
+        },
+        {
+          "id": "c",
+          "text": "Processing - runs data preparation and evaluation code on AWS compute rather than your machine",
+          "correct": true,
+          "rationale": "SageMaker starts the machines, runs the script and shuts them down."
+        },
+        {
+          "id": "d",
+          "text": "Studio - automatically selects the best algorithm for a tabular dataset",
+          "correct": false,
+          "rationale": "Studio is the web interface the other features are used from; automated algorithm selection is Autopilot."
+        }
+      ],
+      "explanation": "Building a model means trying many versions of it. Experiments tracks what was tried and what it scored, Automatic Model Tuning searches the hyperparameter space, and Processing runs the surrounding data work at a scale one machine cannot handle.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Experiments"
+        },
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Automatic Model Tuning"
+        }
+      ]
+    },
+    {
+      "id": "model-monitor-drift",
+      "type": "single",
+      "prompt": "A model deployed a year ago is quietly getting less accurate although no code has changed. Which SageMaker feature is designed to catch this?",
+      "tags": [
+        "sagemaker",
+        "monitoring"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "SageMaker Model Monitor",
+          "correct": true,
+          "rationale": "It watches production models and alerts when data or prediction quality degrades."
+        },
+        {
+          "id": "b",
+          "text": "SageMaker Model Registry",
+          "correct": false,
+          "rationale": "The Registry catalogs versions and approval status before deployment."
+        },
+        {
+          "id": "c",
+          "text": "SageMaker Feature Store",
+          "correct": false,
+          "rationale": "Feature Store keeps feature definitions consistent; it does not monitor live quality."
+        },
+        {
+          "id": "d",
+          "text": "SageMaker Canvas",
+          "correct": false,
+          "rationale": "Canvas is a no-code tool for building models."
+        }
+      ],
+      "explanation": "This is drift: the live data gradually stops resembling the training data as the world changes. Model Monitor watches on a schedule or continuously for changes in incoming data, drops in prediction quality, and bias appearing in predictions.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Model Monitor"
+        }
+      ]
+    },
+    {
+      "id": "governance-artifacts",
+      "type": "multi",
+      "prompt": "An auditor asks what a model is for, what its known limitations are, and what is currently deployed. Which SageMaker features answer these? (Select all that apply)",
+      "tags": [
+        "sagemaker",
+        "governance"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Model Cards - intended use, risk rating, training details and caveats",
+          "correct": true,
+          "rationale": "The documentation record that travels with a model."
+        },
+        {
+          "id": "b",
+          "text": "Model Dashboard - every model in the account and how each behaves in production",
+          "correct": true,
+          "rationale": "One screen showing what is deployed and which models have raised alerts."
+        },
+        {
+          "id": "c",
+          "text": "Model Registry - which versions exist and which are approved",
+          "correct": true,
+          "rationale": "The catalog of versions and their approval status."
+        },
+        {
+          "id": "d",
+          "text": "Automatic Model Tuning - the hyperparameter search that produced the model",
+          "correct": false,
+          "rationale": "Tuning improves a model; it is not a governance record."
+        }
+      ],
+      "explanation": "Governance splits across three artifacts: Model Cards document what a model is and is not for, the Registry records versions and approval, and the Dashboard shows what is live and whether any of it is in trouble.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Model Cards"
+        },
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Model Dashboard"
+        }
+      ]
+    },
+    {
+      "id": "pipelines-mlops",
+      "type": "single",
+      "prompt": "Which SageMaker feature connects data preparation, training, evaluation, registration and deployment into one automated repeatable workflow?",
+      "tags": [
+        "sagemaker",
+        "mlops"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "SageMaker Pipelines",
+          "correct": true,
+          "rationale": "It is the practical implementation of MLOps within SageMaker."
+        },
+        {
+          "id": "b",
+          "text": "SageMaker Studio",
+          "correct": false,
+          "rationale": "Studio is the interface the work is done from, not an automated workflow."
+        },
+        {
+          "id": "c",
+          "text": "SageMaker Processing",
+          "correct": false,
+          "rationale": "Processing runs one script on AWS compute rather than orchestrating the full lifecycle."
+        },
+        {
+          "id": "d",
+          "text": "SageMaker JumpStart",
+          "correct": false,
+          "rationale": "JumpStart is a catalog of pre-trained models and solutions."
+        }
+      ],
+      "explanation": "Pipelines runs every stage in order without manual intervention, delivering the MLOps benefits of productivity, reliability, repeatability, auditability and consistent quality - including continuous training as new data arrives.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "SageMaker Pipelines"
+        }
+      ]
+    },
+    {
+      "id": "explainability-techniques",
+      "type": "multi",
+      "prompt": "Which techniques are used to explain a complex model’s output? (Select all that apply)",
+      "tags": [
+        "responsible-ai",
+        "explainability"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "SHAP, scoring how much each input contributed to a prediction",
+          "correct": true,
+          "rationale": "It is the technique SageMaker Clarify uses."
+        },
+        {
+          "id": "b",
+          "text": "LIME, which also attributes a prediction to its inputs",
+          "correct": true,
+          "rationale": "Local Interpretable Model-agnostic Explanations works from outside the model."
+        },
+        {
+          "id": "c",
+          "text": "Counterfactual explanations, showing what input change would have altered the outcome",
+          "correct": true,
+          "rationale": "For example, the income level at which a declined loan would have been approved."
+        },
+        {
+          "id": "d",
+          "text": "Increasing the number of training epochs",
+          "correct": false,
+          "rationale": "Training longer changes the model’s accuracy, not anyone’s ability to explain it."
+        }
+      ],
+      "explanation": "When a model is too complex to inspect directly, these techniques infer the relationship between inputs and outputs from the outside. There is a genuine tension to remember: publishing too much detail can help bad actors attack the model or extract its training data.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Explainability Techniques"
+        }
+      ]
+    }
+  ]
+}

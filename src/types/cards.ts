@@ -1,12 +1,12 @@
 /**
  * Content types. Everything the learner reads is described here and lives in
- * version-controlled JSON under `/data` — the UI never hard-codes a question.
+ * version-controlled JSON under `/data` - the UI never hard-codes a question.
  */
 
 /**
- * `single`  — exactly one correct option (4 options by convention).
- * `multi`   — "select all that apply"; one or more correct options.
- * `boolean` — True/False; exactly two options.
+ * `single`  - exactly one correct option (4 options by convention).
+ * `multi`   - "select all that apply"; one or more correct options.
+ * `boolean` - True/False; exactly two options.
  */
 export type CardType = 'single' | 'multi' | 'boolean'
 
@@ -16,8 +16,8 @@ export type CardType = 'single' | 'multi' | 'boolean'
  * `heading` and `section` are mutually exclusive and encode whether a deep link is
  * possible. A `heading` is a real Markdown `#` heading, so GitHub generates an anchor
  * and the citation links straight to it. A `section` is a labelled region that is not
- * a heading — Ansible.md numbers its sections as list items, and github_cd-cd.md marks
- * some with bold text — so the citation names the region but links to the file itself
+ * a heading - Ansible.md numbers its sections as list items, and github_cd-cd.md marks
+ * some with bold text - so the citation names the region but links to the file itself
  * rather than to an anchor that does not exist. `npm run validate:data` enforces the
  * distinction against the actual note files.
  */
@@ -51,7 +51,7 @@ interface CardBase {
   prompt: string
   /** Prose shown after submit: why the key is the key. */
   explanation: string
-  /** At least one citation — every card must be traceable to the notes. */
+  /** At least one citation - every card must be traceable to the notes. */
   citations: Citation[]
   /** Free-form topic tags, used for grouping and future filtering. */
   tags?: string[]
@@ -75,7 +75,7 @@ export interface BooleanCard extends CardBase {
 
 export type Card = SingleCard | MultiCard | BooleanCard
 
-/** Catalog-level description of a card set — enough to render a list without loading cards. */
+/** Catalog-level description of a card set - enough to render a list without loading cards. */
 export interface CardSetMeta {
   /** Unique within its domain, e.g. `claude-api`. */
   id: string
@@ -116,7 +116,35 @@ export interface DomainMeta {
 
 export type DomainIcon = 'sparkles' | 'cloud' | 'workflow' | 'terminal'
 
+/**
+ * A course: the study guide for one certification (or one non-exam track), mapping the
+ * notes to read to the card sets that test them.
+ *
+ * Courses are the third entity alongside notes and flashcards. A note may appear in
+ * several courses, and a course draws on several card sets, so neither relationship is
+ * one-to-one - which is why the mapping lives here rather than being inferred from paths.
+ */
+export interface CourseMeta {
+  /** Unique within its domain. For a certification this is the exam code, e.g. `aif-c01`. */
+  id: string
+  domainId: string
+  /** Study guide location under `courses/`, without the extension, e.g. `aws/aif-c01`. */
+  path: string
+  title: string
+  /** Short qualifier shown under the title, e.g. the exam code. */
+  subtitle?: string
+  description: string
+  /**
+   * `certification` sits an exam; `track` is a study path with no exam behind it.
+   * Rendered as a badge so a learner can tell the two apart.
+   */
+  kind: 'certification' | 'track'
+  /** Card set ids this course quizzes, in study order. A course quiz is their union. */
+  setIds: string[]
+}
+
 export interface Catalog {
   domains: DomainMeta[]
   sets: CardSetMeta[]
+  courses: CourseMeta[]
 }

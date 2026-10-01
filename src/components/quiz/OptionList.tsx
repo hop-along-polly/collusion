@@ -9,8 +9,8 @@ import { RichText } from '../ui/RichText'
 
 /**
  * Options are real radio/checkbox inputs, visually hidden but focusable. That buys
- * native keyboard behaviour for free — arrow keys move within a radio group, space
- * toggles a checkbox — and screen readers announce the correct role and checked state
+ * native keyboard behaviour for free - arrow keys move within a radio group, space
+ * toggles a checkbox - and screen readers announce the correct role and checked state
  * without any ARIA of our own.
  */
 

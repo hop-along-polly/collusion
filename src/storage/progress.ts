@@ -15,22 +15,22 @@ import {
   PROGRESS_SCHEMA_VERSION,
   type CardProgress,
   type ProgressSnapshot,
-  type SetProgress,
-  type SetProgressSummary,
+  type CourseProgress,
+  type CourseProgressSummary,
 } from '@/types/progress'
 
-export const STORAGE_KEY = 'scribe-cards.progress.v1'
+export const STORAGE_KEY = 'scribe-cards.progress.v2'
 
 export function emptySnapshot(now = Date.now()): ProgressSnapshot {
   return {
     schemaVersion: PROGRESS_SCHEMA_VERSION,
     ownerId: LOCAL_OWNER,
     updatedAt: now,
-    sets: {},
+    courses: {},
   }
 }
 
-function emptySetProgress(): SetProgress {
+function emptyCourseProgress(): CourseProgress {
   return { cards: {}, lastSessionAt: null, sessionsCompleted: 0 }
 }
 
@@ -42,32 +42,32 @@ function emptyCardProgress(): CardProgress {
 
 function updateCard(
   snapshot: ProgressSnapshot,
-  setKey: string,
+  courseKey: string,
   cardId: string,
   now: number,
   update: (card: CardProgress) => CardProgress,
 ): ProgressSnapshot {
-  const set = snapshot.sets[setKey] ?? emptySetProgress()
+  const set = snapshot.courses[courseKey] ?? emptyCourseProgress()
   const card = set.cards[cardId] ?? emptyCardProgress()
 
   return {
     ...snapshot,
     updatedAt: now,
-    sets: {
-      ...snapshot.sets,
-      [setKey]: { ...set, cards: { ...set.cards, [cardId]: update(card) } },
+    courses: {
+      ...snapshot.courses,
+      [courseKey]: { ...set, cards: { ...set.cards, [cardId]: update(card) } },
     },
   }
 }
 
 export function recordAnswer(
   snapshot: ProgressSnapshot,
-  setKey: string,
+  courseKey: string,
   cardId: string,
   isCorrect: boolean,
   now = Date.now(),
 ): ProgressSnapshot {
-  return updateCard(snapshot, setKey, cardId, now, (card) => ({
+  return updateCard(snapshot, courseKey, cardId, now, (card) => ({
     ...card,
     attempts: card.attempts + 1,
     correct: card.correct + (isCorrect ? 1 : 0),
@@ -79,53 +79,53 @@ export function recordAnswer(
 
 export function setMarked(
   snapshot: ProgressSnapshot,
-  setKey: string,
+  courseKey: string,
   cardId: string,
   marked: boolean,
   now = Date.now(),
 ): ProgressSnapshot {
-  return updateCard(snapshot, setKey, cardId, now, (card) => ({ ...card, marked }))
+  return updateCard(snapshot, courseKey, cardId, now, (card) => ({ ...card, marked }))
 }
 
 /** Called when a learner reaches the results screen. */
 export function completeSession(
   snapshot: ProgressSnapshot,
-  setKey: string,
+  courseKey: string,
   now = Date.now(),
 ): ProgressSnapshot {
-  const set = snapshot.sets[setKey] ?? emptySetProgress()
+  const set = snapshot.courses[courseKey] ?? emptyCourseProgress()
   return {
     ...snapshot,
     updatedAt: now,
-    sets: {
-      ...snapshot.sets,
-      [setKey]: { ...set, lastSessionAt: now, sessionsCompleted: set.sessionsCompleted + 1 },
+    courses: {
+      ...snapshot.courses,
+      [courseKey]: { ...set, lastSessionAt: now, sessionsCompleted: set.sessionsCompleted + 1 },
     },
   }
 }
 
 /** Clears one set's history, leaving every other set untouched. */
-export function resetSet(
+export function resetCourse(
   snapshot: ProgressSnapshot,
-  setKey: string,
+  courseKey: string,
   now = Date.now(),
 ): ProgressSnapshot {
-  const { [setKey]: _removed, ...rest } = snapshot.sets
-  return { ...snapshot, updatedAt: now, sets: rest }
+  const { [courseKey]: _removed, ...rest } = snapshot.courses
+  return { ...snapshot, updatedAt: now, courses: rest }
 }
 
 // --- Derived views ---------------------------------------------------------
 
-export function getSetProgress(snapshot: ProgressSnapshot, setKey: string): SetProgress {
-  return snapshot.sets[setKey] ?? emptySetProgress()
+export function getCourseProgress(snapshot: ProgressSnapshot, courseKey: string): CourseProgress {
+  return snapshot.courses[courseKey] ?? emptyCourseProgress()
 }
 
 export function getCardProgress(
   snapshot: ProgressSnapshot,
-  setKey: string,
+  courseKey: string,
   cardId: string,
 ): CardProgress {
-  return getSetProgress(snapshot, setKey).cards[cardId] ?? emptyCardProgress()
+  return getCourseProgress(snapshot, courseKey).cards[cardId] ?? emptyCardProgress()
 }
 
 /**
@@ -139,14 +139,14 @@ export function isReviewable(card: CardProgress): boolean {
 
 /**
  * Card ids eligible for review, in the order the set defines them. Cards missing from
- * progress (never attempted) are excluded — review is for revisiting, not discovering.
+ * progress (never attempted) are excluded - review is for revisiting, not discovering.
  */
 export function reviewableCardIds(
   snapshot: ProgressSnapshot,
-  setKey: string,
+  courseKey: string,
   cardIds: string[],
 ): string[] {
-  const set = getSetProgress(snapshot, setKey)
+  const set = getCourseProgress(snapshot, courseKey)
   return cardIds.filter((id) => {
     const card = set.cards[id]
     return card ? isReviewable(card) : false
@@ -155,10 +155,10 @@ export function reviewableCardIds(
 
 export function summarize(
   snapshot: ProgressSnapshot,
-  setKey: string,
+  courseKey: string,
   cardIds: string[],
-): SetProgressSummary {
-  const set = getSetProgress(snapshot, setKey)
+): CourseProgressSummary {
+  const set = getCourseProgress(snapshot, courseKey)
 
   let attempted = 0
   let correct = 0
@@ -190,7 +190,7 @@ export function summarize(
 }
 
 /**
- * Totals across every set. Derived from the snapshot alone — no card lists — so the
+ * Totals across every set. Derived from the snapshot alone - no card lists - so the
  * landing page can show progress without downloading a single card file.
  */
 export function overallSummary(snapshot: ProgressSnapshot): {
@@ -198,16 +198,16 @@ export function overallSummary(snapshot: ProgressSnapshot): {
   correct: number
   reviewable: number
   accuracy: number
-  setsStarted: number
+  coursesStarted: number
 } {
   let attempted = 0
   let correct = 0
   let reviewable = 0
-  let setsStarted = 0
+  let coursesStarted = 0
 
-  for (const set of Object.values(snapshot.sets)) {
+  for (const course of Object.values(snapshot.courses)) {
     let touched = false
-    for (const card of Object.values(set.cards)) {
+    for (const card of Object.values(course.cards)) {
       if (card.attempts > 0) {
         attempted += 1
         touched = true
@@ -215,7 +215,7 @@ export function overallSummary(snapshot: ProgressSnapshot): {
       }
       if (isReviewable(card)) reviewable += 1
     }
-    if (touched) setsStarted += 1
+    if (touched) coursesStarted += 1
   }
 
   return {
@@ -223,7 +223,7 @@ export function overallSummary(snapshot: ProgressSnapshot): {
     correct,
     reviewable,
     accuracy: attempted === 0 ? 0 : Math.round((correct / attempted) * 100),
-    setsStarted,
+    coursesStarted,
   }
 }
 
@@ -231,7 +231,7 @@ export function overallSummary(snapshot: ProgressSnapshot): {
 
 /**
  * Anything unreadable or from a future schema version is discarded rather than
- * migrated — progress is regenerable, and a half-understood document is worse than a
+ * migrated - progress is regenerable, and a half-understood document is worse than a
  * clean slate. A real migration goes here when schemaVersion 2 ships.
  */
 function parseSnapshot(raw: string | null): ProgressSnapshot | null {
@@ -243,13 +243,13 @@ function parseSnapshot(raw: string | null): ProgressSnapshot | null {
 
     const candidate = parsed as Partial<ProgressSnapshot>
     if (candidate.schemaVersion !== PROGRESS_SCHEMA_VERSION) return null
-    if (typeof candidate.sets !== 'object' || candidate.sets === null) return null
+    if (typeof candidate.courses !== 'object' || candidate.courses === null) return null
 
     return {
       schemaVersion: PROGRESS_SCHEMA_VERSION,
       ownerId: typeof candidate.ownerId === 'string' ? candidate.ownerId : LOCAL_OWNER,
       updatedAt: typeof candidate.updatedAt === 'number' ? candidate.updatedAt : Date.now(),
-      sets: candidate.sets,
+      courses: candidate.courses,
     }
   } catch {
     return null
@@ -261,7 +261,7 @@ export function loadProgress(): ProgressSnapshot {
   try {
     return parseSnapshot(window.localStorage.getItem(STORAGE_KEY)) ?? emptySnapshot()
   } catch {
-    // Private browsing or a blocked storage partition — run in-memory for the session.
+    // Private browsing or a blocked storage partition - run in-memory for the session.
     return emptySnapshot()
   }
 }

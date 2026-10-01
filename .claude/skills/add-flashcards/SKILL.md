@@ -1,78 +1,93 @@
 ---
 name: add-flashcards
-description: This skill adds flashcards to the existing set for the specified folder, covering only notes that are not already represented. Existing cards are never modified or removed. If there is nothing new to cover, the skill does nothing and reports that. To rebuild a set from scratch instead, use the "Generate Flashcards" skill.
+description: This skill adds flashcards to the existing set for the specified note, covering only material that is not already represented. Existing cards are never modified or removed. If there is nothing new to cover, the skill does nothing and reports that. To rebuild a set from scratch instead, use the "Generate Flashcards" skill.
 ---
 
 # Add Flashcards
 
-Extends the existing card set for **one notes directory** to cover material that is not already
-carded. Purely additive.
+Extends the existing card set for **one note** to cover material that is not already carded.
+Purely additive.
 
-**Scope is always a single directory.** Never walk the whole repository in one invocation.
+**Scope is one note at a time.** Never walk the whole repository in a single invocation.
 
 > [!IMPORTANT]
-> **Doing nothing is a valid, expected outcome.** If every part of the notes is already covered,
-> make no file changes at all and report that. Do not rewrite `cards.json` to reformat it, do not
+> **Doing nothing is a valid, expected outcome.** If every part of the note is already covered,
+> make no file changes at all and report that. Do not rewrite the card file to reformat it, do not
 > reword existing cards, and do not add marginal cards to look productive. This skill is built to
 > run repeatedly in CI, where a no-op is the normal result.
+
+## Repository layout
+
+| Path | Holds |
+| ---- | ----- |
+| `notes/<company>/<note>.md` | The topic notes. The source of truth every card is grounded in. |
+| `courses/<company>/<course-id>.md` | A study guide: the topics for one certification or track, linking the notes to read and the card sets that test them. |
+| `flashcards/<domain>/<set-id>.json` | Card data, one file per set. |
+| `catalog.json` | Repo root. Registers domains, sets and courses, and is what the app loads. |
 
 ## Guarantees
 
 - **Existing cards are never touched.** Not their `id`, `prompt`, `options`, option ids,
   `explanation`, or `citations`. Learner progress is persisted by card id, so editing or
   reordering existing cards corrupts it. New cards are appended to the end of the `cards` array.
-- **Only `cards.json` and `data/catalog.json` change**, and in the catalog only `cardCount` and
-  `sources`.
-- If the set does not exist yet, stop. Report that there is nothing to add to and that
+- **Only the card file and `catalog.json` change**, and in the catalog only `cardCount` and
+  `sources` - unless a new set has to be created for a split, which is called out below.
+- If no set covers the note yet, stop. Report that there is nothing to add to and that
   `generate-flashcards` should be run first. Do not create a set here.
 
 ## Invocation
 
 ```
-/add-flashcards courses/aws/aif-c01
+/add-flashcards notes/aws/ai_practitioner.md
 ```
 
-With no directory given, do not guess and do not process everything. Ask which directory; in a
-non-interactive run, fail with a message listing the directories that contain notes.
+A course file may be given instead, which checks every note that course links, one at a time:
+
+```
+/add-flashcards courses/aws/aif-c01.md
+```
+
+With no argument, do not guess and do not process everything. Ask which note; in a
+non-interactive run, fail with a message listing the notes that have cards.
 
 ## Procedure
 
 ### 1. Resolve the target
 
-Read `data/catalog.json` and locate the existing set for this directory, using the resolution
-rules in the `generate-flashcards` skill (`.claude/skills/generate-flashcards/SKILL.md`, step 1).
-Reuse its `id`, `domainId`, and `path` exactly.
+Read `catalog.json` and find every set whose `sources` include this note, using the resolution
+rules in `.claude/skills/generate-flashcards/SKILL.md` (step 1). Reuse their `id`, `domainId` and
+`path` exactly.
 
-If no set is registered for the directory, stop per [Guarantees](#guarantees) above.
+A note may be covered by more than one set. Work out which set new material belongs to by topic,
+matching how the existing split was drawn.
+
+If no set covers the note, stop per [Guarantees](#guarantees) above.
 
 ### 2. Find what is not covered
 
-Read every `.md` file in the directory in full, then read the existing `cards.json` in full.
-Two signals identify new material, and both should be checked:
+Read the note in full, then read the existing card file(s) in full. Two signals identify new
+material, and both should be checked:
 
-**Heading coverage.** Build the list of every substantive heading in the notes, then the set of
+**Heading coverage.** Build the list of every substantive heading in the note, then the set of
 headings and sections already named in existing `citations`. Headings with no citation pointing
 at them are candidates.
 
-**Git history.** Find what has changed in the notes since the cards were last updated:
+**Git history.** Find what changed in the note since the cards were last updated:
 
 ```bash
 # When the card file was last committed
-git log -1 --format=%cI -- data/<path>/cards.json
+git log -1 --format=%cI -- flashcards/<domain>/<set-id>.json
 
-# Notes touched in the directory since then
-git log --since="<that timestamp>" --name-only --pretty=format: -- <notes-dir> | sort -u
+# Whether the note has changed since then
+git log --since="<that timestamp>" --oneline -- notes/<company>/<note>.md
+
+# What actually changed
+git diff <last-cards-commit>..HEAD -- notes/<company>/<note>.md
 ```
 
-Changed files matter even when their headings are already cited, because a section can be
-substantially expanded under an unchanged heading. Read the actual diff for those files:
-
-```bash
-git diff <last-cards-commit>..HEAD -- <notes-dir>
-```
-
-Heading coverage alone misses expansions; git history alone misses notes that were never carded
-on the first pass. Use both.
+Changed content matters even when its heading is already cited, because a section can be
+substantially expanded under an unchanged heading. Heading coverage alone misses expansions; git
+history alone misses material that was never carded on the first pass. Use both.
 
 ### 3. Decide whether there is anything worth adding
 
@@ -87,36 +102,55 @@ examined so the run is auditable.
 
 ### 4. Check the ceiling before writing
 
-Count existing cards plus planned additions against the **30-60** target in
-`ARCHITECTURE.md`.
+Count existing cards plus planned additions against the **30-60** target in `ARCHITECTURE.md`.
 
-If the total would exceed 60, do not silently ship an oversized set. Add the highest-value cards
-up to 60, then report the overflow and recommend `generate-flashcards` with a deliberate split
-along a natural seam. Name the seam you would suggest.
+If a set would exceed 60, do not silently ship an oversized set. Two options, in order of
+preference:
+
+1. **Split**, if the new material forms a coherent second study unit. Create a second set, give
+   it its own card file and catalog entry, and add it to the course's `setIds`. This is how
+   `aif-c01` came to hold `ai-practitioner-foundations` and `ai-practitioner-aws`.
+2. **Stop at 60** if no clean seam exists. Add the highest-value cards up to the ceiling, then
+   report the overflow and recommend `generate-flashcards` with a deliberate split, naming the
+   seam you would suggest.
 
 ### 5. Author the new cards
 
-Follow the authoring rules in `.claude/skills/generate-flashcards/SKILL.md` — they are the single
-source of truth for card quality and are not repeated here. In particular:
+Follow the authoring rules in `.claude/skills/generate-flashcards/SKILL.md` - it is the single
+source of truth for card quality and they are not repeated here. In particular:
 
 - The **Flashcard Guidelines** section: grounding, no "according to the notes" phrasing, never
   all/none of the above.
-- The **Question types** table: `single`, `multi`, and `boolean` are the only supported types.
+- The **Question types** table: `single`, `multi` and `boolean` are the only supported types.
 - The **Citations** rules: `heading` for real Markdown headings, `section` otherwise, never both.
+- The **Additional prohibitions** section, including the ban on em and en dashes - a hyphen, a
+  comma or a full stop instead, in every field.
 
-Two additional constraints specific to adding:
+Two constraints specific to adding:
 
-- **New card ids must not collide** with any existing id in the set. Check before writing.
+- **New card ids must not collide with any existing id in the domain**, not just in the set
+  being extended - progress is stored per course under the bare card id, so a duplicate
+  anywhere in `flashcards/<domain>/` is a build error. One command covers it:
+  ```bash
+  grep -ho '"id": "[^"]*"' flashcards/<domain>/*.json | sort
+  ```
+  Never work around a collision by decorating the id with a set name; a set prefix orphans
+  the card's history if the set is later renamed or split. A taken name usually means the
+  fact is already carded in this domain, which is worth checking first.
 - **Match the existing set's type mix.** Check the current breakdown and keep the additions
   roughly in proportion, so a set does not drift toward being all True/False over several runs.
 
-### 6. Update `data/catalog.json`
+### 6. Update `catalog.json`
 
-- `cardCount` — set to the new total.
-- `sources` — add any note file the new cards cite that is not already listed.
+- `cardCount` - set to the new total for each set touched.
+- `sources` - add any note file the new cards cite that is not already listed.
 
-Leave `title`, `subtitle`, `description`, and `id` alone unless the new material genuinely makes
+Leave `title`, `subtitle`, `description` and `id` alone unless the new material genuinely makes
 the description wrong, in which case say so in the report.
+
+**If a split created a new set**, also register that set and add its id to the `setIds` of every
+course that links this note, then add it to the **Flashcards** column of that course's topic
+table in `courses/<company>/<course-id>.md`. A set no course links to is invisible in the app.
 
 ### 7. Verify
 
@@ -127,7 +161,7 @@ npm run validate:data
 npm test
 ```
 
-A `validate:data` failure is a real defect. Fix the card or the citation — never loosen a
+A `validate:data` failure is a real defect. Fix the card or the citation - never loosen a
 citation to silence the gate.
 
 ### 8. Report

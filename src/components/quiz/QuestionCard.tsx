@@ -60,8 +60,8 @@ export function QuestionCard({
       {/*
         `role="group"` + `aria-labelledby` rather than fieldset/legend: the prompt can
         contain a fenced code block (see the CODEOWNERS card), and a `<pre>` is not
-        valid inside a `<legend>`. This gives identical semantics — the question is
-        announced as the group's name, so the options are never an unlabelled list —
+        valid inside a `<legend>`. This gives identical semantics - the question is
+        announced as the group's name, so the options are never an unlabelled list -
         without constraining what a prompt may contain.
       */}
       <div role="group" aria-labelledby={promptId} className="mt-4">

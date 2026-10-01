@@ -1,0 +1,14 @@
+# TODOs 
+ - [x] AWS MArketplace Notes should all be prefixed with "Marketplace -"
+ - [x] Finish the Full Service Catalog Cheatsheet
+ - [] Carried over from notes.md, which was folded into the cheatsheet. These are AI/ML concepts rather than services, so they belong in ai_practitioner.md: Top K / Top P / Temperature, pruning + distillation + quantization, forward and reverse diffusion, transformer architecture, A/B testing a deployed model, consistent hashing. Everything else notes.md asked about is now answered (fully managed vs managed, database vs data lake, Redshift Spectrum vs Athena, EBS vs S3 vs EFS, NACLs vs route tables, S3 bucket policies in the cheatsheet; responsible AI, SageMaker hosting options, AWS model families, N-grams and the ML algorithms already in ai_practitioner.md)
+ - [x] Regenerate the Service Selection cards against the finished cheatsheet
+ - [x] Add a Cloud Practitioner (CLF-C02) course over the service catalogue
+ - [x] Clear the npm vulnerabilities (vitest 2 -> 4, vite 6.0 -> 6.4.3, react-router-dom 6 -> 7; audit is clean)
+ - [] The Flashcards column in every course study guide links set paths like /aws/services, and there is no route for a set, so all of those links 404. Either add a set route or point the column at the course quiz. Affects all 6 courses, and the generate-flashcards skill instructs writing these links, so fix the skill too
+ - [] Node is 20.9.0, which pins vite to the 6.x line and vitest to 4.x. vite 7+ and vitest 5 need Node 20.19 or 22.12. Worth bumping Node before the next tooling upgrade
+ - [] Deployment choices (Vanity URL vs. Subdomain) ideally flashcards.codescribes.io if Heroku can support that.
+ - [] Register and Login functionality (Can wait until after initial launch)
+ - [] Where/how to store and gamify users answers. Does this mean I have to spin up a DB in Heroku or should I consider moving to AWS and using Serverless resources. Optimizing for costs at this point.
+
+
