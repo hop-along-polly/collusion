@@ -88,6 +88,20 @@ describe('notes', () => {
     renderAt('/notes/aws/not-a-note')
     expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/isn't here/i)
   })
+
+  it('gives every heading an id, so a note can link to its own sections', async () => {
+    // The long reference notes open with their own table of contents. Those `#section`
+    // links are inert unless `rehype-slug` has put an id on the heading, and nothing else
+    // in the app would notice if the plugin were dropped.
+    renderAt('/notes/aws/all_aws_services')
+
+    const toc = await screen.findByRole('link', { name: 'Networking and Content Delivery' })
+    const target = toc.getAttribute('href')?.replace('#', '')
+    expect(target).toBe('networking-and-content-delivery')
+
+    const heading = await screen.findByRole('heading', { name: 'Networking and Content Delivery' })
+    expect(heading.id).toBe(target)
+  })
 })
 
 describe('study guide links', () => {

@@ -3,6 +3,7 @@ import { Children, isValidElement } from 'react'
 import { Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
+import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 
 import { cn } from '@/utils/cn'
@@ -12,12 +13,16 @@ import type { AlertTone } from './ui/Surface'
 /**
  * Renders a note or study guide.
  *
- * Three things the notes actually rely on, none of which come free:
+ * Four things the notes actually rely on, none of which come free:
  *
  *  - **GFM tables**, via `remark-gfm`. Several notes carry their whole comparison in one.
  *  - **Inline HTML**, via `rehype-raw`. Markdown has no way to put a list inside a table
  *    cell, so the notes use `<ul><li>` there. The content is committed to this repository
  *    rather than user-supplied, so raw HTML carries no injection risk here.
+ *  - **Heading ids**, via `rehype-slug`, which is what makes a note's own table of contents
+ *    work. A `#section-name` link is inert without them, and the long reference notes are
+ *    unusable without one. `scroll-mt-24` on each heading keeps the target clear of the
+ *    sticky header once it is scrolled to.
  *  - **GitHub alerts** (`> [!NOTE]`), which no plugin handles - see `blockquote` below.
  */
 
@@ -248,7 +253,13 @@ export default function MarkdownRenderer({ children }: { children: string }) {
     // `[&>*:first-child]:mt-0` stops the leading heading's top margin from doubling the
     // container's own padding.
     <div className="[&>*:first-child]:mt-0">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={components}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        // `rehype-raw` must run first: it reparses the raw HTML into real nodes, and only then
+        // can `rehype-slug` see every heading.
+        rehypePlugins={[rehypeRaw, rehypeSlug]}
+        components={components}
+      >
         {children}
       </ReactMarkdown>
     </div>
