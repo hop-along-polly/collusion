@@ -1,4 +1,4 @@
-# Server Product (Container) Listing Details
+# Marketplace - Server (Container)
 
 A Container listing is a specific type of Server product. The Seller lists software packaged as Docker containers. The AWS Marketplace hosts the images and handles entitlement and billing; The Buyer supplies and pays for the infrastructure the containers run on.
 
@@ -58,7 +58,7 @@ A Seller picks **one** Pricing Model per Container Product, and the price set ap
 | `Contract-based pricing` | An upfront fee entitling them to a specified quantity of use over an agreed length of time. | A 12-month license for 50 nodes of an API gateway, paid upfront at the start of the term. | N/A — the upfront fee *is* the commitment | AWS License Manager |
 
 > [!NOTE]
-> **Two Pricing Models are unavailable for AI agents and tools hosted on Amazon Bedrock AgentCore Runtime.** *"If the container image uses AgentCore, the **Hourly** and **Usage with long-term contract** pricing models are not supported."* The Management Portal blocks both and requires a different Pricing Model to continue. See [AI Agents & Tools Listing Details](./agents_and_tools.md).
+> **Two Pricing Models are unavailable for AI agents and tools hosted on Amazon Bedrock AgentCore Runtime.** *"If the container image uses AgentCore, the **Hourly** and **Usage with long-term contract** pricing models are not supported."* The Management Portal blocks both and requires a different Pricing Model to continue. See [Marketplace - AI Agents & Tools](./agents_and_tools.md).
 
 For `Hourly pricing`, billing is **per-second with a one-minute minimum**. A container run for 20 minutes and 30 seconds at $6/hour bills `20 x ($6/60) + 30 x ($6/60/60) = $2.05`.
 

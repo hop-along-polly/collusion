@@ -1,4 +1,4 @@
-# AWS Marketplace APIs
+# Marketplace - APIs
 
 Which APIs a Seller integrates with is determined by the Listing Type and the Pricing Model together. A Free or BYOL Product may need none at all; a SaaS Contract with Consumption needs three.
 

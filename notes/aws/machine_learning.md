@@ -1,4 +1,4 @@
-# Machine Learning Product Listing Details
+# Marketplace - Machine Learning
 
 An ML listing is how a Seller sells a machine learning model. The Buyer subscribes, and the model runs on **Amazon SageMaker AI**, AWS's managed service for training and running models, inside the Buyer's own AWS account. SageMaker AI is the only place these Products run; there is no other delivery target.
 

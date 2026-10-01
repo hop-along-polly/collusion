@@ -1,4 +1,4 @@
-# SaaS Listing Details
+# Marketplace - SaaS
 
 A SaaS (software as a service) listing is how a Seller sells software that they host and operate. The Buyer never receives a copy of the Seller's software and usually they don't install anything in their AWS Account. Buyers subscribe through AWS Marketplace, AWS bills the Buyer through their AWS account, and the Buyer uses the Product, which runs on the Seller's infrastructure.
 

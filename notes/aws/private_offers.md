@@ -1,4 +1,4 @@
-# Private Offers
+# Marketplace - Private Offers
 
 A Private Offer is a negotiated alternative to a Product's public offer. Where the public offer is a fixed set of terms anyone can accept, a private offer is built for named Buyers and can carry its own pricing, payment schedule, and legal terms. AWS describes them as *"negotiated terms used to purchase a product from AWS Marketplace"*, which may involve *"a custom pricing plan, end user license agreement (EULA), or custom solutions."*
 

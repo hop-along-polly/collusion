@@ -1,4 +1,4 @@
-# Server Product (AMI) Listing Details
+# Marketplace - Server (AMI)
 
 An AMI listing is a specific type of Server product. An **Amazon Machine Image (AMI)** is a snapshot of an entire server — an operating system with whatever software the Seller installed on top of it — that Amazon EC2 uses as a template when it creates a virtual machine. The Seller builds the AMI, AWS Marketplace distributes it and handles billing, and the Buyer runs and pays for the EC2 instances launched from it.
 

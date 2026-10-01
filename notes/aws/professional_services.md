@@ -1,4 +1,4 @@
-# Professional Services Listing Details
+# Marketplace - Professional Services
 
 A Professional Services listing is how a Seller sells people's time and expertise rather than software. The deliverable is human work — an assessment, a migration, a training course, an ongoing managed service — and the reason to sell it through AWS Marketplace is that the fee lands on the Buyer's existing AWS bill instead of arriving as a separate invoice.
 

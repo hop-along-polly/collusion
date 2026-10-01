@@ -1,4 +1,4 @@
-# Renewals
+# Marketplace - Renewals
 
 An agreement ends on its end date unless something continues it. Three different mechanisms do that, and two of them are both called *automatic renewal*, which is where most of the confusion comes from.
 

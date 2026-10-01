@@ -1,4 +1,4 @@
-# Data Product Listing Details
+# Marketplace - Data Product
 
 A Data Product listing is how a Seller sells data rather than software. Files and APIs still appear as delivery mechanisms, but they are transport for the data rather than the thing being sold. A Seller does not need to build delivery, subscription management, entitlement, and billing inegrations because all of that is handled by AWS Data Exchange. The Seller's only obligation is to keep the data current.
 

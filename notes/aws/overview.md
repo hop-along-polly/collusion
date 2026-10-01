@@ -1,4 +1,4 @@
-# AWS Marketplace
+# AWS Marketplace - Overview
 
 The AWS Marketplace is a catalog where one company sells software to another and AWS handles the transaction. Two things make it worth a Seller's effort:
 1. Buyers pay through their existing AWS bill instead of opening a new vendor relationship.

@@ -1,4 +1,4 @@
-# AI Agents & Tools Listing Details
+# Marketplace - AI Agents & Tools
 
 AWS defines an AI agent as software that uses artificial intelligence to reason, plan, and complete tasks on behalf of humans or systems. The distinction it draws is autonomy.
 
