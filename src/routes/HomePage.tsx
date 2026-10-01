@@ -123,6 +123,22 @@ export function HomePage() {
         </ul>
       </section>
 
+      <section aria-labelledby="why-heading" className="max-w-3xl">
+        <h2 id="why-heading" className="font-heading text-4xl">
+          Why this exists
+        </h2>
+        <p className="mt-4 font-body text-content-muted">
+          Certification prep has a habit of covering the syllabus rather than the exam. These
+          notes are written the other way round — after sitting the exam, by people who passed it,
+          and weighted toward what it actually tests rather than toward what is easiest to write
+          up.
+        </p>
+        <p className="mt-3 font-body text-content-muted">
+          Every card cites the section it came from, so you are never asked to take a claim on
+          trust. If an answer looks wrong, go read the source and decide for yourself.
+        </p>
+      </section>
+
       <section aria-labelledby="how-heading" className="max-w-3xl">
         <h2 id="how-heading" className="font-heading text-4xl">
           How a session works

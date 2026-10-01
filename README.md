@@ -4,10 +4,15 @@ Hand-written Markdown course material for technical certifications, written by p
 who have sat these exams and passed them, plus **Scribe Cards**: a static flashcard app built
 from that material.
 
+Certification prep has a habit of covering the syllabus rather than the exam. This material is
+written the other way round — after sitting the exam, and weighted toward what it actually tests
+rather than toward what is easiest to write up.
+
 The Markdown is the source of truth. Every question, explanation and distractor comes from a
 committed `.md` file and cites the specific file and heading behind it, and a build-time gate
 fails the build if a citation stops resolving. That is the invariant the whole project is
-organised around.
+organised around — and the reason a card can always be checked against its source rather than
+taken on trust.
 
 | | |
 |---|---|
