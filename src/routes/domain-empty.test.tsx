@@ -45,10 +45,7 @@ describe('a domain with no card sets', () => {
     const { ProgressProvider } = await import('@/hooks/useProgress')
 
     render(
-      <MemoryRouter
-        initialEntries={['/azure']}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={['/azure']}>
         <ProgressProvider>
           <App />
         </ProgressProvider>

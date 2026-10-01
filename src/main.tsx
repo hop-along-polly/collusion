@@ -17,11 +17,7 @@ if (!container) throw new Error('#root element is missing from index.html')
 
 createRoot(container).render(
   <StrictMode>
-    {/* Opt into the v7 behaviours now so the eventual upgrade is a version bump. */}
-    <BrowserRouter
-      basename={basename}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <BrowserRouter basename={basename}>
       <ProgressProvider>
         <App />
       </ProgressProvider>
