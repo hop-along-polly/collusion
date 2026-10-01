@@ -64,27 +64,27 @@ function DomainCard({ domain }: { domain: DomainMeta }) {
 export function HomePage() {
   const { snapshot } = useProgress()
   const overall = overallSummary(snapshot)
-  const available = catalog.domains.filter((domain) => domain.status === 'available')
+  // A course is either exam-backed or a standalone track, so the two counts partition
+  // `catalog.courses` rather than overlapping.
+  const certifications = listCourses().filter((course) => course.kind === 'certification')
+  const tracks = listCourses().filter((course) => course.kind === 'track')
 
   return (
     <div className="space-y-12">
       <section className="max-w-3xl">
-        <p className="font-body text-xs uppercase tracking-widest text-brand">
-          Software by master craftsmen
-        </p>
         <h1 className="mt-3 font-heading text-5xl leading-none sm:text-6xl">
           Know the material before exam day.
         </h1>
         <p className="mt-5 font-body text-lg text-content-muted">
           Course material hand-written by practitioners who have sat these exams and passed them,
-          pitched at the fundamentals rather than the question bank - so what you learn holds up
+          pitched at the fundamentals rather than the question bank, so what you learn holds up
           long after the exam.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-8">
-          <Stat label="Cards" value={totalCardCount()} tone="brand" />
-          <Stat label="Card sets" value={catalog.sets.length} />
-          <Stat label="Domains" value={available.length} />
+          <Stat label="Courses" value={certifications.length} tone="brand" />
+          <Stat label="Tracks" value={tracks.length} />
+          <Stat label="Flashcards" value={totalCardCount()} />
           {overall.attempted > 0 ? (
             <>
               <Stat label="Answered" value={overall.attempted} />
@@ -107,7 +107,7 @@ export function HomePage() {
 
       <section aria-labelledby="domains-heading">
         <h2 id="domains-heading" className="font-heading text-4xl">
-          Domains
+          Subject Domains
         </h2>
         <p className="mt-2 font-body text-content-muted">
           Pick a subject area, then a certification or topic set.
@@ -124,12 +124,13 @@ export function HomePage() {
 
       <section aria-labelledby="why-heading" className="max-w-3xl">
         <h2 id="why-heading" className="font-heading text-4xl">
-          Why this exists
+          Scribe Cards Ethos
         </h2>
         <p className="mt-4 font-body text-content-muted">
-          Exam questions change. Fundamentals do not. What k-means clustering is, and the kind of
-          problem it belongs to, reads the same today as it will in ten years - so that is what
-          these notes cover, and it is why they stay worth reading once the exam is behind you.
+          Exam questions change. Fundamentals do not. What a "ReAct loop" is, and how it is used 
+          in an Agentic system, is the same today as it will be in ten years. These notes aim to
+          provide an evergreen understanding of the terminology, concepts and services covered by
+          the exams, so that you can reason from first principles rather than memorising answers.
         </p>
         <p className="mt-3 font-body text-content-muted">
           That is the study strategy, not a limit on scope. A memorised answer only helps with a
