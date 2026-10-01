@@ -204,6 +204,14 @@ for (const path of registered) {
 
 let totalCards = 0
 
+/**
+ * Card ids must be unique within a domain, because progress is stored per course and a
+ * course only draws sets from its own domain. Two sets in one domain naming a card
+ * identically would make one card's history indistinguishable from the other's — and
+ * usually means the same fact is carded twice.
+ */
+const idsByDomain = new Map<string, Map<string, string>>()
+
 for (const meta of catalog.sets) {
   const cardPath = join(cardsRoot, `${meta.path}.json`)
   if (!exists(cardPath)) continue
@@ -224,6 +232,22 @@ for (const meta of catalog.sets) {
       `says ${meta.cardCount} but the file holds ${result.value.length}`,
     )
   }
+
+  const claimed = idsByDomain.get(meta.domainId) ?? new Map<string, string>()
+  for (const card of result.value) {
+    const owner = claimed.get(card.id)
+    if (owner) {
+      error(
+        `flashcards/${meta.path}.json`,
+        `card id "${card.id}" is already used by ${owner}. Ids must be unique within the ` +
+          `"${meta.domainId}" domain, because progress is stored per course and a course ` +
+          `draws only on sets from one domain.`,
+      )
+    } else {
+      claimed.set(card.id, `flashcards/${meta.path}.json`)
+    }
+  }
+  idsByDomain.set(meta.domainId, claimed)
 
   checkCards(result.value, meta)
   totalCards += result.value.length

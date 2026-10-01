@@ -10,9 +10,6 @@
 
 import type { Card, CardSet, CardSetMeta, CourseMeta } from '@/types/cards'
 
-/** Separator for namespaced card ids. Not legal in a card id, which is kebab-case. */
-const NAMESPACE = '::'
-
 export interface Deck {
   /** Progress storage key — the course path, e.g. `aws/aif-c01`. */
   progressKey: string
@@ -23,9 +20,10 @@ export interface Deck {
   /** Route base for this quiz, so switching modes keeps the same page. */
   quizPath: string
   /**
-   * Every card the course can draw on. Ids are namespaced `<setId>::<cardId>` and are
-   * also the storage ids — a course can pull from several sets, and a card id is only
-   * unique within one, so two sets could otherwise collide inside a single course.
+   * Every card the course can draw on, with its own id intact — which is also its
+   * storage id. Safe because a course only draws sets from its own domain and the build
+   * gate enforces that card ids are unique within a domain, so no two cards in one
+   * session can collide.
    */
   cards: Card[]
   /**
@@ -45,13 +43,7 @@ export function buildCourseDeck(
   entries: CourseDeckEntry[],
   sessionLimit: number,
 ): Deck {
-  const cards: Card[] = []
-
-  for (const { meta, set } of entries) {
-    for (const card of set.cards) {
-      cards.push({ ...card, id: `${meta.id}${NAMESPACE}${card.id}` })
-    }
-  }
+  const cards = entries.flatMap((entry) => entry.set.cards)
 
   return {
     progressKey: course.path,

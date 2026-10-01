@@ -147,8 +147,10 @@ Total the plan and settle any [split](#set-sizing) now, before authoring.
 
 Required per card:
 
-- `id` — kebab-case, unique in the set, named for the concept (`rag-vs-fine-tuning`, not
-  `card-17`). **Progress is persisted by card id**, so never reuse an id for a different question.
+- `id` — kebab-case, named for the concept (`rag-vs-fine-tuning`, not `card-17`), and
+  **unique across the whole domain**, not just within the set. See
+  [Card ids](#card-ids) below. **Progress is persisted by card id**, so never reuse an id
+  for a different question.
 - `prompt` — the stem. Supports inline `` `code` `` and `**bold**`.
 - `options` — each with a stable `id` (`a`, `b`, `c`, …) and a `rationale`.
 - `explanation` — why the key is the key. State the underlying principle rather than "option B is
@@ -236,6 +238,32 @@ under 30 cards, say so explicitly and confirm the note was exhausted rather than
 number unexplained.
 
 ---
+
+## Card ids
+
+A card id must be unique within its **domain** — every card file under
+`flashcards/<domain>/` — not merely within its own set. `npm run validate:data` fails the
+build on a duplicate.
+
+The reason is the storage model. Progress is recorded per course, a course draws only on
+sets from its own domain, and a card is stored under its own id with no set prefix. Two
+sets in one domain naming a card identically would make one card's history
+indistinguishable from the other's.
+
+Ids deliberately carry **no prefix**. A set prefix would orphan a card's history the moment
+its set were renamed or split, which is a routine operation — and splitting a long note into
+two sets is something this skill does itself.
+
+Checking is one bounded command, not a read of every card in the repository. Run it for the
+target domain before writing ids:
+
+```bash
+grep -ho '"id": "[^"]*"' flashcards/<domain>/*.json | sort
+```
+
+That is a few hundred ids at most. If a name you want is taken, the usual cause is that the
+same fact is already carded elsewhere in the domain — check before renaming around it,
+because the duplicate content is the real problem.
 
 ## Set sizing
 

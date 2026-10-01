@@ -39,8 +39,10 @@ export interface CardProgress {
 
 export interface CourseProgress {
   /**
-   * Keyed by session card id — `<setId>::<cardId>`. Namespaced because a course can draw
-   * on several sets and card ids are only unique within one.
+   * Keyed by card id. Ids carry no set prefix: a course only draws sets from its own
+   * domain, and the build gate enforces that card ids are unique within a domain, so the
+   * id alone is unambiguous inside a course. Keeping it bare means a card's history
+   * survives its set being renamed, split, or the card moving between sets.
    */
   cards: Record<string, CardProgress>
   /** Epoch millis of the last session for this course, or null if never started. */

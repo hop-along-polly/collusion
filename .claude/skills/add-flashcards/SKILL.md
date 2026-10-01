@@ -126,7 +126,15 @@ source of truth for card quality and they are not repeated here. In particular:
 
 Two constraints specific to adding:
 
-- **New card ids must not collide** with any existing id in the set. Check before writing.
+- **New card ids must not collide with any existing id in the domain**, not just in the set
+  being extended — progress is stored per course under the bare card id, so a duplicate
+  anywhere in `flashcards/<domain>/` is a build error. One command covers it:
+  ```bash
+  grep -ho '"id": "[^"]*"' flashcards/<domain>/*.json | sort
+  ```
+  Never work around a collision by decorating the id with a set name; a set prefix orphans
+  the card's history if the set is later renamed or split. A taken name usually means the
+  fact is already carded in this domain, which is worth checking first.
 - **Match the existing set's type mix.** Check the current breakdown and keep the additions
   roughly in proportion, so a set does not drift toward being all True/False over several runs.
 

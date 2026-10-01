@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { App } from '@/App'
 import { courseSets, findCourse } from '@/data/catalog'
+import { loadCardSet } from '@/data/loader'
 import { ProgressProvider } from '@/hooks/useProgress'
 import { STORAGE_KEY } from '@/storage/progress'
 
@@ -18,6 +19,13 @@ import { STORAGE_KEY } from '@/storage/progress'
 
 const AIF = findCourse('aws', 'aif-c01')!
 const SESSION_SIZE = 40
+
+/** Every card id the course can serve, read from the real card files. */
+const courseCardIds = new Set(
+  (await Promise.all(courseSets(AIF).map((meta) => loadCardSet(meta)))).flatMap((set) =>
+    set.cards.map((card) => card.id),
+  ),
+)
 
 function renderAt(path: string) {
   return render(
@@ -80,7 +88,7 @@ describe('a course quiz', () => {
     })
   })
 
-  it('namespaces stored card ids by set, so two sets in one course cannot collide', async () => {
+  it('stores a card under its own id, with no set prefix to orphan on a rename', async () => {
     const user = userEvent.setup()
     renderAt('/courses/aws/aif-c01/quiz')
 
@@ -92,10 +100,11 @@ describe('a course quiz', () => {
     await waitFor(() => {
       const cardIds = Object.keys(storedSnapshot().courses[AIF.path].cards)
       expect(cardIds.length).toBe(1)
-      // Card ids are unique within a set but not across them, so the stored id carries
-      // the set it came from.
-      const [setId] = cardIds[0]!.split('::')
-      expect(courseSets(AIF).map((set) => set.id)).toContain(setId)
+      const stored = cardIds[0]!
+      // No set prefix: a card's history has to survive its set being renamed or split.
+      expect(stored).not.toContain('::')
+      // And it is genuinely one of the course's card ids, written exactly as authored.
+      expect(courseCardIds.has(stored)).toBe(true)
     })
   })
 
