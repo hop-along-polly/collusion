@@ -76,10 +76,9 @@ export function HomePage() {
           Know the material before exam day.
         </h1>
         <p className="mt-5 font-body text-lg text-content-muted">
-          Course material hand-written by practitioners who have sat these exams and passed them.
-          Pick the certification you are studying for and work through its cards — every
-          explanation links to the section that covers it, so a wrong answer tells you exactly
-          what to read next.
+          Course material hand-written by practitioners who have sat these exams and passed them,
+          pitched at the fundamentals rather than the question bank — so what you learn holds up
+          long after the exam.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-8">
@@ -128,49 +127,25 @@ export function HomePage() {
           Why this exists
         </h2>
         <p className="mt-4 font-body text-content-muted">
-          Certification prep has a habit of covering the syllabus rather than the exam. These
-          notes are written the other way round — after sitting the exam, by people who passed it,
-          and weighted toward what it actually tests rather than toward what is easiest to write
-          up.
+          Exam questions change. Fundamentals do not. What k-means clustering is, and the kind of
+          problem it belongs to, reads the same today as it will in ten years — so that is what
+          these notes cover, and it is why they stay worth reading once the exam is behind you.
         </p>
         <p className="mt-3 font-body text-content-muted">
-          Every card cites the section it came from, so you are never asked to take a claim on
-          trust. If an answer looks wrong, go read the source and decide for yourself.
+          That is the study strategy, not a limit on scope. A memorised answer only helps with a
+          question you have already seen. Understanding why a technique exists and when it applies
+          means an unfamiliar question is still answerable — reason from the fundamentals and they
+          lead to exactly one correct answer.
         </p>
-      </section>
-
-      <section aria-labelledby="how-heading" className="max-w-3xl">
-        <h2 id="how-heading" className="font-heading text-4xl">
-          How a session works
-        </h2>
-        <ol className="mt-4 space-y-3 font-body text-content-muted">
-          <li className="flex gap-3">
-            <span className="font-heading text-2xl leading-none text-brand">1</span>
-            <span>
-              Answer a question — select one, select all that apply, or true/false. Nothing is graded
-              until you submit.
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <span className="font-heading text-2xl leading-none text-brand">2</span>
-            <span>
-              Submit to see the verdict, an explanation of why each option is right or wrong, and a
-              link to the note it came from.
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <span className="font-heading text-2xl leading-none text-brand">3</span>
-            <span>
-              Anything you miss or star lands in <strong className="text-content">review mode</strong>,
-              so a second pass only covers what you have not nailed yet.
-            </span>
-          </li>
-        </ol>
-        <p className="mt-4 font-body text-sm text-content-subtle">
+        <p className="mt-3 font-body text-content-muted">
+          Every card cites the section it came from, so you can go back to the reasoning instead of
+          taking an answer on trust.
+        </p>
+        <p className="mt-6 font-body text-sm text-content-subtle">
           Progress is stored in this browser only — there is no account and nothing leaves your
           machine.{' '}
-          <Link to="/anthropic" className="text-brand underline-offset-2 hover:underline">
-            Start with Anthropic
+          <Link to="/courses" className="text-brand underline-offset-2 hover:underline">
+            Pick a course
           </Link>
           .
         </p>

@@ -4,9 +4,15 @@ Hand-written Markdown course material for technical certifications, written by p
 who have sat these exams and passed them, plus **Scribe Cards**: a static flashcard app built
 from that material.
 
-Certification prep has a habit of covering the syllabus rather than the exam. This material is
-written the other way round — after sitting the exam, and weighted toward what it actually tests
-rather than toward what is easiest to write up.
+**The material is deliberately evergreen.** What k-means clustering is and the kind of problem it
+belongs to reads the same today as it will in ten years, and that is the level these notes are
+pitched at. The bet is that fundamentals are also the better exam strategy: a memorised answer only
+helps with a question you have already seen, whereas understanding why a technique exists and when
+it applies means an unfamiliar question is still answerable — reason from the fundamentals and they
+lead to exactly one correct answer.
+
+This is why cards are never written from a question bank or an exam recollection. They come from the
+notes, which cover the subject rather than the test.
 
 The Markdown is the source of truth. Every question, explanation and distractor comes from a
 committed `.md` file and cites the specific file and heading behind it, and a build-time gate
