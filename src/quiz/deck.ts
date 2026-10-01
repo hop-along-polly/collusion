@@ -3,9 +3,9 @@
  * study guide lists.
  *
  * Flashcards are only ever launched from a course, and results are stored per course.
- * That is deliberate — a card can be tested by more than one certification, and how
- * ready you are for one exam says nothing about the other. The same card answered under
- * AIF-C01 and under CCAR-F is two independent records.
+ * That is deliberate — two courses in the same domain can list the same set, so a card
+ * can be tested by more than one certification, and how ready you are for one exam says
+ * nothing about the other. Keying progress by course keeps those histories independent.
  */
 
 import type { Card, CardSet, CardSetMeta, CourseMeta } from '@/types/cards'

@@ -15,8 +15,9 @@ export function NotesPage() {
       <header className="max-w-3xl">
         <h1 className="font-heading text-5xl leading-tight text-content-strong">Notes</h1>
         <p className="mt-3 font-body text-lg text-content-muted">
-          The course material, one topic per page. A topic can be part of more than one
-          certification, so the same page may appear in several courses.
+          The course material, hand-written by practitioners who hold these certifications. One
+          topic per page. To study for a specific exam, open its course instead — it lists these
+          topics in reading order.
         </p>
       </header>
 

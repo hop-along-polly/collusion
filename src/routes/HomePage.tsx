@@ -76,9 +76,10 @@ export function HomePage() {
           Know the material before exam day.
         </h1>
         <p className="mt-5 font-body text-lg text-content-muted">
-          Pick the certification you are studying for and work through its cards. Every explanation
-          links to the section that covers it, so a wrong answer tells you exactly what to read
-          next.
+          Course material hand-written by practitioners who have sat these exams and passed them.
+          Pick the certification you are studying for and work through its cards — every
+          explanation links to the section that covers it, so a wrong answer tells you exactly
+          what to read next.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-8">
