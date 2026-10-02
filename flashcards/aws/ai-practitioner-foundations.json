@@ -1393,6 +1393,322 @@
           "heading": "Terminology"
         }
       ]
+    },
+    {
+      "id": "self-attention-purpose",
+      "type": "single",
+      "prompt": "What does the self-attention mechanism in a transformer do?",
+      "tags": [
+        "architecture",
+        "transformers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "For every token, it weighs how much each other token in the input matters to it",
+          "correct": true,
+          "rationale": "That weighing is what carries context across a passage, and what resolves which earlier noun a later pronoun refers to."
+        },
+        {
+          "id": "b",
+          "text": "It reads the input one token at a time, carrying a hidden state forward",
+          "correct": false,
+          "rationale": "That describes the recurrent approaches transformers replaced. Reading sequentially is exactly what self-attention avoids."
+        },
+        {
+          "id": "c",
+          "text": "It removes noise from an input step by step until an output emerges",
+          "correct": false,
+          "rationale": "That is reverse diffusion, which generates images rather than attending over text."
+        },
+        {
+          "id": "d",
+          "text": "It stores the model weights at lower numeric precision",
+          "correct": false,
+          "rationale": "That is quantization, a way to shrink a finished model rather than part of the architecture."
+        }
+      ],
+      "explanation": "Self-attention is how a model considers a whole input at once instead of a token at a time, which is what lets meaning depend on words far apart in a passage. It is the defining mechanism of the transformer, and the reason long-range context works at all.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Transformers"
+        }
+      ]
+    },
+    {
+      "id": "transformer-parallelism",
+      "type": "single",
+      "prompt": "Why did the transformer architecture make training on internet-scale text practical?",
+      "tags": [
+        "architecture",
+        "transformers"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "It processes the whole input at once, so training parallelises across hardware",
+          "correct": true,
+          "rationale": "The architectures it replaced read a sequence step by step, which could not be spread across hardware efficiently."
+        },
+        {
+          "id": "b",
+          "text": "It needs far less training data than earlier architectures",
+          "correct": false,
+          "rationale": "The opposite is closer to the truth: transformers made it feasible to train on far more data than before."
+        },
+        {
+          "id": "c",
+          "text": "It compresses the training data before learning from it",
+          "correct": false,
+          "rationale": "No compression step is involved. Scale came from how the computation is arranged, not from shrinking the input."
+        },
+        {
+          "id": "d",
+          "text": "It learns by adding noise to its inputs and predicting what was added",
+          "correct": false,
+          "rationale": "That is how a diffusion model is trained, and it applies to image generation."
+        }
+      ],
+      "explanation": "Foundation models exist because of parallelism rather than cleverness. Sequential architectures could only use a fraction of available hardware, so the practical ceiling on training data was low. Attending over an entire input at once lifted that ceiling.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Transformers"
+        }
+      ]
+    },
+    {
+      "id": "diffusion-forward-vs-reverse",
+      "type": "single",
+      "prompt": "In a diffusion model, what happens during **reverse** diffusion?",
+      "tags": [
+        "architecture",
+        "diffusion"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Noise is subtracted step by step, guided by the prompt, until an image emerges",
+          "correct": true,
+          "rationale": "Generation runs the training process backwards, starting from pure noise."
+        },
+        {
+          "id": "b",
+          "text": "Noise is added to a real image until nothing but noise is left",
+          "correct": false,
+          "rationale": "That is forward diffusion, which is the training process rather than generation."
+        },
+        {
+          "id": "c",
+          "text": "Weights that contribute little to the output are removed",
+          "correct": false,
+          "rationale": "That is pruning, a way to shrink a model after training."
+        },
+        {
+          "id": "d",
+          "text": "A generator and a discriminator compete until the generator wins",
+          "correct": false,
+          "rationale": "That is a GAN, the older approach to image generation."
+        }
+      ],
+      "explanation": "The two directions are training and inference. Forward diffusion destroys an image so the model can learn to predict the noise at each step; reverse diffusion applies that learned prediction in the other direction. Nothing about generation is a separate skill from what training taught.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Diffusion"
+        }
+      ]
+    },
+    {
+      "id": "diffusion-learns-noise",
+      "type": "boolean",
+      "prompt": "A diffusion model is trained by learning to draw an image that matches a text description.",
+      "tags": [
+        "architecture",
+        "diffusion"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "It is trained to predict the noise that was added to a real image, step by step, until the image was destroyed. Generation is that prediction applied in reverse, from pure noise toward an image, with the prompt steering it. The model never learns to draw, which is why the same mechanism produces any subject it has seen.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Diffusion"
+        }
+      ]
+    },
+    {
+      "id": "architecture-by-output-type",
+      "type": "multi",
+      "prompt": "Which statements about generative model architectures are correct? (Select all that apply)",
+      "tags": [
+        "architecture"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Transformers are the architecture behind large language models",
+          "correct": true,
+          "rationale": "Text in and text out is a transformer."
+        },
+        {
+          "id": "b",
+          "text": "Diffusion models generate images",
+          "correct": true,
+          "rationale": "Text in and image out is diffusion."
+        },
+        {
+          "id": "c",
+          "text": "Stable Diffusion, Amazon Titan Image Generator and Nova Canvas are diffusion models",
+          "correct": true,
+          "rationale": "A question naming a specific model is usually testing which family it belongs to."
+        },
+        {
+          "id": "d",
+          "text": "A GAN pits a generator against a discriminator, and is an older approach to image generation",
+          "correct": true,
+          "rationale": "It solves the same problem as diffusion and still appears as a distractor."
+        },
+        {
+          "id": "e",
+          "text": "Diffusion is the architecture behind large language models",
+          "correct": false,
+          "rationale": "That is the transformer. Diffusion generates images."
+        }
+      ],
+      "explanation": "The two architectures divide by what is produced rather than by capability. Knowing which family a named model belongs to answers most questions on the subject, because the architecture determines what the model can take in and give back.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "How the Models Work"
+        }
+      ]
+    },
+    {
+      "id": "compression-techniques",
+      "type": "multi",
+      "prompt": "Which techniques reduce what a trained model costs to run? (Select all that apply)",
+      "tags": [
+        "optimization"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Distillation, training a smaller student model to imitate a larger teacher",
+          "correct": true,
+          "rationale": "The student is cheaper to run, at the price of the teacher’s breadth."
+        },
+        {
+          "id": "b",
+          "text": "Pruning, removing weights and connections that contribute little",
+          "correct": true,
+          "rationale": "A smaller network results, until pruning goes far enough to cost real accuracy."
+        },
+        {
+          "id": "c",
+          "text": "Quantization, storing weights at lower numeric precision",
+          "correct": true,
+          "rationale": "Less memory and faster arithmetic, for a small loss of precision."
+        },
+        {
+          "id": "d",
+          "text": "Fine-tuning, adjusting weights on task-specific data",
+          "correct": false,
+          "rationale": "Fine-tuning changes how a model behaves. The model is the same size afterwards and costs the same to run."
+        },
+        {
+          "id": "e",
+          "text": "Lowering the temperature at inference time",
+          "correct": false,
+          "rationale": "Temperature controls sampling. It changes which words are chosen, not what the model costs."
+        }
+      ],
+      "explanation": "All three real answers trade a little accuracy for size, speed or price. Fine-tuning is the reliable distractor, because it sounds like optimisation while leaving the model exactly as large as before.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Making a Model Smaller and Cheaper"
+        }
+      ]
+    },
+    {
+      "id": "quantization-precision",
+      "type": "single",
+      "prompt": "Which technique cuts a model’s memory use and speeds up its arithmetic by storing weights at lower numeric precision?",
+      "tags": [
+        "optimization"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Quantization",
+          "correct": true,
+          "rationale": "Reducing 32-bit floats to 8-bit integers, for example, shrinks the model and makes the maths faster."
+        },
+        {
+          "id": "b",
+          "text": "Pruning",
+          "correct": false,
+          "rationale": "Pruning removes weights and connections outright rather than storing them differently."
+        },
+        {
+          "id": "c",
+          "text": "Distillation",
+          "correct": false,
+          "rationale": "Distillation trains a separate, smaller model to imitate a larger one."
+        },
+        {
+          "id": "d",
+          "text": "Fine-tuning",
+          "correct": false,
+          "rationale": "Fine-tuning adjusts weights to change behaviour and leaves the model the same size."
+        }
+      ],
+      "explanation": "The three compression techniques differ in what they change: quantization changes how weights are stored, pruning removes some of them, and distillation replaces the model with a smaller one trained to imitate it. A scenario about fitting a model onto smaller hardware is pointing at one of these rather than at fine-tuning.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Making a Model Smaller and Cheaper"
+        }
+      ]
+    },
+    {
+      "id": "fine-tuning-not-smaller",
+      "type": "boolean",
+      "prompt": "Fine-tuning a model reduces its size, and therefore what it costs to run.",
+      "tags": [
+        "optimization"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "Fine-tuning adjusts weights so the model behaves differently. It has exactly as many weights afterwards, so it costs the same per request. When a question asks how to cut inference cost or fit a model on smaller hardware, the answers are distillation, pruning and quantization, and fine-tuning is there to catch anyone matching on the word \"optimise\".",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Making a Model Smaller and Cheaper"
+        }
+      ]
     }
   ]
 }
