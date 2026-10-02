@@ -55,6 +55,37 @@ const META_REFERENCE_PATTERNS: [RegExp, string][] = [
   [/\b(?:the|this|that)\s+(?:\S+\s+){0,3}sections?\b/i, 'refers to a heading in the source note'],
 ]
 
+/**
+ * A scenario followed by a stub: "...wants to keep its existing manifests. Which service?"
+ *
+ * The question has to carry the ask, because a learner reads the stem under time pressure
+ * and a two-word question makes them re-read the scenario to work out what is even being
+ * asked. Restating the requirement in the question costs a few words and removes that
+ * re-read: "Which AWS service lets them keep both?"
+ *
+ * Only applies when something precedes the question. A short question that is the whole
+ * prompt is already self-contained, so "What is a Subagent?" is fine.
+ */
+function checkStubQuestion(prompt: string, at: string, issues: Issue[]): void {
+  const sentences = prompt.trim().split(/(?<=[.?!])\s+/)
+  if (sentences.length < 2) return
+
+  const question = (sentences.at(-1) ?? '').trim()
+  if (!question.endsWith('?')) return
+
+  const words = question.replace(/\?+$/, '').split(/\s+/).filter(Boolean)
+  if (words.length > STUB_QUESTION_MAX_WORDS) return
+
+  issues.push({
+    path: at,
+    message: `the closing question "${question}" leans on the sentence before it - restate what is being asked`,
+    severity: 'error',
+  })
+}
+
+/** Below this, a closing question is not carrying the ask on its own. */
+const STUB_QUESTION_MAX_WORDS = 4
+
 /** Card text that must read as a standalone statement about the subject. */
 function checkMetaReferences(raw: Record<string, unknown>, at: string, issues: Issue[]): void {
   const fields: [string, unknown][] = [
@@ -157,6 +188,8 @@ export function validateCards(input: unknown, basePath = 'cards'): ValidationRes
 
     if (!isNonEmptyString(raw.prompt)) {
       issues.push({ path: `${at}.prompt`, message: 'missing or empty', severity: 'error' })
+    } else {
+      checkStubQuestion(raw.prompt, `${at}.prompt`, issues)
     }
 
     if (!isNonEmptyString(raw.explanation)) {

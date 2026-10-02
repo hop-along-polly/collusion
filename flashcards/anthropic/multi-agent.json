@@ -5,7 +5,7 @@
     {
       "id": "agent-vs-workflow",
       "type": "single",
-      "prompt": "A task has a well-defined goal, but the steps to reach it vary from case to case. Agent or Workflow?",
+      "prompt": "A task has a well-defined goal, but the steps to reach it vary from case to case. Is that better built as an Agent or as a Workflow?",
       "tags": [
         "fundamentals"
       ],
@@ -596,7 +596,7 @@
     {
       "id": "prompt-chaining-pattern",
       "type": "single",
-      "prompt": "A task decomposes cleanly into a sequence of steps, each handled by a different Model processing the previous step's output. Which pattern?",
+      "prompt": "A task decomposes cleanly into a sequence of steps, each handled by a different Model processing the previous step's output. Which orchestration pattern is that?",
       "tags": [
         "patterns"
       ],

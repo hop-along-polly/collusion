@@ -462,7 +462,7 @@
     {
       "id": "ecs-vs-eks",
       "type": "single",
-      "prompt": "A team is migrating an application that already runs on Kubernetes on-premises and wants to keep its existing manifests and tooling. Which service?",
+      "prompt": "A team is migrating an application that already runs on Kubernetes on-premises and wants to keep its existing manifests and tooling. Which AWS service lets them keep both?",
       "tags": [
         "containers"
       ],
@@ -614,7 +614,7 @@
     {
       "id": "sns-vs-sqs",
       "type": "single",
-      "prompt": "An event must reach four independent subscribers at the same time, each processing it separately. Which service fits?",
+      "prompt": "An event must reach four independent subscribers at the same time, each processing it separately. Which AWS service delivers a copy to every subscriber?",
       "tags": [
         "messaging"
       ],
@@ -655,7 +655,7 @@
     {
       "id": "sqs-queue-types",
       "type": "single",
-      "prompt": "An order-processing pipeline must process messages in exactly the order they were sent. Which SQS queue type?",
+      "prompt": "An order-processing pipeline must process messages in exactly the order they were sent. Which SQS queue type guarantees that ordering?",
       "tags": [
         "messaging"
       ],
@@ -938,7 +938,7 @@
     {
       "id": "s3-bucket-policy",
       "type": "single",
-      "prompt": "Every request to a bucket must be refused unless it arrives over HTTPS. Where is that enforced?",
+      "prompt": "Every request to a bucket must be refused unless it arrives over HTTPS. Where is a rule like that enforced?",
       "tags": [
         "storage",
         "security"
@@ -980,7 +980,7 @@
     {
       "id": "s3-storage-class-unknown-pattern",
       "type": "single",
-      "prompt": "Access patterns for a large set of objects are unknown and expected to change. Which S3 storage class?",
+      "prompt": "Access patterns for a large set of objects are unknown and expected to change. Which S3 storage class suits data whose access pattern cannot be predicted?",
       "tags": [
         "storage",
         "cost"
@@ -1064,7 +1064,7 @@
     {
       "id": "glacier-retrieval",
       "type": "single",
-      "prompt": "Archived data must be retrievable within milliseconds. Which S3 Glacier option?",
+      "prompt": "Archived data must be retrievable within milliseconds. Which S3 Glacier storage class meets that retrieval time?",
       "tags": [
         "storage",
         "archival"
@@ -1154,7 +1154,7 @@
     {
       "id": "ebs-zonal-scope",
       "type": "single",
-      "prompt": "An EBS volume must be made available to an instance in a different Availability Zone. What is required?",
+      "prompt": "An EBS volume must be made available to an instance in a different Availability Zone. What has to happen, given that a volume cannot cross a zone boundary?",
       "tags": [
         "storage",
         "resilience"
@@ -1286,7 +1286,7 @@
     {
       "id": "efs-shared-mounts",
       "type": "single",
-      "prompt": "A fleet of instances across three Availability Zones must read and write the same files at the same time. Which service?",
+      "prompt": "A fleet of instances across three Availability Zones must read and write the same files at the same time. Which AWS storage service supports that many concurrent writers?",
       "tags": [
         "storage"
       ],
@@ -1416,7 +1416,7 @@
     {
       "id": "aws-backup-central",
       "type": "single",
-      "prompt": "An organization wants one place to define and audit backup policy across EBS, RDS, DynamoDB and EFS. Which service?",
+      "prompt": "An organization wants one place to define and audit backup policy across EBS, RDS, DynamoDB and EFS. Which AWS service centralises that policy?",
       "tags": [
         "storage",
         "governance"
@@ -1500,7 +1500,7 @@
     {
       "id": "rds-multiaz-vs-read-replica",
       "type": "single",
-      "prompt": "An RDS database must survive the loss of an Availability Zone with automatic failover. Which feature?",
+      "prompt": "An RDS database must survive the loss of an Availability Zone with automatic failover. Which RDS feature provides that?",
       "tags": [
         "databases",
         "resilience"
@@ -1542,7 +1542,7 @@
     {
       "id": "aurora-serverless-v2",
       "type": "single",
-      "prompt": "A relational workload is busy for a few hours a day and nearly idle the rest of the time. Which option fits best?",
+      "prompt": "A relational workload is busy for a few hours a day and nearly idle the rest of the time. Which Aurora option avoids paying for the idle time?",
       "tags": [
         "databases",
         "cost"
@@ -1584,7 +1584,7 @@
     {
       "id": "dynamodb-global-tables",
       "type": "single",
-      "prompt": "An application needs reads *and* writes served from multiple AWS Regions against the same table. Which feature?",
+      "prompt": "An application needs reads *and* writes served from multiple AWS Regions against the same table. Which DynamoDB feature accepts writes in every Region?",
       "tags": [
         "databases",
         "multi-region"
@@ -1626,7 +1626,7 @@
     {
       "id": "dax-purpose",
       "type": "single",
-      "prompt": "DynamoDB read latency must drop from single-digit milliseconds to microseconds without changing application logic. What is added?",
+      "prompt": "DynamoDB read latency must drop from single-digit milliseconds to microseconds without changing application logic. Which component should be put in front of the table?",
       "tags": [
         "databases",
         "performance"

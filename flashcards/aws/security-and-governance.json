@@ -5,7 +5,7 @@
     {
       "id": "observability-services",
       "type": "single",
-      "prompt": "An auditor needs a record of every API call and user activity across the AWS account. Which service?",
+      "prompt": "An auditor needs a record of every API call and user activity across the AWS account. Which AWS service keeps that record?",
       "tags": [
         "observability",
         "auditing"
@@ -47,7 +47,7 @@
     {
       "id": "cloudwatch-vs-cloudtrail",
       "type": "single",
-      "prompt": "An application's response times have degraded and the team needs to find out when it started. Which service holds that?",
+      "prompt": "An application's response times have degraded and the team needs to find out when it started. Which AWS service holds the history that answers that?",
       "tags": [
         "observability"
       ],
@@ -130,7 +130,7 @@
     {
       "id": "cloudtrail-lake-queries",
       "type": "single",
-      "prompt": "A security team wants to run SQL queries over years of API activity without building a pipeline. Which option?",
+      "prompt": "A security team wants to run SQL queries over years of API activity without building a pipeline. Which option provides that without assembly?",
       "tags": [
         "auditing"
       ],
@@ -171,7 +171,7 @@
     {
       "id": "xray-tracing",
       "type": "single",
-      "prompt": "A request passes through an API, two Lambda functions and a database, and the team needs to know which hop is slow. Which service?",
+      "prompt": "A request passes through an API, two Lambda functions and a database, and the team needs to know which hop is slow. Which AWS service attributes the latency to a specific hop?",
       "tags": [
         "observability"
       ],
@@ -212,7 +212,7 @@
     {
       "id": "identity-services",
       "type": "single",
-      "prompt": "An organization needs single sign-on across multiple AWS accounts. Which service?",
+      "prompt": "An organization needs single sign-on across multiple AWS accounts. Which AWS service provides it?",
       "tags": [
         "identity"
       ],
@@ -364,7 +364,7 @@
     {
       "id": "scp-never-grants",
       "type": "single",
-      "prompt": "A Service Control Policy allows a service, but a user in a member account still cannot use it. Why?",
+      "prompt": "A Service Control Policy allows a service, but a user in a member account still cannot use it. Why does an SCP alone not grant that access?",
       "tags": [
         "identity",
         "governance"
@@ -406,7 +406,7 @@
     {
       "id": "cognito-pool-types",
       "type": "single",
-      "prompt": "A mobile app's users must sign in, then upload directly to S3 using temporary AWS credentials. Which Cognito components?",
+      "prompt": "A mobile app's users must sign in, then upload directly to S3 using temporary AWS credentials. Which combination of Cognito components covers both steps?",
       "tags": [
         "identity"
       ],
@@ -447,7 +447,7 @@
     {
       "id": "ram-cross-account-sharing",
       "type": "single",
-      "prompt": "Several accounts need to use the same subnet and Transit Gateway rather than duplicating them. Which service?",
+      "prompt": "Several accounts need to use the same subnet and Transit Gateway rather than duplicating them. Which AWS service shares those resources across accounts?",
       "tags": [
         "identity",
         "networking",
@@ -689,7 +689,7 @@
     {
       "id": "kms-vs-cloudhsm",
       "type": "single",
-      "prompt": "A regulator requires single-tenant hardware security modules under the customer's exclusive control. Which service?",
+      "prompt": "A regulator requires single-tenant hardware security modules under the customer's exclusive control. Which AWS service meets that requirement?",
       "tags": [
         "security",
         "encryption"
@@ -731,7 +731,7 @@
     {
       "id": "secrets-vs-parameter-store",
       "type": "single",
-      "prompt": "Database credentials must be stored centrally and rotated automatically. Which service?",
+      "prompt": "Database credentials must be stored centrally and rotated automatically. Which AWS service does both?",
       "tags": [
         "security"
       ],
@@ -813,7 +813,7 @@
     {
       "id": "firewall-manager-org-wide",
       "type": "single",
-      "prompt": "WAF rules must apply to every account in an organization, including accounts created next month. Which service?",
+      "prompt": "WAF rules must apply to every account in an organization, including accounts created next month. Which AWS service applies them organisation-wide?",
       "tags": [
         "security",
         "governance"
@@ -896,7 +896,7 @@
     {
       "id": "config-change-history",
       "type": "single",
-      "prompt": "A resource is non-compliant and the team needs to know what it looked like last month and when it changed. Which service?",
+      "prompt": "A resource is non-compliant and the team needs to know what it looked like last month and when it changed. Which AWS service records that configuration history?",
       "tags": [
         "governance",
         "auditing"
@@ -938,7 +938,7 @@
     {
       "id": "session-manager-no-bastion",
       "type": "single",
-      "prompt": "Engineers need shell access to private instances without opening SSH or running a bastion host. Which option?",
+      "prompt": "Engineers need shell access to private instances without opening SSH or running a bastion host. Which option gives them a shell under those constraints?",
       "tags": [
         "governance",
         "security"
@@ -980,7 +980,7 @@
     {
       "id": "cloudformation-stacksets",
       "type": "single",
-      "prompt": "The same stack of resources must be deployed into twelve accounts across three Regions in one operation. Which feature?",
+      "prompt": "The same stack of resources must be deployed into twelve accounts across three Regions in one operation. Which CloudFormation feature does that?",
       "tags": [
         "governance",
         "iac"
@@ -1022,7 +1022,7 @@
     {
       "id": "service-catalog-self-service",
       "type": "single",
-      "prompt": "A platform team wants developers to launch only pre-approved infrastructure, within set constraints. Which service?",
+      "prompt": "A platform team wants developers to launch only pre-approved infrastructure, within set constraints. Which AWS service publishes those approved products for self-service?",
       "tags": [
         "governance"
       ],
@@ -1194,7 +1194,7 @@
     {
       "id": "budgets-vs-cost-explorer",
       "type": "single",
-      "prompt": "A team must be alerted before monthly spend passes a threshold rather than discovering it on the bill. Which service?",
+      "prompt": "A team must be alerted before monthly spend passes a threshold rather than discovering it on the bill. Which cost management service raises that alert?",
       "tags": [
         "cost"
       ],
@@ -1235,7 +1235,7 @@
     {
       "id": "dms-online-migration",
       "type": "single",
-      "prompt": "A production database must move to AWS with minimal downtime, and the engine is changing from Oracle to PostgreSQL. Which combination?",
+      "prompt": "A production database must move to AWS with minimal downtime, and the engine is changing from Oracle to PostgreSQL. Which combination of services covers both the schema conversion and the data move?",
       "tags": [
         "migration",
         "databases"
@@ -1277,7 +1277,7 @@
     {
       "id": "datasync-vs-transfer-family",
       "type": "single",
-      "prompt": "External partners must continue sending files over SFTP, with the data landing in S3. Which service?",
+      "prompt": "External partners must continue sending files over SFTP, with the data landing in S3. Which AWS service gives them that endpoint?",
       "tags": [
         "migration",
         "storage"
@@ -1319,7 +1319,7 @@
     {
       "id": "snowball-edge-when",
       "type": "single",
-      "prompt": "Eighty terabytes must move to AWS from a site whose internet link would take months to transfer it. What fits?",
+      "prompt": "Eighty terabytes must move to AWS from a site whose internet link would take months to transfer it. Which approach moves the data without using the network?",
       "tags": [
         "migration"
       ],
@@ -1360,7 +1360,7 @@
     {
       "id": "codedeploy-strategies",
       "type": "single",
-      "prompt": "A release must be able to roll back automatically if error rates rise after deployment. Which service provides that?",
+      "prompt": "A release must be able to roll back automatically if error rates rise after deployment. Which AWS service provides that deployment strategy?",
       "tags": [
         "devtools"
       ],

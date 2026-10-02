@@ -46,7 +46,7 @@
     {
       "id": "which-construct-for-presave-validation",
       "type": "single",
-      "prompt": "You want validation to run every time a file is saved or a commit is pushed. Which construct fits?",
+      "prompt": "You want validation to run every time a file is saved or a commit is pushed. Which construct runs automatically in response to an event like that?",
       "tags": [
         "when-to-use"
       ],
@@ -91,7 +91,7 @@
     {
       "id": "skill-scope-precedence",
       "type": "single",
-      "prompt": "Two skills share the same name - one Personal, one Project, one Enterprise. Which one wins?",
+      "prompt": "Two skills share the same name - one Personal, one Project, one Enterprise. Which scope wins when all three are present?",
       "tags": [
         "scopes",
         "precedence"
@@ -533,7 +533,7 @@
     {
       "id": "which-construct-for-task-expertise",
       "type": "single",
-      "prompt": "A team keeps writing inconsistent release notes. They want Claude to follow their house process whenever that task comes up. Which construct?",
+      "prompt": "A team keeps writing inconsistent release notes. They want Claude to follow their house process whenever that task comes up. Which construct captures a process for a recurring task?",
       "tags": [
         "when-to-use"
       ],
@@ -578,7 +578,7 @@
     {
       "id": "which-construct-for-isolation",
       "type": "single",
-      "prompt": "A task needs to run with a different, narrower set of tools than the main session has. Which construct?",
+      "prompt": "A task needs to run with a different, narrower set of tools than the main session has. Which construct provides that isolation?",
       "tags": [
         "when-to-use"
       ],

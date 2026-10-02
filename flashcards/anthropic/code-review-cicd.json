@@ -216,7 +216,7 @@
     {
       "id": "system-prompt-flags",
       "type": "single",
-      "prompt": "A workflow needs to add instructions on top of the System Prompt rather than replace it. Which `claude_args` flag?",
+      "prompt": "A workflow needs to add instructions on top of the System Prompt rather than replace it. Which `claude_args` flag appends to the System Prompt?",
       "tags": [
         "action",
         "cli-flags"
@@ -848,7 +848,7 @@
     {
       "id": "push-interactive-warning",
       "type": "single",
-      "prompt": "A workflow triggers on `push` and contains a `claude-code-action` step with no `prompt`. What happens?",
+      "prompt": "A workflow triggers on `push` and contains a `claude-code-action` step with no `prompt`. What happens when that workflow runs?",
       "tags": [
         "action",
         "modes",

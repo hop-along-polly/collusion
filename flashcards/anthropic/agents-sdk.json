@@ -256,7 +256,7 @@
     {
       "id": "subagent-fork",
       "type": "single",
-      "prompt": "A subagent needs the full conversation so far in order to continue the main Agent's work. How is it spawned?",
+      "prompt": "A subagent needs the full conversation so far in order to continue the main Agent's work. How is a subagent spawned so that it inherits that context?",
       "tags": [
         "subagents"
       ],

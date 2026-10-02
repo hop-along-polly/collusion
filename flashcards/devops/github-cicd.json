@@ -1106,7 +1106,7 @@
     {
       "id": "event-filters",
       "type": "single",
-      "prompt": "A workflow should run only when commits land on the `main` branch. How is that expressed?",
+      "prompt": "A workflow should run only when commits land on the `main` branch. How is that restriction expressed in the workflow file?",
       "tags": [
         "actions",
         "events"
@@ -1148,7 +1148,7 @@
     {
       "id": "job-dependency-needs",
       "type": "single",
-      "prompt": "A workflow has `stand-alone-job` and `dependent-job` with `needs: stand-alone-job`. What happens?",
+      "prompt": "A workflow has `stand-alone-job` and `dependent-job` with `needs: stand-alone-job`. In what order do those two jobs run?",
       "tags": [
         "actions",
         "jobs"
@@ -1241,7 +1241,7 @@
     {
       "id": "self-hosted-runners",
       "type": "single",
-      "prompt": "GitHub offers hosted Ubuntu, Windows and macOS runners. What is the alternative?",
+      "prompt": "GitHub offers hosted Ubuntu, Windows and macOS runners. What is the alternative when a job needs hardware or software GitHub does not provide?",
       "tags": [
         "actions",
         "runners"

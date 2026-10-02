@@ -99,7 +99,7 @@
     {
       "id": "mcp-control-model",
       "type": "single",
-      "prompt": "MCP `prompts` are described as *user controlled*. Why?",
+      "prompt": "MCP `prompts` are described as *user controlled*. What makes them user controlled rather than model controlled?",
       "tags": [
         "primitives"
       ],
