@@ -88,6 +88,20 @@ Beyond "never all/none of the above":
   rest are trivially wrong. If only one option can be true, it is a `single`.
 - Every card must stand alone. No card may depend on the reader recalling a specific sentence,
   variable name, or example from the source note.
+- **Never** end a scenario with a stub question. `Which service?`, `Which option?`, `What
+  happens?` and `Why?` make the reader go back and re-read the scenario to work out what is
+  being asked. The closing question has to carry the ask on its own, which usually means
+  restating the requirement that decides the answer:
+
+  > **No:** A team is migrating an application that already runs on Kubernetes on-premises and
+  > wants to keep its existing manifests and tooling. *Which service?*
+  >
+  > **Yes:** A team is migrating an application that already runs on Kubernetes on-premises and
+  > wants to keep its existing manifests and tooling. *Which AWS service lets them keep both?*
+
+  A short question is fine when it is the whole prompt, because there is nothing to lean on:
+  `What is a Subagent?` needs no expansion. `src/data/validate.ts` fails the build on a
+  closing question of four words or fewer that follows another sentence.
 - **Never** use an em dash or an en dash, in any field. Write a hyphen, a comma, or a full stop
   instead. These notes are written by practitioners who hold the certifications, and an em dash
   is the clearest signal to a reader that a model wrote the sentence - once they suspect the card
