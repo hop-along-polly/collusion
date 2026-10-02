@@ -63,6 +63,64 @@ If broken down into a `3-Gram` (Tri-Gram) you would get the following 3-Grams;
  - "a wood chuck",
  - "wood chuck chuck"
 
+## How the Models Work
+
+Two architectures account for nearly all generative AI on the exam, and they split by what is
+being generated.
+
+### Transformers
+
+The **transformer** is the architecture behind large language models. Its central mechanism is
+**self-attention**: for every token, the model weighs how much every other token in the input
+matters to it. That is what lets it carry context across a long passage, and resolve which
+earlier noun a later pronoun refers to.
+
+What made it win was parallelism. The recurrent approaches it replaced read a sequence one step
+at a time, so training could not be spread across hardware efficiently. Self-attention looks at
+the whole input at once, which is what made training on internet-scale text practical, and is
+the reason foundation models exist at all.
+
+### Diffusion
+
+**Diffusion** models generate images. They are trained by destruction and used in reverse:
+
+ - **Forward diffusion** is the training process. Take a real image and add a little random
+   noise, repeatedly, until nothing but noise is left. At each step the model learns to predict
+   the noise that was just added.
+ - **Reverse diffusion** is generation. Start from pure noise and subtract the predicted noise
+   step by step, guided by the text prompt, until an image emerges.
+
+So the model never learns to draw. It learns to recognise noise, and generation is that skill
+applied backwards. Stable Diffusion, Amazon Titan Image Generator and Nova Canvas all work this
+way. **GANs**, where a generator and a discriminator compete, are the older approach to the same
+problem and still appear as a distractor.
+
+> [!NOTE]
+> Text in, text out is a transformer. Text in, image out is diffusion. A question naming a
+> specific model is usually testing whether you know which family it belongs to.
+
+### Making a Model Smaller and Cheaper
+
+Three techniques reduce what a model costs to run. All three trade some accuracy for size,
+speed or price, and the exam tests whether you can tell them apart from fine-tuning, which
+changes a model's behaviour rather than its size.
+
+| Technique | What happens | Cost of it |
+| --------- | ------------ | ---------- |
+| `Distillation` | A large, capable **teacher** model generates outputs that train a smaller **student** model to imitate it on a narrower task. | The student is only as good as the task it was taught; it does not inherit the teacher's breadth. |
+| `Pruning` | Weights and connections that contribute little to the output are removed outright, leaving a smaller network. | Prune too far and accuracy falls away sharply. |
+| `Quantization` | Weights are stored at lower numeric precision, for example 32-bit floats reduced to 8-bit integers, which cuts memory and speeds arithmetic. | Small, usually acceptable loss of precision in the outputs. |
+
+Bedrock offers distillation as a managed feature, covered under
+[Fine-Tuning and Customization](#fine-tuning-and-customization). Pruning and quantization are
+things you do to a model you control, which in practice means a model in SageMaker AI.
+
+> [!IMPORTANT]
+> **Fine-tuning is not a compression technique.** It adjusts weights so the model behaves
+> differently; the model is the same size afterwards and costs the same to run. If a question
+> asks how to reduce inference cost or fit a model on smaller hardware, fine-tuning is the
+> distractor.
+
 ## Types of Data
 
  - `Labeled`: data accompanied by a `label` representing the desired output/classification.
@@ -265,6 +323,32 @@ Bedrock offers two ways to pay for that:
 
 > [!NOTE]
 > **Watch for the phrase "unpredictable" or "variable" traffic in an exam question.** It points to `On-Demand`. Phrases about guaranteed capacity, consistent performance, or high steady volume point to `Provisioned Throughput`.
+
+### Inference Parameters
+
+The same prompt sent to the same model can come back differently, because the model samples
+from a distribution of likely next tokens rather than always taking the most likely one. These
+parameters control that sampling, and they are the knobs an exam question describes rather
+than names.
+
+| Parameter | What it does | Raise it for | Lower it for |
+| --------- | ------------ | ------------ | ------------ |
+| `Temperature` | Scales how much the model favours less likely tokens. It reshapes the whole distribution. | Variety, brainstorming, creative copy | Repeatable, factual answers. At or near 0 the same prompt gives the same response. |
+| `Top P` | Nucleus sampling. Considers only the smallest set of tokens whose probabilities add up to P, then samples from those. | A wider pool of candidate words | A narrow, safe pool |
+| `Top K` | Considers only the K most likely next tokens, however probable they are. | A wider pool | A narrow pool |
+| `Max tokens` | Caps how long the response can be. Also a cost control, since you pay per token. | Long-form output | Short answers, lower spend |
+| `Stop sequences` | Strings that end generation when produced. | n/a | Keeping a model from running past the answer |
+
+The distinction worth holding is that **Temperature reshapes the distribution while Top K and
+Top P truncate it**. Top K cuts by count, Top P by cumulative probability, which is why Top P
+adapts to how confident the model is and Top K does not. Tuning one of the two is normal;
+tuning both at once makes the effect of either hard to reason about.
+
+> [!NOTE]
+> A question describing a need for consistent, auditable, factual answers is pointing at a low
+> temperature. One describing marketing variations or ideation is pointing at a higher one.
+> Neither improves accuracy: sampling controls how the model chooses among words it already
+> considers plausible, so a wrong fact stays wrong at every temperature.
 
 ### Playgrounds
 
@@ -483,6 +567,22 @@ Training produces a model file, which on its own does nothing. Deployment puts t
 > **The deciding factors are how quickly the answer is needed and how steady the traffic is.** "While the customer waits" means Real-Time. "Overnight" or "all the records at once" means Batch Transform. "Unpredictable traffic" or "idle much of the time" means Serverless. "Large files" or "long processing time" means Asynchronous.
 
 SageMaker also supports **auto scaling**, which adds and removes compute behind a real-time endpoint as traffic rises and falls, and hosting **multiple models behind a single endpoint** to save cost when you have many small models.
+
+#### Comparing a New Model Against the Old One in Production
+
+A real-time endpoint can host more than one **production variant**, each with a share of the
+traffic. That is how a new model version is evaluated on live requests.
+
+ - **A/B testing** splits real traffic between variants, say 90% to the current model and 10%
+   to the candidate, and compares outcomes on real usage. Users do receive the candidate's
+   responses, so the risk is real but bounded by the weight.
+ - **Shadow testing** sends a copy of live traffic to the candidate and discards its responses.
+   Nobody sees them, so there is no user-facing risk, and you still learn how the candidate
+   behaves on production inputs.
+
+Neither is the same as **multi-model hosting**, which puts many *different* models behind one
+endpoint to avoid paying for an endpoint each. That is a cost decision. A/B and shadow testing
+are release decisions about two versions of the same thing.
 
 ### 5. Monitoring and Governance
 
