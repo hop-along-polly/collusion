@@ -173,11 +173,11 @@ breaks the build instead of silently producing citations that land nowhere.
 
 A citation may name a `heading` **or** a `section`, never both:
 
-- `heading` - a real Markdown `#` heading. GitHub generates an anchor, so the citation
-  deep-links to it.
+- `heading` - a real Markdown `#` heading. `rehype-slug` gives it an id when the note is
+  rendered, so the citation deep-links to that section of the note page.
 - `section` - a labelled region that is not a heading. `Ansible.md` numbers its sections as
   ordered-list items and `github_cd-cd.md` marks some with bold text; neither produces an
-  anchor. These citations name the region and link to the file.
+  anchor. These citations name the region and link to the note page without one.
 
 Without the distinction, roughly a quarter of the citations would have pointed at anchors that
 do not exist. The validator rejects a `heading` that is not one, *and* a `section` that actually

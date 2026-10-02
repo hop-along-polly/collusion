@@ -177,7 +177,7 @@ A name already taken usually means the same fact is carded elsewhere in the doma
 worth looking at before renaming around it.
 
 **Citations:** use `heading` when the label is a real Markdown `#` heading - the citation then
-deep-links to GitHub's anchor. Use `section` when it is a labelled region that is *not* a
+deep-links to that section of the note page in the app. Use `section` when it is a labelled region that is *not* a
 heading (`Ansible.md` numbers its sections as list items; `github_cd-cd.md` marks some with bold
 text) - the citation names the region and links to the file, never to an anchor that does not
 exist. The validator enforces this both ways, so a dead anchor cannot ship.
