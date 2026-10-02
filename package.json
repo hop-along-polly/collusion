@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run validate:data && tsc -b && vite build",
-    "postbuild": "node scripts/write-spa-fallback.mjs",
+    "postbuild": "node scripts/write-spa-fallback.mjs && tsx scripts/write-sitemap.ts",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
