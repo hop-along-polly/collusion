@@ -10,14 +10,14 @@ Work through these topics in order. Each links to its flashcard set for self-tes
 
 | # | Topic | Notes | Flashcards |
 |---|-------|-------|------------|
-| 1 | Claude fundamentals and prompting | [claude_101.md](../../notes/anthropic/claude_101.md) | [Claude 101](/anthropic/claude-101) |
-| 2 | Working effectively with AI | [ai_fluency.md](../../notes/anthropic/ai_fluency.md) | [AI Fluency](/anthropic/ai-fluency) |
-| 3 | The Claude API end to end | [building_with_claude_api.md](../../notes/anthropic/building_with_claude_api.md), [claude_on_google_cloud.md](../../notes/anthropic/claude_on_google_cloud.md) | [Building with the Claude API](/anthropic/claude-api) |
-| 4 | Model Context Protocol | [intro_to_mcp.md](../../notes/anthropic/intro_to_mcp.md) | [Model Context Protocol](/anthropic/mcp) |
-| 5 | Agents and the ReAct loop | [agents_sdk.md](../../notes/anthropic/agents_sdk.md) | [Agents SDK](/anthropic/agents-sdk) |
-| 6 | Multi-agent orchestration | [multi_agent_pipelines.md](../../notes/anthropic/multi_agent_pipelines.md) | [Multi-Agent Pipelines](/anthropic/multi-agent) |
-| 7 | Agent Skills | [agent_skills.md](../../notes/anthropic/agent_skills.md) | [Agent Skills](/anthropic/agent-skills) |
-| 8 | Claude in CI/CD | [code_review_cicd.md](../../notes/anthropic/code_review_cicd.md) | [Code Review & CI/CD](/anthropic/code-review-cicd) |
+| 1 | Claude fundamentals and prompting | [claude_101.md](../../notes/anthropic/claude_101.md) | Claude 101 |
+| 2 | Working effectively with AI | [ai_fluency.md](../../notes/anthropic/ai_fluency.md) | AI Fluency |
+| 3 | The Claude API end to end | [building_with_claude_api.md](../../notes/anthropic/building_with_claude_api.md), [claude_on_google_cloud.md](../../notes/anthropic/claude_on_google_cloud.md) | Building with the Claude API |
+| 4 | Model Context Protocol | [intro_to_mcp.md](../../notes/anthropic/intro_to_mcp.md) | Model Context Protocol |
+| 5 | Agents and the ReAct loop | [agents_sdk.md](../../notes/anthropic/agents_sdk.md) | Agents SDK |
+| 6 | Multi-agent orchestration | [multi_agent_pipelines.md](../../notes/anthropic/multi_agent_pipelines.md) | Multi-Agent Pipelines |
+| 7 | Agent Skills | [agent_skills.md](../../notes/anthropic/agent_skills.md) | Agent Skills |
+| 8 | Claude in CI/CD | [code_review_cicd.md](../../notes/anthropic/code_review_cicd.md) | Code Review & CI/CD |
 
 ---
 

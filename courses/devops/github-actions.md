@@ -7,9 +7,9 @@ how work is triggered and run, and the repository controls that decide who revie
 
 | # | Topic | Notes | Flashcards |
 |---|-------|-------|------------|
-| 1 | Teams, notifications and CODEOWNERS | [github_cd-cd.md](../../notes/devops/github_cd-cd.md) | [GitHub CI/CD](/devops/github-cicd) |
-| 2 | Workflows, jobs and runners | [github_cd-cd.md](../../notes/devops/github_cd-cd.md) | [GitHub CI/CD](/devops/github-cicd) |
-| 3 | Reusable workflows and composite actions | [github_cd-cd.md](../../notes/devops/github_cd-cd.md) | [GitHub CI/CD](/devops/github-cicd) |
+| 1 | Teams, notifications and CODEOWNERS | [github_cd-cd.md](../../notes/devops/github_cd-cd.md) | GitHub CI/CD |
+| 2 | Workflows, jobs and runners | [github_cd-cd.md](../../notes/devops/github_cd-cd.md) | GitHub CI/CD |
+| 3 | Reusable workflows and composite actions | [github_cd-cd.md](../../notes/devops/github_cd-cd.md) | GitHub CI/CD |
 
 ## What to focus on
 

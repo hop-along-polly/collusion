@@ -7,10 +7,10 @@ describing the state a machine should be in, and letting Ansible make it so.
 
 | # | Topic | Notes | Flashcards |
 |---|-------|-------|------------|
-| 1 | The agentless model and platform constraints | [Ansible.md](../../notes/devops/Ansible.md) | [Ansible Fundamentals](/devops/ansible) |
-| 2 | Inventory: parameters, grouping and connection | [Ansible.md](../../notes/devops/Ansible.md) | [Ansible Fundamentals](/devops/ansible) |
-| 3 | Playbooks, plays, tasks and idempotency | [Ansible.md](../../notes/devops/Ansible.md) | [Ansible Fundamentals](/devops/ansible) |
-| 4 | Variables, conditionals and roles | [Ansible.md](../../notes/devops/Ansible.md) | [Ansible Fundamentals](/devops/ansible) |
+| 1 | The agentless model and platform constraints | [Ansible.md](../../notes/devops/Ansible.md) | Ansible Fundamentals |
+| 2 | Inventory: parameters, grouping and connection | [Ansible.md](../../notes/devops/Ansible.md) | Ansible Fundamentals |
+| 3 | Playbooks, plays, tasks and idempotency | [Ansible.md](../../notes/devops/Ansible.md) | Ansible Fundamentals |
+| 4 | Variables, conditionals and roles | [Ansible.md](../../notes/devops/Ansible.md) | Ansible Fundamentals |
 
 ## What to focus on
 
