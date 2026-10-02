@@ -957,7 +957,7 @@
     {
       "id": "vars-files-keyword",
       "type": "single",
-      "prompt": "A playbook needs variables from a standalone `vars.yml`. Which key includes them?",
+      "prompt": "A playbook needs variables from a standalone `vars.yml`. Which playbook key includes that file?",
       "tags": [
         "variables"
       ],

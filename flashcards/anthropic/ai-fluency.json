@@ -628,7 +628,7 @@
     {
       "id": "provide-context-tip",
       "type": "single",
-      "prompt": "The \"Provide Context\" prompting tip asks you to be specific about three things. Which?",
+      "prompt": "The \"Provide Context\" prompting tip asks you to be specific about three things. Which three things does it name?",
       "tags": [
         "prompting"
       ],

@@ -5,7 +5,7 @@
     {
       "id": "athena-serverless-queries",
       "type": "single",
-      "prompt": "A team needs occasional SQL queries over data already sitting in S3, with nothing to provision. Which service?",
+      "prompt": "A team needs occasional SQL queries over data already sitting in S3, with nothing to provision. Which AWS service runs those queries without a cluster to manage?",
       "tags": [
         "analytics"
       ],
@@ -155,7 +155,7 @@
     {
       "id": "emr-open-source-frameworks",
       "type": "single",
-      "prompt": "A data team wants to run its existing Apache Spark jobs with control over cluster tuning. Which service?",
+      "prompt": "A data team wants to run its existing Apache Spark jobs with control over cluster tuning. Which AWS service gives them that level of control?",
       "tags": [
         "analytics"
       ],
@@ -196,7 +196,7 @@
     {
       "id": "lake-formation-permissions",
       "type": "single",
-      "prompt": "A data lake on S3 needs table, column and row-level permissions for different analyst groups. Which service?",
+      "prompt": "A data lake on S3 needs table, column and row-level permissions for different analyst groups. Which AWS service enforces permissions at that granularity?",
       "tags": [
         "analytics",
         "security"
@@ -280,7 +280,7 @@
     {
       "id": "firehose-vs-data-streams",
       "type": "single",
-      "prompt": "Streaming data must land in S3 with no consumer code to write and no shards to manage. Which service?",
+      "prompt": "Streaming data must land in S3 with no consumer code to write and no shards to manage. Which AWS service delivers the stream to its destination?",
       "tags": [
         "analytics",
         "streaming"
@@ -322,7 +322,7 @@
     {
       "id": "msk-kafka-compatibility",
       "type": "single",
-      "prompt": "An existing application uses Apache Kafka producers and consumers and must keep working after moving to AWS. Which service?",
+      "prompt": "An existing application uses Apache Kafka producers and consumers and must keep working after moving to AWS. Which AWS service lets those clients run unchanged?",
       "tags": [
         "analytics",
         "streaming"
@@ -549,7 +549,7 @@
     {
       "id": "kendra-vs-opensearch",
       "type": "single",
-      "prompt": "Employees should ask questions in plain English and get answers drawn from documents spread across several internal systems. Which service?",
+      "prompt": "Employees should ask questions in plain English and get answers drawn from documents spread across several internal systems. Which AWS service provides that without building a relevance strategy first?",
       "tags": [
         "ai",
         "search"
@@ -591,7 +591,7 @@
     {
       "id": "personalize-vs-forecast",
       "type": "single",
-      "prompt": "A retailer wants to predict demand for each product over the next quarter from years of sales history. Which service?",
+      "prompt": "A retailer wants to predict demand for each product over the next quarter from years of sales history. Which AWS service produces that kind of time-series prediction?",
       "tags": [
         "ai"
       ],
@@ -720,7 +720,7 @@
     {
       "id": "bedrock-knowledge-bases-managed-rag",
       "type": "single",
-      "prompt": "An application must answer from a company's own documents, and the team does not want to build ingestion, chunking and retrieval themselves. Which option?",
+      "prompt": "An application must answer from a company's own documents, and the team does not want to build ingestion, chunking and retrieval themselves. Which Bedrock feature handles all of that for them?",
       "tags": [
         "ai",
         "rag"
@@ -913,7 +913,7 @@
     {
       "id": "workspaces-vs-appstream",
       "type": "single",
-      "prompt": "Users need a single internal application delivered to their browsers, not a full desktop. Which service?",
+      "prompt": "Users need a single internal application delivered to their browsers, not a full desktop. Which AWS service streams just the application?",
       "tags": [
         "euc"
       ],
@@ -1002,7 +1002,7 @@
     {
       "id": "ses-transactional-email",
       "type": "single",
-      "prompt": "An application must send high volumes of transactional email such as receipts and password resets. Which service?",
+      "prompt": "An application must send high volumes of transactional email such as receipts and password resets. Which AWS service is built for that kind of sending?",
       "tags": [
         "euc"
       ],
@@ -1084,7 +1084,7 @@
     {
       "id": "greengrass-offline-operation",
       "type": "single",
-      "prompt": "Equipment in a remote facility must keep running inference and routing messages while its internet link is down. Which service?",
+      "prompt": "Equipment in a remote facility must keep running inference and routing messages while its internet link is down. Which AWS service runs that logic on the device itself?",
       "tags": [
         "iot",
         "edge"

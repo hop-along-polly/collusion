@@ -1421,7 +1421,7 @@
     {
       "id": "ml-model-package-restriction",
       "type": "single",
-      "prompt": "A Seller trains a model using a SageMaker AI built-in algorithm and wants to publish it as a Model package. What is the problem?",
+      "prompt": "A Seller trains a model using a SageMaker AI built-in algorithm and wants to publish it as a Model package. Which restriction stops that listing?",
       "tags": [
         "ml"
       ],

@@ -137,7 +137,7 @@
     {
       "id": "overfitting-signature",
       "type": "single",
-      "prompt": "A model scores 99% on the data it was trained with and 62% on data it has never seen. What has happened?",
+      "prompt": "A model scores 99% on the data it was trained with and 62% on data it has never seen. Which problem does the gap between those two scores indicate?",
       "tags": [
         "terminology",
         "model-fit"
@@ -326,7 +326,7 @@
     {
       "id": "paradigm-for-segmentation",
       "type": "single",
-      "prompt": "A marketing team wants to group customers into segments, but has no existing categories and no idea what the groups should be. Which learning paradigm fits?",
+      "prompt": "A marketing team wants to group customers into segments, but has no existing categories and no idea what the groups should be. Which machine learning paradigm suits a problem with no labelled examples?",
       "tags": [
         "ml-paradigms",
         "unsupervised"
@@ -588,7 +588,7 @@
     {
       "id": "accuracy-imbalance-trap",
       "type": "single",
-      "prompt": "Only 1 transaction in 100 is fraudulent. A model labels every transaction as legitimate and reports 99% accuracy. What does this demonstrate?",
+      "prompt": "Only 1 transaction in 100 is fraudulent. A model labels every transaction as legitimate and reports 99% accuracy. Which weakness of accuracy as a metric does that result expose?",
       "tags": [
         "classification-metrics",
         "accuracy"
@@ -672,7 +672,7 @@
     {
       "id": "recall-scenario",
       "type": "single",
-      "prompt": "A medical screening model must not miss a tumor, and clinicians accept that some healthy scans will be flagged for review. Which metric matters most?",
+      "prompt": "A medical screening model must not miss a tumor, and clinicians accept that some healthy scans will be flagged for review. Which evaluation metric should the team optimise for?",
       "tags": [
         "classification-metrics",
         "recall"
@@ -912,7 +912,7 @@
     {
       "id": "mae-outliers",
       "type": "single",
-      "prompt": "Daily ride-share demand is forecast, and a single New Year's Eve spike should not dominate the score. Which metric best fits?",
+      "prompt": "Daily ride-share demand is forecast, and a single New Year's Eve spike should not dominate the score. Which regression metric treats that outlier proportionately?",
       "tags": [
         "regression-metrics",
         "mae"
@@ -954,7 +954,7 @@
     {
       "id": "r-squared-meaning",
       "type": "single",
-      "prompt": "A house-price model reports an R² of 0.15. What does this indicate?",
+      "prompt": "A house-price model reports an R² of 0.15. What does that value say about how much of the variation in price the model explains?",
       "tags": [
         "regression-metrics",
         "r-squared"
@@ -1080,7 +1080,7 @@
     {
       "id": "bertscore-paraphrase",
       "type": "single",
-      "prompt": "A summarizer often rewords ideas using synonyms, and correct answers are being marked down. Which metric addresses this?",
+      "prompt": "A summarizer often rewords ideas using synonyms, and correct answers are being marked down. Which evaluation metric scores meaning rather than exact wording?",
       "tags": [
         "generative-metrics",
         "bertscore"

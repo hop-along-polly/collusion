@@ -123,7 +123,7 @@
     {
       "id": "nacl-block-single-ip",
       "type": "single",
-      "prompt": "A single external IP address is attacking an application and must be blocked at the VPC level. Which control?",
+      "prompt": "A single external IP address is attacking an application and must be blocked at the VPC level. Which VPC control can deny traffic from one source?",
       "tags": [
         "networking",
         "security"
@@ -207,7 +207,7 @@
     {
       "id": "gateway-direction",
       "type": "single",
-      "prompt": "EC2 instances in a private subnet need outbound internet access but must not be reachable from the internet. Which component?",
+      "prompt": "EC2 instances in a private subnet need outbound internet access but must not be reachable from the internet. Which VPC component allows traffic in that one direction only?",
       "tags": [
         "networking"
       ],
@@ -359,7 +359,7 @@
     {
       "id": "peering-vs-transit",
       "type": "single",
-      "prompt": "An organization has grown to dozens of VPCs connected by point-to-point peering and wants to simplify. What should it adopt?",
+      "prompt": "An organization has grown to dozens of VPCs connected by point-to-point peering and wants to simplify. Which AWS service replaces that mesh with a single hub?",
       "tags": [
         "networking"
       ],
@@ -573,7 +573,7 @@
     {
       "id": "privatelink-saas",
       "type": "single",
-      "prompt": "A SaaS vendor wants customers to reach its service from their own VPCs without exposing it to the internet. Which service?",
+      "prompt": "A SaaS vendor wants customers to reach its service from their own VPCs without exposing it to the internet. Which AWS service publishes a service that way?",
       "tags": [
         "networking",
         "security"
@@ -615,7 +615,7 @@
     {
       "id": "load-balancer-layers",
       "type": "single",
-      "prompt": "Traffic must be routed to different backend applications based on the URL path. Which load balancer?",
+      "prompt": "Traffic must be routed to different backend applications based on the URL path. Which type of load balancer can route on the path?",
       "tags": [
         "networking"
       ],
@@ -703,7 +703,7 @@
     {
       "id": "gwlb-appliances",
       "type": "single",
-      "prompt": "All traffic must pass through a fleet of third-party firewall appliances transparently. Which service?",
+      "prompt": "All traffic must pass through a fleet of third-party firewall appliances transparently. Which AWS service inserts those appliances into the traffic path?",
       "tags": [
         "networking",
         "security"
@@ -907,7 +907,7 @@
     {
       "id": "cloudfront-vs-global-accelerator",
       "type": "single",
-      "prompt": "A TCP-based game server needs players routed onto the AWS backbone as early as possible, with static IP addresses for clients. Which service?",
+      "prompt": "A TCP-based game server needs players routed onto the AWS backbone as early as possible, with static IP addresses for clients. Which AWS service provides both of those?",
       "tags": [
         "networking",
         "edge"
@@ -949,7 +949,7 @@
     {
       "id": "cloudfront-oac-private-bucket",
       "type": "single",
-      "prompt": "Content should be served through CloudFront while the S3 bucket behind it stays private. What makes that possible?",
+      "prompt": "Content should be served through CloudFront while the S3 bucket behind it stays private. Which CloudFront feature gives the distribution access to a private bucket?",
       "tags": [
         "edge",
         "security",

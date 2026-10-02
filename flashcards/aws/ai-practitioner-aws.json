@@ -95,7 +95,7 @@
     {
       "id": "nova-micro-choice",
       "type": "single",
-      "prompt": "An application classifies a high volume of short incoming text messages and needs the lowest possible latency and cost. Which Nova model fits?",
+      "prompt": "An application classifies a high volume of short incoming text messages and needs the lowest possible latency and cost. Which model in the Amazon Nova family fits that workload?",
       "tags": [
         "foundation-models",
         "nova"
@@ -137,7 +137,7 @@
     {
       "id": "textract-vs-comprehend",
       "type": "single",
-      "prompt": "A lender receives scanned loan applications as images and must pull the values out of the form fields. Which service does this?",
+      "prompt": "A lender receives scanned loan applications as images and must pull the values out of the form fields. Which AWS service extracts those values while preserving the structure of the form?",
       "tags": [
         "ai-services",
         "textract"
@@ -227,7 +227,7 @@
     {
       "id": "polly-vs-transcribe",
       "type": "single",
-      "prompt": "A call center wants written transcripts of recorded customer calls. Which service is required?",
+      "prompt": "A call center wants written transcripts of recorded customer calls. Which AWS service converts that recorded speech into text?",
       "tags": [
         "ai-services",
         "transcribe"
@@ -394,7 +394,7 @@
     {
       "id": "provisioned-vs-ondemand",
       "type": "single",
-      "prompt": "A production workload sends a high, steady volume of Bedrock requests and needs guaranteed, predictable performance. Which pricing model applies?",
+      "prompt": "A production workload sends a high, steady volume of Bedrock requests and needs guaranteed, predictable performance. Which Bedrock pricing model reserves capacity for it?",
       "tags": [
         "bedrock",
         "pricing"
@@ -466,7 +466,7 @@
     {
       "id": "rag-vs-fine-tuning",
       "type": "single",
-      "prompt": "An assistant must answer questions about internal HR policies that are revised every month. Which approach fits best?",
+      "prompt": "An assistant must answer questions about internal HR policies that are revised every month. Which approach keeps its answers current as those policies change?",
       "tags": [
         "bedrock",
         "rag",
@@ -1381,7 +1381,7 @@
     {
       "id": "bedrock-playground-purpose",
       "type": "single",
-      "prompt": "Before committing an application to a particular foundation model, a developer wants to try the same prompts against several models without writing code. Which Bedrock feature fits?",
+      "prompt": "Before committing an application to a particular foundation model, a developer wants to try the same prompts against several models without writing code. Which Bedrock feature lets them compare the responses side by side?",
       "tags": [
         "bedrock",
         "playgrounds"
@@ -1809,7 +1809,7 @@
     {
       "id": "low-temperature-scenario",
       "type": "single",
-      "prompt": "An internal tool must return the same answer to the same question every time, so results can be audited. Which setting fits?",
+      "prompt": "An internal tool must return the same answer to the same question every time, so results can be audited. Which inference setting makes the output repeatable?",
       "tags": [
         "bedrock",
         "inference"
@@ -1927,7 +1927,7 @@
     {
       "id": "shadow-testing-no-user-impact",
       "type": "single",
-      "prompt": "A candidate model must be evaluated on real production traffic without any user receiving its responses. Which approach?",
+      "prompt": "A candidate model must be evaluated on real production traffic without any user receiving its responses. Which deployment testing approach satisfies both requirements?",
       "tags": [
         "sagemaker",
         "deployment"

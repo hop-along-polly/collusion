@@ -140,7 +140,7 @@
     {
       "id": "desktop-app-modes",
       "type": "single",
-      "prompt": "Work that draws on multiple information sources, requires multi-tasking, and produces a final deliverable such as a presentation. Which Claude desktop mode?",
+      "prompt": "Work that draws on multiple information sources, requires multi-tasking, and produces a final deliverable such as a presentation. Which Claude desktop mode is built for that?",
       "tags": [
         "claude-101",
         "apps"
@@ -808,7 +808,7 @@
     {
       "id": "code-modes",
       "type": "single",
-      "prompt": "A developer wants Claude to outline its full approach before touching any files. Which Code mode?",
+      "prompt": "A developer wants Claude to outline its full approach before touching any files. Which Claude Code mode does that?",
       "tags": [
         "apps"
       ],

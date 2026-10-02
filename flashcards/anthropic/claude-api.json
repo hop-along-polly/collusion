@@ -1153,7 +1153,7 @@
     {
       "id": "cosine-distance-meaning",
       "type": "single",
-      "prompt": "A semantic search returns a chunk whose embedding has a cosine distance of 0 from the query embedding. What does that mean?",
+      "prompt": "A semantic search returns a chunk whose embedding has a cosine distance of 0 from the query embedding. What does a distance of 0 say about the two embeddings?",
       "tags": [
         "rag",
         "math"
@@ -2087,7 +2087,7 @@
     {
       "id": "thinking-budget-constraint",
       "type": "single",
-      "prompt": "Extended Thinking is enabled with `thinking_budget=1024` and `max_tokens=1025`. What is the problem?",
+      "prompt": "Extended Thinking is enabled with `thinking_budget=1024` and `max_tokens=1025`. What is wrong with that combination of values?",
       "tags": [
         "extended-thinking"
       ],
