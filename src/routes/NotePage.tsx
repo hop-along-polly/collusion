@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 
 import { coursesForNote, findDomain } from '@/data/catalog'
-import { findNoteRef, githubUrl } from '@/data/content'
+import { findNoteRef } from '@/data/content'
 import { useNote } from '@/hooks/useContent'
 import { Markdown } from '@/components/Markdown'
 import { EmptyState } from '@/components/ui/Feedback'
@@ -72,18 +72,6 @@ export function NotePage() {
             </Card>
           ) : null}
 
-          <Card>
-            <h2 className="font-heading text-xl">Note source</h2>
-            <a
-              href={githubUrl(ref.file)}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 inline-flex items-center gap-1.5 break-all font-mono text-sm text-brand underline-offset-2 hover:underline"
-            >
-              <Icon name="external" size={14} className="shrink-0" />
-              {ref.file}
-            </a>
-          </Card>
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 
 import { courseSets, findCourse, findDomain } from '@/data/catalog'
-import { githubUrl } from '@/data/content'
 import { useCourseGuide } from '@/hooks/useContent'
 import { useProgress } from '@/hooks/useProgress'
 import { getCourseProgress } from '@/storage/progress'
@@ -148,21 +147,6 @@ export function CoursePage() {
             )}
           </Card>
 
-          <Card>
-            <h2 className="font-heading text-xl">Study guide source</h2>
-            <p className="mt-2 font-body text-sm text-content-muted">
-              This page renders a Markdown file kept in the repository.
-            </p>
-            <a
-              href={githubUrl(`courses/${course.path}.md`)}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-3 inline-flex items-center gap-1.5 font-mono text-sm text-brand underline-offset-2 hover:underline"
-            >
-              <Icon name="external" size={14} />
-              courses/{course.path}.md
-            </a>
-          </Card>
         </div>
       </div>
     </div>
