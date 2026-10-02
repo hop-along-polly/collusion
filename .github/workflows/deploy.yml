@@ -47,11 +47,11 @@ jobs:
         run: npm test
 
       - name: Build
-        # Derive the base path from the repository name so a fork or a rename needs no
-        # code change. `postbuild` writes the SPA 404.html fallback.
+        # No BASE_PATH: the site is served from the root of flashcards.codescribes.io, so
+        # the default `/` is correct. A fork publishing to `<owner>.github.io/<repo>/`
+        # would set `BASE_PATH: /${{ github.event.repository.name }}/` here instead.
+        # `postbuild` writes the SPA 404.html fallback.
         run: npm run build
-        env:
-          BASE_PATH: /${{ github.event.repository.name }}/
 
       # Nothing to publish from a pull request, but the build above still has to pass.
       - uses: actions/upload-pages-artifact@v3

@@ -7,8 +7,9 @@ import { ProgressProvider } from './hooks/useProgress'
 import './styles/index.css'
 
 /**
- * `import.meta.env.BASE_URL` is `/collusion/` in a GitHub Pages build and `/` locally,
- * so the router's basename tracks whatever `vite.config.ts` was told to use.
+ * `import.meta.env.BASE_URL` is `/` now that the site has its own domain, and `/<repo>/`
+ * for a deployment under a GitHub Pages project path, so the router's basename tracks
+ * whatever `vite.config.ts` was told to use rather than assuming either.
  */
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
 

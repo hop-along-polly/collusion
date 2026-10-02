@@ -13,7 +13,7 @@
  */
 declare const __REPO_REF__: string | undefined
 
-export const REPO_URL = 'https://github.com/hop-along-polly/collusion'
+export const REPO_URL = 'https://github.com/codescribes-llc/scribe-cards'
 
 /** The branch, tag or commit this bundle was built from. */
 export const repoRef: string =
