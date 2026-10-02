@@ -247,14 +247,15 @@ set **Settings → Pages → Source: Deploy from a branch → `gh-pages` / root*
 
 ### Why deep links work
 
-GitHub Pages has no rewrite rules, so `/collusion/courses/aws/aif-c01` would 404 on a cold load.
+GitHub Pages has no rewrite rules, so `/courses/aws/aif-c01` would 404 on a cold load.
 The build's `postbuild` step copies `index.html` to `404.html`; Pages serves that for any
 unmatched path, and since the shell's asset URLs already include the base path, the app boots
 and React Router resolves the URL. That is what lets the app use real paths instead of `#/hash`
 URLs.
 
-The base path defaults to `/collusion/` in production builds and `/` in development
-(`vite.config.ts`); `BASE_PATH` overrides it.
+The base path is `/`, because the site is served from the root of its own domain
+(`vite.config.ts`). `BASE_PATH` overrides it for a deployment under a project path, such as
+a fork published at `<owner>.github.io/<repo>/`.
 
 ---
 

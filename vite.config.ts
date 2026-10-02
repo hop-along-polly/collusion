@@ -4,11 +4,14 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 /**
- * GitHub Pages serves project sites from `https://<user>.github.io/<repo>/`, so the
- * bundle needs a matching base path. `BASE_PATH` lets CI (or a fork with a different
- * repo name) override it without editing code; local dev stays at `/`.
+ * The site is served from the root of its own domain, `flashcards.codescribes.io`, so the
+ * base path is `/`.
+ *
+ * `BASE_PATH` is kept as an override for a deployment that is not at a domain root: a
+ * GitHub Pages project site lives at `https://<owner>.github.io/<repo>/` and needs
+ * `/<repo>/` instead, which is what a fork without its own domain would want.
  */
-const base = process.env.BASE_PATH ?? (process.env.NODE_ENV === 'production' ? '/collusion/' : '/')
+const base = process.env.BASE_PATH ?? '/'
 
 /**
  * The ref that citation and "view on GitHub" links point at, injected as `__REPO_REF__`
