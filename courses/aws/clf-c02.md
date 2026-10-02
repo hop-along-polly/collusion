@@ -13,20 +13,20 @@ pays is knowing many services shallowly and the handful of commonly confused pai
 
 | # | Topic | Notes | Flashcards |
 |---|-------|-------|------------|
-| 1 | What fully managed means, and regional against global scope | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Core Services](/aws/services) |
-| 2 | Compute: EC2, Auto Scaling, Lambda, Batch and the managed runtimes | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Core Services](/aws/services) |
-| 3 | Containers: ECS, EKS, Fargate and ECR | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Core Services](/aws/services) |
-| 4 | Messaging and application integration: SNS, SQS, EventBridge, Step Functions, API Gateway | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Core Services](/aws/services) |
-| 5 | Storage: S3 and its classes, EBS, EFS, FSx, and backup | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Core Services](/aws/services) |
-| 6 | Databases: RDS and Aurora, DynamoDB, and the purpose-built engines | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Core Services](/aws/services) |
-| 7 | Networking: VPC building blocks, security groups against network ACLs | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Networking](/aws/networking) |
-| 8 | Connectivity, load balancing, Route 53 and the edge services | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Networking](/aws/networking) |
-| 9 | Observability and auditing: CloudWatch, CloudTrail, Config and X-Ray | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Security and Governance](/aws/security-and-governance) |
-| 10 | Identity: IAM, Identity Center, Cognito and Organizations | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Security and Governance](/aws/security-and-governance) |
-| 11 | The security suite, encryption and secrets | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Security and Governance](/aws/security-and-governance) |
-| 12 | Governance, billing and the pricing models | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Security and Governance](/aws/security-and-governance) |
-| 13 | Analytics, streaming and the applied AI services | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Analytics and AI Services](/aws/analytics-and-ai) |
-| 14 | The shared responsibility model, Well-Architected, and disaster recovery strategies | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Security and Governance](/aws/security-and-governance) |
+| 1 | What fully managed means, and regional against global scope | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Core Services |
+| 2 | Compute: EC2, Auto Scaling, Lambda, Batch and the managed runtimes | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Core Services |
+| 3 | Containers: ECS, EKS, Fargate and ECR | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Core Services |
+| 4 | Messaging and application integration: SNS, SQS, EventBridge, Step Functions, API Gateway | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Core Services |
+| 5 | Storage: S3 and its classes, EBS, EFS, FSx, and backup | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Core Services |
+| 6 | Databases: RDS and Aurora, DynamoDB, and the purpose-built engines | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Core Services |
+| 7 | Networking: VPC building blocks, security groups against network ACLs | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Networking |
+| 8 | Connectivity, load balancing, Route 53 and the edge services | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Networking |
+| 9 | Observability and auditing: CloudWatch, CloudTrail, Config and X-Ray | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Security and Governance |
+| 10 | Identity: IAM, Identity Center, Cognito and Organizations | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Security and Governance |
+| 11 | The security suite, encryption and secrets | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Security and Governance |
+| 12 | Governance, billing and the pricing models | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Security and Governance |
+| 13 | Analytics, streaming and the applied AI services | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Analytics and AI Services |
+| 14 | The shared responsibility model, Well-Architected, and disaster recovery strategies | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Security and Governance |
 
 > One note covers this whole certification, split into four card sets because the service
 > catalogue is four study units rather than one. Read the Conventions at the top of the note

@@ -149,8 +149,10 @@ Leave `title`, `subtitle`, `description` and `id` alone unless the new material 
 the description wrong, in which case say so in the report.
 
 **If a split created a new set**, also register that set and add its id to the `setIds` of every
-course that links this note, then add it to the **Flashcards** column of that course's topic
-table in `courses/<company>/<course-id>.md`. A set no course links to is invisible in the app.
+course that links this note, then name it in the **Flashcards** column of that course's topic
+table in `courses/<company>/<course-id>.md`, as plain text rather than a link. A set no course
+links to is invisible in the app, and a set *path* has no route, so linking it renders the
+not-found page. See the warning in `generate-flashcards/SKILL.md`.
 
 ### 7. Verify
 

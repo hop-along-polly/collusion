@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it } from 'vitest'
 
 import { App } from '@/App'
+import { courseSets, findCourse } from '@/data/catalog'
 import { ProgressProvider } from '@/hooks/useProgress'
 
 /**
@@ -36,7 +37,7 @@ describe('courses', () => {
     expect(screen.getAllByText('Certification').length).toBeGreaterThan(0)
   })
 
-  it('renders the study guide and links the sets the course quizzes', async () => {
+  it('renders the study guide and names every set the course quizzes', async () => {
     renderAt('/courses/aws/aif-c01')
 
     expect(
@@ -48,11 +49,22 @@ describe('courses', () => {
       expect(screen.getByRole('heading', { name: /Topics covered/ })).toBeTruthy()
     })
 
-    // Both generated sets are reachable. Each is linked twice by design - once from the
-    // guide's topic table and once from the flashcards panel - so assert presence, not
-    // uniqueness.
-    expect(screen.getAllByRole('link', { name: /Concepts & Metrics/ }).length).toBeGreaterThan(0)
-    expect(screen.getAllByRole('link', { name: /AWS Services/ }).length).toBeGreaterThan(0)
+    // Every set is named, by the flashcards panel and by the guide's topic table.
+    const sets = courseSets(findCourse('aws', 'aif-c01')!)
+    expect(sets.length).toBeGreaterThan(1)
+    for (const set of sets) {
+      expect(screen.getAllByText(set.title).length).toBeGreaterThan(0)
+    }
+
+    // Named, not linked. A set has no page, because a session runs a whole course and
+    // results are recorded against the certification. This assertion used to require the
+    // opposite, which is how 47 links to a route that does not exist survived in the
+    // guides: the test asserted the bug. Checked by href, since a set title and a note
+    // title can coincide.
+    const setPaths = sets.map((set) => `/${set.path}`)
+    for (const link of screen.getAllByRole('link')) {
+      expect(setPaths).not.toContain(link.getAttribute('href'))
+    }
   })
 
   it('renders a 404 for a course that does not exist', () => {

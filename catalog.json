@@ -1,7 +1,7 @@
 {
   "$comment": "Registry of every domain, card set and course. Adding a set = drop its cards into flashcards/<domain>/<set-id>.json, add an entry to `sets`, and list it in the `setIds` of every course that quizzes it. `npm run validate:data` checks that all of these stay in sync.",
   "domains": [
-{
+    {
       "id": "aws",
       "title": "AWS",
       "tagline": "AWS Core Services, AI/ML Services and Marketplace listings.",
@@ -244,7 +244,7 @@
       "sources": [
         "notes/aws/ai_practitioner.md"
       ],
-      "cardCount": 34
+      "cardCount": 42
     },
     {
       "id": "ai-practitioner-aws",
@@ -256,7 +256,7 @@
       "sources": [
         "notes/aws/ai_practitioner.md"
       ],
-      "cardCount": 42
+      "cardCount": 48
     }
   ],
   "courses": [

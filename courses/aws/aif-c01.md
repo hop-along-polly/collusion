@@ -8,13 +8,13 @@ the right AWS service for a scenario, and recognize responsible-AI obligations.
 
 | # | Topic | Notes | Flashcards |
 |---|-------|-------|------------|
-| 1 | Core concepts, data types and ML paradigms | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [Concepts & Metrics](/aws/ai-practitioner-foundations) |
-| 2 | Evaluation metrics - classification, regression, generative | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [Concepts & Metrics](/aws/ai-practitioner-foundations) |
-| 3 | Amazon foundation models and the managed AI services | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [AWS Services](/aws/ai-practitioner-aws) |
-| 4 | Bedrock and SageMaker AI | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [AWS Services](/aws/ai-practitioner-aws) |
-| 5 | Responsible AI | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | [AWS Services](/aws/ai-practitioner-aws) |
-| 6 | AWS service selection | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Core Services](/aws/services) |
-| 7 | The analytics and applied AI services, and where embeddings are stored | [all_aws_services.md](../../notes/aws/all_aws_services.md) | [Analytics and AI Services](/aws/analytics-and-ai) |
+| 1 | Core concepts, data types and ML paradigms | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | Concepts & Metrics |
+| 2 | Evaluation metrics - classification, regression, generative | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | Concepts & Metrics |
+| 3 | Amazon foundation models and the managed AI services | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | AWS Services |
+| 4 | Bedrock and SageMaker AI | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | AWS Services |
+| 5 | Responsible AI | [ai_practitioner.md](../../notes/aws/ai_practitioner.md) | AWS Services |
+| 6 | AWS service selection | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Core Services |
+| 7 | The analytics and applied AI services, and where embeddings are stored | [all_aws_services.md](../../notes/aws/all_aws_services.md) | Analytics and AI Services |
 
 > The AI Practitioner notes are covered by two card sets rather than one. At 76 cards the
 > material is two study units: the vendor-neutral concepts and metrics, and the AWS service

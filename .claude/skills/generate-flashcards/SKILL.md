@@ -216,8 +216,15 @@ whose study guide links this note:
 
 1. Add the set id to that course's `setIds` in `catalog.json`, in study order. The build fails if
    a `setIds` entry is not a real set in the same domain.
-2. Update the **Flashcards** column of the topic table in `courses/<company>/<course-id>.md` to
-   link the set at `/<domain>/<set-id>`.
+2. Name the set in the **Flashcards** column of the topic table in
+   `courses/<company>/<course-id>.md`, as **plain text, not a link**. `setIds` is what wires the
+   set into the course; the column only tells a reader which set covers that topic.
+
+> [!WARNING]
+> Never write `[Set Title](/<domain>/<set-id>)` there. A card set has no page: sessions launch
+> from a course, because results are recorded per certification. `/<domain>/<set-id>` matches no
+> route, so the link renders the not-found page. 47 of them accumulated across six guides before
+> anyone noticed, which is what a link that only ever fails looks like from the inside.
 
 If no course covers the note yet, say so in the report rather than inventing a course. Creating a
 course is a deliberate decision about what a learner is studying for.

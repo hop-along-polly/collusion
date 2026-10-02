@@ -10,6 +10,8 @@
  *  - every cited note file exists
  *  - every cited `heading` is a real Markdown heading in that file (so the deep link
  *    resolves), and every cited `section` label actually appears in it
+ *  - no study guide links a card set path, which has no route and so renders the
+ *    not-found page
  *
  * The point is that a card can never quietly drift from the notes it claims to cite.
  */
@@ -276,6 +278,19 @@ for (const course of catalog.courses) {
     const noteRelative = target.replace(/^(\.\.\/)+/, '')
     if (!exists(join(repoRoot, noteRelative))) {
       error(`courses/${course.path}.md`, `links to "${target}" but ${noteRelative} does not exist`)
+    }
+  }
+
+  // A card set has no page. Sessions launch from a course, because results are recorded per
+  // certification, so `/<domain>/<set-id>` matches no route and renders the not-found page.
+  // 47 such links accumulated across six guides before anyone noticed, which is how a link
+  // that only ever fails behaves: nothing complains, because nothing checks.
+  for (const [, label, target] of guide.matchAll(/\[([^\]]+)\]\((\/[^)\s]+)\)/g)) {
+    if (registered.has(target.replace(/^\//, ''))) {
+      error(
+        `courses/${course.path}.md`,
+        `links "${label}" to the card set path "${target}", which has no route - name the set in plain text instead`,
+      )
     }
   }
 }

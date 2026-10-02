@@ -1763,6 +1763,256 @@
           "heading": "Explainability Techniques"
         }
       ]
+    },
+    {
+      "id": "temperature-vs-top-p",
+      "type": "single",
+      "prompt": "What distinguishes `Temperature` from `Top P`?",
+      "tags": [
+        "bedrock",
+        "inference"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Temperature reshapes the whole distribution of likely next tokens, while Top P truncates it to the smallest set whose probabilities add up to P",
+          "correct": true,
+          "rationale": "One changes the odds across the board; the other discards the tail before sampling."
+        },
+        {
+          "id": "b",
+          "text": "Temperature truncates the distribution by count, while Top P reshapes it",
+          "correct": false,
+          "rationale": "Truncating by count is Top K. The two halves of this option are swapped."
+        },
+        {
+          "id": "c",
+          "text": "Temperature caps the length of the response, while Top P caps its cost",
+          "correct": false,
+          "rationale": "Length and the cost that follows from it are controlled by max tokens."
+        },
+        {
+          "id": "d",
+          "text": "Temperature applies to image models and Top P to text models",
+          "correct": false,
+          "rationale": "Both are sampling controls for text generation."
+        }
+      ],
+      "explanation": "Temperature reshapes, Top K and Top P truncate. Top K cuts by a fixed count and Top P by cumulative probability, which is why Top P adapts to how confident the model is at each step and Top K does not. Tuning one of the two is normal; tuning both makes the effect of either hard to reason about.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Inference Parameters"
+        }
+      ]
+    },
+    {
+      "id": "low-temperature-scenario",
+      "type": "single",
+      "prompt": "An internal tool must return the same answer to the same question every time, so results can be audited. Which setting fits?",
+      "tags": [
+        "bedrock",
+        "inference"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A temperature at or near 0",
+          "correct": true,
+          "rationale": "At the low end the model consistently takes the most likely token, so the same prompt gives the same response."
+        },
+        {
+          "id": "b",
+          "text": "A high temperature",
+          "correct": false,
+          "rationale": "A high temperature favours less likely tokens, which is what produces variety between runs."
+        },
+        {
+          "id": "c",
+          "text": "A higher Top K",
+          "correct": false,
+          "rationale": "Widening the candidate pool makes the output less predictable, not more."
+        },
+        {
+          "id": "d",
+          "text": "A larger max tokens value",
+          "correct": false,
+          "rationale": "That allows a longer answer. It says nothing about whether the answer is repeatable."
+        }
+      ],
+      "explanation": "Repeatability and auditability point to the deterministic end of sampling; variety and ideation point to the other end. The giveaway in a question is whether it values the same answer twice or a different answer each time.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Inference Parameters"
+        }
+      ]
+    },
+    {
+      "id": "sampling-not-accuracy",
+      "type": "boolean",
+      "prompt": "Lowering the temperature makes a model’s answers more factually accurate.",
+      "tags": [
+        "bedrock",
+        "inference"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "True",
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": "False",
+          "correct": true
+        }
+      ],
+      "explanation": "Sampling parameters only decide how the model chooses among tokens it already considers plausible, so a wrong fact stays wrong at every temperature. What a low temperature buys is consistency, which can make an error easier to notice but no less likely. Accuracy comes from grounding the model in real data with retrieval, from customisation, or from a more capable model.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Inference Parameters"
+        }
+      ]
+    },
+    {
+      "id": "inference-parameter-purposes",
+      "type": "multi",
+      "prompt": "Which pairings of inference parameter and effect are correct? (Select all that apply)",
+      "tags": [
+        "bedrock",
+        "inference"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "`Top K`: consider only the K most likely next tokens",
+          "correct": true,
+          "rationale": "A fixed count, regardless of how confident the model is."
+        },
+        {
+          "id": "b",
+          "text": "`Top P`: consider the smallest set of tokens whose probabilities add up to P",
+          "correct": true,
+          "rationale": "A cumulative probability threshold, so the pool shrinks when the model is confident."
+        },
+        {
+          "id": "c",
+          "text": "`Max tokens`: cap how long the response can be, which also caps what it costs",
+          "correct": true,
+          "rationale": "Billing is per token, so a length cap is also a spend cap."
+        },
+        {
+          "id": "d",
+          "text": "`Stop sequences`: end generation when a given string is produced",
+          "correct": true,
+          "rationale": "Useful for keeping a model from running past the answer."
+        },
+        {
+          "id": "e",
+          "text": "`Temperature`: reserve a fixed amount of model capacity in advance",
+          "correct": false,
+          "rationale": "Reserving capacity is Provisioned Throughput, a pricing mode rather than a sampling parameter."
+        }
+      ],
+      "explanation": "Four of these shape the response and one is a billing construct wearing a similar name. Keeping sampling controls separate from capacity and pricing decisions is what makes a question about either one straightforward.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Inference Parameters"
+        }
+      ]
+    },
+    {
+      "id": "shadow-testing-no-user-impact",
+      "type": "single",
+      "prompt": "A candidate model must be evaluated on real production traffic without any user receiving its responses. Which approach?",
+      "tags": [
+        "sagemaker",
+        "deployment"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "Shadow testing",
+          "correct": true,
+          "rationale": "A copy of live traffic reaches the candidate and its responses are discarded, so there is no user-facing risk."
+        },
+        {
+          "id": "b",
+          "text": "A/B testing with a small traffic weight",
+          "correct": false,
+          "rationale": "Users do receive the candidate’s responses under A/B testing. A small weight bounds the risk rather than removing it."
+        },
+        {
+          "id": "c",
+          "text": "Multi-model hosting",
+          "correct": false,
+          "rationale": "That puts several different models behind one endpoint to save cost. It compares nothing."
+        },
+        {
+          "id": "d",
+          "text": "Automatic model tuning",
+          "correct": false,
+          "rationale": "Tuning searches hyperparameters during training, before anything is deployed."
+        }
+      ],
+      "explanation": "The deciding question is whether a real user may see the candidate’s output. If not, only shadow testing qualifies. If a bounded number may, A/B testing with a traffic weight is the faster way to learn, because it measures real outcomes rather than just behaviour.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Comparing a New Model Against the Old One in Production"
+        }
+      ]
+    },
+    {
+      "id": "endpoint-release-testing",
+      "type": "multi",
+      "prompt": "Which statements about evaluating a new model version on a SageMaker endpoint are correct? (Select all that apply)",
+      "tags": [
+        "sagemaker",
+        "deployment"
+      ],
+      "options": [
+        {
+          "id": "a",
+          "text": "A/B testing splits live traffic between production variants according to a weight for each",
+          "correct": true,
+          "rationale": "That weight is how much exposure the candidate gets."
+        },
+        {
+          "id": "b",
+          "text": "Shadow testing sends a copy of live traffic to the candidate and discards its responses",
+          "correct": true,
+          "rationale": "Nobody sees the output, so behaviour can be compared with no user-facing risk."
+        },
+        {
+          "id": "c",
+          "text": "Under A/B testing users do receive the candidate’s responses, so the risk is bounded by its weight rather than eliminated",
+          "correct": true,
+          "rationale": "This is the trade against shadow testing, which eliminates the risk but learns less about real outcomes."
+        },
+        {
+          "id": "d",
+          "text": "Multi-model hosting puts many different models behind one endpoint, which is a cost decision rather than a release decision",
+          "correct": true,
+          "rationale": "It avoids paying for an endpoint per model, and compares nothing."
+        },
+        {
+          "id": "e",
+          "text": "Shadow testing requires taking the current model out of service first",
+          "correct": false,
+          "rationale": "The current model keeps serving every request. That is the point of shadowing."
+        }
+      ],
+      "explanation": "An endpoint can host more than one variant, which is what makes comparing versions on live traffic possible at all. The distinction worth holding is release against cost: A/B and shadow testing decide whether a new version ships, while multi-model hosting is about not paying for idle endpoints.",
+      "citations": [
+        {
+          "file": "notes/aws/ai_practitioner.md",
+          "heading": "Comparing a New Model Against the Old One in Production"
+        }
+      ]
     }
   ]
 }
