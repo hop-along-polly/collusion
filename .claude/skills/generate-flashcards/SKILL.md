@@ -187,9 +187,9 @@ checks both against the real files.
 
 - `file` - the repo-relative note path, e.g. `notes/aws/ai_practitioner.md`.
 - `heading` - a real Markdown `#` heading. Copy the text exactly, without the `#` marks. The
-  citation deep-links to GitHub's anchor.
+  citation deep-links to that section of the note page in the app.
 - `section` - a labelled region that is *not* a heading (a bold label, a numbered list item).
-  Links to the file itself.
+  Links to the note page without an anchor.
 
 Using `heading` for text that is not a heading, or `section` for text that is, fails the build.
 Grep the note for the exact string when unsure.

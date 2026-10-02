@@ -122,7 +122,16 @@ describe('the quiz flow', () => {
     const verdict = await screen.findByRole('heading', { level: 2 })
     expect(/correct|not quite/i.test(verdict.textContent ?? '')).toBe(true)
     expect(screen.getByRole('heading', { name: /^sources?$/i })).toBeTruthy()
-    expect(screen.getAllByRole('link', { name: /Ansible\.md/ }).length).toBeGreaterThan(0)
+
+    // Citations go to the note's own page in the app, never out to the repository. That is
+    // deliberate: following a source should not advertise where the content is kept.
+    const sources = screen.getAllByRole('link', { name: /Ansible\.md/ })
+    expect(sources.length).toBeGreaterThan(0)
+    for (const source of sources) {
+      const href = source.getAttribute('href') ?? ''
+      expect(href.startsWith('/notes/devops/Ansible')).toBe(true)
+      expect(href).not.toMatch(/github\.com/)
+    }
     expect(screen.queryByRole('button', { name: /submit answer/i })).toBeNull()
 
     // Options are frozen once graded.

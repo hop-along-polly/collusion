@@ -4,7 +4,6 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { listDomains } from '@/data/catalog'
 import { useTheme } from '@/hooks/useTheme'
 import { cn } from '@/utils/cn'
-import { REPO_URL } from '@/utils/github'
 import { Icon } from './ui/Icon'
 
 function ThemeToggle() {
@@ -118,20 +117,6 @@ export function Layout() {
         <Outlet />
       </main>
 
-      <footer className="border-t border-line bg-surface">
-        <div className="mx-auto max-w-7xl px-4 py-6 font-body text-sm text-content-muted sm:px-6 lg:px-8">
-          <p>
-            Every card cites the section of the course material it came from.{' '}
-            <a
-              href={REPO_URL}
-              className="inline-flex items-center gap-1 text-brand underline-offset-2 hover:underline"
-            >
-              View on GitHub
-              <Icon name="external" size={14} />
-            </a>
-          </p>
-        </div>
-      </footer>
     </div>
   )
 }

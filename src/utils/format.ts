@@ -1,7 +1,9 @@
 import type { Citation } from '@/types/cards'
-import { githubUrl } from '@/utils/github'
 
-/** GitHub's heading-anchor slug. Mirrored in `scripts/validate-data.ts`. */
+/**
+ * GitHub's heading-anchor slug, which `rehype-slug` also generates when the note is
+ * rendered in-app, so one slug serves both. Mirrored in `scripts/validate-data.ts`.
+ */
 export function slugify(heading: string): string {
   return heading
     .trim()
@@ -11,12 +13,25 @@ export function slugify(heading: string): string {
 }
 
 /**
- * Builds the GitHub URL for a citation. A `heading` is a verified Markdown heading and
- * gets an anchor; a `section` is a label that is not a heading, so the link stops at
- * the file rather than pointing at an anchor that does not exist.
+ * The in-app route for a citation, e.g. `/notes/aws/ai_practitioner#bedrock-agents`.
+ *
+ * Citations used to point at the repository on GitHub. They point at the note page here
+ * instead, which keeps a learner inside the app and does not advertise where the content
+ * lives. The anchor resolves because `rehype-slug` puts ids on the rendered headings.
+ *
+ * A `heading` is a verified Markdown heading and gets an anchor. A `section` is a label
+ * that is not a heading, so the link stops at the page rather than pointing at an anchor
+ * that does not exist.
+ *
+ * Returns `null` when the cited file has no page. Only `notes/<domain>/<name>.md` is
+ * rendered, so a citation naming an example script has nowhere in-app to go, and the
+ * caller shows the label as plain text.
  */
-export function citationUrl(citation: Citation): string {
-  const base = githubUrl(citation.file)
+export function citationUrl(citation: Citation): string | null {
+  const match = /^notes\/([^/]+)\/(.+)\.md$/i.exec(citation.file)
+  if (!match) return null
+
+  const base = `/notes/${match[1]}/${match[2]}`
 
   if (citation.anchor) return `${base}#${citation.anchor}`
   if (citation.heading) return `${base}#${slugify(citation.heading)}`

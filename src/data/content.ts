@@ -131,9 +131,3 @@ export async function loadCourseGuide(course: CourseMeta): Promise<string> {
   return body
 }
 
-/**
- * GitHub's URL for a note, used by the "view on GitHub" affordances. Re-exported here
- * because this is where callers already look for it; the ref it is built from lives in
- * `@/utils/github`.
- */
-export { githubUrl } from '@/utils/github'

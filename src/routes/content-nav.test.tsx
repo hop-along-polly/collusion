@@ -128,8 +128,10 @@ describe('study guide links', () => {
     expect(noteLink.getAttribute('href')).toBe('/notes/devops/Ansible')
 
     await user.click(noteLink)
+    // The note's own first heading, so this proves the note rendered rather than just that
+    // some page did.
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: 'Note source' })).toBeTruthy()
+      expect(screen.getByRole('heading', { name: 'Ansible Fundamentals', level: 1 })).toBeTruthy()
     })
   })
 })
